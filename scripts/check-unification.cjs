@@ -20,7 +20,7 @@ node(path.join(main, "tests/test_xtream_core.cjs"));
 node(path.join(main, "tests/test_stalker_core.cjs"));
 node(path.join(main, "tests/test_guide_core.cjs"));
 const guideAdapter = fs.readFileSync(path.join(root, "ottplay-android/core/src/main/kotlin/play/ott/nativeapp/core/XmltvParser.kt"), "utf8");
-assert(guideAdapter.includes("GuideProgrammeRules.androidOrder(") && guideAdapter.includes("GuideProgrammeRules.validAndroid("), "Android programme rules must use the common core");
+assert(guideAdapter.includes("GuideProgrammeRules.androidOrder(") && guideAdapter.includes("XmltvRecords(XmltvRecordFormat.ANDROID)"), "Android programme rules must use the common core");
 assert(!/distinctBy|sortedWith|to > from/.test(guideAdapter), "Android programme normalization reintroduced");
 const legacyGuide = fs.readFileSync(path.join(main, "src/channels/index.ts"), "utf8");
 for (const api of ["legacyGuideSelection", "legacyGuideShift", "legacyGuideCacheCapacity", "legacyGuideCacheRead", "legacyGuideCacheOrder"]) assert(legacyGuide.includes("." + api + "("), "Base-player guide must use " + api);
@@ -67,6 +67,14 @@ for (const [file, forbidden] of [
     ["src-rs/core/src/xmltv.rs", /NaiveDateTime|RE_TS|best_score|by_norm/],
     ["src/plugins/m3u-proxy.ts", /normalizeNativeEpgName|nativeEpgMatchScore/]
 ]) assert(!forbidden.test(fs.readFileSync(path.join(main, file), "utf8")), "Migrated guide logic reintroduced: " + file);
+for (const [file, required, forbidden] of [
+    ["mobile-xmltv-epg/src/ios/MobileXmltvEpg.swift", "xmltvAccept", /currentProgTitle|currentProgChannel|enum TextTarget/],
+    ["mobile-xmltv-epg/src/android/play/ott/foss/plugin/MobileXmltvEpgPlugin.kt", "XmltvRecords(", /currentProgTitle|currentProgChannel|channels\.putIfAbsent/],
+    ["src-rs/core/src/xmltv.rs", "GuideRecords", /current_programme|current_channel|enum TextTarget|sort_by_key/]
+]) {
+    const source = fs.readFileSync(path.join(main, file), "utf8");
+    assert(source.includes(required) && !forbidden.test(source), "Native XMLTV record rules must use the common core: " + file);
+}
 for (const [file, required] of [
     ["mobile-xmltv-epg/src/ios/MobileXmltvEpg.swift", ["nativeGuideSources", "nativeGuideUnowned", "nativeGuideLookup", "nativeGuideDisk", "nativeGuideLoadStart", "nativeGuideLoadNext", "NativeGuideSourceBatch"]],
     ["mobile-xmltv-epg/src/android/play/ott/foss/plugin/MobileXmltvEpgPlugin.kt", ["NativeGuideSources.urls", "NativeGuideSources.unowned", "NativeGuideSources.lookupAndroid", "NativeGuideSources.diskAndroid", "NativeSourceLoad.start", "NativeSourceLoad.next", "NativeSourceBatch("]],

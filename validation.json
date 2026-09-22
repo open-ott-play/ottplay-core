@@ -760,5 +760,166 @@
       "first source owns a channel; empty successful sources do not hide the first batch error"
     ],
     "report": "reports/native-fallback/validation.json"
-  }
+  },
+  "xmltv_records": {
+    "source_sha256": "bca46d6f41aecaad9697677a8f911fad69e08aa3e1a932b189d27dc83723b9e5",
+    "baseline_commits": {
+      "main": "c02125906cad47c992c67235314018f908d4ab3d",
+      "android": "1ade13fb02fffe828c7a383e15bf0ff7ae5283f8"
+    },
+    "captured_parser_outputs": {
+      "Swift": 23,
+      "archived_Kotlin": 23,
+      "active_Android": 20,
+      "Rust_browser": 32,
+      "Rust_native": 32,
+      "total": 130
+    },
+    "common_tests": {
+      "JVM": {
+        "tests": 119,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "JavaScript": {
+        "tests": 117,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "macOS": {
+        "tests": 117,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    "es5_abi_profiles": 3,
+    "foss2_tests": 351,
+    "android_core_tests": 56,
+    "android_app_tests": 85,
+    "rust_workspace_tests": 69,
+    "native_policy_fallback_contracts": 195,
+    "archived_android_edition_cases": 37,
+    "active_android_limit_differentials": 24,
+    "independent_event_differentials": 10000,
+    "fixture_sha256": {
+      "ottplay-foss/tests/fixtures/guide/native-records-before-core.json": "154be03eb290be437c22af176fb7073aaa34993a955e9472192584610eaad90b",
+      "ottplay-foss/tests/fixtures/guide/native-record-boundaries-before-core.json": "5babe9a0bcf8281abc13b9e412d15331191c73cbe46a9edd5120e813c1382b40",
+      "ottplay-foss/src-rs/core/tests/fixtures/xmltv-records-before-core.json": "c9dec571f7deb187382107c6649f402b9b183b5bb766019b209e8f33bdcd5eab",
+      "ottplay-foss/src-rs/core/tests/fixtures/xmltv-record-boundaries-before-core.json": "ab3c79fa1df5e4129fa775ce8a0dbd8cdcbd8bf5e10ffaf72430f9cb76820d68",
+      "ottplay-android/core/src/test/resources/xmltv-records-before-core.json": "4d07da8cbc39f124591c3929d00f72e76b23c9ca6c2101bdd324600c06f73749"
+    },
+    "migrated": [
+      "native XMLTV metadata and alias precedence",
+      "repeated fields, missing IDs and programme admission",
+      "decoded XML event scope and conditional text error selection",
+      "stable native programme ordering"
+    ],
+    "host_boundaries": [
+      "XML tokenization, decoding errors and security/resource barriers",
+      "Unicode trim/equality primitives",
+      "bounded bridge transport and native collection writes"
+    ],
+    "performance_note": "Measured overhead remains despite eliminating initial emulated-Long/map regression. See real before/after parse reports; no performance parity claimed.",
+    "report": "reports/xmltv-records/validation.json",
+    "performance": {
+      "host": "macOS arm64",
+      "physical_device": false,
+      "output_hashes_equal": true,
+      "swift": [
+        {
+          "programmes": 10000,
+          "before_median_ms": 87.108,
+          "after_median_ms": 160.9
+        },
+        {
+          "programmes": 50000,
+          "before_median_ms": 378.405,
+          "after_median_ms": 711.661
+        }
+      ],
+      "rust": [
+        {
+          "programmes": 10000,
+          "profile": "browser",
+          "old": {
+            "medianMilliseconds": 57.869,
+            "medianPeakRssBytes": 15859712
+          },
+          "new": {
+            "medianMilliseconds": 117.264,
+            "medianPeakRssBytes": 20594688
+          }
+        },
+        {
+          "programmes": 10000,
+          "profile": "native",
+          "old": {
+            "medianMilliseconds": 58.924,
+            "medianPeakRssBytes": 15892480
+          },
+          "new": {
+            "medianMilliseconds": 132.992,
+            "medianPeakRssBytes": 20578304
+          }
+        },
+        {
+          "programmes": 50000,
+          "profile": "browser",
+          "old": {
+            "medianMilliseconds": 240.248,
+            "medianPeakRssBytes": 33505280
+          },
+          "new": {
+            "medianMilliseconds": 505.87,
+            "medianPeakRssBytes": 37978112
+          }
+        },
+        {
+          "programmes": 50000,
+          "profile": "native",
+          "old": {
+            "medianMilliseconds": 239.656,
+            "medianPeakRssBytes": 33488896
+          },
+          "new": {
+            "medianMilliseconds": 607.341,
+            "medianPeakRssBytes": 38125568
+          }
+        },
+        {
+          "programmes": 100000,
+          "profile": "browser",
+          "old": {
+            "medianMilliseconds": 462.024,
+            "medianPeakRssBytes": 56033280
+          },
+          "new": {
+            "medianMilliseconds": 967.624,
+            "medianPeakRssBytes": 60850176
+          }
+        },
+        {
+          "programmes": 100000,
+          "profile": "native",
+          "old": {
+            "medianMilliseconds": 457.488,
+            "medianPeakRssBytes": 56246272
+          },
+          "new": {
+            "medianMilliseconds": 1218.535,
+            "medianPeakRssBytes": 61063168
+          }
+        }
+      ],
+      "limitation": "Synthetic parse-only timings; the shared event bridge remains slower than the native baseline. No physical-device or performance parity claim."
+    },
+    "consumer_commits": {
+      "main": "8222649194c2e251478c4353361e2d05cceb6b7d",
+      "android": "0be1caded9963f3ee3ca8ed0f54674e895696716"
+    }
+  },
+  "latest_validation_stage": "xmltv_records"
 }

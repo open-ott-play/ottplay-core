@@ -213,6 +213,24 @@ Transport, other operator session logic and durable
 state still need migration. See [workspace status](../README.md) and
 [validation](validation.json); physical targets are not certified by VM tests.
 
+`XmltvRecords` now interprets decoded native XMLTV events for Swift, archived
+Kotlin, active Android and both Rust profiles. It owns channel metadata/alias
+precedence, repeated title/description selection, programme admission, timestamp
+conversion and field scope. `NativeRecordRules` supplies stable programme order;
+active Android retains the existing common interval deduplication policy.
+Hosts retain XML decoding/security limits, Unicode primitives, native payload
+storage and error objects. Swift/QuickJS bridge traffic is batched by token count
+and byte budget; emitted collection operations are drained after each batch.
+
+The compatibility profiles preserve concatenated, first and last field rules,
+Foundation canonical ID equality, empty/missing attributes and QuickXML empty
+element events. Conditional Rust decoding failures retain their original error
+and precedence; malformed Swift input still clears only channels/programmes.
+Fixtures captured before migration cover 100 parser results across five profiles,
+with additional native batch/error boundaries. The actual shipping adapters run
+these fixtures in their existing CI suites. Native XMLTV field limits, root/DTD
+guards, decompress limits and programme caps remain platform protections.
+
 The source uses the OttPlay MIT license. Generated JavaScript includes Kotlin's
 Apache-2.0 runtime notices in `ottplay-core.LICENSE.txt`. The standard Gradle
 wrapper retains its Apache-2.0 notices and pinned distribution checksum.

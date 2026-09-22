@@ -49,6 +49,21 @@ function verify(context, profile) {
     partialBatch.advance(false, 0); partialBatch.advance(true, 1);
     assert.equal(partialBatch.failure(), -1);
     assert.equal(new core.NativeGuideSourceBatch(0).failure(), -1);
+    for (const format of ["swift", "android", "rust", "rust-native"]) {
+        const records = new core.XmltvRecords(format, value => value.trim(), value => value);
+        const rows = [["start", "programme", "channel", "__proto__"], ["start", "title"], ["text", "First"], ["end", "title"],
+            ["start", "title"], ["text", "Second"], ["end", "title"], ["end", "programme"]];
+        assert.equal(records.accept(rows.slice(0, 5)).length, 0);
+        const output = records.accept(rows.slice(5));
+        assert.equal(output[0][1], "__proto__");
+        assert.equal(output[0][2], "0");
+        assert.equal(output[0][4], format.startsWith("rust") ? "Second" : "FirstSecond");
+        assert.equal(records.accept([]).length, 0);
+    }
+    const decoding = new core.XmltvRecords("rust", value => value.trim());
+    assert.equal(JSON.stringify(decoding.accept([["text-error", "ignored"], ["start", "programme"], ["start", "title"], ["text-error", "original"]])), '[["error","original"]]');
+    assert.equal(JSON.stringify(core.nativeXmltvOrder([2, 1, 2], "rust-native")), "[1,0,2]");
+    assert.equal(JSON.stringify(core.nativeXmltvOrder([2, 1, 2], "rust")), "[0,1,2]");
     for (const [input, expected] of [
         ["19700101000000 +0000", 0], ["197001010530 +0530", 0],
         ["19691231203000 -03:30", 0], ["19691231235959Z", -1000],

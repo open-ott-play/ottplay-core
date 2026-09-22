@@ -250,10 +250,19 @@ This is a structural guard, not proof of device or provider acceptance.
 - 77 additional contracts were verified on unchanged revision `d24f07be` before
   migration, then on the shared implementation. These include real write
   failures and delayed callbacks, plus the existing 118 source/cache cases.
+- `XmltvRecords` interprets native decoded XMLTV events in one implementation.
+  Swift, archived Kotlin, active Android and Rust retain explicit compatibility
+  profiles for metadata, repeated fields, empty IDs and programme admission.
+  Native parsers retain XML security/decoding and apply the shared collection
+  operations. Swift/Rust transport uses bounded event batches.
+- 100 captured results from `c021259` / Android `1ade13f` cover all five native
+  profiles; additional fixtures exercise batch boundaries and error precedence.
+  Native validation limits and errors remain covered by the shipping adapters.
 
 ## Remaining work
 
-Other operator sessions and catalog/identity rules, state migrations, playback
+EPG source aggregation/refresh, remaining streaming field extraction, other
+operator sessions and catalog/identity rules, state migrations, playback
 controllers and service wire contracts still need migration. No whole client is yet
 fully free of inherited player logic. No release has been published or deployed.
 Archive URLs, M3U and Xtream availability metadata are migrated; other provider

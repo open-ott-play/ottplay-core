@@ -1,11 +1,11 @@
 {
   "ottplay-foss": {
     "url": "https://github.com/open-ott-play/ottplay-foss.git",
-    "revision": "c02125906cad47c992c67235314018f908d4ab3d"
+    "revision": "8222649194c2e251478c4353361e2d05cceb6b7d"
   },
   "ottplay-android": {
     "url": "https://github.com/open-ott-play/ottplay-android.git",
-    "revision": "1ade13fb02fffe828c7a383e15bf0ff7ae5283f8"
+    "revision": "0be1caded9963f3ee3ca8ed0f54674e895696716"
   },
   "ottplay-control-server": {
     "url": "https://github.com/open-ott-play/ottplay-control-server.git",
