@@ -5,7 +5,7 @@ const { parse } = require("acorn");
 // Kotlin 2.4.20 emits these empty collection marker interfaces in JVM hash-set
 // order. They only add membership flags: none has prototype/default methods.
 // Do not reorder arbitrary interfaces, since their default methods can collide.
-const markers = new Set(["Collection", "KtList", "KtSet", "RandomAccess"]);
+const markers = new Set(["Collection", "KtList", "KtSet", "MutableIterable", "RandomAccess"]);
 function canonicalJavaScript(source) {
     const ast = parse(source, { ecmaVersion: 5, sourceType: "script" });
     const constructors = new Set(), registrations = new Set(), replacements = [];

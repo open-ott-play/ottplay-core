@@ -926,15 +926,15 @@
   },
   "latest_validation_stage": "epg_refresh",
   "epg_refresh": {
-    "source_sha256": "675fb6ab32a95c265840f71a24d1bb2f287123bdaa7bd645f53dc2cf736d6bd2",
+    "source_sha256": "6a408ca0f64771388011bb46424bd9217ce05f6f6c29e2c59644f2413c0711fe",
     "baseline_commits": {
       "source": "b2cd27f2a0ffafc99a5c1ca2f2b9ac9134582cb2",
       "main": "8855d7789441cb03605dcabbfd61055259cbfbe6",
       "android": "0be1caded9963f3ee3ca8ed0f54674e895696716"
     },
     "consumer_commits": {
-      "main": "22ea343ba989494398c51dae02962dda362190d4",
-      "android": "33ecfc2cb6d3b18e52b6629c1158c255b57a529f"
+      "main": "b3c8cc072e92f14c8e352a223157788f24ca4dce",
+      "android": "b924c5a62d6312ca4cad87a5e58f01092e165454"
     },
     "captured_refresh_contracts": {
       "browser": 18,
@@ -1003,6 +1003,30 @@
       "Rust all-failed feeds return fresh empty cache; pool-open failure propagates, persist failure does not"
     ],
     "report": "reports/epg-refresh-delivery/validation.json",
-    "physical_device_acceptance": false
+    "physical_device_acceptance": false,
+    "artifacts": {
+      "ottplay-core.js": {
+        "sha256": "648140e8d0ea795d01ed574bff70b8acba083943fc482fea06759ac52453a6c3",
+        "bytes": 833101
+      },
+      "ottplay-core.d.ts": {
+        "sha256": "070612d6f18d4620d6380d9d500679f1f179e88de16d9e8bff4efa4c74496acb",
+        "bytes": 11748
+      },
+      "ottplay-core.jar": {
+        "sha256": "36a2740686ff9234485c8e3857b853f650473942e9d9395c93d90c517481e91b",
+        "bytes": 371950
+      },
+      "ottplay-core.LICENSE.txt": {
+        "sha256": "1e72da3623b91daad1013e577c3611ad6ed314da508b757abe9a1b27a88a14cc",
+        "bytes": 12937
+      }
+    },
+    "packaging_followup": {
+      "reason": "Kotlin JS MutableIterable marker order differed between macOS and Linux",
+      "change": "Extend fail-closed canonical marker normalization; real platform outputs normalize byte-identically",
+      "jvm_artifact_unchanged": true,
+      "focused_tests": "canonicalization, ES5 ABI, FOSS2 352 tests, main guide contracts, distribution guard"
+    }
   }
 }
