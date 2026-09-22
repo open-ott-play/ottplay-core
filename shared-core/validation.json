@@ -1,0 +1,548 @@
+{
+  "scope": "integrated_guide_feed_cache_archive_playlist_xtream_and_stalker_rules",
+  "full_product_migration_complete": false,
+  "validated_at_utc": "2026-09-22T15:45:57.331156+00:00",
+  "test_suites": [
+    {
+      "suite": "ArchiveTest[jvm]",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "build/test-results/jvmTest/TEST-play.ott.core.ArchiveTest.xml"
+    },
+    {
+      "suite": "CalendarOracleTest[jvm]",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "build/test-results/jvmTest/TEST-play.ott.core.CalendarOracleTest.xml"
+    },
+    {
+      "suite": "GuideFeedTest[jvm]",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "build/test-results/jvmTest/TEST-play.ott.core.GuideFeedTest.xml"
+    },
+    {
+      "suite": "GuideTest[jvm]",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "build/test-results/jvmTest/TEST-play.ott.core.GuideTest.xml"
+    },
+    {
+      "suite": "NativeGuideTest[jvm]",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "build/test-results/jvmTest/TEST-play.ott.core.NativeGuideTest.xml"
+    },
+    {
+      "suite": "OperatorPlaylistTest[jvm]",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "build/test-results/jvmTest/TEST-play.ott.core.OperatorPlaylistTest.xml"
+    },
+    {
+      "suite": "PlaylistTest[jvm]",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "build/test-results/jvmTest/TEST-play.ott.core.PlaylistTest.xml"
+    },
+    {
+      "suite": "StalkerTest[jvm]",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "build/test-results/jvmTest/TEST-play.ott.core.StalkerTest.xml"
+    },
+    {
+      "suite": "XtreamTest[jvm]",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "build/test-results/jvmTest/TEST-play.ott.core.XtreamTest.xml"
+    },
+    {
+      "suite": "jsNodeTest.play.ott.core.ArchiveTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "build/test-results/jsNodeTest/TEST-jsNodeTest.play.ott.core.ArchiveTest.xml"
+    },
+    {
+      "suite": "jsNodeTest.play.ott.core.GuideFeedTest",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "build/test-results/jsNodeTest/TEST-jsNodeTest.play.ott.core.GuideFeedTest.xml"
+    },
+    {
+      "suite": "jsNodeTest.play.ott.core.GuideTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "build/test-results/jsNodeTest/TEST-jsNodeTest.play.ott.core.GuideTest.xml"
+    },
+    {
+      "suite": "jsNodeTest.play.ott.core.NativeGuideTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "build/test-results/jsNodeTest/TEST-jsNodeTest.play.ott.core.NativeGuideTest.xml"
+    },
+    {
+      "suite": "jsNodeTest.play.ott.core.OperatorPlaylistTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "build/test-results/jsNodeTest/TEST-jsNodeTest.play.ott.core.OperatorPlaylistTest.xml"
+    },
+    {
+      "suite": "jsNodeTest.play.ott.core.PlaylistTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "build/test-results/jsNodeTest/TEST-jsNodeTest.play.ott.core.PlaylistTest.xml"
+    },
+    {
+      "suite": "jsNodeTest.play.ott.core.StalkerTest",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "build/test-results/jsNodeTest/TEST-jsNodeTest.play.ott.core.StalkerTest.xml"
+    },
+    {
+      "suite": "jsNodeTest.play.ott.core.XtreamTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "build/test-results/jsNodeTest/TEST-jsNodeTest.play.ott.core.XtreamTest.xml"
+    },
+    {
+      "suite": "macosArm64Test.play.ott.core.ArchiveTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "build/test-results/macosArm64Test/TEST-macosArm64Test.play.ott.core.ArchiveTest.xml"
+    },
+    {
+      "suite": "macosArm64Test.play.ott.core.GuideFeedTest",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "build/test-results/macosArm64Test/TEST-macosArm64Test.play.ott.core.GuideFeedTest.xml"
+    },
+    {
+      "suite": "macosArm64Test.play.ott.core.GuideTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "build/test-results/macosArm64Test/TEST-macosArm64Test.play.ott.core.GuideTest.xml"
+    },
+    {
+      "suite": "macosArm64Test.play.ott.core.NativeGuideTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "build/test-results/macosArm64Test/TEST-macosArm64Test.play.ott.core.NativeGuideTest.xml"
+    },
+    {
+      "suite": "macosArm64Test.play.ott.core.OperatorPlaylistTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "build/test-results/macosArm64Test/TEST-macosArm64Test.play.ott.core.OperatorPlaylistTest.xml"
+    },
+    {
+      "suite": "macosArm64Test.play.ott.core.PlaylistTest",
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "build/test-results/macosArm64Test/TEST-macosArm64Test.play.ott.core.PlaylistTest.xml"
+    },
+    {
+      "suite": "macosArm64Test.play.ott.core.StalkerTest",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "build/test-results/macosArm64Test/TEST-macosArm64Test.play.ott.core.StalkerTest.xml"
+    },
+    {
+      "suite": "macosArm64Test.play.ott.core.XtreamTest",
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report": "build/test-results/macosArm64Test/TEST-macosArm64Test.play.ott.core.XtreamTest.xml"
+    }
+  ],
+  "total_tests": 254,
+  "javascript": {
+    "es5Syntax": true,
+    "bundleBytes": 722824,
+    "reports": [
+      {
+        "profile": "modern",
+        "oracleDates": 2928,
+        "passed": true
+      },
+      {
+        "profile": "ES5 API simulation with core-js and native binary arrays",
+        "oracleDates": 2928,
+        "passed": true
+      },
+      {
+        "profile": "ES5 API simulation with core-js and emulated binary arrays",
+        "oracleDates": 2928,
+        "passed": true
+      }
+    ]
+  },
+  "source": {
+    "sha256": "24993729c1c63974b71dfe7c9aed44a59b8bdec7d92441b1312ba2431eecef61",
+    "files": {
+      "LICENSE": "ec6a17ce723ea8b4c6b08f277ab84750440a8c3e5401aaa9f4e4e9d5fd0fd72c",
+      "build.gradle.kts": "e89cc0e4057ab3989c6d4048d6b2ee7b5efb023a7c96c2886d8dd62778e42a73",
+      "gradle.properties": "dd942c44c3d22f584bcdea5f5f72325b7b49af1b42a5e73ed0b82ef665d1c9e1",
+      "gradle/wrapper/gradle-wrapper.jar": "7a9ce74cff467ca1bf60a4fcd9f05185acceda4d0f382434d393e17864262c5d",
+      "gradle/wrapper/gradle-wrapper.properties": "7ecd08c4b304cb5c5091a7c9e3d3cbcb31dc48b3d77410f6ded99da2ee88977b",
+      "licenses/kotlin-LICENSE.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "licenses/kotlin-NOTICE.txt": "0b09a83d3ef7795c7dec65e815866597c066c53898f2852a76599b8f5552941a",
+      "package.json": "cad1cc1027fe35d7f90fb9b133c9ef0bcc0620f0937d16babf9cf66a86eae849",
+      "scripts/distribute.cjs": "695cb1e4b79aed5fed8be7f98c3c026e87e6097013b579e2cb86a130954e61d8",
+      "settings.gradle.kts": "de8cc9d9be33ed5e41247734b1cbac66deb0d372f550e2e263033ecb7e18ce05",
+      "src/commonMain/kotlin/play/ott/core/Archive.kt": "6c588d4c4696f98e34f40e3253c98d072db2b656d4184e47ffd6c06b6c667522",
+      "src/commonMain/kotlin/play/ott/core/CoreText.kt": "23563e36428144351929739f2ff8c09a33853fc9433aa00b1bf6918ea1f4f3b8",
+      "src/commonMain/kotlin/play/ott/core/GuideCache.kt": "dc9250ff8776cc0ae6bd306609fa9f3f776e40a7dcd28c4b9c0524b651e613a4",
+      "src/commonMain/kotlin/play/ott/core/GuideFeed.kt": "a58fc31b7ada6692a209501cea68058da5fb8e7f2a8956de3bfa9c167593bf81",
+      "src/commonMain/kotlin/play/ott/core/GuideNames.kt": "4fb05f86b86d4ea2b34b8c31697fef307e790c7757c1fa3af7e20178b5f7a390",
+      "src/commonMain/kotlin/play/ott/core/GuideSchedule.kt": "f66476d52e5eed2ba6f3de1412ff5c4e5244e530f4af73bc27367ee3a48509f9",
+      "src/commonMain/kotlin/play/ott/core/GuideTime.kt": "ad5b3458c584f207f535f1db064e76cbdeeb52f8bb1006cc0c205edfb061008a",
+      "src/commonMain/kotlin/play/ott/core/LegacyStalker.kt": "2a509fc6fa4c2519f4e87fd8dfdb02a60a8a4896d8ae19f7fa7af6c0b4f6206f",
+      "src/commonMain/kotlin/play/ott/core/LegacyXtream.kt": "b86d8491d85e347d30ca7c5c0d270e1027b0cdffe63b7111f53de5a5ccc88aca",
+      "src/commonMain/kotlin/play/ott/core/NativeGuide.kt": "85f8c3c46fc050005d065c3b8eb35a4c55e2fbd62c874eb6a4afc296678a0e00",
+      "src/commonMain/kotlin/play/ott/core/OperatorPlaylist.kt": "298019d520ba6e614c829f404be8657f6ae47d855e805eda9f26ba7d3ef59cdb",
+      "src/commonMain/kotlin/play/ott/core/Playlist.kt": "ab2b86c27c841c4e9759592b4cc652e2413b6452303ac1d3bc6646e974d35ebb",
+      "src/commonMain/kotlin/play/ott/core/ProviderPlaylist.kt": "ab1bca4f6956348d21db4c70e0f3b438f399b61b6119ea28de0fde4029dccdbd",
+      "src/commonMain/kotlin/play/ott/core/ProviderValue.kt": "a1073cd8689e8244241673335f5f576991d799dffef1572d3c003b54b26c98c5",
+      "src/commonMain/kotlin/play/ott/core/StalkerBrowser.kt": "038d7edc23fc0fa5e4e80f9a23eb14cf7b8af65909a1a19c6280b63259abc727",
+      "src/commonMain/kotlin/play/ott/core/StalkerCatalog.kt": "7a7f60a1818891090eba4ee63ec754e0832a111ea8fb3f57c44c6a7a1fe14495",
+      "src/commonMain/kotlin/play/ott/core/StalkerProtocol.kt": "8a0d4b3e20fc77978695a1a8b86b0aa53fd4e62b08b201b4474730128711eaf8",
+      "src/commonMain/kotlin/play/ott/core/XtreamCatalog.kt": "c1fbfacd51ea71a10cca603536f2b60c5d14ce0a3e1a0bfa91644c8b2f5836de",
+      "src/commonMain/kotlin/play/ott/core/XtreamSession.kt": "9d92d2cfd49ab89ff49084dba6787829fd914587f15c1414af96faba9cda2f9b",
+      "src/commonTest/kotlin/play/ott/core/ArchiveTest.kt": "a648fbf79e296172f50bd11387e92bcb0f9549ddbd961a927e8610e9e55b7951",
+      "src/commonTest/kotlin/play/ott/core/GuideFeedTest.kt": "1261aec4db22bc2e7f7d8a60e0aac89c9f4354eca7f873c178978e34c0752299",
+      "src/commonTest/kotlin/play/ott/core/GuideTest.kt": "369936429caf00934f15d58d26642d02ca7ef13832a5d70d2b90095e36d90b4f",
+      "src/commonTest/kotlin/play/ott/core/NativeGuideTest.kt": "531642ad0620ff1986ea8946d975cfa642a5d61226509e6ca2aa75b469b18800",
+      "src/commonTest/kotlin/play/ott/core/OperatorPlaylistTest.kt": "06d8644750eeda7363b2b5c65f17412804a492076b3136a8e8d9e2b621558b46",
+      "src/commonTest/kotlin/play/ott/core/PlaylistTest.kt": "38f8a985a5a2e38669363852b1f68c24059dfc6513ce65ad4fc5389e3f036238",
+      "src/commonTest/kotlin/play/ott/core/StalkerTest.kt": "06f7741c6fe0b9cb8971f4d3a944a43c43ca7c7bcd840618dfb28ebfeebba4b1",
+      "src/commonTest/kotlin/play/ott/core/XtreamTest.kt": "f0c51171a2479fcd1ed385a90beed0dd0d61ea5c54d8d2906c35f792913a9694",
+      "src/jsMain/kotlin/Exports.kt": "8cba52393b445812eabdc0f831b4b8270ddc2b69065410df15e73a8862b9b528",
+      "src/jsMain/kotlin/GuideExports.kt": "8c891e93cbbd0cc9a8140d36b5955ec3b0bd6c29bed7d947a12d78c9264c3ec2",
+      "src/jsMain/kotlin/ProviderExports.kt": "e393f37d8f7503f95464f956fc3d8f16a80be0f01b2266a0e478e482caef454f",
+      "src/jsMain/kotlin/StalkerExports.kt": "8c7d1e72fba73551497c4de9798fdaa0e064a8a9f91465f749b75b88c792afb1",
+      "src/jsMain/kotlin/XtreamExports.kt": "dfd51f22afaa9049f7419be61da85a6aab0386dd5a09195fb5c71208d0336637",
+      "src/jvmTest/kotlin/play/ott/core/CalendarOracleTest.kt": "32d3c8a7179e1eb5981fc3ac9020504e51835be0ff59971de4191441242b3974"
+    }
+  },
+  "artifacts": {
+    "ottplay-core.js": {
+      "sha256": "86347adb02dfa9b63288b83b8b1337caca381bfefa5f993b634cd2f5dfd160f6",
+      "bytes": 722961
+    },
+    "ottplay-core.d.ts": {
+      "sha256": "d9f9c3b34b4c4a3149c3198ec1d46c243ed5672a596726b5a0ae67384cdfad63",
+      "bytes": 7407
+    },
+    "ottplay-core.jar": {
+      "sha256": "2d575b2745463845f6a8aaef993f6dc02f249ce1c3fbffe4b5d25e631fd37584",
+      "bytes": 310573
+    },
+    "ottplay-core.LICENSE.txt": {
+      "sha256": "1e72da3623b91daad1013e577c3611ad6ed314da508b757abe9a1b27a88a14cc",
+      "bytes": 12937
+    }
+  },
+  "physical_device_tests": false,
+  "native_execution": {
+    "ios": "same ES5 artifact via system JavaScriptCore; real bridge fixture and simulator application build passed",
+    "rust": "same ES5 artifact via rquickjs 0.14.0 / QuickJS-NG; macOS ARM64 and Linux ARM64 musl tests passed",
+    "kotlin_native": "macOS common tests; Apple framework is not an application dependency"
+  },
+  "archive": {
+    "provider_adapters": 13,
+    "recorded_provider_contracts": 272,
+    "baseline_revision": "7d47b0ca391e4b1d1fe282cb4bf11a2bfe17e80a",
+    "client_contracts": [
+      "FOSS2 completed programmes",
+      "Android elapsed/current programme",
+      "historical provider profiles"
+    ],
+    "host_boundaries": [
+      "URL parser",
+      "IANA/UTC calendar fields",
+      "origin-scoped transport headers"
+    ]
+  },
+  "core_source_sha256": "24993729c1c63974b71dfe7c9aed44a59b8bdec7d92441b1312ba2431eecef61",
+  "playlist": {
+    "main_provider_adapters": 43,
+    "media_adapters": 3,
+    "main_recorded_contracts": 743,
+    "foss2_recorded_contracts": 26,
+    "profiles": [
+      "browser",
+      "android",
+      "generic",
+      "base-m3u",
+      "1ott",
+      "only4",
+      "shara-tv",
+      "tvteam",
+      "antifriz",
+      "edem",
+      "kb-team",
+      "shura",
+      "media"
+    ],
+    "js_abi_checks": "modern and two ES5 API simulations passed"
+  },
+  "xtream": {
+    "profiles": [
+      "browser",
+      "android",
+      "base-player"
+    ],
+    "recorded_contracts": {
+      "foss2": 58,
+      "android": 68,
+      "base_player": 13,
+      "total": 139
+    },
+    "domains": [
+      "account validation",
+      "catalog request order",
+      "optional HTTP section policy",
+      "category and item normalization",
+      "channel and episode identity",
+      "stream and API routes",
+      "archive eligibility",
+      "season grouping",
+      "short EPG record selection"
+    ],
+    "host_boundaries": [
+      "JSON and URL codecs",
+      "HTTP and cancellation",
+      "hash/encoding primitives",
+      "Date decoding",
+      "localization and UI"
+    ],
+    "retained_compatibility": [
+      "base-player name-hash IDs and raw stream references",
+      "browser strict auth/numeric IDs",
+      "native embedded live response and optional 404/405/501 sections",
+      "native 100,000-row limit before deduplication and next-section requests",
+      "client-specific direct URLs/extensions/fallback names",
+      "JSON date coercion and own __proto__ fields"
+    ],
+    "cancellation": "browser catalog cancellation exercised at all seven request stages; existing series cancellation test passed",
+    "intentional_changes": [
+      "safe prototype-named base-player category dictionaries",
+      "malformed base-player list types return the existing load failure instead of a callback exception"
+    ],
+    "benchmark": {
+      "host": "darwin arm64",
+      "engine": "v26.8.2",
+      "physical_device": false,
+      "source_sha256": "3d6874ab61f82ac1779114ff6a2d295003d56ff5b06bd8c5732eb813727eacc4",
+      "js_bytes": 620181,
+      "gzip_bytes": 100132,
+      "samples": [
+        {
+          "count": 10000,
+          "milliseconds": 147,
+          "returned": 10000,
+          "requests": 7
+        },
+        {
+          "count": 100000,
+          "milliseconds": 1357,
+          "returned": 100000,
+          "requests": 7
+        }
+      ]
+    },
+    "fixture_sha256": {
+      "../ottplay-foss2/tests/fixtures/xtream-before-core.json": "84c82c82ab16dd0fbdcf50b7075d8b4c332b82c6563d630b9251b6714f1eff20",
+      "ottplay-android/core/src/test/resources/xtream-before-core.json": "4421c1d92306ccce53fb2a8e058d786dcdc3b0f49c6068ce7ec47fd59d23a5c1",
+      "ottplay-foss/tests/fixtures/xtream/legacy.json": "37f21a880098904abd9e9ac83d3e42146e5ed4029d32419f2a9ce92761529f2a"
+    }
+  },
+  "stalker": {
+    "profiles": [
+      "browser MAG",
+      "Android MAG/JSON-RPC",
+      "base-player JSON-RPC"
+    ],
+    "recorded_contracts": {
+      "foss2": 52,
+      "android": 63,
+      "base_player": 19,
+      "bestlist_xtream": 12,
+      "total": 146
+    },
+    "domains": [
+      "authentication and profile policy",
+      "token cache and bounded retry",
+      "request/header ordering",
+      "pagination and duplicate policy",
+      "catalog identity and folder hierarchy",
+      "media-link interpretation",
+      "RPC short EPG"
+    ],
+    "host_boundaries": [
+      "JSON and URL codecs",
+      "HTTP and cancellation",
+      "locking",
+      "hash/encoding primitives",
+      "localization and UI"
+    ],
+    "retained_compatibility": [
+      "browser raw-row vs native unique-row pagination",
+      "browser first duplicate vs native last duplicate",
+      "browser private token/command references and strict generations",
+      "native single 401/403 retry and token reuse",
+      "base-player numeric/hash IDs, raw URLs and numeric-prefix EPG fields",
+      "BEST LiST distinct M3U fallback URL forms"
+    ],
+    "cancellation": "browser load cancellation exercised at all stages; stale sessions and string generations rejected; existing page cancellation passed",
+    "es5": "modern and two old-API simulations passed; forbidden Unicode RegExp calls removed from Xtream fallback and antifriz logo rewrite",
+    "fixture_sha256": {
+      "../ottplay-foss2/tests/fixtures/stalker-before-core.json": "a925fd406ea211ac4dc54b2ee9a298957dcf02a7f0a8a69eed059fc6f01ab3cd",
+      "ottplay-android/core/src/test/resources/stalker-before-core.json": "47e41334a674bf7b547db93bc8882e89d7a6c1acb0f79f870118e5f67ac1641b",
+      "ottplay-foss/tests/fixtures/stalker/legacy.json": "daf8bdf414408c8f72986ea486330f3b9c3e9b20064d8186b04243c10943c4ba",
+      "ottplay-foss/tests/fixtures/stalker/bestlist-xtream.json": "ba4f1235784eb99a0a32f4edbaeb7b0a41c499a0cbe6380d06edc9bbe647833d"
+    },
+    "benchmark": {
+      "host": "darwin arm64",
+      "engine": "v26.8.2",
+      "physical_device": false,
+      "source_sha256": "3d6874ab61f82ac1779114ff6a2d295003d56ff5b06bd8c5732eb813727eacc4",
+      "js_bytes": 620181,
+      "gzip_bytes": 100132,
+      "samples": [
+        {
+          "count": 10000,
+          "milliseconds": 87,
+          "returned": 10001,
+          "requests": 13
+        },
+        {
+          "count": 50000,
+          "milliseconds": 374,
+          "returned": 50001,
+          "requests": 53
+        }
+      ]
+    }
+  },
+  "guide_feed_cache": {
+    "recorded_contracts": {
+      "foss2": 44,
+      "base_player": 44,
+      "android": 33,
+      "total": 121
+    },
+    "domains": [
+      "XMLTV programme validation and missing-stop inference",
+      "metadata/index/duplicate precedence",
+      "feed-scoped identity and preference",
+      "coverage metadata",
+      "protected lookup cache with copy budget",
+      "classic inclusive now/next selection and full-schedule TTL/LRU",
+      "Android programme ordering"
+    ],
+    "retained_compatibility": [
+      "first usable icon and duplicate payload",
+      "programme references and unique-ID schedule aliases",
+      "browser latest overlap and half-open ends",
+      "classic earliest overlap and inclusive ends",
+      "classic one-hour miss retry and 12-hour response TTL",
+      "Android first duplicate interval"
+    ],
+    "host_boundaries": [
+      "XML decoding and decompression limits",
+      "URL codec",
+      "transport/cancellation and UI",
+      "storage and wall clock"
+    ],
+    "fixture_sha256": {
+      "../ottplay-foss2/tests/fixtures/guide-before-core.json": "d8fdc090cbe5e6b3e0837db37346c3b5954003147648286fc0583a9706dbc9ee",
+      "ottplay-foss/tests/fixtures/guide/legacy.json": "2e6c39907d8841d934edac0be5849e72e665c5b64a57de93f52467a94a432eca",
+      "ottplay-android/core/src/test/resources/guide-before-core.json": "d40ca06c327d6c130e82e8a6ca3d1595e21871ebd90cb3bff057e4aa89d62508"
+    },
+    "benchmark": {
+      "host": "darwin arm64",
+      "engine": "v26.8.2",
+      "physical_device": false,
+      "source_sha256": "24993729c1c63974b71dfe7c9aed44a59b8bdec7d92441b1312ba2431eecef61",
+      "js_bytes": 722961,
+      "gzip_bytes": 115353,
+      "samples": [
+        {
+          "programmes": 1000,
+          "channels": 50,
+          "xml_bytes": 105589,
+          "parse_ms": 35,
+          "merge_ms": 6,
+          "lookup_two_scans_ms": 2
+        },
+        {
+          "programmes": 10000,
+          "channels": 500,
+          "xml_bytes": 1066589,
+          "parse_ms": 151,
+          "merge_ms": 48,
+          "lookup_two_scans_ms": 11
+        },
+        {
+          "programmes": 50000,
+          "channels": 2500,
+          "xml_bytes": 5375589,
+          "parse_ms": 778,
+          "merge_ms": 290,
+          "lookup_two_scans_ms": 83
+        }
+      ]
+    }
+  }
+}

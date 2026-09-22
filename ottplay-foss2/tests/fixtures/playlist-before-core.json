@@ -1,0 +1,927 @@
+[
+  {
+    "text": "\r\n#EXTINF:-1 tvg-id=\"news\" group-title=\"News, world\",Name, comma\r\n#EXTGRP:Fallback\r\n../live/one\r\n#EXTINF:-1 tvg-id=\"news\",Variant\r\nhttps://v.test/two\r\n#EXTINF:-1 tvg-id=\"news\",Copy\r\n../live/one",
+    "source": {
+      "id": "list-🎬",
+      "url": "https://p.test/folder/list.m3u"
+    },
+    "error": {
+      "code": "M3U_FORMAT",
+      "message": "The source is not an EXTM3U playlist"
+    }
+  },
+  {
+    "text": "\r\n#EXTINF:-1 tvg-id=\"news\" catchup-days=\"0\",Name, comma\r\n#EXTGRP:Fallback\r\n../live/one\r\n#EXTINF:-1 tvg-id=\"news\",Variant\r\nhttps://v.test/two\r\n#EXTINF:-1 tvg-id=\"news\",Copy\r\n../live/one",
+    "source": {
+      "id": "list-🎬",
+      "url": "https://p.test/folder/list.m3u"
+    },
+    "error": {
+      "code": "M3U_FORMAT",
+      "message": "The source is not an EXTM3U playlist"
+    }
+  },
+  {
+    "text": "\r\n#EXTINF:-1 tvg-id=\"__proto__\" tvg-shift=\"5.5\",Name, comma\r\n#EXTGRP:Fallback\r\n../live/one\r\n#EXTINF:-1 tvg-id=\"news\",Variant\r\nhttps://v.test/two\r\n#EXTINF:-1 tvg-id=\"news\",Copy\r\n../live/one",
+    "source": {
+      "id": "list-🎬",
+      "url": "https://p.test/folder/list.m3u"
+    },
+    "error": {
+      "code": "M3U_FORMAT",
+      "message": "The source is not an EXTM3U playlist"
+    }
+  },
+  {
+    "text": "\r\n#EXTINF:-1 media=\"true\" tvg-name=\"Movie\",Name, comma\r\n#EXTGRP:Fallback\r\n../live/one\r\n#EXTINF:-1 tvg-id=\"news\",Variant\r\nhttps://v.test/two\r\n#EXTINF:-1 tvg-id=\"news\",Copy\r\n../live/one",
+    "source": {
+      "id": "list-🎬",
+      "url": "https://p.test/folder/list.m3u"
+    },
+    "error": {
+      "code": "M3U_FORMAT",
+      "message": "The source is not an EXTM3U playlist"
+    }
+  },
+  {
+    "text": "\r\n#EXTINF:-1 tvg-id=\"news\" catchup-days=\"bad\" timeshift=\"8\",Name, comma\r\n#EXTGRP:Fallback\r\n../live/one\r\n#EXTINF:-1 tvg-id=\"news\",Variant\r\nhttps://v.test/two\r\n#EXTINF:-1 tvg-id=\"news\",Copy\r\n../live/one",
+    "source": {
+      "id": "list-🎬",
+      "url": "https://p.test/folder/list.m3u"
+    },
+    "error": {
+      "code": "M3U_FORMAT",
+      "message": "The source is not an EXTM3U playlist"
+    }
+  },
+  {
+    "text": "\r\n#EXTINF:-1 tvg-id=\"news\" group-title=\"\" catchup=\"none\",Name, comma\r\n#EXTGRP:Fallback\r\n../live/one\r\n#EXTINF:-1 tvg-id=\"news\",Variant\r\nhttps://v.test/two\r\n#EXTINF:-1 tvg-id=\"news\",Copy\r\n../live/one",
+    "source": {
+      "id": "list-🎬",
+      "url": "https://p.test/folder/list.m3u"
+    },
+    "error": {
+      "code": "M3U_FORMAT",
+      "message": "The source is not an EXTM3U playlist"
+    }
+  },
+  {
+    "text": "\r\n#EXTINF:-1 tvg-id=\"news\" tvg-logo=\"/logo.png\" url-tvg=\"extra.xml\",Name, comma\r\n#EXTGRP:Fallback\r\n../live/one\r\n#EXTINF:-1 tvg-id=\"news\",Variant\r\nhttps://v.test/two\r\n#EXTINF:-1 tvg-id=\"news\",Copy\r\n../live/one",
+    "source": {
+      "id": "list-🎬",
+      "url": "https://p.test/folder/list.m3u"
+    },
+    "error": {
+      "code": "M3U_FORMAT",
+      "message": "The source is not an EXTM3U playlist"
+    }
+  },
+  {
+    "text": "#EXTM3U\r\n#EXTINF:-1 tvg-id=\"news\" group-title=\"News, world\",Name, comma\r\n#EXTGRP:Fallback\r\n../live/one\r\n#EXTINF:-1 tvg-id=\"news\",Variant\r\nhttps://v.test/two\r\n#EXTINF:-1 tvg-id=\"news\",Copy\r\n../live/one",
+    "source": {
+      "id": "list-🎬",
+      "url": "https://p.test/folder/list.m3u"
+    },
+    "expected": {
+      "channels": [
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:524ba784-6bfd16ee",
+          "name": "Name, comma",
+          "url": "https://p.test/live/one",
+          "group": "News, world",
+          "logo": "",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": []
+        },
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:1de26a7f-c8c60b79",
+          "name": "Variant",
+          "url": "https://v.test/two",
+          "group": "Other",
+          "logo": "",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": []
+        }
+      ],
+      "epgUrls": [],
+      "warnings": []
+    }
+  },
+  {
+    "text": "#EXTM3U\r\n#EXTINF:-1 tvg-id=\"news\" catchup-days=\"0\",Name, comma\r\n#EXTGRP:Fallback\r\n../live/one\r\n#EXTINF:-1 tvg-id=\"news\",Variant\r\nhttps://v.test/two\r\n#EXTINF:-1 tvg-id=\"news\",Copy\r\n../live/one",
+    "source": {
+      "id": "list-🎬",
+      "url": "https://p.test/folder/list.m3u"
+    },
+    "expected": {
+      "channels": [
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:524ba784-6bfd16ee",
+          "name": "Name, comma",
+          "url": "https://p.test/live/one",
+          "group": "Fallback",
+          "logo": "",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": []
+        },
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:1de26a7f-c8c60b79",
+          "name": "Variant",
+          "url": "https://v.test/two",
+          "group": "Other",
+          "logo": "",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": []
+        }
+      ],
+      "epgUrls": [],
+      "warnings": []
+    }
+  },
+  {
+    "text": "#EXTM3U\r\n#EXTINF:-1 tvg-id=\"__proto__\" tvg-shift=\"5.5\",Name, comma\r\n#EXTGRP:Fallback\r\n../live/one\r\n#EXTINF:-1 tvg-id=\"news\",Variant\r\nhttps://v.test/two\r\n#EXTINF:-1 tvg-id=\"news\",Copy\r\n../live/one",
+    "source": {
+      "id": "list-🎬",
+      "url": "https://p.test/folder/list.m3u"
+    },
+    "expected": {
+      "channels": [
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:__proto__",
+          "name": "Name, comma",
+          "url": "https://p.test/live/one",
+          "group": "Fallback",
+          "logo": "",
+          "tvgId": "__proto__",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 5.5,
+          "epgUrls": []
+        },
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:1de26a7f-c8c60b79",
+          "name": "Variant",
+          "url": "https://v.test/two",
+          "group": "Other",
+          "logo": "",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": []
+        },
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:524ba784-6bfd16ee",
+          "name": "Copy",
+          "url": "https://p.test/live/one",
+          "group": "Other",
+          "logo": "",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": []
+        }
+      ],
+      "epgUrls": [],
+      "warnings": []
+    }
+  },
+  {
+    "text": "#EXTM3U\r\n#EXTINF:-1 media=\"true\" tvg-name=\"Movie\",Name, comma\r\n#EXTGRP:Fallback\r\n../live/one\r\n#EXTINF:-1 tvg-id=\"news\",Variant\r\nhttps://v.test/two\r\n#EXTINF:-1 tvg-id=\"news\",Copy\r\n../live/one",
+    "source": {
+      "id": "list-🎬",
+      "url": "https://p.test/folder/list.m3u"
+    },
+    "expected": {
+      "channels": [
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:url:524ba784-6bfd16ee",
+          "name": "Name, comma",
+          "url": "https://p.test/live/one",
+          "group": "Fallback",
+          "logo": "",
+          "tvgId": "",
+          "tvgName": "Movie",
+          "kind": "vod",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": []
+        },
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:1de26a7f-c8c60b79",
+          "name": "Variant",
+          "url": "https://v.test/two",
+          "group": "Other",
+          "logo": "",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": []
+        },
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:524ba784-6bfd16ee",
+          "name": "Copy",
+          "url": "https://p.test/live/one",
+          "group": "Other",
+          "logo": "",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": []
+        }
+      ],
+      "epgUrls": [],
+      "warnings": []
+    }
+  },
+  {
+    "text": "#EXTM3U\r\n#EXTINF:-1 tvg-id=\"news\" catchup-days=\"bad\" timeshift=\"8\",Name, comma\r\n#EXTGRP:Fallback\r\n../live/one\r\n#EXTINF:-1 tvg-id=\"news\",Variant\r\nhttps://v.test/two\r\n#EXTINF:-1 tvg-id=\"news\",Copy\r\n../live/one",
+    "source": {
+      "id": "list-🎬",
+      "url": "https://p.test/folder/list.m3u"
+    },
+    "expected": {
+      "channels": [
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:524ba784-6bfd16ee",
+          "name": "Name, comma",
+          "url": "https://p.test/live/one",
+          "group": "Fallback",
+          "logo": "",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": []
+        },
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:1de26a7f-c8c60b79",
+          "name": "Variant",
+          "url": "https://v.test/two",
+          "group": "Other",
+          "logo": "",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": []
+        }
+      ],
+      "epgUrls": [],
+      "warnings": []
+    }
+  },
+  {
+    "text": "#EXTM3U\r\n#EXTINF:-1 tvg-id=\"news\" group-title=\"\" catchup=\"none\",Name, comma\r\n#EXTGRP:Fallback\r\n../live/one\r\n#EXTINF:-1 tvg-id=\"news\",Variant\r\nhttps://v.test/two\r\n#EXTINF:-1 tvg-id=\"news\",Copy\r\n../live/one",
+    "source": {
+      "id": "list-🎬",
+      "url": "https://p.test/folder/list.m3u"
+    },
+    "expected": {
+      "channels": [
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:524ba784-6bfd16ee",
+          "name": "Name, comma",
+          "url": "https://p.test/live/one",
+          "group": "Fallback",
+          "logo": "",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": [],
+          "catchup": {
+            "type": "none",
+            "source": "",
+            "days": 0,
+            "correction": 0
+          }
+        },
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:1de26a7f-c8c60b79",
+          "name": "Variant",
+          "url": "https://v.test/two",
+          "group": "Other",
+          "logo": "",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": []
+        }
+      ],
+      "epgUrls": [],
+      "warnings": []
+    }
+  },
+  {
+    "text": "#EXTM3U\r\n#EXTINF:-1 tvg-id=\"news\" tvg-logo=\"/logo.png\" url-tvg=\"extra.xml\",Name, comma\r\n#EXTGRP:Fallback\r\n../live/one\r\n#EXTINF:-1 tvg-id=\"news\",Variant\r\nhttps://v.test/two\r\n#EXTINF:-1 tvg-id=\"news\",Copy\r\n../live/one",
+    "source": {
+      "id": "list-🎬",
+      "url": "https://p.test/folder/list.m3u"
+    },
+    "expected": {
+      "channels": [
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:524ba784-6bfd16ee",
+          "name": "Name, comma",
+          "url": "https://p.test/live/one",
+          "group": "Fallback",
+          "logo": "https://p.test/logo.png",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": [
+            "https://p.test/folder/extra.xml"
+          ]
+        },
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:1de26a7f-c8c60b79",
+          "name": "Variant",
+          "url": "https://v.test/two",
+          "group": "Other",
+          "logo": "",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": []
+        }
+      ],
+      "epgUrls": [
+        "https://p.test/folder/extra.xml"
+      ],
+      "warnings": []
+    }
+  },
+  {
+    "text": "#EXTM3U x-tvg-url=\"../epg.xml\" group-title=\"Default\" catchup=\"append\" catchup-days=\"4\" catchup-source=\"?utc={utc}\"\r\n#EXTINF:-1 tvg-id=\"news\" group-title=\"News, world\",Name, comma\r\n#EXTGRP:Fallback\r\n../live/one\r\n#EXTINF:-1 tvg-id=\"news\",Variant\r\nhttps://v.test/two\r\n#EXTINF:-1 tvg-id=\"news\",Copy\r\n../live/one",
+    "source": {
+      "id": "list-🎬",
+      "url": "https://p.test/folder/list.m3u"
+    },
+    "expected": {
+      "channels": [
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:524ba784-6bfd16ee",
+          "name": "Name, comma",
+          "url": "https://p.test/live/one",
+          "group": "News, world",
+          "logo": "",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": [
+            "https://p.test/epg.xml"
+          ],
+          "catchup": {
+            "type": "append",
+            "source": "?utc={utc}",
+            "days": 4,
+            "correction": 0
+          }
+        },
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:1de26a7f-c8c60b79",
+          "name": "Variant",
+          "url": "https://v.test/two",
+          "group": "Default",
+          "logo": "",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": [
+            "https://p.test/epg.xml"
+          ],
+          "catchup": {
+            "type": "append",
+            "source": "?utc={utc}",
+            "days": 4,
+            "correction": 0
+          }
+        }
+      ],
+      "epgUrls": [
+        "https://p.test/epg.xml"
+      ],
+      "warnings": []
+    }
+  },
+  {
+    "text": "#EXTM3U x-tvg-url=\"../epg.xml\" group-title=\"Default\" catchup=\"append\" catchup-days=\"4\" catchup-source=\"?utc={utc}\"\r\n#EXTINF:-1 tvg-id=\"news\" catchup-days=\"0\",Name, comma\r\n#EXTGRP:Fallback\r\n../live/one\r\n#EXTINF:-1 tvg-id=\"news\",Variant\r\nhttps://v.test/two\r\n#EXTINF:-1 tvg-id=\"news\",Copy\r\n../live/one",
+    "source": {
+      "id": "list-🎬",
+      "url": "https://p.test/folder/list.m3u"
+    },
+    "expected": {
+      "channels": [
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:524ba784-6bfd16ee",
+          "name": "Name, comma",
+          "url": "https://p.test/live/one",
+          "group": "Fallback",
+          "logo": "",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": [
+            "https://p.test/epg.xml"
+          ],
+          "catchup": {
+            "type": "append",
+            "source": "?utc={utc}",
+            "days": 0,
+            "correction": 0
+          }
+        },
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:1de26a7f-c8c60b79",
+          "name": "Variant",
+          "url": "https://v.test/two",
+          "group": "Default",
+          "logo": "",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": [
+            "https://p.test/epg.xml"
+          ],
+          "catchup": {
+            "type": "append",
+            "source": "?utc={utc}",
+            "days": 4,
+            "correction": 0
+          }
+        }
+      ],
+      "epgUrls": [
+        "https://p.test/epg.xml"
+      ],
+      "warnings": []
+    }
+  },
+  {
+    "text": "#EXTM3U x-tvg-url=\"../epg.xml\" group-title=\"Default\" catchup=\"append\" catchup-days=\"4\" catchup-source=\"?utc={utc}\"\r\n#EXTINF:-1 tvg-id=\"__proto__\" tvg-shift=\"5.5\",Name, comma\r\n#EXTGRP:Fallback\r\n../live/one\r\n#EXTINF:-1 tvg-id=\"news\",Variant\r\nhttps://v.test/two\r\n#EXTINF:-1 tvg-id=\"news\",Copy\r\n../live/one",
+    "source": {
+      "id": "list-🎬",
+      "url": "https://p.test/folder/list.m3u"
+    },
+    "expected": {
+      "channels": [
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:__proto__",
+          "name": "Name, comma",
+          "url": "https://p.test/live/one",
+          "group": "Fallback",
+          "logo": "",
+          "tvgId": "__proto__",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 5.5,
+          "epgUrls": [
+            "https://p.test/epg.xml"
+          ],
+          "catchup": {
+            "type": "append",
+            "source": "?utc={utc}",
+            "days": 4,
+            "correction": 0
+          }
+        },
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:1de26a7f-c8c60b79",
+          "name": "Variant",
+          "url": "https://v.test/two",
+          "group": "Default",
+          "logo": "",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": [
+            "https://p.test/epg.xml"
+          ],
+          "catchup": {
+            "type": "append",
+            "source": "?utc={utc}",
+            "days": 4,
+            "correction": 0
+          }
+        },
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:524ba784-6bfd16ee",
+          "name": "Copy",
+          "url": "https://p.test/live/one",
+          "group": "Default",
+          "logo": "",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": [
+            "https://p.test/epg.xml"
+          ],
+          "catchup": {
+            "type": "append",
+            "source": "?utc={utc}",
+            "days": 4,
+            "correction": 0
+          }
+        }
+      ],
+      "epgUrls": [
+        "https://p.test/epg.xml"
+      ],
+      "warnings": []
+    }
+  },
+  {
+    "text": "#EXTM3U x-tvg-url=\"../epg.xml\" group-title=\"Default\" catchup=\"append\" catchup-days=\"4\" catchup-source=\"?utc={utc}\"\r\n#EXTINF:-1 media=\"true\" tvg-name=\"Movie\",Name, comma\r\n#EXTGRP:Fallback\r\n../live/one\r\n#EXTINF:-1 tvg-id=\"news\",Variant\r\nhttps://v.test/two\r\n#EXTINF:-1 tvg-id=\"news\",Copy\r\n../live/one",
+    "source": {
+      "id": "list-🎬",
+      "url": "https://p.test/folder/list.m3u"
+    },
+    "expected": {
+      "channels": [
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:url:524ba784-6bfd16ee",
+          "name": "Name, comma",
+          "url": "https://p.test/live/one",
+          "group": "Fallback",
+          "logo": "",
+          "tvgId": "",
+          "tvgName": "Movie",
+          "kind": "vod",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": [
+            "https://p.test/epg.xml"
+          ],
+          "catchup": {
+            "type": "append",
+            "source": "?utc={utc}",
+            "days": 4,
+            "correction": 0
+          }
+        },
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:1de26a7f-c8c60b79",
+          "name": "Variant",
+          "url": "https://v.test/two",
+          "group": "Default",
+          "logo": "",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": [
+            "https://p.test/epg.xml"
+          ],
+          "catchup": {
+            "type": "append",
+            "source": "?utc={utc}",
+            "days": 4,
+            "correction": 0
+          }
+        },
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:524ba784-6bfd16ee",
+          "name": "Copy",
+          "url": "https://p.test/live/one",
+          "group": "Default",
+          "logo": "",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": [
+            "https://p.test/epg.xml"
+          ],
+          "catchup": {
+            "type": "append",
+            "source": "?utc={utc}",
+            "days": 4,
+            "correction": 0
+          }
+        }
+      ],
+      "epgUrls": [
+        "https://p.test/epg.xml"
+      ],
+      "warnings": []
+    }
+  },
+  {
+    "text": "#EXTM3U x-tvg-url=\"../epg.xml\" group-title=\"Default\" catchup=\"append\" catchup-days=\"4\" catchup-source=\"?utc={utc}\"\r\n#EXTINF:-1 tvg-id=\"news\" catchup-days=\"bad\" timeshift=\"8\",Name, comma\r\n#EXTGRP:Fallback\r\n../live/one\r\n#EXTINF:-1 tvg-id=\"news\",Variant\r\nhttps://v.test/two\r\n#EXTINF:-1 tvg-id=\"news\",Copy\r\n../live/one",
+    "source": {
+      "id": "list-🎬",
+      "url": "https://p.test/folder/list.m3u"
+    },
+    "expected": {
+      "channels": [
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:524ba784-6bfd16ee",
+          "name": "Name, comma",
+          "url": "https://p.test/live/one",
+          "group": "Fallback",
+          "logo": "",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": [
+            "https://p.test/epg.xml"
+          ],
+          "catchup": {
+            "type": "append",
+            "source": "?utc={utc}",
+            "days": 0,
+            "correction": 0
+          }
+        },
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:1de26a7f-c8c60b79",
+          "name": "Variant",
+          "url": "https://v.test/two",
+          "group": "Default",
+          "logo": "",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": [
+            "https://p.test/epg.xml"
+          ],
+          "catchup": {
+            "type": "append",
+            "source": "?utc={utc}",
+            "days": 4,
+            "correction": 0
+          }
+        }
+      ],
+      "epgUrls": [
+        "https://p.test/epg.xml"
+      ],
+      "warnings": []
+    }
+  },
+  {
+    "text": "#EXTM3U x-tvg-url=\"../epg.xml\" group-title=\"Default\" catchup=\"append\" catchup-days=\"4\" catchup-source=\"?utc={utc}\"\r\n#EXTINF:-1 tvg-id=\"news\" group-title=\"\" catchup=\"none\",Name, comma\r\n#EXTGRP:Fallback\r\n../live/one\r\n#EXTINF:-1 tvg-id=\"news\",Variant\r\nhttps://v.test/two\r\n#EXTINF:-1 tvg-id=\"news\",Copy\r\n../live/one",
+    "source": {
+      "id": "list-🎬",
+      "url": "https://p.test/folder/list.m3u"
+    },
+    "expected": {
+      "channels": [
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:524ba784-6bfd16ee",
+          "name": "Name, comma",
+          "url": "https://p.test/live/one",
+          "group": "Fallback",
+          "logo": "",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": [
+            "https://p.test/epg.xml"
+          ],
+          "catchup": {
+            "type": "none",
+            "source": "https://p.test/folder/list.m3u?utc={utc}",
+            "days": 4,
+            "correction": 0
+          }
+        },
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:1de26a7f-c8c60b79",
+          "name": "Variant",
+          "url": "https://v.test/two",
+          "group": "Default",
+          "logo": "",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": [
+            "https://p.test/epg.xml"
+          ],
+          "catchup": {
+            "type": "append",
+            "source": "?utc={utc}",
+            "days": 4,
+            "correction": 0
+          }
+        }
+      ],
+      "epgUrls": [
+        "https://p.test/epg.xml"
+      ],
+      "warnings": []
+    }
+  },
+  {
+    "text": "#EXTM3U x-tvg-url=\"../epg.xml\" group-title=\"Default\" catchup=\"append\" catchup-days=\"4\" catchup-source=\"?utc={utc}\"\r\n#EXTINF:-1 tvg-id=\"news\" tvg-logo=\"/logo.png\" url-tvg=\"extra.xml\",Name, comma\r\n#EXTGRP:Fallback\r\n../live/one\r\n#EXTINF:-1 tvg-id=\"news\",Variant\r\nhttps://v.test/two\r\n#EXTINF:-1 tvg-id=\"news\",Copy\r\n../live/one",
+    "source": {
+      "id": "list-🎬",
+      "url": "https://p.test/folder/list.m3u"
+    },
+    "expected": {
+      "channels": [
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:524ba784-6bfd16ee",
+          "name": "Name, comma",
+          "url": "https://p.test/live/one",
+          "group": "Fallback",
+          "logo": "https://p.test/logo.png",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": [
+            "https://p.test/folder/extra.xml",
+            "https://p.test/epg.xml"
+          ],
+          "catchup": {
+            "type": "append",
+            "source": "?utc={utc}",
+            "days": 4,
+            "correction": 0
+          }
+        },
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:tvg:news:1de26a7f-c8c60b79",
+          "name": "Variant",
+          "url": "https://v.test/two",
+          "group": "Default",
+          "logo": "",
+          "tvgId": "news",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": [
+            "https://p.test/epg.xml"
+          ],
+          "catchup": {
+            "type": "append",
+            "source": "?utc={utc}",
+            "days": 4,
+            "correction": 0
+          }
+        }
+      ],
+      "epgUrls": [
+        "https://p.test/epg.xml",
+        "https://p.test/folder/extra.xml"
+      ],
+      "warnings": []
+    }
+  },
+  {
+    "text": "",
+    "source": {
+      "id": "list-🎬",
+      "url": "https://p.test/folder/list.m3u"
+    },
+    "error": {
+      "code": "M3U_FORMAT",
+      "message": "The playlist is empty"
+    }
+  },
+  {
+    "text": "#EXTM3U\n#EXTINF:-1 tvg-id=\"unterminated,broken\nhttps://v.test/a\n#EXTINF:-1,Good\nhttps://v.test/b",
+    "source": {
+      "id": "list-🎬",
+      "url": "https://p.test/folder/list.m3u"
+    },
+    "expected": {
+      "channels": [
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:url:d961ca4f-df460017",
+          "name": "Good",
+          "url": "https://v.test/b",
+          "group": "Other",
+          "logo": "",
+          "tvgId": "",
+          "tvgName": "",
+          "kind": "live",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": []
+        }
+      ],
+      "epgUrls": [],
+      "warnings": [
+        "Ignored malformed EXTINF at line 2",
+        "Ignored unsupported or incomplete stream at line 3"
+      ]
+    }
+  },
+  {
+    "text": "#EXTM3U\n#EXTINF:-1,Show\n#EXT-X-PLAYLIST-TYPE:VOD\nhttps://v.test/a",
+    "source": {
+      "id": "list-🎬",
+      "url": "https://p.test/folder/list.m3u"
+    },
+    "expected": {
+      "channels": [
+        {
+          "id": "list-%F0%9F%8E%AC:m3u:url:da61cbe2-df460014",
+          "name": "Show",
+          "url": "https://v.test/a",
+          "group": "Other",
+          "logo": "",
+          "tvgId": "",
+          "tvgName": "",
+          "kind": "vod",
+          "sourceId": "list-🎬",
+          "tvgShift": 0,
+          "epgUrls": []
+        }
+      ],
+      "epgUrls": [],
+      "warnings": []
+    }
+  },
+  {
+    "text": "#EXTM3U\n#EXTINF:-1,Name\njavascript:alert(1)",
+    "source": {
+      "id": "list-🎬",
+      "url": "https://p.test/folder/list.m3u"
+    },
+    "expected": {
+      "channels": [],
+      "epgUrls": [],
+      "warnings": [
+        "Ignored unsupported or incomplete stream at line 3"
+      ]
+    }
+  },
+  {
+    "text": "#EXTM3U\n#EXTINF:-1 tvg-id=\"one\"\ntvg-name=\"Folded\",Name\nhttps://v.test/a",
+    "source": {
+      "id": "list-🎬",
+      "url": "https://p.test/folder/list.m3u"
+    },
+    "expected": {
+      "channels": [],
+      "epgUrls": [],
+      "warnings": [
+        "Ignored malformed EXTINF at line 2",
+        "Ignored unsupported or incomplete stream at line 3",
+        "Ignored unsupported or incomplete stream at line 4"
+      ]
+    }
+  }
+]

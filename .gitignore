@@ -1,0 +1,14 @@
+/ottplay-foss/
+/ottplay-android/
+/ottplay-control-server/
+/ottplay-swop/
+/ottplay-web-vitrine/
+/reports/
+**/__pycache__/
+*.pyc
+.DS_Store
+.env
+.env.*
+*.pem
+*.keystore
+*.jks

@@ -1,0 +1,39 @@
+/* Installed desktop apps can draw behind the title bar. Other browsers keep
+   the original layout and never receive a draggable region. */
+#window-drag-region { display: none; }
+
+@media (display-mode: window-controls-overlay) {
+    /* Only the browser-provided free rectangle can drag the window. It has no
+       focus target, controls or painted background over the video. */
+    #window-drag-region {
+        display: block;
+        position: fixed;
+        z-index: 4000;
+        left: env(titlebar-area-x, 0px);
+        top: env(titlebar-area-y, 0px);
+        width: env(titlebar-area-width, 0px);
+        height: env(titlebar-area-height, 0px);
+        -webkit-app-region: drag;
+        app-region: drag;
+        -webkit-user-select: none;
+        user-select: none;
+    }
+
+    /* Video retains the full viewport. Browsing, modal controls and the
+       on-screen keyboard start below the system buttons on either platform. */
+    #foss2-home, #f2-dialog, #f2-dialog .f2-keyboard-layer {
+        top: calc(env(titlebar-area-y, 0px) + env(titlebar-area-height, 0px));
+    }
+    #player-osd {
+        box-sizing: border-box;
+        max-height: calc(100% - env(titlebar-area-y, 0px) - env(titlebar-area-height, 0px));
+        overflow-y: auto;
+    }
+
+    /* A fullscreen transition must also work before the display-mode media
+       query updates. System controls no longer reserve space in fullscreen. */
+    :root:fullscreen #window-drag-region { display: none; }
+    :root:fullscreen #foss2-home, :root:fullscreen #f2-dialog,
+    :root:fullscreen #f2-dialog .f2-keyboard-layer { top: 0; }
+    :root:fullscreen #player-osd { max-height: 100%; }
+}

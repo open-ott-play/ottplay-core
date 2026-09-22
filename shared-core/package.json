@@ -1,0 +1,14 @@
+{
+  "name": "ottplay-shared-core-validation",
+  "private": true,
+  "version": "0.1.0-dev",
+  "scripts": {
+    "check:js": "node scripts/check-js.cjs",
+    "pack:core": "node scripts/distribute.cjs build",
+    "check:core": "node scripts/distribute.cjs check"
+  },
+  "devDependencies": {
+    "acorn": "8.16.0",
+    "core-js-bundle": "3.50.0"
+  }
+}

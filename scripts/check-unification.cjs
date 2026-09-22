@@ -1,0 +1,74 @@
+"use strict";
+const fs = require("node:fs");
+const path = require("node:path");
+const assert = require("node:assert/strict");
+const { execFileSync } = require("node:child_process");
+const root = path.resolve(__dirname, "..");
+const inventory = JSON.parse(fs.readFileSync(path.join(root, "inventory.json")));
+const core = path.join(root, "shared-core");
+function node(file, ...args) { execFileSync(process.execPath, [file, ...args], { cwd: root, stdio: "inherit" }); }
+node(path.join(core, "scripts/check-boundary.cjs"));
+node(path.join(core, "scripts/distribute.cjs"), "check-web", path.join(root, inventory.additional_client.path));
+node(path.join(core, "scripts/distribute.cjs"), "check-jvm", path.join(root, "ottplay-android"));
+const main = path.join(root, "ottplay-foss");
+node(path.join(core, "scripts/distribute.cjs"), "check-native", main);
+node(path.join(main, "scripts/shared-core.cjs"));
+node(path.join(main, "tests/test_archive_core.cjs"));
+node(path.join(main, "tests/test_playlist_core.cjs"));
+node(path.join(main, "tests/test_xtream_core.cjs"));
+node(path.join(main, "tests/test_stalker_core.cjs"));
+node(path.join(main, "tests/test_guide_core.cjs"));
+const guideAdapter = fs.readFileSync(path.join(root, "ottplay-android/core/src/main/kotlin/play/ott/nativeapp/core/XmltvParser.kt"), "utf8");
+assert(guideAdapter.includes("GuideProgrammeRules.androidOrder(") && guideAdapter.includes("GuideProgrammeRules.validAndroid("), "Android programme rules must use the common core");
+assert(!/distinctBy|sortedWith|to > from/.test(guideAdapter), "Android programme normalization reintroduced");
+const legacyGuide = fs.readFileSync(path.join(main, "src/channels/index.ts"), "utf8");
+for (const api of ["legacyGuideSelection", "legacyGuideShift", "legacyGuideCacheCapacity", "legacyGuideCacheRead", "legacyGuideCacheOrder"]) assert(legacyGuide.includes("." + api + "("), "Base-player guide must use " + api);
+assert(!/EPG_CACHE_TTL_MS|sorted\.findIndex|epgCacheChannelOrder\.(?:splice|unshift)|epgData!\.slice\(\)\.sort/.test(legacyGuide), "Base-player guide rules reintroduced");
+const playlistAdapter = fs.readFileSync(path.join(root, "ottplay-android/core/src/main/kotlin/play/ott/nativeapp/core/M3uParser.kt"), "utf8");
+assert(playlistAdapter.includes("Playlist.read("), "Android playlists must use the common core");
+assert(!/commaOutsideQuotes|private fun attributes|#EXTINF:/.test(playlistAdapter), "Android playlist parsing reintroduced");
+const browserProvider = fs.readFileSync(path.join(root, inventory.additional_client.path, "src/providers.js"), "utf8");
+assert(browserProvider.includes("OttPlayCore.parseBrowserPlaylist("), "FOSS2 playlists must use the common core");
+assert(!/function (?:titleComma|archiveDays|attributes)\(/.test(browserProvider), "Browser playlist decisions reintroduced");
+assert(browserProvider.includes("new root.OttPlayCore.XtreamClient("), "FOSS2 Xtream must use the common core");
+assert(!/function (?:normalizeXtream|normalizeSeries|streamUrl|numericId)\(/.test(browserProvider), "Browser Xtream decisions reintroduced");
+const nativeXtream = fs.readFileSync(path.join(root, "ottplay-android/core/src/main/kotlin/play/ott/nativeapp/core/XtreamProvider.kt"), "utf8");
+assert(nativeXtream.includes("XtreamLoad(") && nativeXtream.includes("XtreamCatalogs.episodes("), "Android Xtream must use the common core");
+assert(!/get_live_streams|get_vod_streams|get_series_info|tv_archive_duration|container_extension/.test(nativeXtream), "Android Xtream wire decisions reintroduced");
+const legacyXtream = fs.readFileSync(path.join(main, "prov/xtream/prov.js"), "utf8");
+assert(legacyXtream.includes("OttPlayCore.legacyXtreamClient(") && legacyXtream.includes("client.guide("), "Base-player Xtream must use the common core");
+assert(!/live_streams|epg_listings|player_api\.php|function addChan2cat/.test(legacyXtream), "Base-player Xtream rules reintroduced");
+assert(browserProvider.includes("new root.OttPlayCore.StalkerClient(") && browserProvider.includes("OttPlayCore.stalkerConfig("), "FOSS2 Stalker must use the common core");
+assert(!/function (?:portalItem|pagedPortal|portalRequest)|get_ordered_list|create_link/.test(browserProvider), "Browser Stalker rules reintroduced");
+const nativeStalker = fs.readFileSync(path.join(root, "ottplay-android/core/src/main/kotlin/play/ott/nativeapp/core/StalkerProvider.kt"), "utf8");
+assert(nativeStalker.includes("StalkerNativeLoad(") && nativeStalker.includes("StalkerRetry("), "Android Stalker must use the common core");
+assert(!/get_ordered_list|create_link|total_items|tv_genre_id/.test(nativeStalker), "Android Stalker rules reintroduced");
+const legacyStalker = fs.readFileSync(path.join(main, "prov/stalker/prov.js"), "utf8");
+assert(legacyStalker.includes("new OttPlayCore.LegacyStalkerClient("), "Base-player Stalker must use the common core");
+assert(!/stalkerApiCall\(\s*["']get_channels|get_epg_info|function addChan2cat|loadChannelsFromStalker/.test(legacyStalker), "Base-player Stalker rules reintroduced");
+const bestlist = fs.readFileSync(path.join(main, "prov/bestlist/stalker/prov.js"), "utf8");
+assert(bestlist.includes("OttPlayCore.legacyXtreamClient(") && bestlist.includes("fallbackPlaylist("), "BEST LiST must use the common Xtream core");
+assert(!/live_streams|player_api\.php|function addChan2cat/.test(bestlist), "BEST LiST Xtream rules reintroduced");
+function playlists(directory) {
+    for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+        const file = path.join(directory, entry.name);
+        if (entry.isDirectory()) playlists(file);
+        else if (entry.name === "prov.js") assert(!/#EXTINF:/.test(fs.readFileSync(file, "utf8")), "Provider M3U parser reintroduced: " + file);
+    }
+}
+playlists(path.join(main, "prov"));
+const archiveAdapter = fs.readFileSync(path.join(root, "ottplay-android/core/src/main/kotlin/play/ott/nativeapp/core/CatchupResolver.kt"), "utf8");
+assert(archiveAdapter.includes("Archive.resolve("), "Android archive must use the common core");
+assert(!/private fun flussonic|val replacements|substituted\.replace/.test(archiveAdapter), "Android archive decisions reintroduced");
+for (const [file, forbidden] of [
+    ["mobile-xmltv-epg/src/ios/MobileXmltvEpg.swift", /DateFormatter|NSRegularExpression|func (?:normalize|matchScore|regionalShift)/],
+    ["mobile-xmltv-epg/src/android/play/ott/foss/plugin/MobileXmltvEpgPlugin.kt", /SimpleDateFormat|fun (?:normalize|matchScore|regionalShift)/],
+    ["src-rs/core/src/xmltv.rs", /NaiveDateTime|RE_TS|best_score|by_norm/],
+    ["src/plugins/m3u-proxy.ts", /normalizeNativeEpgName|nativeEpgMatchScore/]
+]) assert(!forbidden.test(fs.readFileSync(path.join(main, file), "utf8")), "Migrated guide logic reintroduced: " + file);
+for (const provider of inventory.provider_directories) assert(fs.statSync(path.join(main, "prov", provider)).isDirectory(), "Retained provider removed: " + provider);
+for (const adapter of inventory.device_adapters) assert(fs.statSync(path.join(main, adapter)).isFile(), "Retained device removed: " + adapter);
+execFileSync("python3", [path.join(main, "tests/test_native_epg_cache.py"), "--check-sources-only"], { stdio: "inherit" });
+assert(inventory.product_decisions.retain_historical_tv_stb_platforms);
+assert(inventory.product_decisions.retain_all_named_provider_integrations);
+console.log("PASS unified guide/archive/playlist/Xtream/Stalker artifacts, native source ownership and retained provider/device inventory");

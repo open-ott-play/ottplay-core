@@ -1,0 +1,66 @@
+name: Shared core
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  portable:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: shared-core
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: shared-core/package-lock.json
+      - run: npm ci
+      - run: node scripts/check-boundary.cjs
+      - run: ./gradlew --no-daemon jvmTest jsNodeTest
+      - run: npm run pack:core
+      - run: npm run check:js
+      - run: npm run check:core
+      - run: node scripts/distribute.cjs check-web ../ottplay-foss2
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ottplay-shared-core
+          path: shared-core/dist/
+          if-no-files-found: error
+
+  browser-client:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: ottplay-foss2
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: ottplay-foss2/package-lock.json
+      - run: npm ci --ignore-scripts
+      - run: npm test
+      - run: npx playwright install --with-deps chromium
+      - name: Generate synthetic playback fixture
+        run: |
+          sudo apt-get update && sudo apt-get install -y ffmpeg
+          ffmpeg -nostdin -y -f lavfi -i testsrc2=size=320x180:rate=24 -f lavfi -i sine=frequency=440 -t 8 -c:v libx264 -pix_fmt yuv420p -c:a aac -movflags +faststart "$RUNNER_TEMP/ottplay-test.mp4"
+      - run: npm run test:provider-browser
+        env:
+          OTT2_TEST_MEDIA: ${{ runner.temp }}/ottplay-test.mp4
+      - run: npm run test:epg-browser
+      - run: npm run test:compat-browser
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: foss2-browser-reports
+          path: ottplay-foss2/test-results/
+          if-no-files-found: warn

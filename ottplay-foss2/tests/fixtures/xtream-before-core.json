@@ -1,0 +1,4815 @@
+{
+  "source": {
+    "id": "xc 🎬",
+    "type": "xtream",
+    "url": "https://xc.test/folder/player_api.php?old=1",
+    "username": "a/b",
+    "password": "x?&"
+  },
+  "cases": [
+    {
+      "input": {
+        "account": null,
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26"
+        ],
+        "error": {
+          "code": "AUTHENTICATION",
+          "message": "Xtream authentication was not accepted or the account is inactive"
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {},
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26"
+        ],
+        "error": {
+          "code": "AUTHENTICATION",
+          "message": "Xtream authentication was not accepted or the account is inactive"
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": [],
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26"
+        ],
+        "error": {
+          "code": "AUTHENTICATION",
+          "message": "Xtream authentication was not accepted or the account is inactive"
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {}
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26"
+        ],
+        "error": {
+          "code": "AUTHENTICATION",
+          "message": "Xtream authentication was not accepted or the account is inactive"
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": false
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26"
+        ],
+        "error": {
+          "code": "AUTHENTICATION",
+          "message": "Xtream authentication was not accepted or the account is inactive"
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": "0",
+            "password": "PRIVATE"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26"
+        ],
+        "error": {
+          "code": "AUTHENTICATION",
+          "message": "Xtream authentication was not accepted or the account is inactive"
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": "1",
+            "status": "Expired"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26"
+        ],
+        "error": {
+          "code": "AUTHENTICATION",
+          "message": "Xtream authentication was not accepted or the account is inactive"
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": []
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": "1",
+            "status": ""
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": []
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": "1",
+            "status": "ACTIVE"
+          },
+          "live_streams": [
+            {
+              "stream_id": 999,
+              "name": "Embedded"
+            }
+          ]
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": []
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": null,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored a catalog record without a numeric stream ID",
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": "",
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored a catalog record without a numeric stream ID",
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 0,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:0",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/0.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "0",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": "001",
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:001",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/001.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "001",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": "-1",
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored a catalog record without a numeric stream ID",
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": "1.5",
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored a catalog record without a numeric stream ID",
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": "x",
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored a catalog record without a numeric stream ID",
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": true,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored a catalog record without a numeric stream ID",
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": {},
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored a catalog record without a numeric stream ID",
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": [
+                3
+              ],
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:3",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/3.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "3",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": true,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": true,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": false,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": false,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ]
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": "true",
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": "true",
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ]
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": "1",
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": "1",
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 0
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 0
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ]
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": -1
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": -1
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ]
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2.5
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2.5
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2.5,
+              "catchup": {
+                "type": "xtream",
+                "days": 2.5,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": "2x"
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": "2x"
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ]
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": "0x10"
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": "0x10"
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 16,
+              "catchup": {
+                "type": "xtream",
+                "days": 16,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": "Infinity"
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": "Infinity"
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ]
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": [
+                2
+              ]
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": [
+                2
+              ]
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": true
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": true
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 1,
+              "catchup": {
+                "type": "xtream",
+                "days": 1,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2,
+              "container_extension": ""
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2,
+              "container_extension": ""
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2,
+              "container_extension": "mp4"
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2,
+              "container_extension": "mp4"
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            },
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:vod:7",
+              "name": "First",
+              "group": "Movies",
+              "logo": "",
+              "tvgId": "",
+              "kind": "vod",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/movie/a%2Fb/x%3F%26/7.mp4",
+              "description": "",
+              "adult": false,
+              "epgUrls": []
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": []
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2,
+              "container_extension": "mkv"
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2,
+              "container_extension": "mkv"
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            },
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:vod:7",
+              "name": "First",
+              "group": "Movies",
+              "logo": "",
+              "tvgId": "",
+              "kind": "vod",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/movie/a%2Fb/x%3F%26/7.mkv",
+              "description": "",
+              "adult": false,
+              "epgUrls": []
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": []
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2,
+              "container_extension": "a/b"
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2,
+              "container_extension": "a/b"
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2,
+              "container_extension": "12345678901"
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2,
+              "container_extension": "12345678901"
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2,
+              "container_extension": "MP4"
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2,
+              "container_extension": "MP4"
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            },
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:vod:7",
+              "name": "First",
+              "group": "Movies",
+              "logo": "",
+              "tvgId": "",
+              "kind": "vod",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/movie/a%2Fb/x%3F%26/7.MP4",
+              "description": "",
+              "adult": false,
+              "epgUrls": []
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": []
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2,
+              "direct_source": "https://cdn.test/a?secret=fixture"
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2,
+              "direct_source": "https://cdn.test/a?secret=fixture"
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://cdn.test/a?secret=fixture",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            },
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:vod:7",
+              "name": "First",
+              "group": "Movies",
+              "logo": "",
+              "tvgId": "",
+              "kind": "vod",
+              "sourceId": "xc 🎬",
+              "url": "https://cdn.test/a?secret=fixture",
+              "description": "",
+              "adult": false,
+              "epgUrls": []
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": []
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2,
+              "direct_source": "../live"
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2,
+              "direct_source": "../live"
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2,
+              "direct_source": "javascript:bad"
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2,
+              "direct_source": "javascript:bad"
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2,
+              "direct_source": ""
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 7,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2,
+              "direct_source": ""
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": 1,
+              "category_name": " First "
+            },
+            {
+              "category_id": 1,
+              "category_name": ""
+            },
+            {
+              "category_id": "__proto__",
+              "category_name": "Proto"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 0,
+              "name": "",
+              "category_id": "__proto__"
+            },
+            {
+              "stream_id": 1,
+              "name": " One ",
+              "epg_channel_id": " x ",
+              "plot": " plot ",
+              "stream_icon": "../logo",
+              "cover": "https://i.test/cover"
+            },
+            {
+              "stream_id": 1,
+              "name": "Copy"
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [
+            {
+              "stream_id": 9,
+              "name": "Bad",
+              "container_extension": "bad/ext"
+            },
+            {
+              "stream_id": 9,
+              "name": "Valid duplicate",
+              "container_extension": "mp4"
+            }
+          ],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:0",
+              "name": "Channel 0",
+              "group": "Proto",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/0.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ]
+            },
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:1",
+              "name": "One",
+              "group": "Other",
+              "logo": "",
+              "tvgId": "x",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/1.m3u8",
+              "description": "plot",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ]
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": [
+            "Ignored VOD without a valid container extension"
+          ]
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": null,
+          "get_vod_streams": [],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories"
+        ],
+        "error": {
+          "code": "XTREAM_FORMAT",
+          "message": "The provider returned an invalid catalog"
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": {},
+          "get_vod_streams": [],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories"
+        ],
+        "error": {
+          "code": "XTREAM_FORMAT",
+          "message": "The provider returned an invalid catalog"
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": "bad-json",
+          "get_vod_streams": [],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories"
+        ],
+        "error": {
+          "code": "JSON_FORMAT",
+          "message": "The provider returned invalid JSON"
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": {
+            "user_info": {
+              "auth": 0
+            }
+          },
+          "get_vod_streams": [],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories"
+        ],
+        "error": {
+          "code": "AUTHENTICATION",
+          "message": "The provider did not accept this account"
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [
+            null,
+            4,
+            "string",
+            {}
+          ],
+          "get_vod_streams": [],
+          "get_series_categories": [],
+          "get_series": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": []
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [],
+          "get_series_categories": [],
+          "get_series": [
+            {
+              "series_id": 9,
+              "name": "Story",
+              "cover": "https://i.test/cover",
+              "plot": "Plot",
+              "is_adult": 1
+            }
+          ]
+        },
+        "series": null
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_info&series_id=9"
+        ],
+        "error": {
+          "code": "XTREAM_FORMAT",
+          "message": "Xtream returned invalid series details"
+        },
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            },
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:series:9",
+              "name": "Story",
+              "group": "Series",
+              "logo": "https://i.test/cover",
+              "tvgId": "",
+              "kind": "folder",
+              "sourceId": "xc 🎬",
+              "url": "",
+              "description": "Plot",
+              "adult": true,
+              "epgUrls": [],
+              "folderType": "series",
+              "seriesId": "9"
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": []
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [],
+          "get_series_categories": [],
+          "get_series": [
+            {
+              "series_id": 9,
+              "name": "Story",
+              "cover": "https://i.test/cover",
+              "plot": "Plot",
+              "is_adult": 1
+            }
+          ]
+        },
+        "series": {}
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_info&series_id=9"
+        ],
+        "error": {
+          "code": "XTREAM_FORMAT",
+          "message": "Xtream returned invalid series details"
+        },
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            },
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:series:9",
+              "name": "Story",
+              "group": "Series",
+              "logo": "https://i.test/cover",
+              "tvgId": "",
+              "kind": "folder",
+              "sourceId": "xc 🎬",
+              "url": "",
+              "description": "Plot",
+              "adult": true,
+              "epgUrls": [],
+              "folderType": "series",
+              "seriesId": "9"
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": []
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [],
+          "get_series_categories": [],
+          "get_series": [
+            {
+              "series_id": 9,
+              "name": "Story",
+              "cover": "https://i.test/cover",
+              "plot": "Plot",
+              "is_adult": 1
+            }
+          ]
+        },
+        "series": {
+          "episodes": null
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_info&series_id=9"
+        ],
+        "error": {
+          "code": "XTREAM_FORMAT",
+          "message": "Xtream returned invalid series details"
+        },
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            },
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:series:9",
+              "name": "Story",
+              "group": "Series",
+              "logo": "https://i.test/cover",
+              "tvgId": "",
+              "kind": "folder",
+              "sourceId": "xc 🎬",
+              "url": "",
+              "description": "Plot",
+              "adult": true,
+              "epgUrls": [],
+              "folderType": "series",
+              "seriesId": "9"
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": []
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [],
+          "get_series_categories": [],
+          "get_series": [
+            {
+              "series_id": 9,
+              "name": "Story",
+              "cover": "https://i.test/cover",
+              "plot": "Plot",
+              "is_adult": 1
+            }
+          ]
+        },
+        "series": {
+          "episodes": {}
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_info&series_id=9"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            },
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:series:9",
+              "name": "Story",
+              "group": "Series",
+              "logo": "https://i.test/cover",
+              "tvgId": "",
+              "kind": "folder",
+              "sourceId": "xc 🎬",
+              "url": "",
+              "description": "Plot",
+              "adult": true,
+              "epgUrls": [],
+              "folderType": "series",
+              "seriesId": "9"
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": []
+        },
+        "folders": {
+          "items": [],
+          "warnings": []
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [],
+          "get_series_categories": [],
+          "get_series": [
+            {
+              "series_id": 9,
+              "name": "Story",
+              "cover": "https://i.test/cover",
+              "plot": "Plot",
+              "is_adult": 1
+            }
+          ]
+        },
+        "series": {
+          "episodes": []
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_info&series_id=9"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            },
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:series:9",
+              "name": "Story",
+              "group": "Series",
+              "logo": "https://i.test/cover",
+              "tvgId": "",
+              "kind": "folder",
+              "sourceId": "xc 🎬",
+              "url": "",
+              "description": "Plot",
+              "adult": true,
+              "epgUrls": [],
+              "folderType": "series",
+              "seriesId": "9"
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": []
+        },
+        "folders": {
+          "items": [],
+          "warnings": []
+        },
+        "episodes": []
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [],
+          "get_series_categories": [],
+          "get_series": [
+            {
+              "series_id": 9,
+              "name": "Story",
+              "cover": "https://i.test/cover",
+              "plot": "Plot",
+              "is_adult": 1
+            }
+          ]
+        },
+        "series": {
+          "episodes": [
+            {
+              "id": 7,
+              "container_extension": "mp4",
+              "episode_num": 2
+            },
+            {
+              "id": 8,
+              "container_extension": "mkv",
+              "season": 2,
+              "episode_num": 1
+            }
+          ]
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_info&series_id=9"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            },
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:series:9",
+              "name": "Story",
+              "group": "Series",
+              "logo": "https://i.test/cover",
+              "tvgId": "",
+              "kind": "folder",
+              "sourceId": "xc 🎬",
+              "url": "",
+              "description": "Plot",
+              "adult": true,
+              "epgUrls": [],
+              "folderType": "series",
+              "seriesId": "9"
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": []
+        },
+        "folders": {
+          "items": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:series:9:season:0",
+              "name": "Season 0",
+              "kind": "folder",
+              "folderType": "season",
+              "seriesId": "9",
+              "seasonNumber": "0",
+              "sourceId": "xc 🎬",
+              "group": "Story",
+              "logo": "https://i.test/cover",
+              "description": "Plot",
+              "adult": true
+            },
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:series:9:season:2",
+              "name": "Season 2",
+              "kind": "folder",
+              "folderType": "season",
+              "seriesId": "9",
+              "seasonNumber": "2",
+              "sourceId": "xc 🎬",
+              "group": "Story",
+              "logo": "https://i.test/cover",
+              "description": "Plot",
+              "adult": true
+            }
+          ],
+          "warnings": []
+        },
+        "episodes": [
+          {
+            "items": [
+              {
+                "id": "xc%20%F0%9F%8E%AC:xtream:episode:7",
+                "name": "Episode 2",
+                "kind": "vod",
+                "sourceId": "xc 🎬",
+                "group": "Story",
+                "url": "https://xc.test/folder/series/a%2Fb/x%3F%26/7.mp4",
+                "episodeNumber": 2,
+                "seasonNumber": "0",
+                "logo": "https://i.test/cover",
+                "description": "",
+                "adult": true
+              }
+            ],
+            "warnings": []
+          },
+          {
+            "items": [
+              {
+                "id": "xc%20%F0%9F%8E%AC:xtream:episode:8",
+                "name": "Episode 1",
+                "kind": "vod",
+                "sourceId": "xc 🎬",
+                "group": "Story",
+                "url": "https://xc.test/folder/series/a%2Fb/x%3F%26/8.mkv",
+                "episodeNumber": 1,
+                "seasonNumber": "2",
+                "logo": "https://i.test/cover",
+                "description": "",
+                "adult": true
+              }
+            ],
+            "warnings": []
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [],
+          "get_series_categories": [],
+          "get_series": [
+            {
+              "series_id": 9,
+              "name": "Story",
+              "cover": "https://i.test/cover",
+              "plot": "Plot",
+              "is_adult": 1
+            }
+          ]
+        },
+        "series": {
+          "seasons": [
+            {
+              "season_number": 2,
+              "name": "Second"
+            }
+          ],
+          "episodes": {
+            "1": [
+              {
+                "id": 10,
+                "title": "Pilot",
+                "episode_num": 1,
+                "container_extension": "mp4"
+              },
+              {
+                "id": "bad",
+                "container_extension": "mp4"
+              }
+            ],
+            "2": [
+              {
+                "id": "12",
+                "title": "Finale",
+                "season": 2,
+                "episode_num": 2,
+                "container_extension": "mp4",
+                "info": {
+                  "plot": "Literal <tag>",
+                  "movie_image": "https://i.test/a"
+                }
+              },
+              {
+                "id": 11,
+                "title": "First",
+                "season": 2,
+                "episode_num": 1,
+                "container_extension": "mkv"
+              }
+            ]
+          }
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_info&series_id=9"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            },
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:series:9",
+              "name": "Story",
+              "group": "Series",
+              "logo": "https://i.test/cover",
+              "tvgId": "",
+              "kind": "folder",
+              "sourceId": "xc 🎬",
+              "url": "",
+              "description": "Plot",
+              "adult": true,
+              "epgUrls": [],
+              "folderType": "series",
+              "seriesId": "9"
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": []
+        },
+        "folders": {
+          "items": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:series:9:season:1",
+              "name": "Season 1",
+              "kind": "folder",
+              "folderType": "season",
+              "seriesId": "9",
+              "seasonNumber": "1",
+              "sourceId": "xc 🎬",
+              "group": "Story",
+              "logo": "https://i.test/cover",
+              "description": "Plot",
+              "adult": true
+            },
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:series:9:season:2",
+              "name": "Second",
+              "kind": "folder",
+              "folderType": "season",
+              "seriesId": "9",
+              "seasonNumber": "2",
+              "sourceId": "xc 🎬",
+              "group": "Story",
+              "logo": "https://i.test/cover",
+              "description": "Plot",
+              "adult": true
+            }
+          ],
+          "warnings": [
+            "Ignored an episode without a numeric identity or season"
+          ]
+        },
+        "episodes": [
+          {
+            "items": [
+              {
+                "id": "xc%20%F0%9F%8E%AC:xtream:episode:10",
+                "name": "Pilot",
+                "kind": "vod",
+                "sourceId": "xc 🎬",
+                "group": "Story",
+                "url": "https://xc.test/folder/series/a%2Fb/x%3F%26/10.mp4",
+                "episodeNumber": 1,
+                "seasonNumber": "1",
+                "logo": "https://i.test/cover",
+                "description": "",
+                "adult": true
+              }
+            ],
+            "warnings": [
+              "Ignored an episode without a numeric identity or season"
+            ]
+          },
+          {
+            "items": [
+              {
+                "id": "xc%20%F0%9F%8E%AC:xtream:episode:11",
+                "name": "First",
+                "kind": "vod",
+                "sourceId": "xc 🎬",
+                "group": "Story",
+                "url": "https://xc.test/folder/series/a%2Fb/x%3F%26/11.mkv",
+                "episodeNumber": 1,
+                "seasonNumber": "2",
+                "logo": "https://i.test/cover",
+                "description": "",
+                "adult": true
+              },
+              {
+                "id": "xc%20%F0%9F%8E%AC:xtream:episode:12",
+                "name": "Finale",
+                "kind": "vod",
+                "sourceId": "xc 🎬",
+                "group": "Story",
+                "url": "https://xc.test/folder/series/a%2Fb/x%3F%26/12.mp4",
+                "episodeNumber": 2,
+                "seasonNumber": "2",
+                "logo": "https://i.test/a",
+                "description": "Literal <tag>",
+                "adult": true
+              }
+            ],
+            "warnings": [
+              "Ignored an episode without a numeric identity or season"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [],
+          "get_series_categories": [],
+          "get_series": [
+            {
+              "series_id": 9,
+              "name": "Story",
+              "cover": "https://i.test/cover",
+              "plot": "Plot",
+              "is_adult": 1
+            }
+          ]
+        },
+        "series": {
+          "episodes": {
+            "1": [
+              {
+                "id": 1,
+                "container_extension": "bad/ext"
+              },
+              {
+                "id": 1,
+                "container_extension": "mp4"
+              },
+              {
+                "id": 2,
+                "season": "x",
+                "container_extension": "mp4"
+              },
+              {
+                "stream_id": 3,
+                "container_extension": "mp4"
+              }
+            ],
+            "bad": {}
+          }
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_info&series_id=9"
+        ],
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            },
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:series:9",
+              "name": "Story",
+              "group": "Series",
+              "logo": "https://i.test/cover",
+              "tvgId": "",
+              "kind": "folder",
+              "sourceId": "xc 🎬",
+              "url": "",
+              "description": "Plot",
+              "adult": true,
+              "epgUrls": [],
+              "folderType": "series",
+              "seriesId": "9"
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": []
+        },
+        "folders": {
+          "items": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:series:9:season:1",
+              "name": "Season 1",
+              "kind": "folder",
+              "folderType": "season",
+              "seriesId": "9",
+              "seasonNumber": "1",
+              "sourceId": "xc 🎬",
+              "group": "Story",
+              "logo": "https://i.test/cover",
+              "description": "Plot",
+              "adult": true
+            }
+          ],
+          "warnings": [
+            "Ignored an invalid episode group",
+            "Ignored an episode without a valid container extension",
+            "Ignored an episode without a numeric identity or season",
+            "Ignored an episode without a numeric identity or season"
+          ]
+        },
+        "episodes": [
+          {
+            "items": [
+              {
+                "id": "xc%20%F0%9F%8E%AC:xtream:episode:1",
+                "name": "Episode 1",
+                "kind": "vod",
+                "sourceId": "xc 🎬",
+                "group": "Story",
+                "url": "https://xc.test/folder/series/a%2Fb/x%3F%26/1.mp4",
+                "episodeNumber": 0,
+                "seasonNumber": "1",
+                "logo": "https://i.test/cover",
+                "description": "",
+                "adult": true
+              }
+            ],
+            "warnings": [
+              "Ignored an invalid episode group",
+              "Ignored an episode without a valid container extension",
+              "Ignored an episode without a numeric identity or season",
+              "Ignored an episode without a numeric identity or season"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "account": {
+          "user_info": {
+            "auth": 1,
+            "status": "Active"
+          }
+        },
+        "actions": {
+          "get_live_categories": [
+            {
+              "category_id": "1",
+              "category_name": "News"
+            }
+          ],
+          "get_live_streams": [
+            {
+              "stream_id": 42,
+              "name": "First",
+              "category_id": "1",
+              "tv_archive": 1,
+              "tv_archive_duration": 2
+            }
+          ],
+          "get_vod_categories": [],
+          "get_vod_streams": [],
+          "get_series_categories": [],
+          "get_series": [
+            {
+              "series_id": 9,
+              "name": "Story",
+              "cover": "https://i.test/cover",
+              "plot": "Plot",
+              "is_adult": 1
+            }
+          ]
+        },
+        "series": {
+          "user_info": {
+            "auth": 0
+          },
+          "episodes": {}
+        }
+      },
+      "expected": {
+        "calls": [
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_live_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_vod_streams",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_categories",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series",
+          "https://xc.test/folder/player_api.php?username=a%2Fb&password=x%3F%26&action=get_series_info&series_id=9"
+        ],
+        "error": {
+          "code": "AUTHENTICATION",
+          "message": "The provider did not accept this account"
+        },
+        "catalog": {
+          "channels": [
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:live:42",
+              "name": "First",
+              "group": "News",
+              "logo": "",
+              "tvgId": "",
+              "kind": "live",
+              "sourceId": "xc 🎬",
+              "url": "https://xc.test/folder/live/a%2Fb/x%3F%26/42.m3u8",
+              "description": "",
+              "adult": false,
+              "epgUrls": [
+                "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+              ],
+              "archiveDays": 2,
+              "catchup": {
+                "type": "xtream",
+                "days": 2,
+                "base": "https://xc.test/folder",
+                "username": "a/b",
+                "password": "x?&",
+                "streamId": "42",
+                "extension": "m3u8",
+                "correction": 0
+              }
+            },
+            {
+              "id": "xc%20%F0%9F%8E%AC:xtream:series:9",
+              "name": "Story",
+              "group": "Series",
+              "logo": "https://i.test/cover",
+              "tvgId": "",
+              "kind": "folder",
+              "sourceId": "xc 🎬",
+              "url": "",
+              "description": "Plot",
+              "adult": true,
+              "epgUrls": [],
+              "folderType": "series",
+              "seriesId": "9"
+            }
+          ],
+          "epgUrls": [
+            "https://xc.test/folder/xmltv.php?username=a%2Fb&password=x%3F%26"
+          ],
+          "warnings": []
+        },
+        "episodes": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "package": "core-js-bundle",
+  "version": "3.50.0",
+  "source": "https://github.com/zloirock/core-js/tree/v3.50.0",
+  "registry": "https://registry.npmjs.org/core-js-bundle/-/core-js-bundle-3.50.0.tgz",
+  "registryIntegrity": "sha512-UetmVQc1PWZWV4QIdDcjPRO2ODiI/Khq/eIuHZ82QVYGtyeYGMIIHp3QcGumd7VtF2x6+Dsx61DFvZnDXiLavw==",
+  "file": "minified.js",
+  "bytes": 273494,
+  "sha256": "19ef6c6270dd909cb78ea5f8eb67a9ae716b0415b0600fd3686332db14bfc8ab",
+  "license": "MIT",
+  "licenseFile": "core-js.LICENSE.txt",
+  "syntax": "Acorn ecmaVersion 5 passes",
+  "origin": "Unmodified official npm package bundle; downloaded archive verified against registry SHA-512 integrity. No install scripts executed.",
+  "runtime": "Load src/compat.js first to record real binary capabilities, then this bundle, then src/compat-ready.js, before any application or media vendor code in each page and Worker realm. Upstream feature detection preserves working native implementations and repairs absent or defective language APIs. Native MSE, codecs, EME, Worker and network capabilities are not supplied by this bundle."
+}

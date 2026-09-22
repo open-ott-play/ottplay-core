@@ -1,0 +1,78 @@
+#foss2-home .f2-source { margin-bottom: .6em; padding: .75em; border: 1px solid #353d47; border-radius: .15em; background: #1a2027; font-size: .8em; word-wrap: break-word; }
+#foss2-home .f2-source button { margin-right: .5em; font-size: .85em; }
+#foss2-home .f2-source p { color: #aeb5bf; }
+#foss2-home .f2-settings h2 { margin: 1em 0 .3em; font-size: .95em; font-weight: normal; color: #e7d8bf; }
+.f2-help { color: #aeb5bf; line-height: 1.55; font-size: .8em; }
+#foss2-home .f2-guide-row { display: block; width: 100%; padding: .45em .65em; margin: 0 0 .15em; text-align: left; background: #1a2027; border: 1px solid #353d47; color: #e7edf5; font-size: .8em; }
+.f2-guide-time { display: inline-block; width: 8em; color: #efc173; vertical-align: top; }
+.f2-guide-row > span { display: inline-block; }
+.f2-guide-row small { display: block; color: #aeb5bf; margin-top: .3em; }
+#foss2-home .f2-channel-identity { position: relative; padding-left: 2.15em; }
+#foss2-home .f2-channel-logo { display: inline-block; position: absolute; top: 50%; left: 0; width: 1.85em; height: 1.45em; margin-top: -.725em; overflow: hidden; line-height: 1.45em; text-align: center; vertical-align: middle; }
+#foss2-home .f2-channel-logo img { display: inline-block; max-width: 100%; max-height: 100%; width: auto; height: auto; border: 0; vertical-align: middle; }
+#foss2-home.f2-compact-tv .f2-channel-logo { height: 1.08em; margin-top: -.54em; line-height: 1.08em; }
+#foss2-home .f2-guide-description { max-width: 72%; vertical-align: top; }
+#foss2-home .f2-guide-description strong, #foss2-home .f2-guide-description small { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+#foss2-home .f2-guide-description .f2-channel-identity { min-height: 1.5em; line-height: 1.5; }
+#foss2-home .f2-guide-row:focus .f2-guide-time, #foss2-home .f2-guide-row.f2-focused .f2-guide-time, #foss2-home .f2-guide-row:focus small, #foss2-home .f2-guide-row.f2-focused small { color: #1b2631; }
+#foss2-home .f2-epg-status { overflow: hidden; margin: 0 0 .2em; color: #91a4b8; font-size: .64em; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
+#foss2-home .f2-heading-scroll .f2-epg-status { display: inline-block; max-width: 19em; margin: 0 0 0 .8em; font-size: .59em; line-height: 1.7; vertical-align: middle; }
+#f2-dialog { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 2200; overflow: auto; padding: 1em 0; background: #111519; background: rgba(7,10,14,.94); font-size: inherit; }
+#f2-dialog * { box-sizing: border-box; }
+.f2-dialog-inner { width: 80%; max-width: 38em; margin: 0 auto; padding: 1em; border: 1px solid #5e5b53; border-radius: .2em; background: #1b2027; word-wrap: break-word; }
+.f2-dialog-inner h2 { margin: 0 0 .65em; font-size: 1.15em; }
+.f2-dialog-inner p { margin: .6em 0; line-height: 1.4; }
+.f2-dialog-inner h3 { margin: .7em 0 .3em; font-size: 1em; }
+#f2-dialog .f2-toolbar { margin: .4em 0; }
+#f2-dialog button { margin: .3em .4em .3em 0; padding: .4em .65em; border: 1px solid #637083; border-radius: .2em; color: #eef1f5; background: #29323d; }
+#f2-dialog .f2-primary { color: #17140f; background: #f4bb5b; border-color: #f4bb5b; }
+#f2-dialog button.f2-focused { outline: 2px solid #ffce78; outline-offset: 2px; }
+.f2-field { display: block; margin: .55em 0 .75em; }
+.f2-field > span { display: block; margin-bottom: .2em; font-size: .85em; color: #b6c0cb; }
+.f2-field input, .f2-field textarea, .f2-field select { width: 100%; padding: .4em; border: 1px solid #6f7781; border-radius: 5px; color: #fff; background: #111519; }
+.f2-field textarea { resize: vertical; }
+.f2-dialog-footer { margin-top: .8em; border-top: 1px solid #3b4653; }
+/* Small landscape windows must keep every playback control reachable. */
+#player-osd { max-height: 100%; overflow: auto; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
+@media screen and (max-width: 700px) and (max-aspect-ratio: 1/1) {
+    #foss2-home .f2-footer-note { float: none; display: block; }
+    .f2-dialog-inner { width: 94%; padding: 16px; }
+    #player-osd { font-size: 14px; padding: 12px; }
+}
+
+/* Remote-friendly text entry; the editor remains inside the active dialog. */
+.f2-edit-control { display: block; }
+#f2-dialog .f2-edit-control > input, #f2-dialog .f2-edit-control > textarea { display: inline-block; width: 75%; vertical-align: middle; }
+#f2-dialog .f2-keyboard-open { display: inline-block; width: 23%; margin: 0 0 0 2%; padding: 11px 4px; font-size: .72em; vertical-align: middle; }
+#f2-dialog .f2-keyboard-layer { position: fixed; left: 0; top: 0; right: 0; bottom: 0; z-index: 2; overflow: auto; background: #10151c; background: rgba(10,15,22,.98); }
+#f2-dialog .f2-keyboard-panel { width: 94%; max-width: 42em; margin: .5em auto; padding: .75em; border: 1px solid #626974; border-radius: 9px; background: #1b222c; text-align: center; }
+#f2-dialog .f2-kb-title { margin: 0 0 10px; font-size: 1.1em; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+#f2-dialog .f2-kb-preview { padding: 10px; min-height: 2.5em; margin-bottom: 10px; border: 1px solid #6a778b; border-radius: 5px; color: #f2f5fb; background: #0c1117; text-align: left; white-space: pre-wrap; word-wrap: break-word; }
+#f2-dialog .f2-kb-cursor { color: #17140f; background: #f4bb5b; }
+#f2-dialog .f2-kb-row { white-space: nowrap; }
+#f2-dialog .f2-kb-key { width: 6.2%; min-width: 1.8em; margin: .13em .12em; padding: .5em .1em; font-size: 1em; line-height: 1.2; }
+#f2-dialog .f2-kb-actions { margin-top: 10px; padding-top: 7px; border-top: 1px solid #424d5d; }
+#f2-dialog .f2-kb-control { margin: .2em .25em; padding: .65em .8em; font-size: .78em; }
+#f2-dialog .f2-keyboard-panel .f2-help { margin: 8px 0 0; font-size: .7em; }
+@media screen and (max-width: 600px) {
+    #f2-dialog .f2-keyboard-panel { padding: 10px 5px; font-size: 14px; }
+    #f2-dialog .f2-kb-key { width: 6.2%; min-width: 0; margin: .13em .08em; padding: .65em 0; }
+    #f2-dialog .f2-keyboard-open { font-size: .65em; }
+}
+
+.f2-check { display: block; margin: 1em 0; line-height: 1.7; }
+.f2-check input { margin-right: .5em; }
+.f2-accent-blue .f2-active, .f2-accent-blue .f2-primary { background: #a1d9ff; color: #152331; }
+.f2-accent-green .f2-active, .f2-accent-green .f2-primary { background: #a8e3bd; color: #152b20; }
+.f2-accent-blue .f2-focused, .f2-accent-blue button:focus { outline-color: #a1d9ff; }
+.f2-accent-green .f2-focused, .f2-accent-green button:focus { outline-color: #a8e3bd; }
+
+#f2-dialog .f2-engine-unavailable { display: inline-block; margin: .3em .7em .3em 0; padding: .4em .65em; border: 1px solid #3b4755; color: #8493a2; font-size: .85em; }
+/* The selected accent applies equally to the remote's filled focus row and to
+   dialog controls; the ID selectors match the base component specificity. */
+body.f2-accent-blue #foss2-home button:focus, body.f2-accent-blue #foss2-home button.f2-focused, body.f2-accent-blue #foss2-home .f2-primary, body.f2-accent-blue #f2-dialog .f2-primary { background: #a1d9ff; border-color: #a1d9ff; outline-color: #a1d9ff; color: #152331; }
+body.f2-accent-green #foss2-home button:focus, body.f2-accent-green #foss2-home button.f2-focused, body.f2-accent-green #foss2-home .f2-primary, body.f2-accent-green #f2-dialog .f2-primary { background: #a8e3bd; border-color: #a8e3bd; outline-color: #a8e3bd; color: #152b20; }
+body.f2-accent-blue #foss2-home .f2-nav .f2-active { border-left-color: #a1d9ff; }
+body.f2-accent-green #foss2-home .f2-nav .f2-active { border-left-color: #a8e3bd; }
+body.f2-accent-blue #f2-dialog button:focus, body.f2-accent-blue #f2-dialog button.f2-focused { outline-color: #a1d9ff; }
+body.f2-accent-green #f2-dialog button:focus, body.f2-accent-green #f2-dialog button.f2-focused { outline-color: #a8e3bd; }

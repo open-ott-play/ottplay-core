@@ -1,0 +1,233 @@
+{
+  "schema": 1,
+  "status": "guide_feed_cache_archive_playlist_xtream_and_stalker_core_integration_in_progress",
+  "full_migration_complete": false,
+  "repositories": [
+    {
+      "name": "ottplay-foss",
+      "path": "ottplay-foss",
+      "revision": "7d47b0ca391e4b1d1fe282cb4bf11a2bfe17e80a",
+      "migration": "native_and_browser_guide_rules_and_13_provider_archive_adapters_use_shared_ES5_core; archived_android_guide_uses_same_core_JVM; other_domains_pending; all_M3U_provider_and_media_parsers_use_shared_ES5_core; Xtream_rules_use_shared_core; Stalker_MAG_or_RPC_rules_use_shared_core; guide_schedule_normalization_or_cache_rules_use_shared_core"
+    },
+    {
+      "name": "ottplay-android",
+      "path": "ottplay-android",
+      "revision": "25a55fc4102cf37a294e882d81122d7387dc89b4",
+      "migration": "xmltv_timestamp_and_archive_resolution_use_shared_jvm_artifact; other_domains_pending; M3U_parser_uses_shared_JVM_core; Xtream_rules_use_shared_core; Stalker_MAG_or_RPC_rules_use_shared_core; guide_schedule_normalization_or_cache_rules_use_shared_core"
+    },
+    {
+      "name": "ottplay-control-server",
+      "path": "ottplay-control-server",
+      "revision": "775774f04a5913824d3b5f05faf3377a4b2cb2b1",
+      "migration": "not_started"
+    },
+    {
+      "name": "ottplay-swop",
+      "path": "ottplay-swop",
+      "revision": "f89c9f02158a46ce6695ad380d2bafe4fecfc1ce",
+      "migration": "not_started"
+    },
+    {
+      "name": "ottplay-web-vitrine",
+      "path": "ottplay-web-vitrine",
+      "revision": "198ad0c0c89f47720c93c6e8a3b1e2148acea837",
+      "migration": "not_started"
+    }
+  ],
+  "additional_client": {
+    "name": "ottplay-foss2",
+    "path": "ottplay-foss2",
+    "version": "0.6.0-beta.1",
+    "migration": "browser_and_node_guide_rules_and_browser_archive_resolution_use_shared_js_artifact; other_domains_pending; M3U_parser_uses_shared_ES5_core; Xtream_rules_use_shared_ES5_core; Stalker_MAG_rules_use_shared_ES5_core; guide_normalization_feed_merge_affinity_coverage_and_lookup_cache_use_shared_core"
+  },
+  "provider_directories": [
+    "1ott",
+    "all4you",
+    "antifriz",
+    "bestlist",
+    "cbilling",
+    "d",
+    "demo",
+    "diamondtv",
+    "dosug",
+    "dragon",
+    "drvao",
+    "edem",
+    "fabryka",
+    "fox",
+    "fxml",
+    "great",
+    "ipstream",
+    "iptv-ott.ru",
+    "itv",
+    "kb-team",
+    "korona",
+    "m3u",
+    "moidom",
+    "newlook",
+    "only4",
+    "ottclub",
+    "ottg",
+    "ottprime",
+    "polmedia",
+    "prost",
+    "raduga",
+    "rd",
+    "russkoetv",
+    "shara-tv",
+    "shara.club",
+    "sharavoz",
+    "shocktv",
+    "shura",
+    "stalker",
+    "tabox",
+    "top",
+    "topiptv",
+    "tvclub",
+    "tvteam",
+    "ultifl1x",
+    "vidok",
+    "xtream"
+  ],
+  "identical_source_files": [
+    {
+      "repository": "ottplay-foss",
+      "paths": [
+        "ios/App/CapApp-SPM/Sources/CapApp-SPM/MobileXmltvEpg.swift",
+        "mobile-xmltv-epg/src/ios/MobileXmltvEpg.swift"
+      ],
+      "lines_each": 437,
+      "sha256": "46c8cbbbb26700a62ee195acb3b4192a02e3489bb970ca5178ca9c4ddfeb71e8",
+      "resolution": "one canonical source; duplicate removed",
+      "canonical_source": "mobile-xmltv-epg/src/ios/MobileXmltvEpg.swift"
+    },
+    {
+      "repository": "ottplay-foss",
+      "paths": [
+        "android/app/src/main/java/play/ott/foss/plugin/MobileXmltvEpgPlugin.kt",
+        "mobile-xmltv-epg/src/android/play/ott/foss/plugin/MobileXmltvEpgPlugin.kt"
+      ],
+      "lines_each": 390,
+      "sha256": "4304bdbd94b5ab32acd5d9dde1375d9823a29b7acb4556d907495a7e6a042d71",
+      "resolution": "one canonical source; duplicate removed",
+      "canonical_source": "mobile-xmltv-epg/src/android/play/ott/foss/plugin/MobileXmltvEpgPlugin.kt"
+    }
+  ],
+  "pending_product_decisions": [],
+  "core_candidate": "Kotlin Multiplatform: one source produces JVM and ES5; ES5 also executes in JavaScriptCore (Swift) and QuickJS-NG (Rust, including musl)",
+  "retention_default": "Retain every existing TV/STB platform and historical provider integration (confirmed requirement).",
+  "product_decisions": {
+    "retain_historical_tv_stb_platforms": true,
+    "retain_all_named_provider_integrations": true,
+    "basis": "User confirmation: да; no platform or provider retirement authorized."
+  },
+  "device_adapters": [
+    "src/stb/android/stb.ts",
+    "src/stb/dune/stb.ts",
+    "src/stb/e2/stb.ts",
+    "src/stb/edem/stb.ts",
+    "src/stb/hbbtv/stb.ts",
+    "src/stb/hisense/stb.ts",
+    "src/stb/inext/stb.ts",
+    "src/stb/lg/netcast/stb.ts",
+    "src/stb/lg/webos/stb.ts",
+    "src/stb/mag/stb.ts",
+    "src/stb/nodejs/stb.ts",
+    "src/stb/panasonic/stb.ts",
+    "src/stb/pc/stb.ts",
+    "src/stb/pc2/stb.ts",
+    "src/stb/philips/stb.ts",
+    "src/stb/samsung/maple/stb.ts",
+    "src/stb/samsung/tizen/stb.ts",
+    "src/stb/sharp/stb.ts",
+    "src/stb/skyworth/stb.ts",
+    "src/stb/sony/stb.ts",
+    "src/stb/spark/stb.ts",
+    "src/stb/tcl/stb.ts",
+    "src/stb/toshiba/stb.ts",
+    "src/stb/vewd/stb.ts"
+  ],
+  "core_distribution_manifest": "shared-core/dist/ottplay-core.manifest.json",
+  "core_consumers": [
+    {
+      "client": "ottplay-foss2 browser",
+      "artifact": "ottplay-foss2/vendor/ottplay-core.js",
+      "scope": "XMLTV time, name normalization, ordered ID selection, current/next and cache intervals, archive URLs and M3U catalogs, Xtream account/catalog/series rules, Stalker MAG or JSON-RPC sessions/catalogs, XMLTV normalization, feed merge/affinity/coverage and protected lookup cache"
+    },
+    {
+      "client": "ottplay-foss2 Node EPG filter",
+      "artifact": "ottplay-foss2/vendor/ottplay-core.js",
+      "scope": "XMLTV time, name normalization, ordered ID selection, current/next"
+    },
+    {
+      "client": "ottplay-android",
+      "artifact": "ottplay-android/core/vendor/ottplay-core.jar",
+      "scope": "XMLTV time with existing Android input grammar, archive URLs and M3U catalogs, Xtream account/catalog/series rules, Stalker MAG or JSON-RPC sessions/catalogs, programme validation/deduplication/order"
+    },
+    {
+      "client": "ottplay-foss browser native XMLTV bridge",
+      "artifact": "ottplay-foss/vendor/ottplay-core.js",
+      "scope": "ordered ID/alias/fuzzy matching; main browser also uses 13 archive and 43 playlist/3 media adapters; Xtream live catalog and short EPG, Stalker MAG or JSON-RPC sessions/catalogs, classic now/next and full-schedule cache policy"
+    },
+    {
+      "client": "ottplay-foss Swift/iOS",
+      "artifact": "ottplay-foss/vendor/ottplay-core.js",
+      "scope": "XMLTV time, native names/ID/alias/fuzzy matching, regional shifts, archive windows; JavaScriptCore"
+    },
+    {
+      "client": "ottplay-foss Rust server and Tauri",
+      "artifact": "ottplay-foss/vendor/ottplay-core.js",
+      "scope": "XMLTV time, native names/ID/alias/fuzzy matching, regional shifts, archive windows; rquickjs 0.14.0"
+    },
+    {
+      "client": "ottplay-foss archived Capacitor Android fixture",
+      "artifact": "ottplay-foss/vendor/ottplay-core.jar",
+      "scope": "XMLTV time, native names/ID/alias/fuzzy matching, regional shifts, archive windows"
+    }
+  ],
+  "core_validation": "shared-core/validation.json",
+  "migrated_archive_adapters": [
+    "1ott",
+    "antifriz",
+    "edem",
+    "itv",
+    "kb-team",
+    "m3u",
+    "only4",
+    "ottclub",
+    "shara-tv",
+    "shura",
+    "stalker",
+    "tvteam",
+    "xtream"
+  ],
+  "migrated_playlist_profiles": {
+    "main_provider_adapters": 43,
+    "media_adapters": 3,
+    "main_recorded_contracts": 743,
+    "foss2_recorded_contracts": 26,
+    "profiles": [
+      "browser",
+      "android",
+      "generic",
+      "base-m3u",
+      "1ott",
+      "only4",
+      "shara-tv",
+      "tvteam",
+      "antifriz",
+      "edem",
+      "kb-team",
+      "shura",
+      "media"
+    ],
+    "js_abi_checks": "modern and two ES5 API simulations passed"
+  },
+  "migrated_xtream_contracts": {
+    "foss2": 58,
+    "android": 68,
+    "base_player": 13,
+    "baseline_android": "25a55fc4102cf37a294e882d81122d7387dc89b4",
+    "baseline_main": "7d47b0ca391e4b1d1fe282cb4bf11a2bfe17e80a"
+  }
+}

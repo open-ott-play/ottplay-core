@@ -1,0 +1,39 @@
+{
+  "package": "mpegts.js",
+  "version": "1.8.2",
+  "source": "https://github.com/xqq/mpegts.js/tree/v1.8.2",
+  "registry": "https://registry.npmjs.org/mpegts.js/-/mpegts.js-1.8.2.tgz",
+  "registryIntegrity": "sha512-cZYMa5muASH55wrS6JK5IGkUqnCA96c0f+WdnW91jIK9s/N6NzjmTQDJNYg9A5u/G2Q5nj2b3w1Zwzze/9guxA==",
+  "file": "dist/mpegts.js",
+  "bytes": 275488,
+  "sha256": "bda31748736a69cb610c2edf4623e633f1f4f47b5bda83668c8d287e51b0c3a8",
+  "license": "Apache-2.0",
+  "licenseFile": "mpegts.LICENSE.txt",
+  "bundledLicenseFile": "mpegts.js.LICENSE.txt",
+  "syntax": "Acorn ecmaVersion 5 passes",
+  "origin": "Unmodified minified npm dependency; no old application source or patches copied.",
+  "runtime": "Optional MSE MPEG-TS/FLV transmuxer, not a software codec decoder. Requires feature-gated loading and getFeatureList().mseLivePlayback for live streams; native playback remains available without modern APIs. Browser and device codec/CORS restrictions still apply.",
+  "dependenciesLicenseFile": "mpegts.dependencies.LICENSE.txt",
+  "bundledDependencies": [
+    {
+      "package": "es6-promise",
+      "version": "4.2.8",
+      "license": "MIT",
+      "registry": "https://registry.npmjs.org/es6-promise/-/es6-promise-4.2.8.tgz",
+      "registryIntegrity": "sha512-HJDGx5daxeIvxdBxvG2cb9g4tEvwIk3i8+nhX0yGrYmZUzbkdg8QbDevheDB8gd0//uPj4c1EQua8Q+MViT0/w=="
+    },
+    {
+      "package": "events",
+      "version": "3.3.0",
+      "license": "MIT",
+      "registry": "https://registry.npmjs.org/events/-/events-3.3.0.tgz",
+      "registryIntegrity": "sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q=="
+    }
+  ],
+  "verification": {
+    "date": "2026-09-14",
+    "browser": "Playwright Chromium",
+    "syntheticStreams": "8-second H264/AAC 320x180 25fps streams generated locally using ffmpeg. HTTP TS and FLV each fail native playback with MediaError code 4 and then decode with mpegts.js, currentTime > 0.3s, audio and video metadata present, no player or page errors.",
+    "scope": "Standalone upstream dependency proof. Not an LG firmware test or real provider acceptance."
+  }
+}

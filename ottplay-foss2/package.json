@@ -1,0 +1,40 @@
+{
+  "name": "ottplay-foss2",
+  "version": "0.6.0-beta.1",
+  "private": true,
+  "description": "Independent ES5 IPTV player and its technical specification",
+  "scripts": {
+    "start": "node scripts/serve.cjs",
+    "check:es5": "node scripts/check-es5.cjs",
+    "test": "node --test --test-concurrency=1 tests/test-*.cjs && npm run check:es5 && node scripts/check-resources.cjs && npm run check:vendors && npm run check:core",
+    "check:core": "node scripts/check-core.cjs",
+    "test:browser": "node tests/browser.cjs",
+    "test:media-browser": "node tests/browser-media.cjs",
+    "test:provider-browser": "node tests/browser-providers.cjs",
+    "test:engines-browser": "node tests/browser-engines.cjs",
+    "test:epg-browser": "node tests/browser-epg.cjs",
+    "test:browse-browser": "node tests/browser-browse.cjs",
+    "test:compat-browser": "node tests/browser-compat.cjs",
+    "test:scroll-browser": "node tests/browser-scroll.cjs",
+    "test:controls-browser": "node tests/browser-controls.cjs",
+    "test:startup-browser": "node tests/browser-startup.cjs",
+    "test:window-controls-browser": "node tests/browser-window-controls.cjs",
+    "build:vendors": "node scripts/vendors.cjs build",
+    "check:vendors": "node scripts/vendors.cjs check",
+    "release:beta": "node scripts/release.cjs",
+    "verify:release": "node scripts/verify-release.cjs"
+  },
+  "devDependencies": {
+    "acorn": "8.16.0",
+    "core-js-bundle": "3.50.0",
+    "hls.js": "1.7.3",
+    "jsdom": "29.1.1",
+    "mpegts.js": "1.8.2",
+    "parse5": "7.3.0",
+    "playwright": "1.63.0",
+    "shaka-player": "5.2.10"
+  },
+  "dependencies": {
+    "saxes": "6.0.0"
+  }
+}

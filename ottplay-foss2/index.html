@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="application-version" content="0.6.0-beta.1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="referrer" content="no-referrer">
+    <meta name="theme-color" content="#111519">
+    <title>OTT-play 2</title>
+    <link rel="manifest" href="/manifest.webmanifest">
+    <link rel="icon" type="image/png" href="/icons/icon-192.png">
+    <link rel="stylesheet" href="/ui/base.css">
+    <link rel="stylesheet" href="/ui/shell.css">
+    <link rel="stylesheet" href="/ui/components.css">
+    <link rel="stylesheet" href="/ui/window-controls.css">
+</head>
+<body>
+    <div id="window-drag-region" aria-hidden="true"></div>
+    <div id="player-stage">
+        <video id="player-video" playsinline webkit-playsinline preload="metadata"></video>
+        <button type="button" id="player-info-hitarea" tabindex="-1" aria-label="Show channel information" aria-hidden="true" style="display:none"></button>
+        <div id="player-osd" role="region" aria-label="Channel information" aria-hidden="true" data-expanded="false" style="display:none">
+            <h1 id="player-title">OTT-play 2</h1>
+            <p id="player-programme"><span id="player-programme-time"></span><strong id="player-programme-title"></strong></p>
+            <div id="player-programme-details" aria-hidden="true" style="display:none">
+                <p id="player-description" tabindex="0"></p>
+                <p id="player-next"></p>
+            </div>
+            <p id="player-engine-status" role="status"></p>
+            <p id="player-status" role="status"></p>
+            <div id="player-controls">
+            <button type="button" id="player-home">Home</button>
+            <button type="button" id="player-pause">Play / Pause</button>
+            <button type="button" id="player-stop">Stop</button>
+            <button type="button" id="player-engines">Engine</button>
+            <button type="button" id="player-options">Options</button>
+            <button type="button" id="player-fullscreen">Fullscreen</button>
+            </div>
+        </div>
+    </div>
+    <div id="foss2-home" role="region" aria-label="OTT-play 2">
+        <div id="boot-message">OTT-play 2 · Loading…</div>
+    </div>
+    <div id="f2-toast" role="status" style="display:none"></div>
+    <noscript>JavaScript is required to run this player.</noscript>
+    <script src="/src/compat.js"></script>
+    <script src="/vendor/core-js.min.js"></script>
+    <script src="/src/compat-ready.js"></script>
+    <script src="/src/runtime.js"></script>
+    <script src="/vendor/ottplay-core.js"></script>
+    <script src="/src/security.js"></script>
+    <script src="/src/library.js"></script>
+    <script src="/src/channel-identity.js"></script>
+    <script src="/src/migration.js"></script>
+    <script src="/src/features.js"></script>
+    <script src="/src/state.js"></script>
+    <script src="/src/transport.js"></script>
+    <script src="/src/devices.js"></script>
+    <script src="/src/providers.js"></script>
+    <script src="/src/epg.js"></script>
+    <script src="/src/media.js"></script>
+    <script src="/src/keyboard.js"></script>
+    <script src="/src/auto-scroll.js"></script>
+    <script src="/src/view.js"></script>
+    <script src="/src/playback-preferences.js"></script>
+    <script src="/src/playback-view.js"></script>
+    <script src="/src/playback-info.js"></script>
+    <script src="/src/app.js"></script>
+    <script src="/src/boot.js"></script>
+</body>
+</html>

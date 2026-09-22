@@ -1,0 +1,32 @@
+@font-face { font-family: Roboto; src: url('/fonts/Roboto-Regular.ttf') format('truetype'); }
+@font-face { font-family: RobotoCondensed; src: url('/fonts/RobotoCondensed-Regular.ttf') format('truetype'); }
+@font-face { font-family: Caveat; src: url('/fonts/Caveat-Regular.ttf') format('truetype'); }
+@font-face { font-family: Liberation; src: url('/fonts/LiberationSans-Regular.ttf') format('truetype'); }
+@font-face { font-family: Gabriela; src: url('/fonts/Gabriela-Regular.ttf') format('truetype'); }
+@font-face { font-family: PTSansNarrow; src: url('/fonts/PTSansNarrow-Regular.ttf') format('truetype'); }
+@font-face { font-family: fontello; src: url('/fonts/fontello.eot'); src: url('/fonts/fontello.eot?#iefix') format('embedded-opentype'), url('/fonts/fontello.woff2') format('woff2'), url('/fonts/fontello.woff') format('woff'), url('/fonts/fontello.ttf') format('truetype'), url('/fonts/fontello.svg#fontello') format('svg'); }
+html, body { width: 100%; height: 100%; margin: 0; background: #111519; color: #f1f2f3; font-family: RobotoCondensed, Arial, Helvetica, sans-serif; }
+button, input, textarea, select { font: inherit; }
+button { cursor: pointer; }
+button:focus, input:focus, textarea:focus, select:focus { outline: 2px solid #ffce78; outline-offset: 2px; }
+#player-stage { overflow: hidden; position: fixed; top: 0; right: 0; bottom: 0; left: 0; background: #000; }
+#player-video { width: 100%; height: 100%; }
+#player-osd { position: absolute; z-index: 2; left: 0; right: 0; bottom: 0; padding: .65em 1em; background: #171b20; background: rgba(17,21,25,.65); font-size: inherit; }
+#player-info-hitarea { position: absolute; z-index: 1; left: 0; bottom: 0; width: 100%; height: 24%; min-height: 4em; max-height: 12em; padding: 0; margin: 0; border: 0; border-radius: 0; background: transparent; color: transparent; outline: 0; }
+#player-title { margin: 0 0 .25em; font-size: 1.2em; }
+#player-programme { margin: 0 0 .3em; font-size: 1em; line-height: 1.35; word-wrap: break-word; }
+#player-programme-time { margin-right: .7em; color: #efc173; white-space: nowrap; }
+#player-programme-title { font-weight: normal; }
+#player-programme-details { margin: .4em 0; padding: .5em 0 .25em; border-top: 1px solid #48515b; }
+#player-description { max-height: 9em; max-height: 30vh; overflow: auto; margin: 0; line-height: 1.4; white-space: pre-wrap; word-wrap: break-word; color: #dbe0e6; }
+#player-description:focus { outline: 2px solid #ffce78; outline-offset: 2px; }
+#player-next { margin: .45em 0 0; color: #bdcad6; font-size: .85em; line-height: 1.3; word-wrap: break-word; }
+#player-controls { clear: both; }
+#player-osd button { font-size: .5em; padding: .4em .7em; margin: .3em .4em .3em 0; border: 1px solid #6f7781; color: #f1f2f3; background: #252d37; border-radius: 3px; }
+#boot-message { padding: 12%; font-size: 24px; text-align: center; }
+#boot-message button { margin-top: 30px; padding: 15px; }
+#f2-toast { position: fixed; right: 5%; bottom: 6%; left: 5%; z-index: 3000; padding: 18px 24px; border: 1px solid #b89050; border-radius: 6px; color: #f4e4c7; background: #383026; font-size: inherit; }
+
+#player-engine-status { display: inline-block; margin: 0 .8em .35em 0; color: #e8bf80; font-size: .7em; }
+#player-status { display: inline-block; margin: 0 0 .35em; color: #bdcad6; font-size: .8em; }
+#player-osd button:focus { color: #1b2631; background: #f4c579; }

@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "builderSha256": "d506c7c35964ac9e8a4a138a7d01bd28bf9f70194a7b7a7c44e1c3e2514961a5",
+  "lockfileSha256": "37e1c0b83c0122a2e617536efa9db97cccf2872c9285c3f6124cf3fd4f9f74e7",
+  "packages": {
+    "core-js-bundle": {
+      "version": "3.50.0",
+      "integrity": "sha512-UetmVQc1PWZWV4QIdDcjPRO2ODiI/Khq/eIuHZ82QVYGtyeYGMIIHp3QcGumd7VtF2x6+Dsx61DFvZnDXiLavw==",
+      "resolved": "https://registry.npmjs.org/core-js-bundle/-/core-js-bundle-3.50.0.tgz"
+    },
+    "hls.js": {
+      "version": "1.7.3",
+      "integrity": "sha512-MsPlx6yVW4Qv4C7mEVou4/gk/5cN2dVxOTnrNjPSmyH2f0Ln+/UkG10Ax1PE6OvrmTVPKgQYozTtBaPOuCzq7A==",
+      "resolved": "https://registry.npmjs.org/hls.js/-/hls.js-1.7.3.tgz"
+    },
+    "shaka-player": {
+      "version": "5.2.10",
+      "integrity": "sha512-X1yfQHbBtJyAYeGfu/2jtLcusmW9AFskXjQ6+11PuIBUh20O1I3Y/ERetQ7K6NDenUzo7nt0EgoMoBzVmlBTxg==",
+      "resolved": "https://registry.npmjs.org/shaka-player/-/shaka-player-5.2.10.tgz"
+    },
+    "mpegts.js": {
+      "version": "1.8.2",
+      "integrity": "sha512-cZYMa5muASH55wrS6JK5IGkUqnCA96c0f+WdnW91jIK9s/N6NzjmTQDJNYg9A5u/G2Q5nj2b3w1Zwzze/9guxA==",
+      "resolved": "https://registry.npmjs.org/mpegts.js/-/mpegts.js-1.8.2.tgz"
+    },
+    "es6-promise": {
+      "version": "4.2.8",
+      "integrity": "sha512-HJDGx5daxeIvxdBxvG2cb9g4tEvwIk3i8+nhX0yGrYmZUzbkdg8QbDevheDB8gd0//uPj4c1EQua8Q+MViT0/w==",
+      "resolved": "https://registry.npmjs.org/es6-promise/-/es6-promise-4.2.8.tgz"
+    },
+    "events": {
+      "version": "3.3.0",
+      "integrity": "sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==",
+      "resolved": "https://registry.npmjs.org/events/-/events-3.3.0.tgz"
+    }
+  },
+  "bootstrap": {
+    "src/compat.js": "21e71818d9167e8076633fc05e6684306d84558012764efea90d1ccb58942193",
+    "src/compat-ready.js": "1501d7499014fcdb0d843b3efcd06699f35fefe680a32a97b03d03dbee5242ad",
+    "src/hls-worker.js": "99f4b4a55aa09c614e33c975ff7c460aceeb97b93404f3942ae451bf6ddb5160"
+  },
+  "provenance": {
+    "vendor/core-js.provenance.json": "f6895dad32ec41446e1f099c506bbe1ce9e6f49b671fac4b2c7d9add7b39766b",
+    "vendor/hls.provenance.json": "3c9431df5700e711a478a6182b1a64d5364d0a45455eae233ca7dcc832d5de45",
+    "vendor/shaka.provenance.json": "f0391e78095272109545af5ff489444bf9f5a7b97101f184e0fed4988efee627",
+    "vendor/mpegts.provenance.json": "1b88dae3d23c7b6a527d7e41b548c5dc4864489556ecb18942547d28d23ef16f"
+  },
+  "assets": {
+    "vendor/core-js.min.js": "19ef6c6270dd909cb78ea5f8eb67a9ae716b0415b0600fd3686332db14bfc8ab",
+    "vendor/core-js.LICENSE.txt": "b87653fff2d44426ab5cd4723cee3b1364dc8d35a0acdf098c54689543123bf8",
+    "vendor/hls.min.js": "a12e7ee1cd64a69dcdb314157e45dafcba705bfb0b1440b7935cb265d374423e",
+    "vendor/hls.worker.js": "42794b9ca89d78c54407c6a0e46cdcde9fbd976e476259428e506be857cb16ea",
+    "vendor/hls.LICENSE.txt": "ca8773cf798c7ed997d4dd7c8e23c348699f8d5b7462636694cc14de6cda12db",
+    "vendor/shaka.min.js": "7677ac05b0e1e5335f8b99ee832b6efaef4b01a7cead7bf778fd4356c4ec9848",
+    "vendor/shaka.LICENSE.txt": "20ce2eba547fd0a8c4023511c003eabe510982a335cccd4e270f1f55ffbd2250",
+    "vendor/mpegts.min.js": "bda31748736a69cb610c2edf4623e633f1f4f47b5bda83668c8d287e51b0c3a8",
+    "vendor/mpegts.js.LICENSE.txt": "dc4d5273f129801a2575dcb2649d5ad2ca06be1334c9be2a8f7929118e0e8668",
+    "vendor/mpegts.LICENSE.txt": "58d1e17ffe5109a7ae296caafcadfdbe6a7d176f0bc4ab01e12a689b0499d8bd",
+    "vendor/mpegts.dependencies.LICENSE.txt": "7adfd1cef1a854e07e2e0aef05c5d22933a5b0043d9cba454ad5d8e01f2ad011"
+  }
+}

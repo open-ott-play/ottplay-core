@@ -1,0 +1,5 @@
+* text=auto eol=lf
+*.bat -text whitespace=cr-at-eol
+ottplay-foss2/licenses/* -text whitespace=cr-at-eol
+ottplay-foss2/vendor/* -text whitespace=-blank-at-eof
+shared-core/licenses/* -text

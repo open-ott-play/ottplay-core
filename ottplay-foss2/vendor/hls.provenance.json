@@ -1,0 +1,20 @@
+{
+  "package": "hls.js",
+  "version": "1.7.3",
+  "source": "https://github.com/video-dev/hls.js/tree/v1.7.3",
+  "registry": "https://registry.npmjs.org/hls.js/-/hls.js-1.7.3.tgz",
+  "file": "dist/hls.min.js",
+  "bytes": 619692,
+  "sha256": "a12e7ee1cd64a69dcdb314157e45dafcba705bfb0b1440b7935cb265d374423e",
+  "license": "Apache-2.0",
+  "licenseFile": "hls.LICENSE.txt",
+  "syntax": "Acorn ecmaVersion 5 passes",
+  "runtime": "Application compatibility bootstrap runs before the bundle and in the separate Worker realm. Native MediaSource and binary APIs remain capability requirements; polyfills do not supply decoders or firmware playback bridges.",
+  "worker": {
+    "file": "dist/hls.worker.js",
+    "localFile": "hls.worker.js",
+    "bytes": 118233,
+    "sha256": "42794b9ca89d78c54407c6a0e46cdcde9fbd976e476259428e506be857cb16ea",
+    "origin": "Unmodified worker from the same official hls.js 1.7.3 npm distribution; matching main bundle verified byte-for-byte."
+  }
+}
