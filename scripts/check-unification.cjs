@@ -66,6 +66,17 @@ for (const [file, forbidden] of [
     ["src-rs/core/src/xmltv.rs", /NaiveDateTime|RE_TS|best_score|by_norm/],
     ["src/plugins/m3u-proxy.ts", /normalizeNativeEpgName|nativeEpgMatchScore/]
 ]) assert(!forbidden.test(fs.readFileSync(path.join(main, file), "utf8")), "Migrated guide logic reintroduced: " + file);
+for (const [file, required] of [
+    ["mobile-xmltv-epg/src/ios/MobileXmltvEpg.swift", ["nativeGuideSources", "nativeGuideUnowned", "nativeGuideLookup", "nativeGuideDisk"]],
+    ["mobile-xmltv-epg/src/android/play/ott/foss/plugin/MobileXmltvEpgPlugin.kt", ["NativeGuideSources.urls", "NativeGuideSources.unowned", "NativeGuideSources.lookupAndroid", "NativeGuideSources.diskAndroid"]],
+    ["src-rs/core/src/native_xmltv.rs", ["shared_guide::unowned", "shared_guide::source_fresh", "shared_guide::source_refresh", "shared_guide::evict_source_set"]]
+]) {
+    const source = fs.readFileSync(path.join(main, file), "utf8");
+    for (const api of required) assert(source.includes(api), "Native source/cache rules must use " + api);
+    assert(!/TTL_SECONDS|const TTL:|private let ttl:|cdn\.epg\.one|channels\.contains_key\(&id\)/.test(source), "Native source/cache decisions reintroduced: " + file);
+}
+const repository = fs.readFileSync(path.join(root, "ottplay-android/app/src/main/java/play/ott/nativeapp/data/NativeRepository.kt"), "utf8");
+assert(repository.includes("providers.epgSources(source, catalog)"), "Active Android EPG sources must use the core adapter");
 for (const provider of inventory.provider_directories) assert(fs.statSync(path.join(main, "prov", provider)).isDirectory(), "Retained provider removed: " + provider);
 for (const adapter of inventory.device_adapters) assert(fs.statSync(path.join(main, adapter)).isFile(), "Retained device removed: " + adapter);
 execFileSync("python3", [path.join(main, "tests/test_native_epg_cache.py"), "--check-sources-only"], { stdio: "inherit" });

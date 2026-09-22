@@ -10,7 +10,9 @@ Stalker/Ministra MAG sessions, pagination and media references now use the core
 in FOSS2 and Android; Android and the base player also delegate JSON-RPC.
 Browser XMLTV normalization, feed merging/affinity/coverage, protected lookup
 caching, classic-player schedule/cache rules and Android programme ordering
-now also delegate to the common core.
+now also delegate to the common core. Native source selection, first-source
+ownership, memory/disk cache decisions and Rust atomic refresh decisions also
+run in this core, with explicit platform compatibility profiles.
 **The product migration is not complete.**
 The five repository directories are isolated checkouts of the revisions recorded
 in [inventory.json](inventory.json); existing installations are not modified.

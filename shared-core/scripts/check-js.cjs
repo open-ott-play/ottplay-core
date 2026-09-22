@@ -14,6 +14,22 @@ function verify(context, profile) {
     vm.runInContext(bundle, context, { timeout: 10000 });
     const core = context["play.ott:ottplay-shared-core"];
     assert(core, profile + ": classic-script export is available");
+    assert.equal(JSON.stringify(core.nativeGuideSources([" "], "https://explicit.test", value => value.trim())), '["https://cdn.epg.one/epg2.xml.gz"]');
+    assert.equal(JSON.stringify(core.nativeGuideUnowned(["old"], ["old", "__proto__", "new", "new"])), '["__proto__","new"]');
+    assert.equal(core.nativeGuideLookup(7200, 0, false, true), "JOIN");
+    assert.equal(core.nativeGuideLookup(7199, 0, false, true), "CACHE");
+    assert.equal(core.nativeGuideLookup(7199, 0, true, true), "JOIN");
+    assert.equal(core.nativeGuideLookup(0, null, false, false), "LOAD");
+    assert.equal(core.nativeGuideDisk("a", "a", 7200, 0, false), false);
+    assert.equal(core.nativeGuideDisk("a", "b", 0, 0, true), false);
+    assert.equal(core.nativeGuideDisk("a", "a", 0, NaN, true), true);
+    assert.equal(core.nativeGuideFresh(7199), true);
+    assert.equal(core.nativeGuideFresh(7200), false);
+    assert.equal(core.nativeGuideRefresh(true, false, true), "STALE");
+    assert.equal(core.nativeGuideRefresh(true, false, false), "REPLACE");
+    assert.equal(core.nativeGuideRefresh(true, true, false), "FAIL");
+    assert.equal(core.nativeGuideEvictSourceSet(8, false), true);
+    assert.equal(core.nativeGuideEvictSourceSet(8, true), false);
     for (const [input, expected] of [
         ["19700101000000 +0000", 0], ["197001010530 +0530", 0],
         ["19691231203000 -03:30", 0], ["19691231235959Z", -1000],

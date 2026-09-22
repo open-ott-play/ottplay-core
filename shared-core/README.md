@@ -12,7 +12,7 @@ ID/name/quality-alias selection, native fuzzy matching, regional time shifts,
 archive windows, current/next selection, cache intervals, archive URL decisions,
 M3U catalog rules, Xtream sessions/catalogs/series and Stalker MAG/JSON-RPC.
 `src/jsMain` converts ABI types only. XML decoding, decompression, transport,
-native feed fetch/cache ownership, storage, UI and media playback remain
+native feed I/O and callback coordination, storage, UI and media playback remain
 with consumers. Native matching indexes themselves belong to this core.
 
 Compatibility is explicit. The browser format requires minutes, accepts UTC/GMT/Z
@@ -163,6 +163,23 @@ start, while `GuideSchedule` retains half-open/latest-start browser semantics.
 Android uses `GuideProgrammeRules` for interval validation, duplicate retention
 and deterministic ordering. Captured contracts cover 44 browser, 44 classic
 and 33 Android cases; XML parser protections stay in the host.
+
+`NativeGuideSources` owns native URL selection/deduplication, channel ownership,
+cache hit/coalescing precedence, disk identity/TTL, Rust source-set capacity and
+partial-refresh decisions. Android's disk TTL remains inclusive at two hours;
+Swift's remains exclusive. Swift supplies Foundation trimming and canonical
+Unicode equality as host primitives. Active Android retains untrimmed URLs and
+explicit-source-first ordering; archived Play still has no bundled default.
+Hosts retain locks, HTTP/XML/gzip/file operations, clock and metadata decoding,
+and callback execution. Per-source offline memory/disk fallback orchestration
+and write-error handling remain in the adapters.
+
+The actual Swift/Kotlin adapters each pass 59 source/cache cases qualified
+against main revision `ab69d2f`, including forced/coalesced loads, exact TTL,
+malformed metadata, Unicode URL/channel equality and integer overflow.
+`tests/test_native_epg_cache.py` executes these through the real JVM and
+JavaScriptCore distributions; Rust tests partial HTTP failure and source-set
+isolation through QuickJS. These run in the existing native CI suites.
 
 Transport, streaming guide retention, remaining native cache policies, other operator session logic and durable
 state still need migration. See [workspace status](../README.md) and
