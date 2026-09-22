@@ -5,7 +5,7 @@
   },
   "ottplay-android": {
     "url": "https://github.com/open-ott-play/ottplay-android.git",
-    "revision": "7d378218f14ea33f374c28b5ce5aeb99b1518755"
+    "revision": "39652cc2d5e9d350e2d468e606c2275981ba30f0"
   },
   "ottplay-control-server": {
     "url": "https://github.com/open-ott-play/ottplay-control-server.git",
