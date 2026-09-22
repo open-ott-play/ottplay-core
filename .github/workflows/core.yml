@@ -28,6 +28,7 @@ jobs:
       - run: npm run check:core
       - run: node scripts/distribute.cjs check-web ../ottplay-foss2
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
         with:
           name: ottplay-shared-core
           path: shared-core/dist/
