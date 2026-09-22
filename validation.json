@@ -917,9 +917,12 @@
       "limitation": "Synthetic parse-only timings; the shared event bridge remains slower than the native baseline. No physical-device or performance parity claim."
     },
     "consumer_commits": {
-      "main": "8222649194c2e251478c4353361e2d05cceb6b7d",
+      "main": "8855d7789441cb03605dcabbfd61055259cbfbe6",
       "android": "0be1caded9963f3ee3ca8ed0f54674e895696716"
-    }
+    },
+    "python_portable_suites": 10,
+    "python_portable_branch_coverage_percent": 81,
+    "ci_inventory": "119/119 reachable"
   },
   "latest_validation_stage": "xmltv_records"
 }
