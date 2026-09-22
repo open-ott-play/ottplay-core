@@ -31,18 +31,13 @@
             return result;
         }
 
-        function children(node, tag) {
-            var result = [];
-            var child;
-            for (child = node.firstChild; child; child = child.nextSibling) {
-                if (child.nodeType === 1 && child.nodeName === tag) result.push(child);
-            }
-            return result;
-        }
-
-        function firstText(node, tag) {
-            var values = children(node, tag);
-            return values.length ? content(values[0]) : "";
+        var emptyAttributes = Object.create(null);
+        function attributes(node) {
+            var rows = node.attributes, count = rows ? rows.length : 0, i, row, values;
+            if (!count) return emptyAttributes;
+            values = Object.create(null);
+            for (i = 0; i < count; i += 1) { row = rows[i]; values[row.nodeName] = row.nodeValue; }
+            return values;
         }
 
         function canonicalName(name) { return core.canonicalChannelName(String(name == null ? "" : name)); }
@@ -93,7 +88,7 @@
         function parseXML(text, DOMParserCtor, sourceUrl) {
             var xml = String(text == null ? "" : text).replace(/^\ufeff/, "");
             var Parser = DOMParserCtor || root.DOMParser;
-            var doc, nodes, nested, row, i, j;
+            var doc, node, child, row, records;
             var stations = [], programmes = [], fields = {};
             var source = httpUrl(sourceUrl);
             var identity = source || "anonymous:" + (++anonymousFeed);
@@ -105,22 +100,21 @@
             ["data-window-start", "data-window-end", "data-programme-limit", "data-truncated-channels", "data-truncated"].forEach(function (key) {
                 fields[key] = doc.documentElement.getAttribute(key);
             });
-            nodes = children(doc.documentElement, "channel");
-            for (i = 0; i < nodes.length; i += 1) {
-                row = { id: nodes[i].getAttribute("id"), names: [], icons: [] };
-                nested = children(nodes[i], "display-name");
-                for (j = 0; j < nested.length; j += 1) row.names.push(content(nested[j]));
-                nested = children(nodes[i], "icon");
-                for (j = 0; j < nested.length; j += 1) row.icons.push(nested[j].getAttribute("src"));
-                stations.push(row);
+            records = new core.WebXmltvRecords("browser");
+            records.start("tv", {});
+            for (node = doc.documentElement.firstChild; node; node = node.nextSibling) {
+                if (node.nodeType !== 1) continue;
+                records.start(node.nodeName, attributes(node));
+                for (child = node.firstChild; child; child = child.nextSibling) {
+                    if (child.nodeType !== 1) continue;
+                    records.start(child.nodeName, attributes(child));
+                    if (records.wantsText()) records.text(content(child));
+                    records.end(child.nodeName);
+                }
+                row = records.end(node.nodeName);
+                if (row) (row.kind === "channel" ? stations : programmes).push(row.value);
             }
-            nodes = children(doc.documentElement, "programme");
-            for (i = 0; i < nodes.length; i += 1) {
-                row = nodes[i];
-                programmes.push({ channel: row.getAttribute("channel"), start: row.getAttribute("start"), stop: row.getAttribute("stop"),
-                    title: firstText(row, "title"), description: firstText(row, "desc"),
-                    catchupAttribute: row.getAttribute("catchup-id"), catchupElement: firstText(row, "catchup-id") });
-            }
+            records.end("tv");
             return core.parseBrowserGuide(stations, programmes, fields, source, identity, function (value) { return iconUrl(value, sourceUrl); });
         }
 

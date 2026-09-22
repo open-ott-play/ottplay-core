@@ -1,0 +1,189 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "channel": {
+        "id": "x"
+      },
+      "sourceType": "undefined",
+      "source": null,
+      "result": {
+        "id": "x"
+      },
+      "resultSourceType": "undefined",
+      "hasOwn": true
+    },
+    {
+      "channel": {
+        "id": "x",
+        "sourceId": "fallback"
+      },
+      "sourceType": "undefined",
+      "source": null,
+      "result": {
+        "sourceId": "fallback",
+        "id": "x"
+      },
+      "resultSourceType": "string",
+      "hasOwn": true
+    },
+    {
+      "channel": {
+        "id": "x"
+      },
+      "sourceType": "object",
+      "source": null,
+      "result": {
+        "id": "x"
+      },
+      "resultSourceType": "undefined",
+      "hasOwn": true
+    },
+    {
+      "channel": {
+        "id": "x",
+        "sourceId": "fallback"
+      },
+      "sourceType": "object",
+      "source": null,
+      "result": {
+        "sourceId": "fallback",
+        "id": "x"
+      },
+      "resultSourceType": "string",
+      "hasOwn": true
+    },
+    {
+      "channel": {
+        "id": "x"
+      },
+      "sourceType": "string",
+      "source": "",
+      "result": {
+        "id": "x"
+      },
+      "resultSourceType": "undefined",
+      "hasOwn": true
+    },
+    {
+      "channel": {
+        "id": "x",
+        "sourceId": "fallback"
+      },
+      "sourceType": "string",
+      "source": "",
+      "result": {
+        "sourceId": "fallback",
+        "id": "x"
+      },
+      "resultSourceType": "string",
+      "hasOwn": true
+    },
+    {
+      "channel": {
+        "id": "x"
+      },
+      "sourceType": "number",
+      "source": 0,
+      "result": {
+        "id": "x"
+      },
+      "resultSourceType": "undefined",
+      "hasOwn": true
+    },
+    {
+      "channel": {
+        "id": "x",
+        "sourceId": "fallback"
+      },
+      "sourceType": "number",
+      "source": 0,
+      "result": {
+        "sourceId": "fallback",
+        "id": "x"
+      },
+      "resultSourceType": "string",
+      "hasOwn": true
+    },
+    {
+      "channel": {
+        "id": "x"
+      },
+      "sourceType": "boolean",
+      "source": false,
+      "result": {
+        "id": "x"
+      },
+      "resultSourceType": "undefined",
+      "hasOwn": true
+    },
+    {
+      "channel": {
+        "id": "x",
+        "sourceId": "fallback"
+      },
+      "sourceType": "boolean",
+      "source": false,
+      "result": {
+        "sourceId": "fallback",
+        "id": "x"
+      },
+      "resultSourceType": "string",
+      "hasOwn": true
+    },
+    {
+      "channel": {
+        "id": "x"
+      },
+      "sourceType": "number",
+      "source": 7,
+      "result": {
+        "sourceId": 7,
+        "id": "x"
+      },
+      "resultSourceType": "number",
+      "hasOwn": true
+    },
+    {
+      "channel": {
+        "id": "x",
+        "sourceId": "fallback"
+      },
+      "sourceType": "number",
+      "source": 7,
+      "result": {
+        "sourceId": 7,
+        "id": "x"
+      },
+      "resultSourceType": "number",
+      "hasOwn": true
+    },
+    {
+      "channel": {
+        "id": "x"
+      },
+      "sourceType": "string",
+      "source": "source",
+      "result": {
+        "sourceId": "source",
+        "id": "x"
+      },
+      "resultSourceType": "string",
+      "hasOwn": true
+    },
+    {
+      "channel": {
+        "id": "x",
+        "sourceId": "fallback"
+      },
+      "sourceType": "string",
+      "source": "source",
+      "result": {
+        "sourceId": "source",
+        "id": "x"
+      },
+      "resultSourceType": "string",
+      "hasOwn": true
+    }
+  ]
+}

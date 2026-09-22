@@ -7,6 +7,7 @@ const test = require('node:test');
 const acorn = require('acorn');
 const modules = {};
 const context = vm.createContext({ OTT2: { define(name, factory) { modules[name] = factory(id => modules[id]); } } });
+require('./load-core.cjs')(context);
 for (const name of ['security', 'library', 'state', 'playback-preferences']) {
     const code = fs.readFileSync(path.join(__dirname, '../src/' + name + '.js'), 'utf8');
     acorn.parse(code, { ecmaVersion: 5 }); vm.runInContext(code, context);

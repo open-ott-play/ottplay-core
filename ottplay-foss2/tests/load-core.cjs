@@ -8,4 +8,5 @@ module.exports = function loadCore(context) {
         vm.runInContext(fs.readFileSync(path.join(__dirname, "../vendor", file), "utf8"), context, { filename: file });
     }
     if (context.window) context.window.OttPlayCore = context.OttPlayCore;
+    return context.OttPlayCore;
 };

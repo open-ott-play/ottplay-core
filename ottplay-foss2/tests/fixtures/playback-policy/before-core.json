@@ -1,0 +1,10043 @@
+{
+  "baseline": "f429f537497ec95c2bf92781e1ecee86c18bbfe8",
+  "observed": {
+    "plans": [
+      {
+        "device": "generic",
+        "mask": 0,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 0,
+        "format": "hls",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 0,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 0,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 0,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 0,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 1,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 1,
+        "format": "hls",
+        "result": [
+          "hls.js"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 1,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 1,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 1,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 1,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 2,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 2,
+        "format": "hls",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 2,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 2,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 2,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 2,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 3,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 3,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 3,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 3,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 3,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 3,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 4,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 4,
+        "format": "hls",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 4,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 4,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 4,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 4,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 5,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 5,
+        "format": "hls",
+        "result": [
+          "hls.js"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 5,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 5,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 5,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 5,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 6,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 6,
+        "format": "hls",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 6,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 6,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 6,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 6,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 7,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 7,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 7,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 7,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 7,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 7,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 8,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 8,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 8,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 8,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 8,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 8,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 9,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 9,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 9,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 9,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 9,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 9,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 10,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 10,
+        "format": "hls",
+        "result": [
+          "native",
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 10,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 10,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 10,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 10,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 11,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 11,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 11,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 11,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 11,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 11,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 12,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 12,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 12,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 12,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 12,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 12,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 13,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 13,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 13,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 13,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 13,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 13,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 14,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 14,
+        "format": "hls",
+        "result": [
+          "native",
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 14,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 14,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 14,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 14,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 15,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 15,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 15,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 15,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 15,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 15,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 16,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 16,
+        "format": "hls",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 16,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 16,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 16,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 16,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 17,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 17,
+        "format": "hls",
+        "result": [
+          "hls.js"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 17,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 17,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 17,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 17,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 18,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 18,
+        "format": "hls",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 18,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 18,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 18,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 18,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 19,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 19,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 19,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 19,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 19,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 19,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 20,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 20,
+        "format": "hls",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 20,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 20,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 20,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 20,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 21,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 21,
+        "format": "hls",
+        "result": [
+          "hls.js"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 21,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 21,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 21,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 21,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 22,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 22,
+        "format": "hls",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 22,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 22,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 22,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 22,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 23,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 23,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 23,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 23,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 23,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 23,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 24,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 24,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 24,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 24,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 24,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 24,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 25,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 25,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 25,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 25,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 25,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 25,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 26,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 26,
+        "format": "hls",
+        "result": [
+          "native",
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 26,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 26,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 26,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 26,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 27,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 27,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 27,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 27,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 27,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 27,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 28,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 28,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 28,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 28,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 28,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 28,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 29,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 29,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 29,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 29,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 29,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 29,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 30,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 30,
+        "format": "hls",
+        "result": [
+          "native",
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 30,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 30,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 30,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 30,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 31,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 31,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 31,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 31,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 31,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 31,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 32,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 32,
+        "format": "hls",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 32,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 32,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 32,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 32,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 33,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 33,
+        "format": "hls",
+        "result": [
+          "hls.js"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 33,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 33,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 33,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 33,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 34,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 34,
+        "format": "hls",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 34,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 34,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 34,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 34,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 35,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 35,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 35,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 35,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 35,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 35,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 36,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 36,
+        "format": "hls",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 36,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 36,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 36,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 36,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 37,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 37,
+        "format": "hls",
+        "result": [
+          "hls.js"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 37,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 37,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 37,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 37,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 38,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 38,
+        "format": "hls",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 38,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 38,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 38,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 38,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 39,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 39,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 39,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 39,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 39,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 39,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 40,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 40,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 40,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 40,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 40,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 40,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 41,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 41,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 41,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 41,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 41,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 41,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 42,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 42,
+        "format": "hls",
+        "result": [
+          "native",
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 42,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 42,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 42,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 42,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 43,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 43,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 43,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 43,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 43,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 43,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 44,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 44,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 44,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 44,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 44,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 44,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 45,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 45,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 45,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 45,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 45,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 45,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 46,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 46,
+        "format": "hls",
+        "result": [
+          "native",
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 46,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 46,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 46,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 46,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 47,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 47,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 47,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 47,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 47,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 47,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 48,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 48,
+        "format": "hls",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 48,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 48,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 48,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 48,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 49,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 49,
+        "format": "hls",
+        "result": [
+          "hls.js"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 49,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 49,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 49,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 49,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 50,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 50,
+        "format": "hls",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 50,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 50,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 50,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 50,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 51,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 51,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 51,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 51,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 51,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 51,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 52,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 52,
+        "format": "hls",
+        "result": []
+      },
+      {
+        "device": "generic",
+        "mask": 52,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 52,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 52,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 52,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 53,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 53,
+        "format": "hls",
+        "result": [
+          "hls.js"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 53,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 53,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 53,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 53,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 54,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 54,
+        "format": "hls",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 54,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 54,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 54,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 54,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 55,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 55,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 55,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 55,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 55,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 55,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 56,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 56,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 56,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 56,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 56,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 56,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 57,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 57,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 57,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 57,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 57,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 57,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 58,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 58,
+        "format": "hls",
+        "result": [
+          "native",
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 58,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 58,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 58,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 58,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 59,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 59,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 59,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 59,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 59,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 59,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 60,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 60,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 60,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 60,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 60,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 60,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 61,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 61,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 61,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 61,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 61,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 61,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 62,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 62,
+        "format": "hls",
+        "result": [
+          "native",
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 62,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 62,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 62,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 62,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 63,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 63,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 63,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 63,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 63,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "generic",
+        "mask": 63,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 0,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 0,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 0,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 0,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 0,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 0,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 1,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 1,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 1,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 1,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 1,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 1,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 2,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 2,
+        "format": "hls",
+        "result": [
+          "native",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 2,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 2,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 2,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 2,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 3,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 3,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 3,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 3,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 3,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 3,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 4,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 4,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 4,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 4,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 4,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 4,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 5,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 5,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 5,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 5,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 5,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 5,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 6,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 6,
+        "format": "hls",
+        "result": [
+          "native",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 6,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 6,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 6,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 6,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 7,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 7,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 7,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 7,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 7,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 7,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 8,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 8,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 8,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 8,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 8,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 8,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 9,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 9,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 9,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 9,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 9,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 9,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 10,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 10,
+        "format": "hls",
+        "result": [
+          "native",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 10,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 10,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 10,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 10,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 11,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 11,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 11,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 11,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 11,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 11,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 12,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 12,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 12,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 12,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 12,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 12,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 13,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 13,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 13,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 13,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 13,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 13,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 14,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 14,
+        "format": "hls",
+        "result": [
+          "native",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 14,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 14,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 14,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 14,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 15,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 15,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 15,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 15,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 15,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 15,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 16,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 16,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 16,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 16,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 16,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 16,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 17,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 17,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 17,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 17,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 17,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 17,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 18,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 18,
+        "format": "hls",
+        "result": [
+          "native",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 18,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 18,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 18,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 18,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 19,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 19,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 19,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 19,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 19,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 19,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 20,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 20,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 20,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 20,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 20,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 20,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 21,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 21,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 21,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 21,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 21,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 21,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 22,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 22,
+        "format": "hls",
+        "result": [
+          "native",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 22,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 22,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 22,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 22,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 23,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 23,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 23,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 23,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 23,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 23,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 24,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 24,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 24,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 24,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 24,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 24,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 25,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 25,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 25,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 25,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 25,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 25,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 26,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 26,
+        "format": "hls",
+        "result": [
+          "native",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 26,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 26,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 26,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 26,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 27,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 27,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 27,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 27,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 27,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 27,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 28,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 28,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 28,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 28,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 28,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 28,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 29,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 29,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 29,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 29,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 29,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 29,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 30,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 30,
+        "format": "hls",
+        "result": [
+          "native",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 30,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 30,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 30,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 30,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 31,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 31,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 31,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 31,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 31,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 31,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 32,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 32,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 32,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 32,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 32,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 32,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 33,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 33,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 33,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 33,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 33,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 33,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 34,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 34,
+        "format": "hls",
+        "result": [
+          "native",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 34,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 34,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 34,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 34,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 35,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 35,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 35,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 35,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 35,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 35,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 36,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 36,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 36,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 36,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 36,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 36,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 37,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 37,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 37,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 37,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 37,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 37,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 38,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 38,
+        "format": "hls",
+        "result": [
+          "native",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 38,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 38,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 38,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 38,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 39,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 39,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 39,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 39,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 39,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 39,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 40,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 40,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 40,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 40,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 40,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 40,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 41,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 41,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 41,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 41,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 41,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 41,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 42,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 42,
+        "format": "hls",
+        "result": [
+          "native",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 42,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 42,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 42,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 42,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 43,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 43,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 43,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 43,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 43,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 43,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 44,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 44,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 44,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 44,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 44,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 44,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 45,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 45,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 45,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "lg/webos",
+        "mask": 45,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 45,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 45,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 46,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 46,
+        "format": "hls",
+        "result": [
+          "native",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 46,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 46,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 46,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 46,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 47,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 47,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 47,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 47,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 47,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 47,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 48,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 48,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 48,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 48,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 48,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 48,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 49,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 49,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 49,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 49,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 49,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 49,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 50,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 50,
+        "format": "hls",
+        "result": [
+          "native",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 50,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 50,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 50,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 50,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 51,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 51,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 51,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 51,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 51,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 51,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 52,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 52,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 52,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 52,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 52,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 52,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 53,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 53,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 53,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 53,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 53,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 53,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 54,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 54,
+        "format": "hls",
+        "result": [
+          "native",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 54,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 54,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 54,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 54,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 55,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 55,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 55,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 55,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 55,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 55,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 56,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 56,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 56,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 56,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 56,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 56,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 57,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 57,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 57,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 57,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 57,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 57,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 58,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 58,
+        "format": "hls",
+        "result": [
+          "native",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 58,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 58,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 58,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 58,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 59,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 59,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 59,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 59,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 59,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 59,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 60,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 60,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 60,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 60,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 60,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 60,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 61,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 61,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 61,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 61,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 61,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 61,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 62,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 62,
+        "format": "hls",
+        "result": [
+          "native",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 62,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 62,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 62,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 62,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 63,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 63,
+        "format": "hls",
+        "result": [
+          "native",
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 63,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 63,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 63,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "lg/webos",
+        "mask": 63,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 0,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 0,
+        "format": "hls",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 0,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 0,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 0,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 0,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 1,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 1,
+        "format": "hls",
+        "result": [
+          "hls.js"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 1,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 1,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 1,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 1,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 2,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 2,
+        "format": "hls",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 2,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 2,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 2,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 2,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 3,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 3,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 3,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 3,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 3,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 3,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 4,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 4,
+        "format": "hls",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 4,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 4,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 4,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 4,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 5,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 5,
+        "format": "hls",
+        "result": [
+          "hls.js"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 5,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 5,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 5,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 5,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 6,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 6,
+        "format": "hls",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 6,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 6,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 6,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 6,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 7,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 7,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 7,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 7,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 7,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 7,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 8,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 8,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 8,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 8,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 8,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 8,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 9,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 9,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 9,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 9,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 9,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 9,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 10,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 10,
+        "format": "hls",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 10,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 10,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 10,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 10,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 11,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 11,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 11,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 11,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 11,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 11,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 12,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 12,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 12,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 12,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 12,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 12,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 13,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 13,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 13,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 13,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 13,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 13,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 14,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 14,
+        "format": "hls",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 14,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 14,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 14,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 14,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 15,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 15,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 15,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 15,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 15,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 15,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 16,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 16,
+        "format": "hls",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 16,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 16,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 16,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 16,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 17,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 17,
+        "format": "hls",
+        "result": [
+          "hls.js"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 17,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 17,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 17,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 17,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 18,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 18,
+        "format": "hls",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 18,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 18,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 18,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 18,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 19,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 19,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 19,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 19,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 19,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 19,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 20,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 20,
+        "format": "hls",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 20,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 20,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 20,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 20,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 21,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 21,
+        "format": "hls",
+        "result": [
+          "hls.js"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 21,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 21,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 21,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 21,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 22,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 22,
+        "format": "hls",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 22,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 22,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 22,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 22,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 23,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 23,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 23,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 23,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 23,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 23,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 24,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 24,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 24,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 24,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 24,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 24,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 25,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 25,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 25,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 25,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 25,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 25,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 26,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 26,
+        "format": "hls",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 26,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 26,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 26,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 26,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 27,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 27,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 27,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 27,
+        "format": "mpegts",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 27,
+        "format": "flv",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 27,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 28,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 28,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 28,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 28,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 28,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 28,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 29,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 29,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 29,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 29,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 29,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 29,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 30,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 30,
+        "format": "hls",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 30,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 30,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 30,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 30,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 31,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 31,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 31,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 31,
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 31,
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 31,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 32,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 32,
+        "format": "hls",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 32,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 32,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 32,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 32,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 33,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 33,
+        "format": "hls",
+        "result": [
+          "hls.js"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 33,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 33,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 33,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 33,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 34,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 34,
+        "format": "hls",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 34,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 34,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 34,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 34,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 35,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 35,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 35,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 35,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 35,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 35,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 36,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 36,
+        "format": "hls",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 36,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 36,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 36,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 36,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 37,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 37,
+        "format": "hls",
+        "result": [
+          "hls.js"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 37,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 37,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 37,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 37,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 38,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 38,
+        "format": "hls",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 38,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 38,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 38,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 38,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 39,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 39,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 39,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 39,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 39,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 39,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 40,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 40,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 40,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 40,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 40,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 40,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 41,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 41,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 41,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 41,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 41,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 41,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 42,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 42,
+        "format": "hls",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 42,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 42,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 42,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 42,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 43,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 43,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 43,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 43,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 43,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 43,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 44,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 44,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 44,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 44,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 44,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 44,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 45,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 45,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 45,
+        "format": "dash",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 45,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 45,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 45,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 46,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 46,
+        "format": "hls",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 46,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 46,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 46,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 46,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 47,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 47,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 47,
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 47,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 47,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 47,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 48,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 48,
+        "format": "hls",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 48,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 48,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 48,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 48,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 49,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 49,
+        "format": "hls",
+        "result": [
+          "hls.js"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 49,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 49,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 49,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 49,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 50,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 50,
+        "format": "hls",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 50,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 50,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 50,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 50,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 51,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 51,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 51,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 51,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 51,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 51,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 52,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 52,
+        "format": "hls",
+        "result": []
+      },
+      {
+        "device": "chromium",
+        "mask": 52,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 52,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 52,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 52,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 53,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 53,
+        "format": "hls",
+        "result": [
+          "hls.js"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 53,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 53,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 53,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 53,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 54,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 54,
+        "format": "hls",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 54,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 54,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 54,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 54,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 55,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 55,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "shaka"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 55,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 55,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 55,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 55,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 56,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 56,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 56,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 56,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 56,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 56,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 57,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 57,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 57,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 57,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 57,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 57,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 58,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 58,
+        "format": "hls",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 58,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 58,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 58,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 58,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 59,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 59,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 59,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 59,
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 59,
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 59,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 60,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 60,
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 60,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 60,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 60,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 60,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 61,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 61,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 61,
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 61,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 61,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 61,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 62,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 62,
+        "format": "hls",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 62,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 62,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 62,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 62,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 63,
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 63,
+        "format": "hls",
+        "result": [
+          "hls.js",
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 63,
+        "format": "dash",
+        "result": [
+          "shaka",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 63,
+        "format": "mpegts",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 63,
+        "format": "flv",
+        "result": [
+          "mpegts",
+          "native"
+        ]
+      },
+      {
+        "device": "chromium",
+        "mask": 63,
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "engine": "native",
+        "format": "",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "engine": "native",
+        "format": "hls",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "engine": "native",
+        "format": "dash",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "engine": "native",
+        "format": "mpegts",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "engine": "native",
+        "format": "flv",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "engine": "native",
+        "format": "file",
+        "result": [
+          "native"
+        ]
+      },
+      {
+        "engine": "hls.js",
+        "format": "",
+        "result": [
+          "hls.js"
+        ]
+      },
+      {
+        "engine": "hls.js",
+        "format": "hls",
+        "result": [
+          "hls.js"
+        ]
+      },
+      {
+        "engine": "hls.js",
+        "format": "dash",
+        "result": [
+          "hls.js"
+        ]
+      },
+      {
+        "engine": "hls.js",
+        "format": "mpegts",
+        "result": [
+          "hls.js"
+        ]
+      },
+      {
+        "engine": "hls.js",
+        "format": "flv",
+        "result": [
+          "hls.js"
+        ]
+      },
+      {
+        "engine": "hls.js",
+        "format": "file",
+        "result": [
+          "hls.js"
+        ]
+      },
+      {
+        "engine": "shaka",
+        "format": "",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "engine": "shaka",
+        "format": "hls",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "engine": "shaka",
+        "format": "dash",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "engine": "shaka",
+        "format": "mpegts",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "engine": "shaka",
+        "format": "flv",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "engine": "shaka",
+        "format": "file",
+        "result": [
+          "shaka"
+        ]
+      },
+      {
+        "engine": "mpegts",
+        "format": "",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "engine": "mpegts",
+        "format": "hls",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "engine": "mpegts",
+        "format": "dash",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "engine": "mpegts",
+        "format": "mpegts",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "engine": "mpegts",
+        "format": "flv",
+        "result": [
+          "mpegts"
+        ]
+      },
+      {
+        "engine": "mpegts",
+        "format": "file",
+        "result": [
+          "mpegts"
+        ]
+      }
+    ],
+    "formats": [
+      {
+        "value": null,
+        "result": ""
+      },
+      {
+        "value": false,
+        "result": ""
+      },
+      {
+        "value": 0,
+        "result": ""
+      },
+      {
+        "value": "",
+        "result": ""
+      },
+      {
+        "value": "HLS",
+        "result": ""
+      },
+      {
+        "value": " m3u8 ",
+        "result": "hls"
+      },
+      {
+        "value": "mpegurl",
+        "result": "hls"
+      },
+      {
+        "value": "DASH",
+        "result": "dash"
+      },
+      {
+        "value": "mpd",
+        "result": "dash"
+      },
+      {
+        "value": "video.mpd;codec=avc",
+        "result": "dash"
+      },
+      {
+        "value": "foo/mpd?x",
+        "result": "dash"
+      },
+      {
+        "value": "foo.mpd#x",
+        "result": ""
+      },
+      {
+        "value": "mpd-extra",
+        "result": ""
+      },
+      {
+        "value": "flv",
+        "result": "flv"
+      },
+      {
+        "value": "x-flv-x",
+        "result": "flv"
+      },
+      {
+        "value": "TS",
+        "result": "mpegts"
+      },
+      {
+        "value": "mp2t",
+        "result": "mpegts"
+      },
+      {
+        "value": "mpeg-ts",
+        "result": "mpegts"
+      },
+      {
+        "value": "mpegts",
+        "result": "mpegts"
+      },
+      {
+        "value": "file",
+        "result": "file"
+      },
+      {
+        "value": "video/mp4",
+        "result": "file"
+      },
+      {
+        "value": "video/mp4extra",
+        "result": "file"
+      },
+      {
+        "value": "video/webm",
+        "result": "file"
+      },
+      {
+        "value": "video/ogg",
+        "result": "file"
+      },
+      {
+        "value": "video/quicktime",
+        "result": "file"
+      },
+      {
+        "value": "audio/mpeg",
+        "result": "file"
+      },
+      {
+        "value": "audio/mp4",
+        "result": "file"
+      },
+      {
+        "value": "audio/aac",
+        "result": "file"
+      },
+      {
+        "value": "audio/ogg",
+        "result": "file"
+      },
+      {
+        "value": "audio/wav",
+        "result": ""
+      },
+      {
+        "value": "hls-flv",
+        "result": "flv"
+      },
+      {
+        "value": "mpegurl-flv",
+        "result": "hls"
+      },
+      {
+        "value": "dash+xml-flv",
+        "result": "dash"
+      },
+      {
+        "value": "flv-mp2t",
+        "result": "flv"
+      },
+      {
+        "value": "application/octet-stream",
+        "result": ""
+      }
+    ],
+    "seeks": [
+      {
+        "ranges": [
+          [
+            0,
+            100
+          ]
+        ],
+        "requested": -1,
+        "accepted": true,
+        "position": 0
+      },
+      {
+        "ranges": [
+          [
+            0,
+            100
+          ]
+        ],
+        "requested": 0,
+        "accepted": true,
+        "position": 0
+      },
+      {
+        "ranges": [
+          [
+            0,
+            100
+          ]
+        ],
+        "requested": 5,
+        "accepted": true,
+        "position": 5
+      },
+      {
+        "ranges": [
+          [
+            0,
+            100
+          ]
+        ],
+        "requested": 10,
+        "accepted": true,
+        "position": 10
+      },
+      {
+        "ranges": [
+          [
+            0,
+            100
+          ]
+        ],
+        "requested": 12,
+        "accepted": true,
+        "position": 12
+      },
+      {
+        "ranges": [
+          [
+            0,
+            100
+          ]
+        ],
+        "requested": 15,
+        "accepted": true,
+        "position": 15
+      },
+      {
+        "ranges": [
+          [
+            0,
+            100
+          ]
+        ],
+        "requested": 18,
+        "accepted": true,
+        "position": 18
+      },
+      {
+        "ranges": [
+          [
+            0,
+            100
+          ]
+        ],
+        "requested": 20,
+        "accepted": true,
+        "position": 20
+      },
+      {
+        "ranges": [
+          [
+            0,
+            100
+          ]
+        ],
+        "requested": 22,
+        "accepted": true,
+        "position": 22
+      },
+      {
+        "ranges": [
+          [
+            0,
+            100
+          ]
+        ],
+        "requested": 25,
+        "accepted": true,
+        "position": 25
+      },
+      {
+        "ranges": [
+          [
+            0,
+            100
+          ]
+        ],
+        "requested": 30,
+        "accepted": true,
+        "position": 30
+      },
+      {
+        "ranges": [
+          [
+            0,
+            100
+          ]
+        ],
+        "requested": 100,
+        "accepted": true,
+        "position": 100
+      },
+      {
+        "ranges": [
+          [
+            5,
+            10
+          ],
+          [
+            20,
+            30
+          ]
+        ],
+        "requested": -1,
+        "accepted": true,
+        "position": 5
+      },
+      {
+        "ranges": [
+          [
+            5,
+            10
+          ],
+          [
+            20,
+            30
+          ]
+        ],
+        "requested": 0,
+        "accepted": true,
+        "position": 5
+      },
+      {
+        "ranges": [
+          [
+            5,
+            10
+          ],
+          [
+            20,
+            30
+          ]
+        ],
+        "requested": 5,
+        "accepted": true,
+        "position": 5
+      },
+      {
+        "ranges": [
+          [
+            5,
+            10
+          ],
+          [
+            20,
+            30
+          ]
+        ],
+        "requested": 10,
+        "accepted": true,
+        "position": 10
+      },
+      {
+        "ranges": [
+          [
+            5,
+            10
+          ],
+          [
+            20,
+            30
+          ]
+        ],
+        "requested": 12,
+        "accepted": true,
+        "position": 10
+      },
+      {
+        "ranges": [
+          [
+            5,
+            10
+          ],
+          [
+            20,
+            30
+          ]
+        ],
+        "requested": 15,
+        "accepted": true,
+        "position": 20
+      },
+      {
+        "ranges": [
+          [
+            5,
+            10
+          ],
+          [
+            20,
+            30
+          ]
+        ],
+        "requested": 18,
+        "accepted": true,
+        "position": 20
+      },
+      {
+        "ranges": [
+          [
+            5,
+            10
+          ],
+          [
+            20,
+            30
+          ]
+        ],
+        "requested": 20,
+        "accepted": true,
+        "position": 20
+      },
+      {
+        "ranges": [
+          [
+            5,
+            10
+          ],
+          [
+            20,
+            30
+          ]
+        ],
+        "requested": 22,
+        "accepted": true,
+        "position": 22
+      },
+      {
+        "ranges": [
+          [
+            5,
+            10
+          ],
+          [
+            20,
+            30
+          ]
+        ],
+        "requested": 25,
+        "accepted": true,
+        "position": 25
+      },
+      {
+        "ranges": [
+          [
+            5,
+            10
+          ],
+          [
+            20,
+            30
+          ]
+        ],
+        "requested": 30,
+        "accepted": true,
+        "position": 30
+      },
+      {
+        "ranges": [
+          [
+            5,
+            10
+          ],
+          [
+            20,
+            30
+          ]
+        ],
+        "requested": 100,
+        "accepted": true,
+        "position": 30
+      },
+      {
+        "ranges": [
+          [
+            5,
+            10
+          ],
+          [
+            10,
+            20
+          ],
+          [
+            25,
+            40
+          ]
+        ],
+        "requested": -1,
+        "accepted": true,
+        "position": 5
+      },
+      {
+        "ranges": [
+          [
+            5,
+            10
+          ],
+          [
+            10,
+            20
+          ],
+          [
+            25,
+            40
+          ]
+        ],
+        "requested": 0,
+        "accepted": true,
+        "position": 5
+      },
+      {
+        "ranges": [
+          [
+            5,
+            10
+          ],
+          [
+            10,
+            20
+          ],
+          [
+            25,
+            40
+          ]
+        ],
+        "requested": 5,
+        "accepted": true,
+        "position": 5
+      },
+      {
+        "ranges": [
+          [
+            5,
+            10
+          ],
+          [
+            10,
+            20
+          ],
+          [
+            25,
+            40
+          ]
+        ],
+        "requested": 10,
+        "accepted": true,
+        "position": 10
+      },
+      {
+        "ranges": [
+          [
+            5,
+            10
+          ],
+          [
+            10,
+            20
+          ],
+          [
+            25,
+            40
+          ]
+        ],
+        "requested": 12,
+        "accepted": true,
+        "position": 12
+      },
+      {
+        "ranges": [
+          [
+            5,
+            10
+          ],
+          [
+            10,
+            20
+          ],
+          [
+            25,
+            40
+          ]
+        ],
+        "requested": 15,
+        "accepted": true,
+        "position": 15
+      },
+      {
+        "ranges": [
+          [
+            5,
+            10
+          ],
+          [
+            10,
+            20
+          ],
+          [
+            25,
+            40
+          ]
+        ],
+        "requested": 18,
+        "accepted": true,
+        "position": 18
+      },
+      {
+        "ranges": [
+          [
+            5,
+            10
+          ],
+          [
+            10,
+            20
+          ],
+          [
+            25,
+            40
+          ]
+        ],
+        "requested": 20,
+        "accepted": true,
+        "position": 20
+      },
+      {
+        "ranges": [
+          [
+            5,
+            10
+          ],
+          [
+            10,
+            20
+          ],
+          [
+            25,
+            40
+          ]
+        ],
+        "requested": 22,
+        "accepted": true,
+        "position": 20
+      },
+      {
+        "ranges": [
+          [
+            5,
+            10
+          ],
+          [
+            10,
+            20
+          ],
+          [
+            25,
+            40
+          ]
+        ],
+        "requested": 25,
+        "accepted": true,
+        "position": 25
+      },
+      {
+        "ranges": [
+          [
+            5,
+            10
+          ],
+          [
+            10,
+            20
+          ],
+          [
+            25,
+            40
+          ]
+        ],
+        "requested": 30,
+        "accepted": true,
+        "position": 30
+      },
+      {
+        "ranges": [
+          [
+            5,
+            10
+          ],
+          [
+            10,
+            20
+          ],
+          [
+            25,
+            40
+          ]
+        ],
+        "requested": 100,
+        "accepted": true,
+        "position": 40
+      }
+    ]
+  }
+}

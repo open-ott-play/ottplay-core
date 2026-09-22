@@ -1,11 +1,12 @@
 # OttPlay shared core
 
-One maintained implementation of the guide, archive, playlist, Xtream and Stalker rules migrated from the
-OttPlay family. The browser and Node filter in FOSS2 consume the same generated
+One maintained implementation of guide, archive, provider/catalog, durable-state
+and playback decisions for the OttPlay family. The browser and Node filter in FOSS2 consume the same generated
 ES5 bundle. Main-player iOS uses JavaScriptCore, Rust uses QuickJS-NG, and the
 main browser bridge uses that identical file. The active native Android
 application and archived Android adapter consume the JVM artifact.
-This is an integrated first slice, not a completed rewrite of the product line.
+Compatibility profiles retain the existing client contracts. Physical device and
+commercial provider acceptance remains separate from the automated checks.
 
 `src/commonMain` owns XMLTV date arithmetic, channel-name normalization, ordered
 ID/name/quality-alias selection, native fuzzy matching, regional time shifts,
@@ -253,3 +254,31 @@ and full rollback on a later insert failure. SQL conflict behavior is unchanged.
 The source uses the OttPlay MIT license. Generated JavaScript includes Kotlin's
 Apache-2.0 runtime notices in `ottplay-core.LICENSE.txt`. The standard Gradle
 wrapper retains its Apache-2.0 notices and pinned distribution checksum.
+
+## Operator, durable-state and playback ownership
+
+`OperatorSession` and the shared catalog builders own the classic operator API,
+playlist fallback and partial-response behavior. Provider profiles supply endpoint
+and credential rules. The base player's single operator transport adapter performs
+XHR, interception and proxy effects; its provider files retain configuration/UI
+wiring. `OperatorPortal` owns VPortal search, pagination, inherited metadata and
+variant choices. `OperatorLifetime` owns request admission and bounded series
+retention; cancellation handles stay in the host.
+
+Durable selections, browser state, source-bound identity, legacy settings import,
+backup portability and parental authorization live in common code. Profiles retain
+classic list aliasing, native merge/eviction, browser redaction, rate limits and
+source/session invalidation. JSON/URL codecs, cryptographic primitives, storage,
+file permissions, consent prompts and payload identity stay in adapters.
+
+Playback rules choose decoder order, format signatures, retry/recovery budgets,
+seek gaps, saved tracks and native resume positions. Channel navigation owns the
+catalog and switch generations that reject stale asynchronous callbacks. Media3,
+HTML media/decoder calls, OS lifecycle events, timers and device APIs stay native.
+The same ES5 artifact supplies the browser and classic decisions; Android calls
+the JVM API directly.
+
+The independent services consume generated wire contracts from the workspace's
+`contracts/ottplay-wire-v1.json`. They do not embed a player runtime. Self-contained
+generators and digest receipts reject edits to a generated policy, including when
+building a consumer without this workspace.

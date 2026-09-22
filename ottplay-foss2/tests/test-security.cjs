@@ -10,6 +10,7 @@ acorn.parse(code, { ecmaVersion: 5 });
 let security;
 const context = vm.createContext({ OTT2: { define(name, factory) { security = factory(); } } });
 vm.runInContext("Promise=undefined; fetch=undefined; Map=undefined; Set=undefined; Uint8Array=undefined; crypto=undefined;", context);
+require("./load-core.cjs")(context);
 vm.runInContext(code, context);
 const plain = value => JSON.parse(JSON.stringify(value));
 function fixture(initialTime = 1000000) {

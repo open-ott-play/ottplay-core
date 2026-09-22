@@ -1,0 +1,1051 @@
+[
+  {
+    "name": "rename active",
+    "profile": "browser",
+    "operation": "renameList",
+    "args": [
+      "default",
+      "Family"
+    ],
+    "initial": {
+      "favorites": {
+        "default": [
+          "a",
+          "b"
+        ],
+        "Second": [
+          "c"
+        ]
+      },
+      "activeFavorites": "default"
+    },
+    "expected": {
+      "state": {
+        "favorites": {
+          "default": [],
+          "Second": [
+            "c"
+          ],
+          "Family": [
+            "a",
+            "b"
+          ]
+        },
+        "activeFavorites": "Family"
+      },
+      "result": {
+        "undefined": true
+      },
+      "origins": [
+        [
+          "default",
+          []
+        ],
+        [
+          "Second",
+          [
+            "Second"
+          ]
+        ],
+        [
+          "Family",
+          []
+        ]
+      ]
+    }
+  },
+  {
+    "name": "rename inactive",
+    "profile": "browser",
+    "operation": "renameList",
+    "args": [
+      "Second",
+      "Family"
+    ],
+    "initial": {
+      "favorites": {
+        "default": [
+          "a",
+          "b"
+        ],
+        "Second": [
+          "c"
+        ]
+      },
+      "activeFavorites": "default"
+    },
+    "expected": {
+      "state": {
+        "favorites": {
+          "default": [
+            "a",
+            "b"
+          ],
+          "Family": [
+            "c"
+          ]
+        },
+        "activeFavorites": "Family"
+      },
+      "result": {
+        "undefined": true
+      },
+      "origins": [
+        [
+          "default",
+          [
+            "default"
+          ]
+        ],
+        [
+          "Family",
+          []
+        ]
+      ]
+    }
+  },
+  {
+    "name": "rename same",
+    "profile": "browser",
+    "operation": "renameList",
+    "args": [
+      "default",
+      "default"
+    ],
+    "initial": {
+      "favorites": {
+        "default": [
+          "a",
+          "b"
+        ],
+        "Second": [
+          "c"
+        ]
+      },
+      "activeFavorites": "default"
+    },
+    "expected": {
+      "state": {
+        "favorites": {
+          "default": [
+            "a",
+            "b"
+          ],
+          "Second": [
+            "c"
+          ]
+        },
+        "activeFavorites": "default"
+      },
+      "result": {
+        "undefined": true
+      },
+      "origins": [
+        [
+          "default",
+          [
+            "default"
+          ]
+        ],
+        [
+          "Second",
+          [
+            "Second"
+          ]
+        ]
+      ]
+    }
+  },
+  {
+    "name": "rename missing",
+    "profile": "browser",
+    "operation": "renameList",
+    "args": [
+      "Missing",
+      "Family"
+    ],
+    "initial": {
+      "favorites": {
+        "default": [
+          "a",
+          "b"
+        ],
+        "Second": [
+          "c"
+        ]
+      },
+      "activeFavorites": "default"
+    },
+    "expected": {
+      "state": {
+        "favorites": {
+          "default": [
+            "a",
+            "b"
+          ],
+          "Second": [
+            "c"
+          ]
+        },
+        "activeFavorites": "default"
+      },
+      "result": {
+        "undefined": true
+      },
+      "origins": [
+        [
+          "default",
+          [
+            "default"
+          ]
+        ],
+        [
+          "Second",
+          [
+            "Second"
+          ]
+        ]
+      ],
+      "error": {
+        "name": "Error",
+        "message": "Unknown list"
+      }
+    }
+  },
+  {
+    "name": "rename conflict",
+    "profile": "browser",
+    "operation": "renameList",
+    "args": [
+      "default",
+      "Second"
+    ],
+    "initial": {
+      "favorites": {
+        "default": [
+          "a",
+          "b"
+        ],
+        "Second": [
+          "c"
+        ]
+      },
+      "activeFavorites": "default"
+    },
+    "expected": {
+      "state": {
+        "favorites": {
+          "default": [
+            "a",
+            "b"
+          ],
+          "Second": [
+            "c"
+          ]
+        },
+        "activeFavorites": "default"
+      },
+      "result": {
+        "undefined": true
+      },
+      "origins": [
+        [
+          "default",
+          [
+            "default"
+          ]
+        ],
+        [
+          "Second",
+          [
+            "Second"
+          ]
+        ]
+      ],
+      "error": {
+        "name": "Error",
+        "message": "List already exists"
+      }
+    }
+  },
+  {
+    "name": "rename whitespace",
+    "profile": "browser",
+    "operation": "renameList",
+    "args": [
+      "default",
+      "  Family  "
+    ],
+    "initial": {
+      "favorites": {
+        "default": [
+          "a",
+          "b"
+        ],
+        "Second": [
+          "c"
+        ]
+      },
+      "activeFavorites": "default"
+    },
+    "expected": {
+      "state": {
+        "favorites": {
+          "default": [],
+          "Second": [
+            "c"
+          ],
+          "Family": [
+            "a",
+            "b"
+          ]
+        },
+        "activeFavorites": "Family"
+      },
+      "result": {
+        "undefined": true
+      },
+      "origins": [
+        [
+          "default",
+          []
+        ],
+        [
+          "Second",
+          [
+            "Second"
+          ]
+        ],
+        [
+          "Family",
+          []
+        ]
+      ]
+    }
+  },
+  {
+    "name": "rename empty",
+    "profile": "browser",
+    "operation": "renameList",
+    "args": [
+      "default",
+      ""
+    ],
+    "initial": {
+      "favorites": {
+        "default": [
+          "a",
+          "b"
+        ],
+        "Second": [
+          "c"
+        ]
+      },
+      "activeFavorites": "default"
+    },
+    "expected": {
+      "state": {
+        "favorites": {
+          "default": [
+            "a",
+            "b"
+          ],
+          "Second": [
+            "c"
+          ]
+        },
+        "activeFavorites": "default"
+      },
+      "result": {
+        "undefined": true
+      },
+      "origins": [
+        [
+          "default",
+          [
+            "default"
+          ]
+        ],
+        [
+          "Second",
+          [
+            "Second"
+          ]
+        ]
+      ],
+      "error": {
+        "name": "Error",
+        "message": "Invalid name"
+      }
+    }
+  },
+  {
+    "name": "rename reserved",
+    "profile": "browser",
+    "operation": "renameList",
+    "args": [
+      "default",
+      "constructor"
+    ],
+    "initial": {
+      "favorites": {
+        "default": [
+          "a",
+          "b"
+        ],
+        "Second": [
+          "c"
+        ]
+      },
+      "activeFavorites": "default"
+    },
+    "expected": {
+      "state": {
+        "favorites": {
+          "default": [
+            "a",
+            "b"
+          ],
+          "Second": [
+            "c"
+          ]
+        },
+        "activeFavorites": "default"
+      },
+      "result": {
+        "undefined": true
+      },
+      "origins": [
+        [
+          "default",
+          [
+            "default"
+          ]
+        ],
+        [
+          "Second",
+          [
+            "Second"
+          ]
+        ]
+      ],
+      "error": {
+        "name": "Error",
+        "message": "Invalid name"
+      }
+    }
+  },
+  {
+    "name": "rename excessive",
+    "profile": "browser",
+    "operation": "renameList",
+    "args": [
+      "default",
+      "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    ],
+    "initial": {
+      "favorites": {
+        "default": [
+          "a",
+          "b"
+        ],
+        "Second": [
+          "c"
+        ]
+      },
+      "activeFavorites": "default"
+    },
+    "expected": {
+      "state": {
+        "favorites": {
+          "default": [
+            "a",
+            "b"
+          ],
+          "Second": [
+            "c"
+          ]
+        },
+        "activeFavorites": "default"
+      },
+      "result": {
+        "undefined": true
+      },
+      "origins": [
+        [
+          "default",
+          [
+            "default"
+          ]
+        ],
+        [
+          "Second",
+          [
+            "Second"
+          ]
+        ]
+      ],
+      "error": {
+        "name": "Error",
+        "message": "Invalid name"
+      }
+    }
+  },
+  {
+    "name": "rename Unicode",
+    "profile": "browser",
+    "operation": "renameList",
+    "args": [
+      "default",
+      "\u0085Family\u0085"
+    ],
+    "initial": {
+      "favorites": {
+        "default": [
+          "a",
+          "b"
+        ],
+        "Second": [
+          "c"
+        ]
+      },
+      "activeFavorites": "default"
+    },
+    "expected": {
+      "state": {
+        "favorites": {
+          "default": [],
+          "Second": [
+            "c"
+          ],
+          "\u0085Family\u0085": [
+            "a",
+            "b"
+          ]
+        },
+        "activeFavorites": "\u0085Family\u0085"
+      },
+      "result": {
+        "undefined": true
+      },
+      "origins": [
+        [
+          "default",
+          []
+        ],
+        [
+          "Second",
+          [
+            "Second"
+          ]
+        ],
+        [
+          "\u0085Family\u0085",
+          []
+        ]
+      ]
+    }
+  },
+  {
+    "name": "delete default",
+    "profile": "browser",
+    "operation": "removeList",
+    "args": [
+      "default"
+    ],
+    "initial": {
+      "favorites": {
+        "default": [
+          "a",
+          "b"
+        ],
+        "Second": [
+          "c"
+        ]
+      },
+      "activeFavorites": "default"
+    },
+    "expected": {
+      "state": {
+        "favorites": {
+          "default": [],
+          "Second": [
+            "c"
+          ]
+        },
+        "activeFavorites": "default"
+      },
+      "result": {
+        "undefined": true
+      },
+      "origins": [
+        [
+          "default",
+          []
+        ],
+        [
+          "Second",
+          [
+            "Second"
+          ]
+        ]
+      ]
+    }
+  },
+  {
+    "name": "delete Second",
+    "profile": "browser",
+    "operation": "removeList",
+    "args": [
+      "Second"
+    ],
+    "initial": {
+      "favorites": {
+        "default": [
+          "a",
+          "b"
+        ],
+        "Second": [
+          "c"
+        ]
+      },
+      "activeFavorites": "default"
+    },
+    "expected": {
+      "state": {
+        "favorites": {
+          "default": [
+            "a",
+            "b"
+          ]
+        },
+        "activeFavorites": "default"
+      },
+      "result": {
+        "undefined": true
+      },
+      "origins": [
+        [
+          "default",
+          [
+            "default"
+          ]
+        ]
+      ]
+    }
+  },
+  {
+    "name": "delete Missing",
+    "profile": "browser",
+    "operation": "removeList",
+    "args": [
+      "Missing"
+    ],
+    "initial": {
+      "favorites": {
+        "default": [
+          "a",
+          "b"
+        ],
+        "Second": [
+          "c"
+        ]
+      },
+      "activeFavorites": "default"
+    },
+    "expected": {
+      "state": {
+        "favorites": {
+          "default": [
+            "a",
+            "b"
+          ],
+          "Second": [
+            "c"
+          ]
+        },
+        "activeFavorites": "default"
+      },
+      "result": {
+        "undefined": true
+      },
+      "origins": [
+        [
+          "default",
+          [
+            "default"
+          ]
+        ],
+        [
+          "Second",
+          [
+            "Second"
+          ]
+        ]
+      ]
+    }
+  },
+  {
+    "name": "delete constructor",
+    "profile": "browser",
+    "operation": "removeList",
+    "args": [
+      "constructor"
+    ],
+    "initial": {
+      "favorites": {
+        "default": [
+          "a",
+          "b"
+        ],
+        "Second": [
+          "c"
+        ]
+      },
+      "activeFavorites": "default"
+    },
+    "expected": {
+      "state": {
+        "favorites": {
+          "default": [
+            "a",
+            "b"
+          ],
+          "Second": [
+            "c"
+          ]
+        },
+        "activeFavorites": "default"
+      },
+      "result": {
+        "undefined": true
+      },
+      "origins": [
+        [
+          "default",
+          [
+            "default"
+          ]
+        ],
+        [
+          "Second",
+          [
+            "Second"
+          ]
+        ]
+      ]
+    }
+  },
+  {
+    "name": "move b/-1",
+    "profile": "browser",
+    "operation": "moveFavorite",
+    "args": [
+      "b",
+      -1
+    ],
+    "initial": {
+      "favorites": {
+        "default": [
+          "a",
+          "b"
+        ],
+        "Second": [
+          "c"
+        ]
+      },
+      "activeFavorites": "default"
+    },
+    "expected": {
+      "state": {
+        "favorites": {
+          "default": [
+            "b",
+            "a"
+          ],
+          "Second": [
+            "c"
+          ]
+        },
+        "activeFavorites": "default"
+      },
+      "result": {
+        "undefined": true
+      },
+      "origins": [
+        [
+          "default",
+          [
+            "default"
+          ]
+        ],
+        [
+          "Second",
+          [
+            "Second"
+          ]
+        ]
+      ]
+    }
+  },
+  {
+    "name": "move a/-1",
+    "profile": "browser",
+    "operation": "moveFavorite",
+    "args": [
+      "a",
+      -1
+    ],
+    "initial": {
+      "favorites": {
+        "default": [
+          "a",
+          "b"
+        ],
+        "Second": [
+          "c"
+        ]
+      },
+      "activeFavorites": "default"
+    },
+    "expected": {
+      "state": {
+        "favorites": {
+          "default": [
+            "a",
+            "b"
+          ],
+          "Second": [
+            "c"
+          ]
+        },
+        "activeFavorites": "default"
+      },
+      "result": {
+        "undefined": true
+      },
+      "origins": [
+        [
+          "default",
+          [
+            "default"
+          ]
+        ],
+        [
+          "Second",
+          [
+            "Second"
+          ]
+        ]
+      ]
+    }
+  },
+  {
+    "name": "move a/1",
+    "profile": "browser",
+    "operation": "moveFavorite",
+    "args": [
+      "a",
+      1
+    ],
+    "initial": {
+      "favorites": {
+        "default": [
+          "a",
+          "b"
+        ],
+        "Second": [
+          "c"
+        ]
+      },
+      "activeFavorites": "default"
+    },
+    "expected": {
+      "state": {
+        "favorites": {
+          "default": [
+            "b",
+            "a"
+          ],
+          "Second": [
+            "c"
+          ]
+        },
+        "activeFavorites": "default"
+      },
+      "result": {
+        "undefined": true
+      },
+      "origins": [
+        [
+          "default",
+          [
+            "default"
+          ]
+        ],
+        [
+          "Second",
+          [
+            "Second"
+          ]
+        ]
+      ]
+    }
+  },
+  {
+    "name": "move missing/1",
+    "profile": "browser",
+    "operation": "moveFavorite",
+    "args": [
+      "missing",
+      1
+    ],
+    "initial": {
+      "favorites": {
+        "default": [
+          "a",
+          "b"
+        ],
+        "Second": [
+          "c"
+        ]
+      },
+      "activeFavorites": "default"
+    },
+    "expected": {
+      "state": {
+        "favorites": {
+          "default": [
+            "a",
+            "b"
+          ],
+          "Second": [
+            "c"
+          ]
+        },
+        "activeFavorites": "default"
+      },
+      "result": {
+        "undefined": true
+      },
+      "origins": [
+        [
+          "default",
+          [
+            "default"
+          ]
+        ],
+        [
+          "Second",
+          [
+            "Second"
+          ]
+        ]
+      ]
+    }
+  },
+  {
+    "name": "move a/0.5",
+    "profile": "browser",
+    "operation": "moveFavorite",
+    "args": [
+      "a",
+      0.5
+    ],
+    "initial": {
+      "favorites": {
+        "default": [
+          "a",
+          "b"
+        ],
+        "Second": [
+          "c"
+        ]
+      },
+      "activeFavorites": "default"
+    },
+    "expected": {
+      "state": {
+        "favorites": {
+          "default": [
+            "a",
+            "b"
+          ],
+          "Second": [
+            "c"
+          ]
+        },
+        "activeFavorites": "default"
+      },
+      "result": {
+        "undefined": true
+      },
+      "origins": [
+        [
+          "default",
+          [
+            "default"
+          ]
+        ],
+        [
+          "Second",
+          [
+            "Second"
+          ]
+        ]
+      ]
+    }
+  },
+  {
+    "name": "move a/1",
+    "profile": "browser",
+    "operation": "moveFavorite",
+    "args": [
+      "a",
+      "1"
+    ],
+    "initial": {
+      "favorites": {
+        "default": [
+          "a",
+          "b"
+        ],
+        "Second": [
+          "c"
+        ]
+      },
+      "activeFavorites": "default"
+    },
+    "expected": {
+      "state": {
+        "favorites": {
+          "default": [
+            "b",
+            "a"
+          ],
+          "Second": [
+            "c"
+          ]
+        },
+        "activeFavorites": "default"
+      },
+      "result": {
+        "undefined": true
+      },
+      "origins": [
+        [
+          "default",
+          [
+            "default"
+          ]
+        ],
+        [
+          "Second",
+          [
+            "Second"
+          ]
+        ]
+      ]
+    }
+  }
+]

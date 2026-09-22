@@ -12,7 +12,7 @@ function visit(directory) {
         const source = fs.readFileSync(file, "utf8");
         assert(!/^import (?:java|javax|platform|kotlinx|play\.ott\.nativeapp)\./m.test(source), "Platform dependency in common core: " + file);
         assert(!/\bRegex\s*\(/.test(source), "Kotlin Regex requires unsupported ES5 flags: " + file);
-        assert(!/\.replaceFirst\s*\(/.test(source), "Kotlin string replaceFirst requires unsupported ES5 flags: " + file);
+        assert(!/\.replace(?:First)?\s*\(/.test(source), "Kotlin string replacement requires unsupported ES5 flags: " + file);
         assert(!/System\.currentTimeMillis|Date\.now|\bfetch\s*\(|\.readText\s*\(|stbPlayer|\bOTT2\b/.test(source), "Host effect or legacy runtime in common core: " + file);
         count++;
     }

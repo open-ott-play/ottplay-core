@@ -13,7 +13,6 @@ const DEFAULT_EPG_URL = "https://cdn.epg.one/epg2.xml.gz";
 const MB = 1024 * 1024;
 const canonicalName = value => core.canonicalChannelName(String(value || ""));
 const escape = value => String(value || "").replace(/[&<>"']/g, character => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;" }[character]));
-function time(value) { return core.parseBrowserXmltvTime(String(value || "")); }
 function identities(dto) {
     if (!dto || typeof dto !== "object" || Array.isArray(dto) || Object.keys(dto).some(key => key !== "channels") || !Array.isArray(dto.channels) || !dto.channels.length || dto.channels.length > 16384) throw new Error("EPG_REQUEST");
     for (const row of dto.channels) {
@@ -96,7 +95,13 @@ function createEPG(configuration = {}) {
         const guide = new core.StreamingGuideFilter(requested, now() / 1000, limits.programmes, limits.perChannel);
         const parser = new SaxesParser(), utf8 = new StringDecoder("utf8");
         let done = false, outgoing = null, incoming = null, decoder = null, timer;
-        let wire = 0, decoded = 0, depth = 0, sawRoot = false, item = null, field = null, gap = 0;
+        let wire = 0, decoded = 0, depth = 0, sawRoot = false, gap = 0;
+        const records = new core.WebXmltvRecords("node-streaming", (id, begin, end) => guide.accepts(id, begin, end), value => {
+            try {
+                const url = new URL(value, DEFAULT_EPG_URL);
+                return ["http:", "https:"].includes(url.protocol) && !url.username && !url.password ? url.href : "";
+            } catch { return ""; }
+        });
         function invalid(code) { const error = new Error(code); error.code = code; throw error; }
         function finish(status, body) {
             if (done) return;
@@ -112,37 +117,18 @@ function createEPG(configuration = {}) {
         parser.on("opentag", tag => {
             depth++;
             if (depth > 16) invalid("EPG_XML");
-            if (depth === 1) { if (tag.name !== "tv" || sawRoot) invalid("EPG_XML"); sawRoot = true; return; }
-            if (depth === 2 && tag.name === "channel") item = { kind: "channel", id: String(tag.attributes.id || "").trim(), names: [], icon: "" };
-            else if (depth === 2 && tag.name === "programme") {
-                const id = String(tag.attributes.channel || "").trim(), begin = time(tag.attributes.start), end = time(tag.attributes.stop);
-                item = guide.accepts(id, begin, end) ? { kind: "programme", id, start: String(tag.attributes.start), stop: String(tag.attributes.stop || ""), begin, end, title: "", desc: "", catchupId: String(tag.attributes["catchup-id"] || "") } : null;
-            }
-            if (!item) return;
-            if (item.id.length > 512) invalid("EPG_FIELD_TOO_LARGE");
-            if (depth === 3 && tag.name === "icon" && item.kind === "channel") {
-                if (String(tag.attributes.src || "").length > 8192) invalid("EPG_FIELD_TOO_LARGE");
-                if (!item.icon) {
-                    try { const url = new URL(String(tag.attributes.src || ""), DEFAULT_EPG_URL); if (["http:", "https:"].includes(url.protocol) && !url.username && !url.password) item.icon = url.href; } catch {}
-                }
-            }
-            if (depth === 3 && ((item.kind === "channel" && tag.name === "display-name") || (item.kind === "programme" && ["title", "desc", "catchup-id"].includes(tag.name)))) field = { name: tag.name, text: "" };
+            if (depth === 1) { if (tag.name !== "tv" || sawRoot) invalid("EPG_XML"); sawRoot = true; }
+            records.start(tag.name, tag.attributes);
         });
-        function addText(value) { if (field) { field.text += value; if (field.text.length > 16384) invalid("EPG_FIELD_TOO_LARGE"); } }
-        parser.on("text", addText); parser.on("cdata", addText);
-        parser.on("closetag", () => {
-            if (depth === 3 && field && item) {
-                const value = field.text.trim();
-                if (field.name === "display-name") { if (item.names.length >= 64) invalid("EPG_FIELD_TOO_LARGE"); item.names.push(value); }
-                else if (field.name === "catchup-id") { if (!item.catchupId) item.catchupId = value; }
-                else if (!item[field.name]) item[field.name] = value;
-                field = null;
-            }
-            if (depth === 2 && item) {
-                if (item.kind === "channel") {
+        parser.on("text", value => records.text(value));
+        parser.on("cdata", value => records.text(value));
+        parser.on("closetag", tag => {
+            const row = records.end(tag.name);
+            if (row) {
+                const item = row.value;
+                if (row.kind === "channel") {
                     if (!guide.channel(item.id, item.names, item.icon)) invalid("EPG_TOO_LARGE");
                 } else guide.programme(item.id, item.begin, item.end, item);
-                item = null;
             }
             depth--;
         });

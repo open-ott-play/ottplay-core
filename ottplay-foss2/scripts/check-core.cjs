@@ -17,7 +17,7 @@ const core = html.indexOf('src="/vendor/ottplay-core.js"');
 assert(polyfills >= 0 && polyfills < core && core < html.indexOf('src="/src/epg.js"'), "Core must load after polyfills and before EPG");
 for (const file of ["src/epg.js", "scripts/epg.cjs"]) {
     const source = fs.readFileSync(path.join(root, file), "utf8");
-    for (const api of ["parseBrowserXmltvTime", "canonicalChannelName", ...(file === "src/epg.js" ? ["selectGuideSchedule", "parseBrowserGuide", "mergeBrowserGuides", "matchedGuideChannel"] : ["streamingGuideIdentities", "StreamingGuideFilter"])]) assert(source.includes("core." + api + "("), file + " must use core." + api);
+    for (const api of ["WebXmltvRecords", "canonicalChannelName", ...(file === "src/epg.js" ? ["parseBrowserXmltvTime", "selectGuideSchedule", "parseBrowserGuide", "mergeBrowserGuides", "matchedGuideChannel"] : ["streamingGuideIdentities", "StreamingGuideFilter"])]) assert(source.includes("core." + api + "("), file + " must use core." + api);
     assert(!source.includes("setUTCFullYear"), "XMLTV date arithmetic belongs to shared core: " + file);
 }
 const streaming = fs.readFileSync(path.join(root, "scripts/epg.cjs"), "utf8");
@@ -40,4 +40,20 @@ const app = fs.readFileSync(path.join(root, "src/app.js"), "utf8");
 assert(app.includes("new environment.OttPlayCore.BrowserGuideRefresh("), "Browser refresh must use the common core");
 for (const api of ["normalize", "begin", "accepts", "complete", "reset", "destroy", "isDue"]) assert(app.includes("guideRefresh." + api + "("), "Browser refresh must use shared " + api);
 assert(!/guideEpoch|guideDue|guideFailures|lastEpgUrls|results\.some|Math\.pow/.test(app), "Browser refresh retention/backoff/generation policy reintroduced");
+const media = fs.readFileSync(path.join(root, "src/media.js"), "utf8");
+for (const api of ["PlaybackRetries", "PlaybackRecovery", "PlaybackEngineSequence", "playbackEngines", "playbackFormat", "playbackSeek", "playbackDeclaredFormat", "playbackBodyFormat"]) assert(media.includes("core." + api + "("), "Playback rules must use " + api);
+assert(!/var retryCount|var engineIndex|var mediaRecoveryUsed|function language\(/.test(media), "Playback policy reintroduced");
+for (const [file, apis, displaced] of [
+    ["src/state.js", ["validateBrowserState", "pruneBrowserSources", "exportBrowserState"], /function reference\(|function track\(/],
+    ["src/library.js", ["restoreChannelIndex", "libraryDecorate", "favoriteListChange", "libraryToggleReminder"], /function legacyTvgId|candidates\.filter/],
+    ["src/channel-identity.js", ["rememberChannelIdentity", "reconcileChannelIdentity", "channelIdentityPermission"], /function candidates\(|function move\(/],
+    ["src/security.js", ["BrowserParentalSession", "parentalValidate", "parentalProtected", "parentalFailedBlock"], /playbackActions|maxBlock|grantUntil = 0/],
+    ["src/migration.js", ["previewLegacySettings"], /function (?:embedded|xtream|oldIds)\(/],
+    ["src/playback-preferences.js", ["playbackTrack", "libraryPreferenceIndex", "librarySavePreference"], /function language\(|candidates\.filter/],
+    ["src/providers.js", ["OperatorRequestClient", "OperatorLifetimeClient", "operatorBrowserConfig", "operatorSourceRelationship"], /var sessions =|var seriesCache =/]
+]) {
+    const source = fs.readFileSync(path.join(root, file), "utf8");
+    for (const api of apis) assert(source.includes("." + api + "("), file + " must use " + api);
+    assert(!displaced.test(source), "Displaced domain implementation reintroduced: " + file);
+}
 console.log("PASS shared core receipt, bootstrap order and guide/archive/playlist/Xtream/Stalker delegation");

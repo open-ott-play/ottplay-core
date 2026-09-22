@@ -416,8 +416,7 @@ OTT2.define("app", function (require) {
                 var previous = saved.lastChannel, sameBroadcast = channelChanged && previous && currentReference && previous.sourceId === currentReference.sourceId ? library.restoreChannel(channels, previous) : null;
                 if (historyChanged || channelChanged) persist(function (s) {
                     if (historyChanged) {
-                        s.history = s.history.filter(function (entry) { return entry.id !== current.id; });
-                        s.history.unshift({ id: current.id, name: current.name, time: Date.now() }); s.history = s.history.slice(0, 100);
+                        s.history = environment.OttPlayCore.recordBrowserHistory(s.history, current.id, current.name, Date.now());
                     }
                     // Save confirmed playback immediately; power loss may omit unload.
                     if (channelChanged) {
@@ -668,7 +667,7 @@ OTT2.define("app", function (require) {
             } else if (name === "channel") channelDialog(getChannel(value));
             else if (name === "play" || name === "resume") play(getChannel(value), name === "resume");
             else if (name === "favorite") {
-                persist(function (s) { var items = s.favorites[s.activeFavorites], index = items.indexOf(value), entry = getChannel(value); if (index < 0) { items.push(value); if (entry && parentsById[value] && parentsById[value].length) s.favoriteItems[value] = { name: entry.name, sourceId: entry.sourceId, parents: parentsById[value].slice() }; } else items.splice(index, 1); }); channelDialog(getChannel(value));
+                persist(function (s) { var items = s.favorites[s.activeFavorites], entry = getChannel(value); if (environment.OttPlayCore.editFavoriteSelection(items, value, "toggle") && entry && parentsById[value] && parentsById[value].length) s.favoriteItems[value] = { name: entry.name, sourceId: entry.sourceId, parents: parentsById[value].slice() }; }); channelDialog(getChannel(value));
             } else if (name === "favoriteLists") {
                 html = '<div class="f2-toolbar">'; Object.keys(saved.favorites).forEach(function (entry, index) { html += view.btn("favorite-list-" + index, "useFavoriteList", view.escape(entry), entry); });
                 html += '</div>' + view.btn("rename-list", "renameFavoriteList", t("Переименовать текущий", "Rename current")) + view.btn("delete-list", "deleteFavoriteList", t("Удалить текущий", "Delete current")) + view.field("list-name", t("Новый список", "New list"), "") + view.btn("add-list", "addFavoriteList", t("Создать", "Create")); view.dialog(t("Списки избранного", "Favorite lists"), html);
@@ -676,7 +675,7 @@ OTT2.define("app", function (require) {
             else if (name === "addFavoriteList") {
                 var newName = String(values["list-name"] || "").replace(/^\s+|\s+$/g, "");
                 if (!newName || ["__proto__", "constructor", "prototype"].indexOf(newName) !== -1 || newName.length > 100) { view.toast(t("Введите допустимое имя.", "Enter a valid name.")); return; }
-                persist(function (s) { if (!Object.prototype.hasOwnProperty.call(s.favorites, newName)) s.favorites[newName] = []; s.activeFavorites = newName; }); view.closeDialog(); render();
+                persist(function (s) { environment.OttPlayCore.favoriteListChange(s, "browser", "add", newName, ""); }); view.closeDialog(); render();
             } else if (name === "channelPage") {
                 pendingChannelFocus = "";
                 page = isFinite(Number(value)) ? Math.max(0, Math.floor(Number(value))) : 0;
@@ -787,7 +786,7 @@ OTT2.define("app", function (require) {
             else if (command === "channelUp" || command === "channelDown") {
                 var live = catalog(false).filter(function (entry) { return entry.kind !== "vod" && entry.kind !== "folder"; });
                 for (i = 0; i < live.length; i++) if (current && live[i].id === current.id) index = i;
-                if (live.length) play(live[index < 0 ? (command === "channelUp" ? 0 : live.length - 1) : (index + (command === "channelUp" ? 1 : -1) + live.length) % live.length], false);
+                if (live.length) play(live[environment.OttPlayCore.playbackChannelIndex(index, live.length, command === "channelUp" ? 1 : -1, "browser")], false);
             } else if (/^digit[0-9]$/.test(command || "")) {
                 if (current && (current.kind === "vod" || current.kind === "archive")) {
                     if (!resolving && !pendingPlayable && isFinite(snapshot.duration) && snapshot.duration > 0) media.seek(snapshot.duration * Number(command.slice(-1)) / 10);

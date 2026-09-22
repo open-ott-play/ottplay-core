@@ -77,9 +77,7 @@
         }
 
         function namespace(source) {
-            var id = trim(source && source.id);
-            if (!id) throw fault("SOURCE_ID", "A persistent source ID is required");
-            return encodeURIComponent(id);
+            return encodeURIComponent(root.OttPlayCore.operatorSourceNamespace(source));
         }
 
         function parseM3U(text, source) {
@@ -105,16 +103,8 @@
         function configFor(source) {
             var config;
             namespace(source);
-            config = {
-                id: String(source.id), type: trim(source.type).toLowerCase(), url: httpUrl(source.url),
-                username: String(source.username == null ? "" : source.username), password: String(source.password == null ? "" : source.password),
-                mac: trim(source.mac).toUpperCase(), timezone: trim(source.timezone) || "UTC", language: trim(source.language) || "en",
-                output: source.output === "ts" ? "ts" : "m3u8", profile: source.profile || {}
-            };
-            if (!config.url) throw fault("SOURCE_URL", "An absolute HTTP or HTTPS source URL is required");
-            if (config.type !== "m3u" && config.type !== "xtream" && config.type !== "stalker") throw fault("UNSUPPORTED_PROVIDER", "This provider type is not supported");
+            config = root.OttPlayCore.operatorBrowserConfig(source, httpUrl(source.url));
             if (config.type === "xtream") {
-                if (!config.username || !config.password) throw fault("SOURCE_CREDENTIALS", "Xtream requires a username and password");
                 config.base = root.OttPlayCore.xtreamBase(config.url);
                 config.xtream = xtreamClient(config);
                 config.api = config.xtream.request();
@@ -139,62 +129,48 @@
 
         function create(options) {
             var request = options && options.request;
-            var sessions = {};
-            var catalogs = {};
-            var seriesCache = {};
-            var generation = 0;
+            var lifetime = new root.OttPlayCore.OperatorLifetimeClient();
 
             function operation(callback) {
-                var active = true, requests = [];
-                function abortOutstanding() {
-                    var i, entry;
-                    for (i = 0; i < requests.length; i += 1) {
-                        entry = requests[i];
-                        if (!entry.settled && !entry.aborted && entry.cancel) {
-                            entry.aborted = true;
-                            try { entry.cancel(); } catch (ignore) {}
-                        }
+                var state = new root.OttPlayCore.OperatorRequestClient(), handles = {};
+                function close() {
+                    var ids = state.end(), i, handle;
+                    if (ids === null) return false;
+                    for (i = 0; i < ids.length; i += 1) {
+                        handle = handles[ids[i]];
+                        delete handles[ids[i]];
+                        try { handle(); } catch (ignore) {}
                     }
+                    handles = {};
+                    return true;
                 }
-                function cancel() {
-                    if (!active) return;
-                    active = false;
-                    abortOutstanding();
-                    requests.length = 0;
-                }
+                function cancel() { close(); }
                 function finish(error, result) {
-                    if (!active) return;
-                    active = false;
-                    abortOutstanding();
-                    requests.length = 0;
-                    callback(error || null, result);
+                    if (close()) callback(error || null, result);
                 }
                 function get(url, consume, extra) {
-                    var entry = { settled: false, cancel: null, aborted: false }, cancellation;
-                    if (!active) return;
+                    var id = state.begin(), cancellation, attachment;
+                    if (id < 0) return;
                     if (typeof request !== "function") { finish(fault("TRANSPORT_UNAVAILABLE", "No HTTP transport is configured")); return; }
-                    requests.push(entry);
                     try {
                         cancellation = request(url, function (error, value) {
-                            if (!active || entry.settled) return;
-                            entry.settled = true;
-                            entry.cancel = null;
+                            if (!state.accept(id)) return;
+                            delete handles[id];
                             if (error) { finish(safeNetworkError(error)); return; }
                             try { consume(value); }
                             catch (parseError) {
-                                if (!active) throw parseError;
+                                if (!state.active()) throw parseError;
                                 finish(parseError && parseError.code ? parseError : fault("PROVIDER_FORMAT", "The provider returned an unsupported response"));
                             }
                         }, extra);
-                        if (typeof cancellation === "function" && !entry.settled) entry.cancel = cancellation;
-                        if (!active && entry.cancel && !entry.aborted) {
-                            entry.aborted = true;
-                            try { entry.cancel(); } catch (ignoreCancel) {}
-                            entry.cancel = null;
+                        if (typeof cancellation === "function") {
+                            attachment = state.attach(id);
+                            if (attachment === "KEEP") handles[id] = cancellation;
+                            else if (attachment === "ABORT") try { cancellation(); } catch (ignoreCancel) {}
                         }
                     } catch (error) {
-                        if (!active) throw error;
-                        entry.settled = true;
+                        if (!state.active()) throw error;
+                        state.failed(id);
                         finish(safeNetworkError(error));
                     }
                 }
@@ -215,7 +191,7 @@
             }
 
             function portalSession(config) {
-                var session = sessions["$" + config.id];
+                var session = lifetime.session(config.id);
                 if (!session) throw fault("PORTAL_SESSION", "Reload this portal before opening its catalog");
                 stalkerResult(session.verify(config.fingerprint));
                 return session;
@@ -223,11 +199,11 @@
 
 
             function loadPortal(config, op) {
-                var session = new root.OttPlayCore.StalkerClient(config, ++generation, encodeURIComponent,
+                var session = new root.OttPlayCore.StalkerClient(config, lifetime.nextGeneration(), encodeURIComponent,
                     function (value) { return relativeUrl(value, config.endpoint); }, httpUrl);
                 runPortal(op, session.load(), function (result) {
-                    sessions["$" + config.id] = session;
-                    catalogs["$" + config.id] = result;
+                    lifetime.setSession(config.id, session);
+                    lifetime.setCatalog(config.id, result);
                     op.finish(null, result);
                 });
             }
@@ -239,7 +215,7 @@
                 if (config.type === "m3u") {
                     op.get(config.url, function (text) {
                         var result = parseM3U(text, config);
-                        catalogs["$" + config.id] = result;
+                        lifetime.setCatalog(config.id, result);
                         op.finish(null, result);
                     });
                 } else if (config.type === "stalker") loadPortal(config, op);
@@ -248,7 +224,7 @@
                         var url = config.xtream.request(), result;
                         if (url === null) {
                             result = xtreamResult(config.xtream.catalog());
-                            catalogs["$" + config.id] = result;
+                            lifetime.setCatalog(config.id, result);
                             op.finish(null, result);
                             return;
                         }
@@ -265,12 +241,13 @@
                 var op = operation(callback), config, session, result, rows, i;
                 try {
                     config = configFor(source);
-                    if (node && String(node.sourceId) !== config.id) throw fault("SOURCE_MISMATCH", "This folder belongs to another source");
-                    if (node && node.kind !== "folder") throw fault("FOLDER_REQUIRED", "Select a folder to browse");
+                    if (node) {
+                        var relationship = root.OttPlayCore.operatorSourceRelationship("browser-browse", config.type, config.id, String(node.kind), String(node.sourceId));
+                        if (relationship === "SOURCE_MISMATCH") throw fault(relationship, "This folder belongs to another source");
+                        if (relationship === "FOLDER_REQUIRED") throw fault(relationship, "Select a folder to browse");
+                    }
                     if (!node) {
-                        rows = catalogs["$" + config.id];
-                        result = { items: [], warnings: [] };
-                        if (rows) for (i = 0; i < rows.channels.length; i += 1) if (rows.channels[i].kind !== "live") result.items.push(rows.channels[i]);
+                        result = { items: lifetime.library(config.id), warnings: [] };
                         op.finish(null, result);
                     } else if (config.type === "xtream") browseXtream(op, config, node);
                     else if (config.type === "stalker") {
@@ -281,17 +258,15 @@
                 return op.cancel;
             }
             function browseXtream(op, config, node) {
-                var cacheKey = "$" + config.api + "\n" + node.seriesId;
+                var cached = lifetime.series(config.api, String(node.seriesId));
                 var request = xtreamResult(config.xtream.seriesRequest(node));
                 function deliver(value) {
-                    op.finish(null, { items: (node.folderType === "season" ? value.episodes["$" + node.seasonNumber] || [] : value.folders).slice(0), warnings: value.warnings.slice(0) });
+                    op.finish(null, lifetime.seriesResult(value, node.folderType, String(node.seasonNumber)));
                 }
-                if (has(seriesCache, cacheKey)) { deliver(seriesCache[cacheKey]); return; }
+                if (cached !== null) { deliver(cached); return; }
                 op.get(request.url, function (text) {
                     var value = xtreamResult(config.xtream.series(parseJSON(text), node));
-                    // A bounded cache avoids retaining every catalogue episode on small devices.
-                    seriesCache = {};
-                    seriesCache[cacheKey] = value;
+                    lifetime.setSeries(config.api, String(node.seriesId), value);
                     deliver(value);
                 });
             }
@@ -301,9 +276,9 @@
 
             function resolve(channel, callback) {
                 var op = operation(callback), session, url;
-                if (channel && channel.kind === "folder") { op.finish(fault("FOLDER_REQUIRED", "Open this folder before choosing a video")); return op.cancel; }
+                if (channel && root.OttPlayCore.operatorSourceRelationship("browser-resolve", "", "", String(channel.kind), "")) { op.finish(fault("FOLDER_REQUIRED", "Open this folder before choosing a video")); return op.cancel; }
                 if (channel && channel.provider === "stalker") {
-                    session = sessions["$" + channel.sourceId];
+                    session = lifetime.session(String(channel.sourceId));
                     if (!session) op.finish(fault("PORTAL_SESSION", "Reload this portal before playing its media"));
                     else runPortal(op, session.playback(channel), function (result) {
                         result.channel = channel;
@@ -317,9 +292,7 @@
                 return op.cancel;
             }
             function close(sourceId) {
-                delete sessions["$" + sourceId];
-                delete catalogs["$" + sourceId];
-                seriesCache = {};
+                lifetime.close(String(sourceId));
             }
             return { load: load, resolve: resolve, browse: browse, close: close };
         }

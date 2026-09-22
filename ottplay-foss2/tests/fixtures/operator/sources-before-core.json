@@ -1,0 +1,410 @@
+{
+  "provenance": {
+    "source": "src/providers.js",
+    "description": "Actual HEAD public provider load/browse/resolve config validation before source policy migration"
+  },
+  "cases": [
+    {
+      "input": {
+        "source": null
+      },
+      "expected": [
+        [
+          "done",
+          {
+            "code": "SOURCE_ID",
+            "message": "A persistent source ID is required"
+          },
+          null
+        ]
+      ]
+    },
+    {
+      "input": {
+        "source": {}
+      },
+      "expected": [
+        [
+          "done",
+          {
+            "code": "SOURCE_ID",
+            "message": "A persistent source ID is required"
+          },
+          null
+        ]
+      ]
+    },
+    {
+      "input": {
+        "source": {
+          "id": "",
+          "type": "xtream",
+          "url": "https://xc.test/base",
+          "username": "u",
+          "password": "p"
+        }
+      },
+      "expected": [
+        [
+          "done",
+          {
+            "code": "SOURCE_ID",
+            "message": "A persistent source ID is required"
+          },
+          null
+        ]
+      ]
+    },
+    {
+      "input": {
+        "source": {
+          "id": " \t",
+          "type": "xtream",
+          "url": "https://xc.test/base",
+          "username": "u",
+          "password": "p"
+        }
+      },
+      "expected": [
+        [
+          "done",
+          {
+            "code": "SOURCE_ID",
+            "message": "A persistent source ID is required"
+          },
+          null
+        ]
+      ]
+    },
+    {
+      "input": {
+        "source": {
+          "id": " src ",
+          "type": "xtream",
+          "url": "",
+          "username": "u",
+          "password": "p"
+        }
+      },
+      "expected": [
+        [
+          "done",
+          {
+            "code": "SOURCE_URL",
+            "message": "An absolute HTTP or HTTPS source URL is required"
+          },
+          null
+        ]
+      ]
+    },
+    {
+      "input": {
+        "source": {
+          "id": " src ",
+          "type": "xtream",
+          "url": "ftp://host",
+          "username": "u",
+          "password": "p"
+        }
+      },
+      "expected": [
+        [
+          "done",
+          {
+            "code": "SOURCE_URL",
+            "message": "An absolute HTTP or HTTPS source URL is required"
+          },
+          null
+        ]
+      ]
+    },
+    {
+      "input": {
+        "source": {
+          "id": " src ",
+          "type": "other",
+          "url": "https://xc.test/base",
+          "username": "u",
+          "password": "p"
+        }
+      },
+      "expected": [
+        [
+          "done",
+          {
+            "code": "UNSUPPORTED_PROVIDER",
+            "message": "This provider type is not supported"
+          },
+          null
+        ]
+      ]
+    },
+    {
+      "input": {
+        "source": {
+          "id": " src ",
+          "type": " XTREAM ",
+          "url": "https://xc.test/base",
+          "username": "u",
+          "password": "p"
+        }
+      },
+      "expected": [
+        [
+          "request",
+          "https://xc.test/base/player_api.php?username=u&password=p"
+        ]
+      ]
+    },
+    {
+      "input": {
+        "source": {
+          "id": " src ",
+          "type": "xtream",
+          "url": "https://xc.test/base",
+          "username": "",
+          "password": "p"
+        }
+      },
+      "expected": [
+        [
+          "done",
+          {
+            "code": "SOURCE_CREDENTIALS",
+            "message": "Xtream requires a username and password"
+          },
+          null
+        ]
+      ]
+    },
+    {
+      "input": {
+        "source": {
+          "id": " src ",
+          "type": "xtream",
+          "url": "https://xc.test/base",
+          "username": "u",
+          "password": null
+        }
+      },
+      "expected": [
+        [
+          "done",
+          {
+            "code": "SOURCE_CREDENTIALS",
+            "message": "Xtream requires a username and password"
+          },
+          null
+        ]
+      ]
+    },
+    {
+      "input": {
+        "source": {
+          "id": " src ",
+          "type": "xtream",
+          "url": "https://xc.test/base",
+          "username": " ",
+          "password": "p"
+        }
+      },
+      "expected": [
+        [
+          "request",
+          "https://xc.test/base/player_api.php?username=%20&password=p"
+        ]
+      ]
+    },
+    {
+      "input": {
+        "source": {
+          "id": " src ",
+          "type": "xtream",
+          "url": "https://xc.test/base",
+          "username": 0,
+          "password": "p"
+        }
+      },
+      "expected": [
+        [
+          "request",
+          "https://xc.test/base/player_api.php?username=0&password=p"
+        ]
+      ]
+    },
+    {
+      "input": {
+        "source": {
+          "id": " src ",
+          "type": "m3u",
+          "url": "https://xc.test/base",
+          "username": "u",
+          "password": "p"
+        }
+      },
+      "expected": [
+        [
+          "request",
+          "https://xc.test/base"
+        ]
+      ]
+    },
+    {
+      "input": {
+        "source": {
+          "id": " src ",
+          "type": "stalker",
+          "url": "https://xc.test/base",
+          "username": "u",
+          "password": "p",
+          "mac": "bad"
+        }
+      },
+      "expected": [
+        [
+          "done",
+          {
+            "code": "SOURCE_MAC",
+            "message": "Enter the MAC address registered with your portal"
+          },
+          null
+        ]
+      ]
+    },
+    {
+      "input": {
+        "source": {
+          "id": " src ",
+          "type": "stalker",
+          "url": "https://xc.test/base",
+          "username": "u",
+          "password": "p",
+          "mac": "00:1A:79:01:02:03",
+          "timezone": "",
+          "language": ""
+        }
+      },
+      "expected": [
+        [
+          "done",
+          {
+            "code": "PORTAL_URL",
+            "message": "Use the portal /c/ URL or its explicit load.php or portal.php endpoint"
+          },
+          null
+        ]
+      ]
+    },
+    {
+      "input": {
+        "mode": "browse",
+        "source": {
+          "id": " src ",
+          "type": "xtream",
+          "url": "https://xc.test/base",
+          "username": "u",
+          "password": "p"
+        },
+        "item": {
+          "sourceId": "other",
+          "kind": "folder"
+        }
+      },
+      "expected": [
+        [
+          "done",
+          {
+            "code": "SOURCE_MISMATCH",
+            "message": "This folder belongs to another source"
+          },
+          null
+        ]
+      ]
+    },
+    {
+      "input": {
+        "mode": "browse",
+        "source": {
+          "id": " src ",
+          "type": "xtream",
+          "url": "https://xc.test/base",
+          "username": "u",
+          "password": "p"
+        },
+        "item": {
+          "sourceId": " src ",
+          "kind": "live"
+        }
+      },
+      "expected": [
+        [
+          "done",
+          {
+            "code": "FOLDER_REQUIRED",
+            "message": "Select a folder to browse"
+          },
+          null
+        ]
+      ]
+    },
+    {
+      "input": {
+        "mode": "resolve",
+        "item": {
+          "kind": "folder"
+        }
+      },
+      "expected": [
+        [
+          "done",
+          {
+            "code": "FOLDER_REQUIRED",
+            "message": "Open this folder before choosing a video"
+          },
+          null
+        ]
+      ]
+    },
+    {
+      "input": {
+        "mode": "resolve",
+        "item": {
+          "kind": "live",
+          "url": "ftp://bad"
+        }
+      },
+      "expected": [
+        [
+          "done",
+          {
+            "code": "STREAM_URL",
+            "message": "This channel has no supported HTTP or HTTPS stream URL"
+          },
+          null
+        ]
+      ]
+    },
+    {
+      "input": {
+        "mode": "resolve",
+        "item": {
+          "kind": "live",
+          "url": "https://valid.test/live"
+        }
+      },
+      "expected": [
+        [
+          "done",
+          null,
+          {
+            "url": "https://valid.test/live",
+            "channel": {
+              "kind": "live",
+              "url": "https://valid.test/live"
+            }
+          }
+        ]
+      ]
+    }
+  ]
+}

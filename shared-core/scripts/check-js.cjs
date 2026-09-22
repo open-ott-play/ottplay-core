@@ -273,6 +273,58 @@ function verify(context, profile) {
         assert.equal(core.parseBrowserXmltvTime(value), expected, profile + ": whitespace U+" + code.toString(16));
     }
 
+    assert.equal(core.playbackFormat("video.mpd;codec=avc"), "dash");
+    assert.equal(core.playbackBodyFormat("<?xml x><!--a--><ns:MPD >"), "dash");
+    assert.equal(core.playbackDeclaredFormat("", "", "", "ts", "x.mp4").reason, "url_hint");
+    assert.equal(JSON.stringify(core.playbackEngines("hls", "auto", { nativeHls: true, hlsJs: true, chromium: true })), '["hls.js","native"]');
+    assert.equal(core.playbackSeek(15, 5, 30, [{ start: 5, end: 10 }, { start: 20, end: 30 }]), 20);
+    assert.equal(core.playbackChannelIndex(-1, 3, -1, "browser"), 2);
+    assert.equal(core.playbackTrack([{ id: 1, language: "rus", label: " Original " }], { language: "ru", label: "Original" }, "native"), 0);
+    const retries = new core.PlaybackRetries(1, 50);
+    assert.equal(retries.admit(true), true); assert.equal(retries.delay(), 50); assert.equal(retries.admit(true), false);
+    retries.reset(); assert.equal(retries.attempts(), 0);
+    const recovery = new core.PlaybackRecovery(2);
+    assert.equal(recovery.media(), true); assert.equal(recovery.media(), false);
+    assert.equal(recovery.network("timeout"), true); assert.equal(recovery.network("timeout"), true); assert.equal(recovery.network("timeout"), false);
+    recovery.reset(); assert.equal(recovery.network("levelParsingError"), false);
+    const restart = new core.PlaybackRestart();
+    assert.equal(restart.admit(true, false, true), "restart"); assert.equal(restart.pending(), true);
+    restart.finish(); assert.equal(restart.admit(true, false, true), "stop"); restart.reset();
+    assert.equal(restart.admit(true, true, true), "stop");
+    const sequence = new core.PlaybackEngineSequence();
+    sequence.set(["native", "hls.js"]); assert.equal(sequence.current(), "native"); assert.equal(sequence.canAdvance(true), true);
+    sequence.advance(); assert.equal(sequence.fallbacks(), 1); assert.equal(sequence.current(), "hls.js"); assert.equal(sequence.canAdvance(true), false);
+
+    assert.equal(core.operatorSourceAction({ server: "https://x", user: "u", pass: "p" }), "API");
+    const operatorSession = new core.OperatorClient({ server: "https://x", user: "u", pass: "p" }, encodeURIComponent, () => 7);
+    operatorSession.accept({ categories: [], live_streams: [{ name: "A", stream_id: 1 }] });
+    assert.equal(operatorSession.catalog().ids[0], 7);
+    const catalog = new core.OperatorCatalogClient("itv");
+    catalog.accept({ channels: [{ ch_id: "1", name: "A", category: "News" }] }, []);
+    assert.equal(core.operatorVodCatalog({ items: { title: "T", channel: { title: "M" } } }, "old").records.length, 1);
+    assert.equal(core.operatorPortalNavigate("search=a%20b", "P", "", "k", decodeURIComponent).node.request.query, "a b");
+    assert.equal(new core.OperatorPortalCatalogClient({ type: "category", items: [{ type: "next" }], count: 2 }, false).next().kind, "LAZY");
+    const request = new core.OperatorRequestClient();
+    assert.equal(request.begin(), 0); assert.equal(request.attach(0), "KEEP"); assert.equal(JSON.stringify(request.end()), "[0]"); assert.equal(request.accept(0), false);
+    const providerLifetime = new core.OperatorLifetimeClient();
+    providerLifetime.setSeries("api", "1", { x: 1 }); providerLifetime.setSeries("api", "2", { x: 2 }); assert.equal(providerLifetime.series("api", "1"), null);
+    assert.equal(core.operatorSourceNamespace({ id: " a " }), "a");
+    assert.equal(core.operatorBrowserConfig({ id: "a", type: "m3u" }, "https://a").type, "m3u");
+    assert.equal(core.operatorSourceRelationship("browser-browse", "xtream", "a", "live", "b"), "SOURCE_MISMATCH");
+
+    assert.equal(core.operatorLiveUrl("antifriz", "1", { server: "cdn", token: "t" }, { mode: 0, hls: 2 }), "http://cdn:80/1/video.m3u8?token=t");
+    const operatorGuide = new core.OperatorGuideClient("shura", false);
+    assert.equal(operatorGuide.phase(), "week"); operatorGuide.complete(); assert.equal(operatorGuide.phase(), "archive");
+    assert.equal(core.operatorGuideUrl("shura", "1", { server: "2", rec: 0 }, "archive").endsWith("/pf.jsonp"), true);
+    assert.equal(core.operatorVodRoot("kb-team", "", ""), "http://89.163.215.125");
+    require("./check-state-abi.cjs")(core, assert);
+    for (const format of ["browser", "node-streaming"]) {
+        const records = new core.WebXmltvRecords(format);
+        records.start("tv", {}); records.start("channel", { id: "news" });
+        records.start("display-name", {}); records.text("News"); records.end("display-name");
+        assert.equal(records.end("channel").value.names[0], "News"); records.end("tv");
+    }
+
     // Differential oracle, independent of the core's Gregorian arithmetic.
     let count = 0;
     for (let year = 1; year <= 9999; year += 41) for (let month = 1; month <= 12; month++) {

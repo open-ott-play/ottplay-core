@@ -1,0 +1,3155 @@
+{
+  "baseline": "f429f537497ec95c2bf92781e1ecee86c18bbfe8",
+  "observed": [
+    {
+      "choice": {
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 3
+    },
+    {
+      "choice": {
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "label": "",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "label": "",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 3
+    },
+    {
+      "choice": {
+        "label": "",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "label": "",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "label": "",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "label": "",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "label": "Russian original",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 2
+    },
+    {
+      "choice": {
+        "label": "Russian original",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 2
+    },
+    {
+      "choice": {
+        "label": "Russian original",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 2
+    },
+    {
+      "choice": {
+        "label": "Russian original",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 2
+    },
+    {
+      "choice": {
+        "label": "Russian original",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 2
+    },
+    {
+      "choice": {
+        "label": "Russian original",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 2
+    },
+    {
+      "choice": {
+        "label": "russian COMMENTARY ",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 0
+    },
+    {
+      "choice": {
+        "label": "russian COMMENTARY ",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 0
+    },
+    {
+      "choice": {
+        "label": "russian COMMENTARY ",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 0
+    },
+    {
+      "choice": {
+        "label": "russian COMMENTARY ",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 0
+    },
+    {
+      "choice": {
+        "label": "russian COMMENTARY ",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 0
+    },
+    {
+      "choice": {
+        "label": "russian COMMENTARY ",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 0
+    },
+    {
+      "choice": {
+        "label": "English",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "label": "English",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "label": "English",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "label": "English",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "label": "English",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "label": "English",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "label": "not-present",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "label": "not-present",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "label": "not-present",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "label": "not-present",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "label": "not-present",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "label": "not-present",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 3
+    },
+    {
+      "choice": {
+        "language": "",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 3
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "Russian original",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 2
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "Russian original",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 2
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "Russian original",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 2
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "Russian original",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 2
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "Russian original",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 2
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "Russian original",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 2
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "russian COMMENTARY ",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 0
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "russian COMMENTARY ",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 0
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "russian COMMENTARY ",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 0
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "russian COMMENTARY ",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 0
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "russian COMMENTARY ",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 0
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "russian COMMENTARY ",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 0
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "English",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "English",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "English",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "English",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "English",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "English",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "not-present",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "not-present",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "not-present",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "not-present",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "not-present",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "",
+        "label": "not-present",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "Russian original",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 2
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "Russian original",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 2
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "Russian original",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 2
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "Russian original",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 2
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "Russian original",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 2
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "Russian original",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 2
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "russian COMMENTARY ",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 0
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "russian COMMENTARY ",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 0
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "russian COMMENTARY ",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 0
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "russian COMMENTARY ",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 0
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "russian COMMENTARY ",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 0
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "russian COMMENTARY ",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 0
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "English",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "English",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "English",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "English",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "English",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "English",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "not-present",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "not-present",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "not-present",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "not-present",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "not-present",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "RU",
+        "label": "not-present",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "Russian original",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 2
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "Russian original",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 2
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "Russian original",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 2
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "Russian original",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 2
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "Russian original",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 2
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "Russian original",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 2
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "russian COMMENTARY ",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 0
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "russian COMMENTARY ",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 0
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "russian COMMENTARY ",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 0
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "russian COMMENTARY ",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 0
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "russian COMMENTARY ",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 0
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "russian COMMENTARY ",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 0
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "English",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "English",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "English",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "English",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "English",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "English",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "not-present",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "not-present",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "not-present",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "not-present",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "not-present",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": " rus ",
+        "label": "not-present",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "Russian original",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "Russian original",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "Russian original",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "Russian original",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "Russian original",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "Russian original",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "russian COMMENTARY ",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "russian COMMENTARY ",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "russian COMMENTARY ",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "russian COMMENTARY ",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "russian COMMENTARY ",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "russian COMMENTARY ",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "English",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "English",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "English",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "English",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "English",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "English",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "not-present",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "not-present",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "not-present",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "not-present",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "not-present",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "en",
+        "label": "not-present",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "Russian original",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "Russian original",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "Russian original",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "Russian original",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "Russian original",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "Russian original",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "russian COMMENTARY ",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "russian COMMENTARY ",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "russian COMMENTARY ",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "russian COMMENTARY ",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "russian COMMENTARY ",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "russian COMMENTARY ",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "English",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "English",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "English",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "English",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "English",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "English",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "not-present",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "not-present",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "not-present",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "not-present",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "not-present",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "eng",
+        "label": "not-present",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": 1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "Russian original",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "Russian original",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "Russian original",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "Russian original",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "Russian original",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "Russian original",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "russian COMMENTARY ",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "russian COMMENTARY ",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "russian COMMENTARY ",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "russian COMMENTARY ",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "russian COMMENTARY ",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "russian COMMENTARY ",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "English",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "English",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "English",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "English",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "English",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "English",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "not-present",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "not-present",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "not-present",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "not-present",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "not-present",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "de",
+        "label": "not-present",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "Russian original",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "Russian original",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "Russian original",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "Russian original",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "Russian original",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "Russian original",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "russian COMMENTARY ",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "russian COMMENTARY ",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "russian COMMENTARY ",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "russian COMMENTARY ",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "russian COMMENTARY ",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "russian COMMENTARY ",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "English",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "English",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "English",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "English",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "English",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "English",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "not-present",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "not-present",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "not-present",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "not-present",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "not-present",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "en_US",
+        "label": "not-present",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "Russian original",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "Russian original",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "Russian original",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "Russian original",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "Russian original",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "Russian original",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "russian COMMENTARY ",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "russian COMMENTARY ",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "russian COMMENTARY ",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "russian COMMENTARY ",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "russian COMMENTARY ",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "russian COMMENTARY ",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "English",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "English",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "English",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "English",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "English",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "English",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "not-present",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "not-present",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "not-present",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "native",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "not-present",
+        "id": "1",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "not-present",
+        "id": 3,
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    },
+    {
+      "choice": {
+        "language": "__proto__",
+        "label": "not-present",
+        "id": "3",
+        "backend": "native"
+      },
+      "backend": "hls.js",
+      "index": -1
+    }
+  ]
+}

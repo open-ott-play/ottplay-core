@@ -1,0 +1,169 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "field": "pin",
+      "suffix": "\n",
+      "value": {
+        "ok": false,
+        "code": "PIN_FORMAT"
+      }
+    },
+    {
+      "field": "salt",
+      "suffix": "\n",
+      "error": {
+        "name": "Error",
+        "message": "Invalid parental-control hash"
+      }
+    },
+    {
+      "field": "hash",
+      "suffix": "\n",
+      "error": {
+        "name": "Error",
+        "message": "Invalid parental-control hash"
+      }
+    },
+    {
+      "field": "pin",
+      "suffix": "\r",
+      "value": {
+        "ok": false,
+        "code": "PIN_FORMAT"
+      }
+    },
+    {
+      "field": "salt",
+      "suffix": "\r",
+      "error": {
+        "name": "Error",
+        "message": "Invalid parental-control hash"
+      }
+    },
+    {
+      "field": "hash",
+      "suffix": "\r",
+      "error": {
+        "name": "Error",
+        "message": "Invalid parental-control hash"
+      }
+    },
+    {
+      "field": "pin",
+      "suffix": "\r\n",
+      "value": {
+        "ok": false,
+        "code": "PIN_FORMAT"
+      }
+    },
+    {
+      "field": "salt",
+      "suffix": "\r\n",
+      "error": {
+        "name": "Error",
+        "message": "Invalid parental-control hash"
+      }
+    },
+    {
+      "field": "hash",
+      "suffix": "\r\n",
+      "error": {
+        "name": "Error",
+        "message": "Invalid parental-control hash"
+      }
+    },
+    {
+      "field": "pin",
+      "suffix": " ",
+      "value": {
+        "ok": false,
+        "code": "PIN_FORMAT"
+      }
+    },
+    {
+      "field": "salt",
+      "suffix": " ",
+      "error": {
+        "name": "Error",
+        "message": "Invalid parental-control hash"
+      }
+    },
+    {
+      "field": "hash",
+      "suffix": " ",
+      "error": {
+        "name": "Error",
+        "message": "Invalid parental-control hash"
+      }
+    },
+    {
+      "field": "pin",
+      "suffix": " ",
+      "value": {
+        "ok": false,
+        "code": "PIN_FORMAT"
+      }
+    },
+    {
+      "field": "salt",
+      "suffix": " ",
+      "error": {
+        "name": "Error",
+        "message": "Invalid parental-control hash"
+      }
+    },
+    {
+      "field": "hash",
+      "suffix": " ",
+      "error": {
+        "name": "Error",
+        "message": "Invalid parental-control hash"
+      }
+    },
+    {
+      "count": "NaN",
+      "value": {
+        "schema": 1,
+        "enabled": true,
+        "salt": "public-test-salt-1234",
+        "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "iterations": null,
+        "protectedIds": [],
+        "scopes": {
+          "settings": true,
+          "source": true,
+          "import": true,
+          "restore": true,
+          "export": true,
+          "proxy": true,
+          "remote": true
+        },
+        "sessionMinutes": 5,
+        "failures": 0,
+        "blockedUntil": 0
+      }
+    },
+    {
+      "count": "Infinity",
+      "error": {
+        "name": "Error",
+        "message": "Invalid parental-control work factor"
+      }
+    },
+    {
+      "count": "-Infinity",
+      "error": {
+        "name": "Error",
+        "message": "Invalid parental-control work factor"
+      }
+    },
+    {
+      "count": "1024.5",
+      "error": {
+        "name": "Error",
+        "message": "Invalid parental-control work factor"
+      }
+    }
+  ]
+}

@@ -1,1032 +1,446 @@
 {
-  "scope": "guide_feed_cache_archive_playlist_xtream_and_stalker_core_integration",
+  "schema": 2,
+  "scope": "shared_domain_core_integration",
+  "audited_domain_migration_complete": true,
   "full_product_migration_complete": false,
   "retained_platforms_and_providers": true,
-  "core_source_sha256": "24993729c1c63974b71dfe7c9aed44a59b8bdec7d92441b1312ba2431eecef61",
-  "shared_core_tests": 254,
-  "shared_core_report": "shared-core/validation.json",
-  "android": {
-    "core_tests": 52,
-    "app_unit_tests": 85,
-    "lint_debug": "passed",
-    "release_tooling_tests": 51,
-    "debug_apk": {
-      "path": "ottplay-android/app/build/outputs/apk/debug/app-debug.apk",
-      "sha256": "1e4a51de0c6b924c41446b8e8c36b8b47e12d5a9bd1185317162d5f4dda9e965",
-      "bytes": 22108836
+  "validated_at_utc": "2026-09-22T23:48:18.677730+00:00",
+  "previous_validation_revision": "f429f537497ec95c2bf92781e1ecee86c18bbfe8",
+  "core_source_sha256": "1f6d25045ad80c3ee449f6ed2affbf051bfff73939c4db9833da7ee22e1da67f",
+  "artifacts": {
+    "ottplay-core.js": {
+      "sha256": "ec2b011bf6d327055b3790fdecbf288235b3812f3688c2b1f93ef68c1242c6a6",
+      "bytes": 1201145
     },
-    "compile_sdk": 37,
-    "target_sdk": 36,
-    "min_sdk": 26,
-    "core_test_suites": [
-      {
-        "suite": "play.ott.nativeapp.core.ArchiveMigrationTest",
-        "tests": 5,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "report": "build/test-results/test/TEST-play.ott.nativeapp.core.ArchiveMigrationTest.xml"
-      },
-      {
-        "suite": "play.ott.nativeapp.core.CoreMessageTest",
-        "tests": 3,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "report": "build/test-results/test/TEST-play.ott.nativeapp.core.CoreMessageTest.xml"
-      },
-      {
-        "suite": "play.ott.nativeapp.core.GuideMigrationTest",
-        "tests": 1,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "report": "build/test-results/test/TEST-play.ott.nativeapp.core.GuideMigrationTest.xml"
-      },
-      {
-        "suite": "play.ott.nativeapp.core.KodiDrmTest",
-        "tests": 7,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "report": "build/test-results/test/TEST-play.ott.nativeapp.core.KodiDrmTest.xml"
-      },
-      {
-        "suite": "play.ott.nativeapp.core.LegacySourceImporterTest",
-        "tests": 3,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "report": "build/test-results/test/TEST-play.ott.nativeapp.core.LegacySourceImporterTest.xml"
-      },
-      {
-        "suite": "play.ott.nativeapp.core.PlaylistEpgTest",
-        "tests": 10,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "report": "build/test-results/test/TEST-play.ott.nativeapp.core.PlaylistEpgTest.xml"
-      },
-      {
-        "suite": "play.ott.nativeapp.core.PlaylistMigrationTest",
-        "tests": 3,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "report": "build/test-results/test/TEST-play.ott.nativeapp.core.PlaylistMigrationTest.xml"
-      },
-      {
-        "suite": "play.ott.nativeapp.core.ProviderRepositoryTest",
-        "tests": 13,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "report": "build/test-results/test/TEST-play.ott.nativeapp.core.ProviderRepositoryTest.xml"
-      },
-      {
-        "suite": "play.ott.nativeapp.core.RemoteTransportPolicyTest",
-        "tests": 5,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "report": "build/test-results/test/TEST-play.ott.nativeapp.core.RemoteTransportPolicyTest.xml"
-      },
-      {
-        "suite": "play.ott.nativeapp.core.StalkerMigrationTest",
-        "tests": 1,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "report": "build/test-results/test/TEST-play.ott.nativeapp.core.StalkerMigrationTest.xml"
-      },
-      {
-        "suite": "play.ott.nativeapp.core.XtreamMigrationTest",
-        "tests": 1,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "report": "build/test-results/test/TEST-play.ott.nativeapp.core.XtreamMigrationTest.xml"
-      }
-    ],
-    "app_test_suites": [
-      {
-        "suite": "play.ott.nativeapp.PlaybackActivityVisibilityTest",
-        "tests": 3,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "report": "build/test-results/testDebugUnitTest/TEST-play.ott.nativeapp.PlaybackActivityVisibilityTest.xml"
-      },
-      {
-        "suite": "play.ott.nativeapp.data.CoreMessageLocalizationTest",
-        "tests": 4,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "report": "build/test-results/testDebugUnitTest/TEST-play.ott.nativeapp.data.CoreMessageLocalizationTest.xml"
-      },
-      {
-        "suite": "play.ott.nativeapp.data.DemoCatalogUpgradeTest",
-        "tests": 8,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "report": "build/test-results/testDebugUnitTest/TEST-play.ott.nativeapp.data.DemoCatalogUpgradeTest.xml"
-      },
-      {
-        "suite": "play.ott.nativeapp.data.EpgHeadersTest",
-        "tests": 2,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "report": "build/test-results/testDebugUnitTest/TEST-play.ott.nativeapp.data.EpgHeadersTest.xml"
-      },
-      {
-        "suite": "play.ott.nativeapp.data.ResumePositionWriterTest",
-        "tests": 2,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "report": "build/test-results/testDebugUnitTest/TEST-play.ott.nativeapp.data.ResumePositionWriterTest.xml"
-      },
-      {
-        "suite": "play.ott.nativeapp.data.SettingsBackupPolicyTest",
-        "tests": 3,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "report": "build/test-results/testDebugUnitTest/TEST-play.ott.nativeapp.data.SettingsBackupPolicyTest.xml"
-      },
-      {
-        "suite": "play.ott.nativeapp.i18n.AppLanguagesTest",
-        "tests": 11,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "report": "build/test-results/testDebugUnitTest/TEST-play.ott.nativeapp.i18n.AppLanguagesTest.xml"
-      },
-      {
-        "suite": "play.ott.nativeapp.playback.ChannelNavigationPlayerTest",
-        "tests": 1,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "report": "build/test-results/testDebugUnitTest/TEST-play.ott.nativeapp.playback.ChannelNavigationPlayerTest.xml"
-      },
-      {
-        "suite": "play.ott.nativeapp.playback.ChannelNavigatorTest",
-        "tests": 7,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "report": "build/test-results/testDebugUnitTest/TEST-play.ott.nativeapp.playback.ChannelNavigatorTest.xml"
-      },
-      {
-        "suite": "play.ott.nativeapp.playback.ItemMediaSourceFactoryTest",
-        "tests": 5,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "report": "build/test-results/testDebugUnitTest/TEST-play.ott.nativeapp.playback.ItemMediaSourceFactoryTest.xml"
-      },
-      {
-        "suite": "play.ott.nativeapp.playback.PlaybackItemsTest",
-        "tests": 8,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "report": "build/test-results/testDebugUnitTest/TEST-play.ott.nativeapp.playback.PlaybackItemsTest.xml"
-      },
-      {
-        "suite": "play.ott.nativeapp.playback.RequestPolicyTest",
-        "tests": 4,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "report": "build/test-results/testDebugUnitTest/TEST-play.ott.nativeapp.playback.RequestPolicyTest.xml"
-      },
-      {
-        "suite": "play.ott.nativeapp.playback.ResumePositionTest",
-        "tests": 2,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "report": "build/test-results/testDebugUnitTest/TEST-play.ott.nativeapp.playback.ResumePositionTest.xml"
-      },
-      {
-        "suite": "play.ott.nativeapp.playback.ScopedDrmCallbackTest",
-        "tests": 5,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "report": "build/test-results/testDebugUnitTest/TEST-play.ott.nativeapp.playback.ScopedDrmCallbackTest.xml"
-      },
-      {
-        "suite": "play.ott.nativeapp.ui.TvRemoteInputTest",
-        "tests": 20,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "report": "build/test-results/testDebugUnitTest/TEST-play.ott.nativeapp.ui.TvRemoteInputTest.xml"
-      }
-    ],
-    "release_apk": {
-      "path": "ottplay-android/app/build/outputs/apk/release/app-release-unsigned.apk",
-      "sha256": "ffbff1e72131ba41ad0f0f7b455789934649999daccc1bd72933685e4545b21e",
-      "bytes": 4574779,
-      "signed": false,
-      "r8": "passed"
+    "ottplay-core.d.ts": {
+      "sha256": "eda1ccbfed4556723bc4dc389240a5b125349b9bdaf5dc864877a29aa9bde6d8",
+      "bytes": 26068
     },
-    "current_artifact_checks": "core/app tests, lintDebug, assembleDebug, assembleRelease passed",
-    "shared_domain_scope": [
-      "XMLTV time",
-      "archive retention and identity",
-      "archive URL formats and templates",
-      "M3U metadata, grouping, identity inputs, archive availability and directive order",
-      "Xtream account/catalog/series rules",
-      "Stalker MAG/JSON-RPC sessions and catalogs",
-      "XMLTV programme validation/deduplication/order"
-    ],
-    "archive_integration_fixtures": [
-      "IANA daylight-saving fold",
-      "encoded terminal resource",
-      "signed duplicate query parameters",
-      "strict recent-timeshift boundary",
-      "origin-scoped credentials"
-    ],
-    "playlist_integration_fixtures": [
-      "malformed HTTP headers without playable URI",
-      "duplicate DRM validation with first stream retained",
-      "localized generated stream title",
-      "HLS feed contract",
-      "scoped stream headers and folded metadata"
-    ],
-    "xtream_recorded_contracts": 68,
-    "stalker_recorded_contracts": 63,
-    "guide_recorded_contracts": 33
+    "ottplay-core.jar": {
+      "sha256": "f77263c612a34bc526a427bd8ff98c9222caec369bd51d0684c0cc4a67d2f859",
+      "bytes": 566291
+    },
+    "ottplay-core.LICENSE.txt": {
+      "sha256": "1e72da3623b91daad1013e577c3611ad6ed314da508b757abe9a1b27a88a14cc",
+      "bytes": 12937
+    }
   },
-  "foss2": {
-    "unit_tests": 350,
-    "es5_grammar": "passed",
-    "asset_and_core_receipts": "passed",
-    "browser_checks": [
+  "shared_core_tests": 611,
+  "shared_core_targets": {
+    "jvmTest": {
+      "tests": 205,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "jsNodeTest": {
+      "tests": 203,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "macosArm64Test": {
+      "tests": 203,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "shared_core_report": "shared-core/validation.json",
+  "javascript": {
+    "es5Syntax": true,
+    "bundleBytes": 1201145,
+    "reports": [
       {
-        "report": "reports/guide-browser-epg-report.json",
+        "profile": "modern",
+        "oracleDates": 2928,
         "passed": true
       },
       {
-        "report": "reports/guide-browser-compat-report.json",
+        "profile": "ES5 API simulation with core-js and native binary arrays",
+        "oracleDates": 2928,
         "passed": true
       },
       {
-        "report": "reports/guide-browser-providers-report.json",
+        "profile": "ES5 API simulation with core-js and emulated binary arrays",
+        "oracleDates": 2928,
         "passed": true
       }
-    ],
-    "current_artifact_checks": "350 tests, ES5, resource/vendor/core receipts; captured Stalker/Xtream/M3U contracts; Chromium provider playback, EPG and compatibility passed",
-    "stalker_recorded_contracts": 52,
-    "guide_recorded_contracts": 44
+    ]
+  },
+  "consumer_revisions": {
+    "ottplay-foss": "4e11d5cd6985a88a19ee1f54aa679491f2832b3b",
+    "ottplay-android": "163f7aaacb0848e93e1e8020b3b53c558840e6fb",
+    "ottplay-control-server": "f3f515680e9bd0e71f4bf7298b7e70f87b5c5f6f",
+    "ottplay-swop": "e45361403a5a4e7109d3ab69d3bc730725c57da4",
+    "ottplay-web-vitrine": "198ad0c0c89f47720c93c6e8a3b1e2148acea837"
   },
   "main_player": {
     "npm_test": "passed",
-    "ci_inventory": "117/117 reachable",
-    "native_swift_kotlin_cache_and_edition_tests": "passed",
-    "ios_simulator_application_build": "passed",
-    "native_runtime_audit": "passed",
-    "duplicate_source_lines_removed": 827,
-    "shared_domain_core_integration": true,
-    "rust_tests_macos_arm64": 66,
-    "rust_tests_alpine_arm64_musl": 44,
-    "python_portable_suites": 10,
-    "python_portable_branch_coverage_percent": 81,
-    "native_guide_scope": [
-      "XMLTV time and bounded timestamp cache",
-      "Name normalization, ordered ID/alias/fuzzy matching",
-      "Regional shift",
-      "Archive window selection"
-    ],
-    "source_revision_matches_all_consumers": true,
-    "native_engine_windows_and_linux_x64": "CI matrix configured; not executed locally",
-    "application_simulator_targets": "arm64 and x86_64, unsigned simulator build",
-    "core_bundle": {
-      "sha256": "86347adb02dfa9b63288b83b8b1337caca381bfefa5f993b634cd2f5dfd160f6",
-      "bytes": 722961,
-      "gzip_bytes": 115353
-    },
-    "synthetic_guide_benchmark_macos_arm64": {
-      "catalog_channels": 2000,
-      "chrono_oracle_ms": 6,
-      "distinct_dates": 100000,
-      "distinct_dates_ms": 2733,
-      "fuzzy_ms": 5022,
-      "fuzzy_queries": 500,
-      "index_ms": 88,
-      "parse_ms": 531,
-      "programmes": 100000,
-      "xml_bytes": 11300069
-    },
-    "performance_limit": "QuickJS unique-date parsing and fuzzy scans remain slower than native Rust; the measured benchmark is synthetic and does not certify physical devices.",
-    "staged_core_resources_verified": [
-      "iOS native bundle",
-      "iOS WebView bundle",
-      "Capacitor stage",
-      "Tauri stage",
-      "Alpine ARM64 container HTTP-served JavaScript"
-    ],
-    "native_runtime_core_resource_gate": "passed; rejects missing/changed compiler output and stages it after native js-directory rebuild",
-    "archive_provider_adapters": 13,
-    "archive_provider_contract_fixtures": 272,
-    "alpine_arm64_full_container_build": "passed",
-    "alpine_arm64_container_http_and_receipt_smoke": "passed",
-    "benchmark_source_sha256": "95b2f2fbbb7ba4f4ec95d1791bb72ef16f68af60397b077fb7d03aa014db99ee",
-    "typecheck": "passed",
-    "playlist_provider_adapters": 43,
-    "playlist_media_adapters": 3,
-    "playlist_recorded_contracts": 743,
-    "server_es5_scripts": 206,
-    "xtream_recorded_contracts": 13,
-    "test_fixture_fix": "Atomic per-process sequence prevents debug API temporary-directory collisions during parallel Rust tests.",
-    "stalker_recorded_contracts": 19,
-    "bestlist_xtream_recorded_contracts": 12,
-    "guide_recorded_contracts": 44
+    "ci_inventory": "129/129 reachable",
+    "lint": "passed",
+    "build": "passed",
+    "server_build": "passed",
+    "bundle_checks": "passed",
+    "es5_scripts": 206,
+    "bundle_device_cases": 940,
+    "playwright_browser_cases": 82,
+    "native_ui_chromium_webkit_cases": 4,
+    "rust_tests": 71,
+    "native_source_cache_contracts": 195,
+    "native_xmltv_contracts": 46,
+    "ios_simulator_build": "passed",
+    "ios_resource_audit_files": 227,
+    "staged_core_copies_verified": 5,
+    "classic_bundle": {
+      "bytes": 473261,
+      "gzip_bytes": 129329,
+      "previous_bytes": 466922,
+      "previous_gzip_bytes": 126848,
+      "raw_budget": 475000,
+      "gzip_budget": 130000
+    }
   },
+  "foss2": {
+    "unit_tests": 402,
+    "es5_grammar": "passed",
+    "asset_and_core_receipts": "passed",
+    "full_browser_acceptance": "running; recorded separately in final delivery receipt"
+  },
+  "android": {
+    "tests": {
+      "core": {
+        "tests": 57,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "app": {
+        "tests": 90,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    "lint": {
+      "debug": {
+        "Warning": 14
+      },
+      "release": {
+        "Warning": 14
+      }
+    },
+    "build_targets": [
+      ":core:test",
+      ":app:testDebugUnitTest",
+      ":app:lintDebug",
+      ":app:lintRelease",
+      ":app:assembleDebug",
+      ":app:assembleRelease",
+      ":app:bundleRelease",
+      ":app:assembleFull",
+      ":app:assembleDebugAndroidTest"
+    ],
+    "artifacts": [
+      {
+        "path": "ottplay-android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
+        "bytes": 2246516,
+        "sha256": "2dc52fbf5b4baad70a30ec6ddba97ff0fb9047614fe9788818649522aa12dab1"
+      },
+      {
+        "path": "ottplay-android/app/build/outputs/apk/debug/app-debug.apk",
+        "bytes": 22242783,
+        "sha256": "b0581d767f3cb309b6a9c06af2cd9cb306f4c736791e589c146576eb8880821b"
+      },
+      {
+        "path": "ottplay-android/app/build/outputs/apk/full/app-full-unsigned.apk",
+        "bytes": 4590659,
+        "sha256": "3de2ebdbcce9c2b5150e3cfe31f2c5516eb68c46f3007888d78f4f9a49d0cb2d"
+      },
+      {
+        "path": "ottplay-android/app/build/outputs/apk/release/app-release-unsigned.apk",
+        "bytes": 4591163,
+        "sha256": "a925a379a4a2ff963fe9608d30577a59c5cd63e9e463ee45ff4a057c29fe6331"
+      },
+      {
+        "path": "ottplay-android/app/build/outputs/bundle/release/app-release.aab",
+        "bytes": 9194513,
+        "sha256": "dc87ab514284641026dabf2a0e2582a28ad2bb9af2d160793269f3b28ab45b45"
+      }
+    ],
+    "core_jar_sha256": "f77263c612a34bc526a427bd8ff98c9222caec369bd51d0684c0cc4a67d2f859"
+  },
+  "wire": {
+    "schema_sha256": "23a19dae2cb07334edadb2cb938749303dd44f0e81ad205352aa2a049c5b6ca4",
+    "generator_sha256": "988e698728f3170beeba059b3feacea78100c306d197ed998285ec05a19c60ae",
+    "contracts": {
+      "main": 81,
+      "swop": 27,
+      "control": 90
+    },
+    "generation_check": "passed",
+    "services": {
+      "control": {
+        "head": "f3f515680e9bd0e71f4bf7298b7e70f87b5c5f6f",
+        "url": "https://github.com/open-ott-play/ottplay-control-server/actions/runs/35798706224",
+        "jobs": 8,
+        "conclusion": "success",
+        "pr": 10
+      },
+      "swop": {
+        "head": "e45361403a5a4e7109d3ab69d3bc730725c57da4",
+        "url": "https://github.com/open-ott-play/ottplay-swop/actions/runs/35798721534",
+        "jobs": 8,
+        "conclusion": "success",
+        "pr": 24
+      }
+    }
+  },
+  "operator": {
+    "entrypoints": 48,
+    "captured_before_cases": 1077,
+    "tests": {
+      "main": [
+        "test_operator_session_core.cjs:660",
+        "test_operator_catalog_core.cjs:21",
+        "test_operator_transport_core.cjs:105",
+        "test_operator_profile_core.cjs:96",
+        "test_operator_vod_core.cjs:34",
+        "test_operator_portal_core.cjs:34",
+        "test_operator_media_core.cjs:91"
+      ],
+      "foss2": [
+        "test-operator-lifetime-core.cjs:16",
+        "test-operator-sources-core.cjs:20"
+      ],
+      "capturedBeforeCases": 1077
+    },
+    "source_ownership_check": "passed"
+  },
+  "state": {
+    "groups": [
+      {
+        "id": "favorites",
+        "status": "implemented_verified",
+        "common_policy": [
+          "shared-core/src/commonMain/kotlin/play/ott/core/DurableSelections.kt"
+        ],
+        "host_only": [
+          "Array mutation ABI preserves classic array aliases and browser copy semantics; host storage/UI synchronization"
+        ]
+      },
+      {
+        "id": "durable_selection_retention",
+        "status": "implemented_verified",
+        "common_policy": [
+          "shared-core/src/commonMain/kotlin/play/ott/core/DurableSelections.kt",
+          "shared-core/src/commonMain/kotlin/play/ott/core/BrowserDurableState.kt",
+          "shared-core/src/commonMain/kotlin/play/ott/core/ClassicDurableState.kt",
+          "shared-core/src/commonMain/kotlin/play/ott/core/LibraryState.kt"
+        ],
+        "host_only": [
+          "DataStore serialization and atomic write queue; UI media effects; playback sampling owned by playback policy"
+        ]
+      },
+      {
+        "id": "backup",
+        "status": "implemented_verified",
+        "common_policy": [
+          "shared-core/src/commonMain/kotlin/play/ott/core/BrowserDurableState.kt",
+          "shared-core/src/commonMain/kotlin/play/ott/core/DurableSelections.kt",
+          "shared-core/src/commonMain/kotlin/play/ott/core/ClassicDurableState.kt"
+        ],
+        "host_only": [
+          "Native JSON schema serialization, platform source validation and URI file grants; vault/database transaction and cache equality effects; installation storage clear/write ordering; remote disconnection"
+        ]
+      },
+      {
+        "id": "legacy_import",
+        "status": "implemented_verified",
+        "common_policy": [
+          "shared-core/src/commonMain/kotlin/play/ott/core/LegacySettingsImport.kt"
+        ],
+        "host_only": [
+          "JSON/XML decoding and unsafe-key/nesting parse guard; platform URL canonicalization; native stable ID hash and localized message binding; browser preview presentation"
+        ]
+      },
+      {
+        "id": "identity",
+        "status": "implemented_verified",
+        "common_policy": [
+          "shared-core/src/commonMain/kotlin/play/ott/core/ChannelRestoration.kt",
+          "shared-core/src/commonMain/kotlin/play/ott/core/ChannelIdentity.kt",
+          "shared-core/src/commonMain/kotlin/play/ott/core/BrowserDurableState.kt",
+          "shared-core/src/commonMain/kotlin/play/ott/core/LibraryState.kt"
+        ],
+        "host_only": [
+          "URI encoding/decoding; host opaque metadata JSON equality; persisted URL fingerprint algorithm (same provider-format hash contract); object ABI mapping"
+        ]
+      },
+      {
+        "id": "parental",
+        "status": "implemented_verified",
+        "common_policy": [
+          "shared-core/src/commonMain/kotlin/play/ott/core/ParentalState.kt",
+          "shared-core/src/commonMain/kotlin/play/ott/core/ClassicDurableState.kt"
+        ],
+        "host_only": [
+          "SHA-256 rounds, salt/random bytes, constant-time comparison; clock acquisition and persistence; PIN prompts/callback/timer effects; classic indicator rendering"
+        ]
+      }
+    ]
+  },
+  "playback": {
+    "schema": 1,
+    "sourceBaseline": "f429f537497ec95c2bf92781e1ecee86c18bbfe8",
+    "entries": [
+      {
+        "area": "browser playback decisions",
+        "adapter": "ottplay-foss2/src/media.js",
+        "commonRules": [
+          "PlaybackRules",
+          "PlaybackDetectionRules",
+          "PlaybackRetries",
+          "PlaybackRecovery",
+          "PlaybackEngineSequence"
+        ],
+        "hostBoundary": "HTML media/decoder API capabilities, subscriptions, teardown sequencing, vendor loading, timers, DOM and network probes"
+      },
+      {
+        "area": "classic playback decisions",
+        "adapter": "ottplay-foss/src/core/index.ts",
+        "commonRules": [
+          "PlaybackRules",
+          "PlaybackRecovery",
+          "PlaybackRestart"
+        ],
+        "hostBoundary": "HTML media/decoder effects, device events, PiP/native bridges, mode storage and UI diagnostics"
+      },
+      {
+        "area": "browser track restoration",
+        "adapter": "ottplay-foss2/src/playback-preferences.js",
+        "commonRules": [
+          "PlaybackRules.track"
+        ],
+        "hostBoundary": "track payloads and persistence effects"
+      },
+      {
+        "area": "native channel navigation",
+        "adapter": "ottplay-android/app/src/main/java/play/ott/nativeapp/playback/ChannelNavigator.kt",
+        "commonRules": [
+          "ChannelNavigation"
+        ],
+        "hostBoundary": "coroutines, repository access, Media3 payloads and effect callbacks"
+      },
+      {
+        "area": "native playback resume",
+        "adapter": "ottplay-android/app/src/main/java/play/ott/nativeapp/playback/PlaybackProgressRecorder.kt",
+        "commonRules": [
+          "PlaybackRules.nativeResume"
+        ],
+        "hostBoundary": "Media3 observation and persistence scheduling"
+      }
+    ],
+    "additionalHostBoundaries": {
+      "native": "OS controller UID/trust admission, HTTP header framing and URL/TLS validation, media sessions/DRM, OS lifecycle",
+      "classic": "TV/STB vendor APIs, fragment decoder probing, focus/remote UI, source wire codecs"
+    },
+    "pending": [
+      "retained physical devices and provider account acceptance"
+    ],
+    "verification": {
+      "source_sha256": "1f6d25045ad80c3ee449f6ed2affbf051bfff73939c4db9833da7ee22e1da67f",
+      "compiled_artifact": "passed",
+      "immutable_contracts": "passed",
+      "full_host_test_suites": "passed"
+    }
+  },
+  "xmltv_browser_performance": {
+    "method": "Three alternating original adapter/current adapter runs, each one warmup plus three measured parses, same current core and 10000-programme 1.95MB XML input. No expected/output changes.",
+    "beforeSamplesMs": [
+      201.04945799999996,
+      196.27312499999994,
+      199.03337499999998,
+      201.227125,
+      196.81145900000013,
+      199.53095899999994,
+      200.98775,
+      193.37633299999993,
+      197.94233299999996
+    ],
+    "afterSamplesMs": [
+      225.75424999999996,
+      221.09566599999994,
+      222.99612500000012,
+      229.232125,
+      217.98633299999995,
+      230.68216699999994,
+      230.13329099999999,
+      220.02579100000003,
+      228.6612500000001
+    ],
+    "beforeMedianMs": 199.03337499999998,
+    "afterMedianMs": 225.75424999999996,
+    "ratio": 1.134253237679359,
+    "outputSha256": "b18980d52094aaa6488ec98372870d8461a9308960dfc3536d37c2d1ba5a97dc"
+  },
+  "performance_limit": "Synthetic XMLTV field normalization is 13.4% slower for 10000 browser programmes with identical output; prior Swift/QuickJS migration benchmarks also showed added parsing cost. Physical device performance parity is not certified.",
   "physical_device_acceptance": false,
   "published_or_deployed": false,
   "remaining": [
-    "Remaining native cache policies",
-    "Other operator catalogs/sessions and cross-catalog channel identity/state migrations",
-    "Durable state, playback and timeshift controllers",
-    "Service wire contracts",
-    "Windows/Linux x64 CI execution and retained physical TV/STB/provider account acceptance"
+    "Retained physical TV/STB codec and DRM acceptance",
+    "Provider-account and installation/rollback acceptance on retained devices",
+    "Final source and consumer CI artifacts are recorded separately after push; release promotion is not part of this change"
   ],
-  "validated_at_utc": "2026-09-22T15:45:57.331156+00:00",
   "reports": {
-    "common": "reports/guide-core-final.log",
-    "es5": "reports/guide-core-es5.log",
-    "rust": "reports/guide-rust-tests.log",
-    "alpine": "reports/guide-alpine-tests.log",
-    "container_build": "reports/guide-container-build.log",
-    "container_smoke": "reports/guide-container-smoke.log",
-    "ios": "reports/guide-xcode-build.log",
-    "adapters": "reports/guide-native-adapters.log",
-    "android": "reports/guide-android-build.log",
-    "main_npm": "reports/guide-main-tests.log",
-    "foss2": "reports/guide-foss2-tests.log",
-    "python": "reports/guide-python-tests.log",
-    "benchmark": "reports/archive-guide-benchmark.log",
-    "structure": "reports/guide-boundary.log",
-    "inventory": "reports/guide-main-tests.log",
-    "playlist_benchmark": "reports/stalker-playlist-benchmark.json",
-    "provider_contracts": "reports/playlist-provider-parity.log",
-    "staged_core": "reports/guide-staged-core.json",
-    "xtream_benchmark": "reports/stalker-xtream-benchmark.json",
-    "xtream_contracts": "reports/xtream-main-parity.log",
-    "stalker_benchmark": "reports/stalker-benchmark.json",
-    "stalker_contracts": "reports/stalker-boundary.log",
-    "guide_benchmark": "reports/guide-benchmark.json",
-    "guide_contracts": "reports/guide-browser-parity.log"
+    "common": "reports/final-unification/final-core-tests.log",
+    "main": "reports/final-unification/main-final.log",
+    "foss2": "reports/final-unification/foss2-final.log",
+    "rust": "reports/final-unification/native-rust.log",
+    "ios": "reports/final-unification/ios-app.log",
+    "android": "reports/final-unification/android/summary.json",
+    "staged_core": "reports/final-unification/staged-core.log",
+    "boundaries": "reports/final-unification/boundary.log"
   },
-  "archive": {
-    "provider_adapters": 13,
-    "recorded_provider_contracts": 272,
-    "baseline_revision": "7d47b0ca391e4b1d1fe282cb4bf11a2bfe17e80a",
-    "client_contracts": [
-      "FOSS2 completed programmes",
-      "Android elapsed/current programme",
-      "historical provider profiles"
-    ],
-    "host_boundaries": [
-      "URL parser",
-      "IANA/UTC calendar fields",
-      "origin-scoped transport headers"
-    ],
-    "retained_wire_compatibility": [
-      "Dune end padding",
-      "absolute timeshift within last ten minutes",
-      "legacy provider-only dollar placeholders",
-      "kb-team .mdp spelling"
-    ],
-    "rejected_browser_inputs": [
-      "unsupported tokens and static non-programme URLs",
-      "future/current/ineligible programmes",
-      "Flussonic marker only in hostname/query/parent path"
-    ]
-  },
-  "playlist": {
-    "main_provider_adapters": 43,
-    "media_adapters": 3,
-    "main_recorded_contracts": 743,
-    "foss2_recorded_contracts": 26,
-    "profiles": [
-      "browser",
-      "android",
-      "generic",
-      "base-m3u",
-      "1ott",
-      "only4",
-      "shara-tv",
-      "tvteam",
-      "antifriz",
-      "edem",
-      "kb-team",
-      "shura",
-      "media"
-    ],
-    "js_abi_checks": "modern and two ES5 API simulations passed",
-    "android_core_tests": 49,
-    "benchmark": {
-      "host": "darwin arm64",
-      "engine": "v26.8.2",
-      "physical_device": false,
-      "source_sha256": "3d6874ab61f82ac1779114ff6a2d295003d56ff5b06bd8c5732eb813727eacc4",
-      "js_bytes": 620181,
-      "gzip_bytes": 100132,
-      "samples": [
-        {
-          "count": 10000,
-          "bytes": 865567,
-          "milliseconds": 200,
-          "returned": 10000
-        },
-        {
-          "count": 100000,
-          "bytes": 9055567,
-          "milliseconds": 1903,
-          "returned": 100000
-        }
-      ]
-    },
-    "intentional_changes": [
-      "FOSS2 32 Mi-code-unit input, 1 Mi-code-unit line and 100,000 unique entry limits",
-      "null-prototype dictionaries for legacy group names"
-    ],
-    "host_boundaries": [
-      "URL parsing",
-      "hash and encoding primitives",
-      "HTTP header decoding",
-      "DRM translation",
-      "localization",
-      "transport and UI"
-    ]
-  },
-  "xtream": {
-    "profiles": [
-      "browser",
-      "android",
-      "base-player"
-    ],
-    "recorded_contracts": {
-      "foss2": 58,
-      "android": 68,
-      "base_player": 13,
-      "total": 139
-    },
-    "domains": [
-      "account validation",
-      "catalog request order",
-      "optional HTTP section policy",
-      "category and item normalization",
-      "channel and episode identity",
-      "stream and API routes",
-      "archive eligibility",
-      "season grouping",
-      "short EPG record selection"
-    ],
-    "host_boundaries": [
-      "JSON and URL codecs",
-      "HTTP and cancellation",
-      "hash/encoding primitives",
-      "Date decoding",
-      "localization and UI"
-    ],
-    "retained_compatibility": [
-      "base-player name-hash IDs and raw stream references",
-      "browser strict auth/numeric IDs",
-      "native embedded live response and optional 404/405/501 sections",
-      "native 100,000-row limit before deduplication and next-section requests",
-      "client-specific direct URLs/extensions/fallback names",
-      "JSON date coercion and own __proto__ fields"
-    ],
-    "cancellation": "browser catalog cancellation exercised at all seven request stages; existing series cancellation test passed",
-    "intentional_changes": [
-      "safe prototype-named base-player category dictionaries",
-      "malformed base-player list types return the existing load failure instead of a callback exception"
-    ],
-    "benchmark": {
-      "host": "darwin arm64",
-      "engine": "v26.8.2",
-      "physical_device": false,
-      "source_sha256": "3d6874ab61f82ac1779114ff6a2d295003d56ff5b06bd8c5732eb813727eacc4",
-      "js_bytes": 620181,
-      "gzip_bytes": 100132,
-      "samples": [
-        {
-          "count": 10000,
-          "milliseconds": 147,
-          "returned": 10000,
-          "requests": 7
-        },
-        {
-          "count": 100000,
-          "milliseconds": 1357,
-          "returned": 100000,
-          "requests": 7
-        }
-      ]
-    },
-    "fixture_sha256": {
-      "../ottplay-foss2/tests/fixtures/xtream-before-core.json": "84c82c82ab16dd0fbdcf50b7075d8b4c332b82c6563d630b9251b6714f1eff20",
-      "ottplay-android/core/src/test/resources/xtream-before-core.json": "4421c1d92306ccce53fb2a8e058d786dcdc3b0f49c6068ce7ec47fd59d23a5c1",
-      "ottplay-foss/tests/fixtures/xtream/legacy.json": "37f21a880098904abd9e9ac83d3e42146e5ed4029d32419f2a9ce92761529f2a"
-    }
-  },
-  "stalker": {
-    "profiles": [
-      "browser MAG",
-      "Android MAG/JSON-RPC",
-      "base-player JSON-RPC"
-    ],
-    "recorded_contracts": {
-      "foss2": 52,
-      "android": 63,
-      "base_player": 19,
-      "bestlist_xtream": 12,
-      "total": 146
-    },
-    "domains": [
-      "authentication and profile policy",
-      "token cache and bounded retry",
-      "request/header ordering",
-      "pagination and duplicate policy",
-      "catalog identity and folder hierarchy",
-      "media-link interpretation",
-      "RPC short EPG"
-    ],
-    "host_boundaries": [
-      "JSON and URL codecs",
-      "HTTP and cancellation",
-      "locking",
-      "hash/encoding primitives",
-      "localization and UI"
-    ],
-    "retained_compatibility": [
-      "browser raw-row vs native unique-row pagination",
-      "browser first duplicate vs native last duplicate",
-      "browser private token/command references and strict generations",
-      "native single 401/403 retry and token reuse",
-      "base-player numeric/hash IDs, raw URLs and numeric-prefix EPG fields",
-      "BEST LiST distinct M3U fallback URL forms"
-    ],
-    "cancellation": "browser load cancellation exercised at all stages; stale sessions and string generations rejected; existing page cancellation passed",
-    "es5": "modern and two old-API simulations passed; forbidden Unicode RegExp calls removed from Xtream fallback and antifriz logo rewrite",
-    "fixture_sha256": {
-      "../ottplay-foss2/tests/fixtures/stalker-before-core.json": "a925fd406ea211ac4dc54b2ee9a298957dcf02a7f0a8a69eed059fc6f01ab3cd",
-      "ottplay-android/core/src/test/resources/stalker-before-core.json": "47e41334a674bf7b547db93bc8882e89d7a6c1acb0f79f870118e5f67ac1641b",
-      "ottplay-foss/tests/fixtures/stalker/legacy.json": "daf8bdf414408c8f72986ea486330f3b9c3e9b20064d8186b04243c10943c4ba",
-      "ottplay-foss/tests/fixtures/stalker/bestlist-xtream.json": "ba4f1235784eb99a0a32f4edbaeb7b0a41c499a0cbe6380d06edc9bbe647833d"
-    },
-    "benchmark": {
-      "host": "darwin arm64",
-      "engine": "v26.8.2",
-      "physical_device": false,
-      "source_sha256": "3d6874ab61f82ac1779114ff6a2d295003d56ff5b06bd8c5732eb813727eacc4",
-      "js_bytes": 620181,
-      "gzip_bytes": 100132,
-      "samples": [
-        {
-          "count": 10000,
-          "milliseconds": 87,
-          "returned": 10001,
-          "requests": 13
-        },
-        {
-          "count": 50000,
-          "milliseconds": 374,
-          "returned": 50001,
-          "requests": 53
-        }
-      ]
-    }
-  },
-  "guide_feed_cache": {
-    "recorded_contracts": {
-      "foss2": 44,
-      "base_player": 44,
-      "android": 33,
-      "total": 121
-    },
-    "domains": [
-      "XMLTV programme validation and missing-stop inference",
-      "metadata/index/duplicate precedence",
-      "feed-scoped identity and preference",
-      "coverage metadata",
-      "protected lookup cache with copy budget",
-      "classic inclusive now/next selection and full-schedule TTL/LRU",
-      "Android programme ordering"
-    ],
-    "retained_compatibility": [
-      "first usable icon and duplicate payload",
-      "programme references and unique-ID schedule aliases",
-      "browser latest overlap and half-open ends",
-      "classic earliest overlap and inclusive ends",
-      "classic one-hour miss retry and 12-hour response TTL",
-      "Android first duplicate interval"
-    ],
-    "host_boundaries": [
-      "XML decoding and decompression limits",
-      "URL codec",
-      "transport/cancellation and UI",
-      "storage and wall clock"
-    ],
-    "fixture_sha256": {
-      "../ottplay-foss2/tests/fixtures/guide-before-core.json": "d8fdc090cbe5e6b3e0837db37346c3b5954003147648286fc0583a9706dbc9ee",
-      "ottplay-foss/tests/fixtures/guide/legacy.json": "2e6c39907d8841d934edac0be5849e72e665c5b64a57de93f52467a94a432eca",
-      "ottplay-android/core/src/test/resources/guide-before-core.json": "d40ca06c327d6c130e82e8a6ca3d1595e21871ebd90cb3bff057e4aa89d62508"
-    },
-    "benchmark": {
-      "host": "darwin arm64",
-      "engine": "v26.8.2",
-      "physical_device": false,
-      "source_sha256": "24993729c1c63974b71dfe7c9aed44a59b8bdec7d92441b1312ba2431eecef61",
-      "js_bytes": 722961,
-      "gzip_bytes": 115353,
-      "samples": [
-        {
-          "programmes": 1000,
-          "channels": 50,
-          "xml_bytes": 105589,
-          "parse_ms": 35,
-          "merge_ms": 6,
-          "lookup_two_scans_ms": 2
-        },
-        {
-          "programmes": 10000,
-          "channels": 500,
-          "xml_bytes": 1066589,
-          "parse_ms": 151,
-          "merge_ms": 48,
-          "lookup_two_scans_ms": 11
-        },
-        {
-          "programmes": 50000,
-          "channels": 2500,
-          "xml_bytes": 5375589,
-          "parse_ms": 778,
-          "merge_ms": 290,
-          "lookup_two_scans_ms": 83
-        }
-      ]
-    }
-  },
-  "streaming_guide": {
-    "source_sha256": "af95a2ee0059f7d6f392b35c058435bd921d909cbb1f78f3c28513215ef0363a",
-    "baseline_commit": "b34ae283bb59402c6d6807cd1af7539124af62df",
-    "captured_http_contracts": 110,
-    "common_tests": {
-      "JVM": 100,
-      "JavaScript": 98,
-      "macOS": 98
-    },
-    "es5_abi_profiles": 3,
-    "foss2_tests": 351,
-    "android_core_tests": 53,
-    "android_app_tests": 85,
-    "report": "reports/streaming-guide/validation.json",
-    "migrated": [
-      "request identity and archive-depth merging",
-      "candidate and metadata ownership",
-      "streaming archive windows and current/next retention",
-      "round-robin programme and UTF-8 byte budgets"
-    ],
-    "host_boundaries": [
-      "HTTP, cancellation, clock and cache I/O",
-      "wire DTO validation",
-      "XML/gzip and URL codecs",
-      "UTF-8 measurement and output serialization"
-    ]
-  },
-  "native_fallback": {
-    "source_sha256": "eac5c02b7ee8df54875c1d5afd77951c129f6f567fa99b62fbc5cfe95f6edf14",
-    "baseline_commit": "d24f07be2abf536977dce0cdae7807fed8bd28dc",
-    "recorded_contracts": {
-      "Swift": 39,
-      "Kotlin": 38,
-      "total": 77
-    },
-    "existing_native_source_cache_contracts": 118,
-    "common_tests": {
-      "JVM": {
-        "tests": 108,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0
-      },
-      "JavaScript": {
-        "tests": 106,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0
-      },
-      "macOS": {
-        "tests": 106,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0
-      }
-    },
-    "es5_abi_profiles": 3,
-    "foss2_tests": 351,
-    "android_core_tests": 53,
-    "android_app_tests": 85,
-    "rust_tests": 67,
-    "archived_android_edition_scenarios": 37,
-    "fixture_sha256": "bbc4cfdf077c2f122f920b1fa3da81f76ae17747c5a40b6598282e115c74cce5",
-    "migrated": [
-      "fresh-disk and network admission",
-      "memory-before-stale-disk fallback",
-      "platform write failure and repeated parse policy",
-      "sequential source batch partial success and first error"
-    ],
-    "host_boundaries": [
-      "HTTP, XML/gzip, files and metadata invalidation",
-      "native payload and original error storage",
-      "locks, clock and callback execution"
-    ],
-    "retained_compatibility": [
-      "empty memory is a usable fallback",
-      "any offline success renews the memory timestamp",
-      "Swift write failure triggers fallback; Android returns fresh network",
-      "Swift second parse failure terminates without fallback",
-      "first source owns a channel; empty successful sources do not hide the first batch error"
-    ],
-    "report": "reports/native-fallback/validation.json"
-  },
-  "xmltv_records": {
-    "source_sha256": "bca46d6f41aecaad9697677a8f911fad69e08aa3e1a932b189d27dc83723b9e5",
-    "baseline_commits": {
-      "main": "c02125906cad47c992c67235314018f908d4ab3d",
-      "android": "1ade13fb02fffe828c7a383e15bf0ff7ae5283f8"
-    },
-    "captured_parser_outputs": {
-      "Swift": 23,
-      "archived_Kotlin": 23,
-      "active_Android": 20,
-      "Rust_browser": 32,
-      "Rust_native": 32,
-      "total": 130
-    },
-    "common_tests": {
-      "JVM": {
-        "tests": 119,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0
-      },
-      "JavaScript": {
-        "tests": 117,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0
-      },
-      "macOS": {
-        "tests": 117,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0
-      }
-    },
-    "es5_abi_profiles": 3,
-    "foss2_tests": 351,
-    "android_core_tests": 56,
-    "android_app_tests": 85,
-    "rust_workspace_tests": 69,
-    "native_policy_fallback_contracts": 195,
-    "archived_android_edition_cases": 37,
-    "active_android_limit_differentials": 24,
-    "independent_event_differentials": 10000,
-    "fixture_sha256": {
-      "ottplay-foss/tests/fixtures/guide/native-records-before-core.json": "154be03eb290be437c22af176fb7073aaa34993a955e9472192584610eaad90b",
-      "ottplay-foss/tests/fixtures/guide/native-record-boundaries-before-core.json": "5babe9a0bcf8281abc13b9e412d15331191c73cbe46a9edd5120e813c1382b40",
-      "ottplay-foss/src-rs/core/tests/fixtures/xmltv-records-before-core.json": "c9dec571f7deb187382107c6649f402b9b183b5bb766019b209e8f33bdcd5eab",
-      "ottplay-foss/src-rs/core/tests/fixtures/xmltv-record-boundaries-before-core.json": "ab3c79fa1df5e4129fa775ce8a0dbd8cdcbd8bf5e10ffaf72430f9cb76820d68",
-      "ottplay-android/core/src/test/resources/xmltv-records-before-core.json": "4d07da8cbc39f124591c3929d00f72e76b23c9ca6c2101bdd324600c06f73749"
-    },
-    "migrated": [
-      "native XMLTV metadata and alias precedence",
-      "repeated fields, missing IDs and programme admission",
-      "decoded XML event scope and conditional text error selection",
-      "stable native programme ordering"
-    ],
-    "host_boundaries": [
-      "XML tokenization, decoding errors and security/resource barriers",
-      "Unicode trim/equality primitives",
-      "bounded bridge transport and native collection writes"
-    ],
-    "performance_note": "Measured overhead remains despite eliminating initial emulated-Long/map regression. See real before/after parse reports; no performance parity claimed.",
-    "report": "reports/xmltv-records/validation.json",
-    "performance": {
-      "host": "macOS arm64",
-      "physical_device": false,
-      "output_hashes_equal": true,
-      "swift": [
-        {
-          "programmes": 10000,
-          "before_median_ms": 87.108,
-          "after_median_ms": 160.9
-        },
-        {
-          "programmes": 50000,
-          "before_median_ms": 378.405,
-          "after_median_ms": 711.661
-        }
-      ],
-      "rust": [
-        {
-          "programmes": 10000,
-          "profile": "browser",
-          "old": {
-            "medianMilliseconds": 57.869,
-            "medianPeakRssBytes": 15859712
-          },
-          "new": {
-            "medianMilliseconds": 117.264,
-            "medianPeakRssBytes": 20594688
-          }
-        },
-        {
-          "programmes": 10000,
-          "profile": "native",
-          "old": {
-            "medianMilliseconds": 58.924,
-            "medianPeakRssBytes": 15892480
-          },
-          "new": {
-            "medianMilliseconds": 132.992,
-            "medianPeakRssBytes": 20578304
-          }
-        },
-        {
-          "programmes": 50000,
-          "profile": "browser",
-          "old": {
-            "medianMilliseconds": 240.248,
-            "medianPeakRssBytes": 33505280
-          },
-          "new": {
-            "medianMilliseconds": 505.87,
-            "medianPeakRssBytes": 37978112
-          }
-        },
-        {
-          "programmes": 50000,
-          "profile": "native",
-          "old": {
-            "medianMilliseconds": 239.656,
-            "medianPeakRssBytes": 33488896
-          },
-          "new": {
-            "medianMilliseconds": 607.341,
-            "medianPeakRssBytes": 38125568
-          }
-        },
-        {
-          "programmes": 100000,
-          "profile": "browser",
-          "old": {
-            "medianMilliseconds": 462.024,
-            "medianPeakRssBytes": 56033280
-          },
-          "new": {
-            "medianMilliseconds": 967.624,
-            "medianPeakRssBytes": 60850176
-          }
-        },
-        {
-          "programmes": 100000,
-          "profile": "native",
-          "old": {
-            "medianMilliseconds": 457.488,
-            "medianPeakRssBytes": 56246272
-          },
-          "new": {
-            "medianMilliseconds": 1218.535,
-            "medianPeakRssBytes": 61063168
-          }
-        }
-      ],
-      "limitation": "Synthetic parse-only timings; the shared event bridge remains slower than the native baseline. No physical-device or performance parity claim."
-    },
-    "consumer_commits": {
-      "main": "8855d7789441cb03605dcabbfd61055259cbfbe6",
-      "android": "0be1caded9963f3ee3ca8ed0f54674e895696716"
-    },
-    "python_portable_suites": 10,
-    "python_portable_branch_coverage_percent": 81,
-    "ci_inventory": "119/119 reachable"
-  },
-  "latest_validation_stage": "epg_refresh",
-  "epg_refresh": {
-    "source_sha256": "6a408ca0f64771388011bb46424bd9217ce05f6f6c29e2c59644f2413c0711fe",
-    "baseline_commits": {
-      "source": "b2cd27f2a0ffafc99a5c1ca2f2b9ac9134582cb2",
-      "main": "8855d7789441cb03605dcabbfd61055259cbfbe6",
-      "android": "0be1caded9963f3ee3ca8ed0f54674e895696716"
-    },
-    "consumer_commits": {
-      "main": "b3c8cc072e92f14c8e352a223157788f24ca4dce",
-      "android": "b924c5a62d6312ca4cad87a5e58f01092e165454"
-    },
-    "captured_refresh_contracts": {
-      "browser": 18,
-      "browser_snapshots": 67,
-      "active_Android": 18,
-      "Rust_server": 28,
-      "Rust_background_cases": 5,
-      "total": 64
-    },
-    "additional_qualified_boundaries": {
-      "browser_callback_lifecycle": 6,
-      "android_cancellation_concurrency_rollback": 3
-    },
-    "common_tests": {
-      "JVM": {
-        "tests": 136,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0
-      },
-      "JavaScript": {
-        "tests": 134,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0
-      },
-      "macOS": {
-        "tests": 134,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0
-      }
-    },
-    "es5_abi_profiles": 3,
-    "foss2_tests": 352,
-    "android_core_tests": 56,
-    "android_app_tests": 89,
-    "rust_workspace_tests": 71,
-    "native_policy_fallback_contracts": 195,
-    "archived_parser_contracts": 46,
-    "archived_android_edition_cases": 37,
-    "base_player_es5_scripts": 206,
-    "ci_inventory": "119/119 reachable",
-    "fixture_sha256": {
-      "ottplay-foss2/tests/fixtures/epg-refresh/before-core.json": "21d1402ff96de1d24f4d779efbe26441796f627d577d1108a417123ee2a72b00",
-      "ottplay-android/app/src/test/resources/epg-refresh-before-core.json": "521c3410b6f2a301ce1d285e870f718ecbbe65ff4a3056080dc94605f641bd27",
-      "ottplay-foss/src-rs/core/tests/fixtures/xmltv-refresh-before-core.json": "4627c64edb8cdf627a90e144b90df8e00190b467efc4a9b21072594f83ee68e6",
-      "ottplay-foss/src-rs/core/tests/fixtures/xmltv-refresh-boundaries-before-core.json": "e88b6f4ffa0c368896b7ad6c1ae9b9c50260e523f4c37a292cfd4824562032aa"
-    },
-    "migrated": [
-      "Browser per-URL retention, configured merge order and progressive refresh outcomes",
-      "Browser callback generations, backoff/deadline and notification decisions",
-      "Active Android sequential fetch admission and guarded commit policy",
-      "Rust server feed error, first metadata ownership, database failure and refresh interval decisions"
-    ],
-    "host_boundaries": [
-      "HTTP/XML and parsed payload ownership",
-      "cancellation execution and original error objects",
-      "clocks, UI, timers, mutexes and exact current source reads",
-      "SQLite transaction and insertion semantics"
-    ],
-    "retained_compatibility": [
-      "Android no URLs preserves old data; empty successful feeds clear it",
-      "Android first failure aborts; complete SourceConfig equality is checked under the existing lock",
-      "Browser stale feeds survive independently and removed/reordered feeds are applied immediately",
-      "Rust all-failed feeds return fresh empty cache; pool-open failure propagates, persist failure does not"
-    ],
-    "report": "reports/epg-refresh-delivery/validation.json",
-    "physical_device_acceptance": false,
-    "artifacts": {
-      "ottplay-core.js": {
-        "sha256": "648140e8d0ea795d01ed574bff70b8acba083943fc482fea06759ac52453a6c3",
-        "bytes": 833101
-      },
-      "ottplay-core.d.ts": {
-        "sha256": "070612d6f18d4620d6380d9d500679f1f179e88de16d9e8bff4efa4c74496acb",
-        "bytes": 11748
-      },
-      "ottplay-core.jar": {
-        "sha256": "36a2740686ff9234485c8e3857b853f650473942e9d9395c93d90c517481e91b",
-        "bytes": 371950
-      },
-      "ottplay-core.LICENSE.txt": {
-        "sha256": "1e72da3623b91daad1013e577c3611ad6ed314da508b757abe9a1b27a88a14cc",
-        "bytes": 12937
-      }
-    },
-    "packaging_followup": {
-      "reason": "Kotlin JS MutableIterable marker order differed between macOS and Linux",
-      "change": "Extend fail-closed canonical marker normalization; real platform outputs normalize byte-identically",
-      "jvm_artifact_unchanged": true,
-      "focused_tests": "canonicalization, ES5 ABI, FOSS2 352 tests, main guide contracts, distribution guard"
-    }
+  "fixture_hashes": {
+    "ottplay-foss2/tests/fixtures/playlist-before-core.json": "26eae1901f2232a0660da5a30d0870cfdbb2ed757389ae5d768719df94aadb9f",
+    "ottplay-foss2/tests/fixtures/stalker-before-core.json": "a925fd406ea211ac4dc54b2ee9a298957dcf02a7f0a8a69eed059fc6f01ab3cd",
+    "ottplay-foss2/tests/fixtures/guide-before-core.json": "d8fdc090cbe5e6b3e0837db37346c3b5954003147648286fc0583a9706dbc9ee",
+    "ottplay-foss2/tests/fixtures/streaming-guide-before-core.json": "90884691768b7a192703890dfc21d803ce5231998990887769d3b3ab6e6eca2c",
+    "ottplay-foss2/tests/fixtures/xtream-before-core.json": "84c82c82ab16dd0fbdcf50b7075d8b4c332b82c6563d630b9251b6714f1eff20",
+    "ottplay-foss2/tests/fixtures/xmltv-fields/node-before-core.json": "ad94a33912a1389c9d7f4f2e37853d7aafbeeece81a3fe3dc24679d4a073c48f",
+    "ottplay-foss2/tests/fixtures/xmltv-fields/browser-before-core.json": "b50928d548d2921c68c24c05a8fbd2fe381e3913d34ad64fbd6b7066ebeb2b6e",
+    "ottplay-foss2/tests/fixtures/playback-policy/detection-before-core.json": "526496718acedf89613c9cb6926ba23f76ed32ca7eab1b8ddff9134d57877ef1",
+    "ottplay-foss2/tests/fixtures/playback-policy/before-core.json": "d66003963983efe940ff500eab950912d917cd90e88b4e4e3f95e22f3cfdbd4e",
+    "ottplay-foss2/tests/fixtures/playback-policy/tracks-before-core.json": "e94eba1794aed04597ba228bba419db2513d4f371aae342ec67a529b49a88e53",
+    "ottplay-foss2/tests/fixtures/state/favorites-before-core.json": "08bc09c3461c65f485730239a128bdc50431912934bc8caaa9d3c99f744cf391",
+    "ottplay-foss2/tests/fixtures/state/security-before-core.json": "1e053bcb82944bd82c07c1bff039546034bcda4e9220e39d97835e17a4386955",
+    "ottplay-foss2/tests/fixtures/state/identity-before-core.json": "20d140eaee38055a5eb4d43595319a051526caf2f282d53adc897176e533322d",
+    "ottplay-foss2/tests/fixtures/state/security-edges-before-core.json": "4442e17e4cd8fd2c4903f8b576cec3e67b0e2429efc5c08fb0f14ee6897ab92a",
+    "ottplay-foss2/tests/fixtures/state/browser-state-before-core.json": "63062633701151048cff075a96eff9a50886318189b6329ddd5db7f871277edc",
+    "ottplay-foss2/tests/fixtures/state/import-before-core.json": "f0e30700b63f74d2030ca85e25eab0fbe249819fe3ccbf233279a83954dfd7e1",
+    "ottplay-foss2/tests/fixtures/state/reference-types-before-core.json": "401cff2f074f5790ae7712cbba879325b4c401bc6463492a86399c56e93e0066",
+    "ottplay-foss2/tests/fixtures/epg-refresh/before-core.json": "21d1402ff96de1d24f4d779efbe26441796f627d577d1108a417123ee2a72b00",
+    "ottplay-foss2/tests/fixtures/operator/lifetime-before-core.json": "f6f0480a8a0ee57bf2ef8ab73b919f61fe837d37fba9f6cf5b1533732836a52f",
+    "ottplay-foss2/tests/fixtures/operator/sources-before-core.json": "25ebe904b8c66efdd307ba0b885b37c1cb7e431e2b605e24e15367a7e82cfc02",
+    "ottplay-foss/tests/fixtures/guide/native-records-before-core.json": "154be03eb290be437c22af176fb7073aaa34993a955e9472192584610eaad90b",
+    "ottplay-foss/tests/fixtures/guide/native-record-boundaries-before-core.json": "5babe9a0bcf8281abc13b9e412d15331191c73cbe46a9edd5120e813c1382b40",
+    "ottplay-foss/tests/fixtures/playback-policy/channels-before-core.json": "8801c4ff07f65a8492bc7eff62c1b1f6b4256d860cb7a657a355904d09a80e59",
+    "ottplay-foss/tests/fixtures/playback-policy/before-core.json": "a62058f6ea0c4148fbc6596cb1f978422f8677a2f8d7ff76dfe5d069bc3f8210",
+    "ottplay-foss/tests/fixtures/state/favorites-before-core.json": "93cbb15a018c57df9dc61a22e9d8fa3c32240ef35fcc2f2080775e452679b236",
+    "ottplay-foss/tests/fixtures/operator/vod-before-core.json": "4acd9ddc89469ddb86954d97daeead2001041d72c92e67bfa7c71bd92a862354",
+    "ottplay-foss/tests/fixtures/operator/sessions-before-core.json": "dedd1c183ffffc1007b6caab1d5b5a98b8f60956b932c7a4a2fc145ec79a2639",
+    "ottplay-foss/tests/fixtures/operator/media-before-core.json": "84c8c52085c70603c7a1196173d2695801128ecc5b8b5fd34787bb4a36a82522",
+    "ottplay-foss/tests/fixtures/operator/catalogs-before-core.json": "f5426c9770ce09c4b18c75572040238c5c8df57983d1b6dee40ac8484da18dec",
+    "ottplay-foss/tests/fixtures/operator/transport-before-core.json": "a10d653f76db8aa523124da4e504d4f91d1584ecbf3b8d03737584e8ae804137",
+    "ottplay-foss/tests/fixtures/operator/profiles-before-core.json": "2e886c61e83315f06418c75a389849b437a2f1c5809f5a974cb5bd84cba66f49",
+    "ottplay-foss/tests/fixtures/operator/portal-before-core.json": "9fccda05f916ef7adce898285d713e5e95b66a8d6a05d135c949f471d83c3132",
+    "ottplay-android/core/src/test/resources/xmltv-records-before-core.json": "4d07da8cbc39f124591c3929d00f72e76b23c9ca6c2101bdd324600c06f73749",
+    "ottplay-android/core/src/test/resources/stalker-before-core.json": "47e41334a674bf7b547db93bc8882e89d7a6c1acb0f79f870118e5f67ac1641b",
+    "ottplay-android/core/src/test/resources/guide-before-core.json": "d40ca06c327d6c130e82e8a6ca3d1595e21871ebd90cb3bff057e4aa89d62508",
+    "ottplay-android/core/src/test/resources/native-import-before-core.json": "e44ed3f797c5dd3b45ebe57d34e09684cba8c3674ff56390a8ef57dc4c47dbc3",
+    "ottplay-android/core/src/test/resources/xtream-before-core.json": "4421c1d92306ccce53fb2a8e058d786dcdc3b0f49c6068ce7ec47fd59d23a5c1",
+    "ottplay-android/app/src/test/resources/android-selections-before-core.json": "74fb1c5adde1188d2a887f259a61e718f5336c7c35ffb1321fa0eaff9b4d6eb9",
+    "ottplay-android/app/src/test/resources/epg-refresh-before-core.json": "521c3410b6f2a301ce1d285e870f718ecbbe65ff4a3056080dc94605f641bd27"
   }
 }

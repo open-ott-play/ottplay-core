@@ -1,0 +1,1627 @@
+{
+  "schema": 1,
+  "source": "f429f537497ec95c2bf92781e1ecee86c18bbfe8",
+  "cases": [
+    {
+      "name": "default",
+      "value": {
+        "schema": 1,
+        "enabled": false,
+        "salt": "",
+        "hash": "",
+        "iterations": 2048,
+        "protectedIds": [],
+        "scopes": {
+          "settings": true,
+          "source": true,
+          "import": true,
+          "restore": true,
+          "export": true,
+          "proxy": true,
+          "remote": true
+        },
+        "sessionMinutes": 5,
+        "failures": 0,
+        "blockedUntil": 0
+      }
+    },
+    {
+      "name": "disabled",
+      "value": {
+        "schema": 1,
+        "enabled": false,
+        "salt": "",
+        "hash": "",
+        "iterations": 2048,
+        "protectedIds": [],
+        "scopes": {
+          "settings": true,
+          "source": true,
+          "import": true,
+          "restore": true,
+          "export": true,
+          "proxy": true,
+          "remote": true
+        },
+        "sessionMinutes": 5,
+        "failures": 0,
+        "blockedUntil": 0
+      }
+    },
+    {
+      "name": "enabled",
+      "value": {
+        "schema": 1,
+        "enabled": true,
+        "salt": "public-test-salt-1234",
+        "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "iterations": 1024,
+        "protectedIds": [],
+        "scopes": {
+          "settings": true,
+          "source": true,
+          "import": true,
+          "restore": true,
+          "export": true,
+          "proxy": true,
+          "remote": true
+        },
+        "sessionMinutes": 5,
+        "failures": 0,
+        "blockedUntil": 0
+      }
+    },
+    {
+      "name": "schema",
+      "error": {
+        "name": "Error",
+        "message": "Unsupported parental-control format"
+      }
+    },
+    {
+      "name": "salt",
+      "error": {
+        "name": "Error",
+        "message": "Invalid parental-control hash"
+      }
+    },
+    {
+      "name": "hash",
+      "error": {
+        "name": "Error",
+        "message": "Invalid parental-control hash"
+      }
+    },
+    {
+      "name": "work",
+      "error": {
+        "name": "Error",
+        "message": "Invalid parental-control work factor"
+      }
+    },
+    {
+      "name": "ids",
+      "value": {
+        "schema": 1,
+        "enabled": true,
+        "salt": "public-test-salt-1234",
+        "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "iterations": 1024,
+        "protectedIds": [
+          "a",
+          "__proto__"
+        ],
+        "scopes": {
+          "settings": true,
+          "source": true,
+          "import": true,
+          "restore": true,
+          "export": true,
+          "proxy": true,
+          "remote": true
+        },
+        "sessionMinutes": 5,
+        "failures": 0,
+        "blockedUntil": 0
+      }
+    },
+    {
+      "name": "badIds",
+      "error": {
+        "name": "Error",
+        "message": "Invalid protected channel ID"
+      }
+    },
+    {
+      "name": "scopes",
+      "value": {
+        "schema": 1,
+        "enabled": true,
+        "salt": "public-test-salt-1234",
+        "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "iterations": 1024,
+        "protectedIds": [],
+        "scopes": {
+          "settings": false,
+          "source": true,
+          "import": true,
+          "restore": true,
+          "export": true,
+          "proxy": true,
+          "remote": true
+        },
+        "sessionMinutes": 5,
+        "failures": 0,
+        "blockedUntil": 0
+      }
+    },
+    {
+      "name": "badScopes",
+      "error": {
+        "name": "Error",
+        "message": "Invalid protection scopes"
+      }
+    },
+    {
+      "name": "bounds",
+      "value": {
+        "schema": 1,
+        "enabled": true,
+        "salt": "public-test-salt-1234",
+        "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "iterations": 1024,
+        "protectedIds": [],
+        "scopes": {
+          "settings": true,
+          "source": true,
+          "import": true,
+          "restore": true,
+          "export": true,
+          "proxy": true,
+          "remote": true
+        },
+        "sessionMinutes": 1,
+        "failures": 30,
+        "blockedUntil": 0
+      }
+    },
+    {
+      "name": "success",
+      "value": {
+        "out": [
+          {
+            "ok": true,
+            "code": "CONFIGURED"
+          },
+          {
+            "ok": true,
+            "code": "UPDATED"
+          },
+          {
+            "ok": true,
+            "code": "AUTHORIZED",
+            "expiresAt": 1300000
+          },
+          {
+            "enabled": true,
+            "unlocked": true,
+            "expiresAt": 1300000,
+            "retryAfter": 0,
+            "failures": 0
+          },
+          {
+            "ok": true,
+            "code": "SESSION",
+            "expiresAt": 1300000
+          },
+          {
+            "ok": true,
+            "code": "SESSION",
+            "expiresAt": 1300000
+          },
+          {
+            "ok": true,
+            "code": "UNPROTECTED"
+          }
+        ],
+        "writes": [
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [
+              "a:adult"
+            ],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [
+              "a:adult"
+            ],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          }
+        ],
+        "state": {
+          "security": {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [
+              "a:adult"
+            ],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          "activeSourceId": "a"
+        }
+      }
+    },
+    {
+      "name": "failures",
+      "value": {
+        "out": [
+          {
+            "ok": true,
+            "code": "CONFIGURED"
+          },
+          {
+            "ok": false,
+            "code": "WRONG_PIN",
+            "retryAfter": 0
+          },
+          {
+            "ok": false,
+            "code": "WRONG_PIN",
+            "retryAfter": 0
+          },
+          {
+            "ok": false,
+            "code": "WRONG_PIN",
+            "retryAfter": 0
+          },
+          {
+            "ok": false,
+            "code": "WRONG_PIN",
+            "retryAfter": 0
+          },
+          {
+            "ok": false,
+            "code": "RATE_LIMIT",
+            "retryAfter": 30
+          },
+          {
+            "ok": false,
+            "code": "RATE_LIMIT",
+            "retryAfter": 60
+          },
+          {
+            "ok": false,
+            "code": "RATE_LIMIT",
+            "retryAfter": 120
+          },
+          {
+            "ok": false,
+            "code": "RATE_LIMIT",
+            "retryAfter": 240
+          },
+          {
+            "ok": false,
+            "code": "RATE_LIMIT",
+            "retryAfter": 300
+          },
+          {
+            "ok": false,
+            "code": "RATE_LIMIT",
+            "retryAfter": 300
+          },
+          {
+            "ok": false,
+            "code": "RATE_LIMIT",
+            "retryAfter": 300
+          },
+          {
+            "ok": true,
+            "code": "AUTHORIZED",
+            "expiresAt": 3400000
+          }
+        ],
+        "writes": [
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 1,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 2,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 3,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 4,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 5,
+            "blockedUntil": 1030000
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 6,
+            "blockedUntil": 1360000
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 7,
+            "blockedUntil": 1720000
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 8,
+            "blockedUntil": 2140000
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 9,
+            "blockedUntil": 2500000
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 10,
+            "blockedUntil": 2800000
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 11,
+            "blockedUntil": 3100000
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          }
+        ],
+        "state": {
+          "security": {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          "activeSourceId": "a"
+        }
+      }
+    },
+    {
+      "name": "source",
+      "value": {
+        "out": [
+          {
+            "ok": true,
+            "code": "CONFIGURED"
+          },
+          {
+            "ok": true,
+            "code": "UPDATED"
+          },
+          {
+            "ok": true,
+            "code": "AUTHORIZED",
+            "expiresAt": 1300000
+          },
+          {
+            "enabled": true,
+            "unlocked": false,
+            "expiresAt": 0,
+            "retryAfter": 0,
+            "failures": 0
+          },
+          {
+            "ok": false,
+            "code": "PIN_REQUIRED"
+          },
+          {
+            "ok": false,
+            "code": "PIN_REQUIRED"
+          },
+          {
+            "ok": true,
+            "code": "UNPROTECTED"
+          }
+        ],
+        "writes": [
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [
+              "a:adult"
+            ],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [
+              "a:adult"
+            ],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          }
+        ],
+        "state": {
+          "security": {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [
+              "a:adult"
+            ],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          "activeSourceId": "b"
+        }
+      }
+    },
+    {
+      "name": "clock-back",
+      "value": {
+        "out": [
+          {
+            "ok": true,
+            "code": "CONFIGURED"
+          },
+          {
+            "ok": true,
+            "code": "UPDATED"
+          },
+          {
+            "ok": true,
+            "code": "AUTHORIZED",
+            "expiresAt": 1300000
+          },
+          {
+            "enabled": true,
+            "unlocked": false,
+            "expiresAt": 0,
+            "retryAfter": 0,
+            "failures": 0
+          },
+          {
+            "ok": false,
+            "code": "PIN_REQUIRED"
+          },
+          {
+            "ok": false,
+            "code": "PIN_REQUIRED"
+          },
+          {
+            "ok": true,
+            "code": "UNPROTECTED"
+          }
+        ],
+        "writes": [
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [
+              "a:adult"
+            ],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [
+              "a:adult"
+            ],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          }
+        ],
+        "state": {
+          "security": {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [
+              "a:adult"
+            ],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          "activeSourceId": "a"
+        }
+      }
+    },
+    {
+      "name": "clock-invalid",
+      "value": {
+        "out": [
+          {
+            "ok": true,
+            "code": "CONFIGURED"
+          },
+          {
+            "ok": true,
+            "code": "UPDATED"
+          },
+          {
+            "ok": true,
+            "code": "AUTHORIZED",
+            "expiresAt": 1300000
+          },
+          {
+            "enabled": true,
+            "unlocked": false,
+            "expiresAt": 0,
+            "retryAfter": 0,
+            "failures": 0
+          },
+          {
+            "ok": false,
+            "code": "PIN_REQUIRED"
+          },
+          {
+            "ok": false,
+            "code": "PIN_REQUIRED"
+          },
+          {
+            "ok": true,
+            "code": "UNPROTECTED"
+          }
+        ],
+        "writes": [
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [
+              "a:adult"
+            ],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [
+              "a:adult"
+            ],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          }
+        ],
+        "state": {
+          "security": {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [
+              "a:adult"
+            ],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          "activeSourceId": "a"
+        }
+      }
+    },
+    {
+      "name": "future-block",
+      "value": {
+        "out": [
+          {
+            "ok": true,
+            "code": "CONFIGURED"
+          },
+          {
+            "enabled": true,
+            "unlocked": false,
+            "expiresAt": 0,
+            "retryAfter": 300,
+            "failures": 0
+          },
+          {
+            "ok": false,
+            "code": "RATE_LIMIT",
+            "retryAfter": 300
+          }
+        ],
+        "writes": [
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 1300000
+          }
+        ],
+        "state": {
+          "security": {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 1300000
+          },
+          "activeSourceId": "a"
+        }
+      }
+    },
+    {
+      "name": "scopes",
+      "value": {
+        "out": [
+          {
+            "ok": true,
+            "code": "CONFIGURED"
+          },
+          {
+            "ok": true,
+            "code": "UPDATED"
+          },
+          {
+            "ok": true,
+            "code": "AUTHORIZED",
+            "expiresAt": 1300000
+          },
+          {
+            "ok": true,
+            "code": "UPDATED"
+          },
+          {
+            "enabled": true,
+            "unlocked": false,
+            "expiresAt": 0,
+            "retryAfter": 0,
+            "failures": 0
+          },
+          {
+            "ok": true,
+            "code": "UNPROTECTED"
+          },
+          {
+            "ok": false,
+            "code": "PIN_REQUIRED"
+          },
+          {
+            "ok": true,
+            "code": "UNPROTECTED"
+          }
+        ],
+        "writes": [
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [
+              "a:adult"
+            ],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [
+              "a:adult"
+            ],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [
+              "a:adult"
+            ],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [
+              "a:adult"
+            ],
+            "scopes": {
+              "settings": false,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          }
+        ],
+        "state": {
+          "security": {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [
+              "a:adult"
+            ],
+            "scopes": {
+              "settings": false,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          "activeSourceId": "a"
+        }
+      }
+    },
+    {
+      "name": "disable",
+      "value": {
+        "out": [
+          {
+            "ok": true,
+            "code": "CONFIGURED"
+          },
+          {
+            "ok": true,
+            "code": "UPDATED"
+          },
+          {
+            "ok": true,
+            "code": "AUTHORIZED",
+            "expiresAt": 1300000
+          },
+          {
+            "ok": true,
+            "code": "DISABLED"
+          },
+          {
+            "enabled": false,
+            "unlocked": false,
+            "expiresAt": 0,
+            "retryAfter": 0,
+            "failures": 0
+          },
+          {
+            "ok": true,
+            "code": "UNPROTECTED"
+          },
+          {
+            "ok": true,
+            "code": "UNPROTECTED"
+          },
+          {
+            "ok": true,
+            "code": "UNPROTECTED"
+          }
+        ],
+        "writes": [
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [
+              "a:adult"
+            ],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [
+              "a:adult"
+            ],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": true,
+            "salt": "000102030405060708090a0b0c0d0e0f",
+            "hash": "74b7753da8e5f2615f94af9008a19e3ddcf09db71123cd56976d4c489a92e7bb",
+            "iterations": 2048,
+            "protectedIds": [
+              "a:adult"
+            ],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          {
+            "schema": 1,
+            "enabled": false,
+            "salt": "",
+            "hash": "",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          }
+        ],
+        "state": {
+          "security": {
+            "schema": 1,
+            "enabled": false,
+            "salt": "",
+            "hash": "",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          "activeSourceId": "a"
+        }
+      }
+    }
+  ]
+}

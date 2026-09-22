@@ -1,0 +1,742 @@
+{
+  "provenance": {
+    "source": "src/providers.js",
+    "sha256": "54e79b2c6a1723cb1f78225689d2666e7654c4f1c16917e9528a39fc3a65baeb",
+    "description": "Actual provider public load/browse/close APIs before shared lifetime migration"
+  },
+  "cases": [
+    {
+      "input": {},
+      "expected": [
+        [
+          "request",
+          "https://feed.test/list.m3u"
+        ],
+        [
+          "done",
+          null,
+          {
+            "channels": [
+              {
+                "id": "feed:m3u:url:82b0b98b-f96db817",
+                "name": "Live",
+                "url": "https://feed.test/live",
+                "group": "Other",
+                "logo": "",
+                "tvgId": "",
+                "tvgName": "",
+                "kind": "live",
+                "sourceId": "feed",
+                "tvgShift": 0,
+                "epgUrls": []
+              },
+              {
+                "id": "feed:m3u:url:974ae9cb-2735d459",
+                "name": "Movie",
+                "url": "https://feed.test/movie",
+                "group": "Other",
+                "logo": "",
+                "tvgId": "",
+                "tvgName": "",
+                "kind": "live",
+                "sourceId": "feed",
+                "tvgShift": 0,
+                "epgUrls": []
+              }
+            ],
+            "epgUrls": [],
+            "warnings": []
+          }
+        ]
+      ]
+    },
+    {
+      "input": {
+        "sync": true
+      },
+      "expected": [
+        [
+          "request",
+          "https://feed.test/list.m3u"
+        ],
+        [
+          "done",
+          null,
+          {
+            "channels": [
+              {
+                "id": "feed:m3u:url:82b0b98b-f96db817",
+                "name": "Live",
+                "url": "https://feed.test/live",
+                "group": "Other",
+                "logo": "",
+                "tvgId": "",
+                "tvgName": "",
+                "kind": "live",
+                "sourceId": "feed",
+                "tvgShift": 0,
+                "epgUrls": []
+              },
+              {
+                "id": "feed:m3u:url:974ae9cb-2735d459",
+                "name": "Movie",
+                "url": "https://feed.test/movie",
+                "group": "Other",
+                "logo": "",
+                "tvgId": "",
+                "tvgName": "",
+                "kind": "live",
+                "sourceId": "feed",
+                "tvgShift": 0,
+                "epgUrls": []
+              }
+            ],
+            "epgUrls": [],
+            "warnings": []
+          }
+        ]
+      ]
+    },
+    {
+      "input": {
+        "sync": true,
+        "twice": true
+      },
+      "expected": [
+        [
+          "request",
+          "https://feed.test/list.m3u"
+        ],
+        [
+          "done",
+          null,
+          {
+            "channels": [
+              {
+                "id": "feed:m3u:url:82b0b98b-f96db817",
+                "name": "Live",
+                "url": "https://feed.test/live",
+                "group": "Other",
+                "logo": "",
+                "tvgId": "",
+                "tvgName": "",
+                "kind": "live",
+                "sourceId": "feed",
+                "tvgShift": 0,
+                "epgUrls": []
+              },
+              {
+                "id": "feed:m3u:url:974ae9cb-2735d459",
+                "name": "Movie",
+                "url": "https://feed.test/movie",
+                "group": "Other",
+                "logo": "",
+                "tvgId": "",
+                "tvgName": "",
+                "kind": "live",
+                "sourceId": "feed",
+                "tvgShift": 0,
+                "epgUrls": []
+              }
+            ],
+            "epgUrls": [],
+            "warnings": []
+          }
+        ]
+      ]
+    },
+    {
+      "input": {
+        "sync": true,
+        "stopAfter": true
+      },
+      "expected": [
+        [
+          "request",
+          "https://feed.test/list.m3u"
+        ],
+        [
+          "done",
+          null,
+          {
+            "channels": [
+              {
+                "id": "feed:m3u:url:82b0b98b-f96db817",
+                "name": "Live",
+                "url": "https://feed.test/live",
+                "group": "Other",
+                "logo": "",
+                "tvgId": "",
+                "tvgName": "",
+                "kind": "live",
+                "sourceId": "feed",
+                "tvgShift": 0,
+                "epgUrls": []
+              },
+              {
+                "id": "feed:m3u:url:974ae9cb-2735d459",
+                "name": "Movie",
+                "url": "https://feed.test/movie",
+                "group": "Other",
+                "logo": "",
+                "tvgId": "",
+                "tvgName": "",
+                "kind": "live",
+                "sourceId": "feed",
+                "tvgShift": 0,
+                "epgUrls": []
+              }
+            ],
+            "epgUrls": [],
+            "warnings": []
+          }
+        ]
+      ]
+    },
+    {
+      "input": {
+        "cancel": true
+      },
+      "expected": [
+        [
+          "request",
+          "https://feed.test/list.m3u"
+        ],
+        [
+          "abort",
+          0
+        ]
+      ]
+    },
+    {
+      "input": {
+        "cancel": true,
+        "twice": true
+      },
+      "expected": [
+        [
+          "request",
+          "https://feed.test/list.m3u"
+        ],
+        [
+          "abort",
+          0
+        ]
+      ]
+    },
+    {
+      "input": {
+        "error": 401
+      },
+      "expected": [
+        [
+          "request",
+          "https://feed.test/list.m3u"
+        ],
+        [
+          "done",
+          "AUTHENTICATION",
+          null
+        ]
+      ]
+    },
+    {
+      "input": {
+        "error": 500
+      },
+      "expected": [
+        [
+          "request",
+          "https://feed.test/list.m3u"
+        ],
+        [
+          "done",
+          "NETWORK",
+          null
+        ]
+      ]
+    },
+    {
+      "input": {
+        "malformed": true
+      },
+      "expected": [
+        [
+          "request",
+          "https://feed.test/list.m3u"
+        ],
+        [
+          "done",
+          "M3U_FORMAT",
+          null
+        ]
+      ]
+    },
+    {
+      "input": {
+        "twice": true
+      },
+      "expected": [
+        [
+          "request",
+          "https://feed.test/list.m3u"
+        ],
+        [
+          "done",
+          null,
+          {
+            "channels": [
+              {
+                "id": "feed:m3u:url:82b0b98b-f96db817",
+                "name": "Live",
+                "url": "https://feed.test/live",
+                "group": "Other",
+                "logo": "",
+                "tvgId": "",
+                "tvgName": "",
+                "kind": "live",
+                "sourceId": "feed",
+                "tvgShift": 0,
+                "epgUrls": []
+              },
+              {
+                "id": "feed:m3u:url:974ae9cb-2735d459",
+                "name": "Movie",
+                "url": "https://feed.test/movie",
+                "group": "Other",
+                "logo": "",
+                "tvgId": "",
+                "tvgName": "",
+                "kind": "live",
+                "sourceId": "feed",
+                "tvgShift": 0,
+                "epgUrls": []
+              }
+            ],
+            "epgUrls": [],
+            "warnings": []
+          }
+        ]
+      ]
+    },
+    {
+      "input": {
+        "browse": true
+      },
+      "expected": [
+        [
+          "request",
+          "https://feed.test/list.m3u"
+        ],
+        [
+          "done",
+          null,
+          {
+            "channels": [
+              {
+                "id": "feed:m3u:url:82b0b98b-f96db817",
+                "name": "Live",
+                "url": "https://feed.test/live",
+                "group": "Other",
+                "logo": "",
+                "tvgId": "",
+                "tvgName": "",
+                "kind": "live",
+                "sourceId": "feed",
+                "tvgShift": 0,
+                "epgUrls": []
+              },
+              {
+                "id": "feed:m3u:url:974ae9cb-2735d459",
+                "name": "Movie",
+                "url": "https://feed.test/movie",
+                "group": "Other",
+                "logo": "",
+                "tvgId": "",
+                "tvgName": "",
+                "kind": "live",
+                "sourceId": "feed",
+                "tvgShift": 0,
+                "epgUrls": []
+              }
+            ],
+            "epgUrls": [],
+            "warnings": []
+          }
+        ],
+        [
+          "done",
+          null,
+          {
+            "items": [],
+            "warnings": []
+          }
+        ]
+      ]
+    },
+    {
+      "input": {
+        "browse": true,
+        "close": true
+      },
+      "expected": [
+        [
+          "request",
+          "https://feed.test/list.m3u"
+        ],
+        [
+          "done",
+          null,
+          {
+            "channels": [
+              {
+                "id": "feed:m3u:url:82b0b98b-f96db817",
+                "name": "Live",
+                "url": "https://feed.test/live",
+                "group": "Other",
+                "logo": "",
+                "tvgId": "",
+                "tvgName": "",
+                "kind": "live",
+                "sourceId": "feed",
+                "tvgShift": 0,
+                "epgUrls": []
+              },
+              {
+                "id": "feed:m3u:url:974ae9cb-2735d459",
+                "name": "Movie",
+                "url": "https://feed.test/movie",
+                "group": "Other",
+                "logo": "",
+                "tvgId": "",
+                "tvgName": "",
+                "kind": "live",
+                "sourceId": "feed",
+                "tvgShift": 0,
+                "epgUrls": []
+              }
+            ],
+            "epgUrls": [],
+            "warnings": []
+          }
+        ],
+        [
+          "done",
+          null,
+          {
+            "items": [],
+            "warnings": []
+          }
+        ]
+      ]
+    },
+    {
+      "input": {
+        "cancelSetup": true
+      },
+      "expected": [
+        [
+          "request",
+          "https://xc.test/player_api.php?username=u&password=p"
+        ],
+        [
+          "request",
+          "https://xc.test/player_api.php?username=u&password=p&action=get_live_categories"
+        ],
+        [
+          "abort",
+          1
+        ]
+      ]
+    },
+    {
+      "input": {
+        "mode": "cache"
+      },
+      "expected": [
+        [
+          "request",
+          "https://xc.test/player_api.php?username=u&password=p&action=get_series_info&series_id=9"
+        ],
+        [
+          "done",
+          null,
+          {
+            "items": [
+              {
+                "id": "xc:xtream:series:9:season:1",
+                "name": "Season 1",
+                "group": "",
+                "logo": "",
+                "kind": "folder",
+                "sourceId": "xc",
+                "description": "",
+                "adult": false,
+                "folderType": "season",
+                "seriesId": "9",
+                "seasonNumber": "1"
+              }
+            ],
+            "warnings": []
+          }
+        ],
+        [
+          "done",
+          null,
+          {
+            "items": [
+              {
+                "id": "xc:xtream:series:9:season:1",
+                "name": "Season 1",
+                "group": "",
+                "logo": "",
+                "kind": "folder",
+                "sourceId": "xc",
+                "description": "",
+                "adult": false,
+                "folderType": "season",
+                "seriesId": "9",
+                "seasonNumber": "1"
+              }
+            ],
+            "warnings": []
+          }
+        ],
+        [
+          "done",
+          null,
+          {
+            "items": [
+              {
+                "id": "xc:xtream:series:9:season:1",
+                "name": "Season 1",
+                "group": "",
+                "logo": "",
+                "kind": "folder",
+                "sourceId": "xc",
+                "description": "",
+                "adult": false,
+                "folderType": "season",
+                "seriesId": "9",
+                "seasonNumber": "1"
+              }
+            ],
+            "warnings": []
+          }
+        ],
+        [
+          "done",
+          null,
+          {
+            "items": [
+              {
+                "id": "xc:xtream:series:9:season:1",
+                "name": "Season 1",
+                "group": "",
+                "logo": "",
+                "kind": "folder",
+                "sourceId": "xc",
+                "description": "",
+                "adult": false,
+                "folderType": "season",
+                "seriesId": "9",
+                "seasonNumber": "1"
+              }
+            ],
+            "warnings": []
+          }
+        ]
+      ]
+    },
+    {
+      "input": {
+        "mode": "cache",
+        "close": true
+      },
+      "expected": [
+        [
+          "request",
+          "https://xc.test/player_api.php?username=u&password=p&action=get_series_info&series_id=9"
+        ],
+        [
+          "done",
+          null,
+          {
+            "items": [
+              {
+                "id": "xc:xtream:series:9:season:1",
+                "name": "Season 1",
+                "group": "",
+                "logo": "",
+                "kind": "folder",
+                "sourceId": "xc",
+                "description": "",
+                "adult": false,
+                "folderType": "season",
+                "seriesId": "9",
+                "seasonNumber": "1"
+              }
+            ],
+            "warnings": []
+          }
+        ],
+        [
+          "done",
+          null,
+          {
+            "items": [
+              {
+                "id": "xc:xtream:series:9:season:1",
+                "name": "Season 1",
+                "group": "",
+                "logo": "",
+                "kind": "folder",
+                "sourceId": "xc",
+                "description": "",
+                "adult": false,
+                "folderType": "season",
+                "seriesId": "9",
+                "seasonNumber": "1"
+              }
+            ],
+            "warnings": []
+          }
+        ],
+        [
+          "request",
+          "https://xc.test/player_api.php?username=u&password=p&action=get_series_info&series_id=9"
+        ],
+        [
+          "done",
+          null,
+          {
+            "items": [
+              {
+                "id": "xc:xtream:series:9:season:2",
+                "name": "Season 2",
+                "group": "",
+                "logo": "",
+                "kind": "folder",
+                "sourceId": "xc",
+                "description": "",
+                "adult": false,
+                "folderType": "season",
+                "seriesId": "9",
+                "seasonNumber": "2"
+              }
+            ],
+            "warnings": []
+          }
+        ],
+        [
+          "done",
+          null,
+          {
+            "items": [
+              {
+                "id": "xc:xtream:series:9:season:2",
+                "name": "Season 2",
+                "group": "",
+                "logo": "",
+                "kind": "folder",
+                "sourceId": "xc",
+                "description": "",
+                "adult": false,
+                "folderType": "season",
+                "seriesId": "9",
+                "seasonNumber": "2"
+              }
+            ],
+            "warnings": []
+          }
+        ]
+      ]
+    },
+    {
+      "input": {
+        "mode": "cache",
+        "other": true
+      },
+      "expected": [
+        [
+          "request",
+          "https://xc.test/player_api.php?username=u&password=p&action=get_series_info&series_id=9"
+        ],
+        [
+          "done",
+          null,
+          {
+            "items": [
+              {
+                "id": "xc:xtream:series:9:season:1",
+                "name": "Season 1",
+                "group": "",
+                "logo": "",
+                "kind": "folder",
+                "sourceId": "xc",
+                "description": "",
+                "adult": false,
+                "folderType": "season",
+                "seriesId": "9",
+                "seasonNumber": "1"
+              }
+            ],
+            "warnings": []
+          }
+        ],
+        [
+          "done",
+          null,
+          {
+            "items": [
+              {
+                "id": "xc:xtream:series:9:season:1",
+                "name": "Season 1",
+                "group": "",
+                "logo": "",
+                "kind": "folder",
+                "sourceId": "xc",
+                "description": "",
+                "adult": false,
+                "folderType": "season",
+                "seriesId": "9",
+                "seasonNumber": "1"
+              }
+            ],
+            "warnings": []
+          }
+        ],
+        [
+          "request",
+          "https://xc.test/player_api.php?username=u&password=p&action=get_series_info&series_id=10"
+        ],
+        [
+          "done",
+          null,
+          {
+            "items": [
+              {
+                "id": "xc:xtream:series:10:season:2",
+                "name": "Season 2",
+                "group": "",
+                "logo": "",
+                "kind": "folder",
+                "sourceId": "xc",
+                "description": "",
+                "adult": false,
+                "folderType": "season",
+                "seriesId": "10",
+                "seasonNumber": "2"
+              }
+            ],
+            "warnings": []
+          }
+        ],
+        [
+          "request",
+          "https://xc.test/player_api.php?username=u&password=p&action=get_series_info&series_id=9"
+        ]
+      ]
+    }
+  ]
+}

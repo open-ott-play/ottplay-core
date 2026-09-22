@@ -1,0 +1,2061 @@
+{
+  "schema": 1,
+  "commit": "398a6113bb2e7f8a98e02638e4da99062f2a0fbb",
+  "cases": [
+    {
+      "name": "first direct title and description own repeated fields",
+      "xml": "<tv><programme channel=\"a\" start=\"20260101000000 +0000\" stop=\"20260101010000 +0000\"><title>First title</title><title>Later title</title><desc>First description</desc><desc>Later description</desc></programme></tv>",
+      "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+      "expected": {
+        "extracted": {
+          "stations": [],
+          "programmes": [
+            {
+              "channel": "a",
+              "start": "20260101000000 +0000",
+              "stop": "20260101010000 +0000",
+              "title": "First title",
+              "description": "First description",
+              "catchupAttribute": null,
+              "catchupElement": ""
+            }
+          ],
+          "fields": {
+            "data-window-start": null,
+            "data-window-end": null,
+            "data-programme-limit": null,
+            "data-truncated-channels": null,
+            "data-truncated": null
+          },
+          "source": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "identity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture"
+        },
+        "guide": {
+          "channels": [],
+          "programmes": [
+            {
+              "channelId": "a",
+              "start": 1767225600,
+              "end": 1767229200,
+              "title": "First title",
+              "description": "First description",
+              "catchupId": ""
+            }
+          ],
+          "byId": {},
+          "byChannel": {
+            "a": [
+              {
+                "channelId": "a",
+                "start": 1767225600,
+                "end": 1767229200,
+                "title": "First title",
+                "description": "First description",
+                "catchupId": ""
+              }
+            ]
+          },
+          "byName": {},
+          "byAlias": {},
+          "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "feedIdentity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "coverage": {
+            "limited": false,
+            "windowStart": null,
+            "windowEnd": null,
+            "programmeLimit": null,
+            "truncatedChannels": 0
+          },
+          "warnings": []
+        },
+        "nullPrototypeFields": [
+          "byId",
+          "byChannel",
+          "byName",
+          "byAlias"
+        ]
+      }
+    },
+    {
+      "name": "empty first direct fields suppress later nonempty fields",
+      "xml": "<tv><programme channel=\"a\" start=\"20260101000000 +0000\" stop=\"20260101010000 +0000\"><title/><title>Later title</title><desc/><desc>Later description</desc></programme></tv>",
+      "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+      "expected": {
+        "extracted": {
+          "stations": [],
+          "programmes": [
+            {
+              "channel": "a",
+              "start": "20260101000000 +0000",
+              "stop": "20260101010000 +0000",
+              "title": "",
+              "description": "",
+              "catchupAttribute": null,
+              "catchupElement": ""
+            }
+          ],
+          "fields": {
+            "data-window-start": null,
+            "data-window-end": null,
+            "data-programme-limit": null,
+            "data-truncated-channels": null,
+            "data-truncated": null
+          },
+          "source": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "identity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture"
+        },
+        "guide": {
+          "channels": [],
+          "programmes": [
+            {
+              "channelId": "a",
+              "start": 1767225600,
+              "end": 1767229200,
+              "title": "",
+              "description": "",
+              "catchupId": ""
+            }
+          ],
+          "byId": {},
+          "byChannel": {
+            "a": [
+              {
+                "channelId": "a",
+                "start": 1767225600,
+                "end": 1767229200,
+                "title": "",
+                "description": "",
+                "catchupId": ""
+              }
+            ]
+          },
+          "byName": {},
+          "byAlias": {},
+          "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "feedIdentity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "coverage": {
+            "limited": false,
+            "windowStart": null,
+            "windowEnd": null,
+            "programmeLimit": null,
+            "truncatedChannels": 0
+          },
+          "warnings": []
+        },
+        "nullPrototypeFields": [
+          "byId",
+          "byChannel",
+          "byName",
+          "byAlias"
+        ]
+      }
+    },
+    {
+      "name": "first direct fields include descendant text in document order",
+      "xml": "<tv><programme channel=\"a\" start=\"20260101000000 +0000\" stop=\"20260101010000 +0000\"><title>Before<b>Bold<i>Italic</i></b>After</title><desc>One<part>Two</part>Three</desc></programme></tv>",
+      "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+      "expected": {
+        "extracted": {
+          "stations": [],
+          "programmes": [
+            {
+              "channel": "a",
+              "start": "20260101000000 +0000",
+              "stop": "20260101010000 +0000",
+              "title": "BeforeBoldItalicAfter",
+              "description": "OneTwoThree",
+              "catchupAttribute": null,
+              "catchupElement": ""
+            }
+          ],
+          "fields": {
+            "data-window-start": null,
+            "data-window-end": null,
+            "data-programme-limit": null,
+            "data-truncated-channels": null,
+            "data-truncated": null
+          },
+          "source": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "identity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture"
+        },
+        "guide": {
+          "channels": [],
+          "programmes": [
+            {
+              "channelId": "a",
+              "start": 1767225600,
+              "end": 1767229200,
+              "title": "BeforeBoldItalicAfter",
+              "description": "OneTwoThree",
+              "catchupId": ""
+            }
+          ],
+          "byId": {},
+          "byChannel": {
+            "a": [
+              {
+                "channelId": "a",
+                "start": 1767225600,
+                "end": 1767229200,
+                "title": "BeforeBoldItalicAfter",
+                "description": "OneTwoThree",
+                "catchupId": ""
+              }
+            ]
+          },
+          "byName": {},
+          "byAlias": {},
+          "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "feedIdentity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "coverage": {
+            "limited": false,
+            "windowStart": null,
+            "windowEnd": null,
+            "programmeLimit": null,
+            "truncatedChannels": 0
+          },
+          "warnings": []
+        },
+        "nullPrototypeFields": [
+          "byId",
+          "byChannel",
+          "byName",
+          "byAlias"
+        ]
+      }
+    },
+    {
+      "name": "indirect title description and catchup fields are ignored",
+      "xml": "<tv><programme channel=\"a\" start=\"20260101000000 +0000\" stop=\"20260101010000 +0000\"><wrapper><title>Nested title</title><desc>Nested description</desc><catchup-id>Nested catchup</catchup-id></wrapper></programme></tv>",
+      "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+      "expected": {
+        "extracted": {
+          "stations": [],
+          "programmes": [
+            {
+              "channel": "a",
+              "start": "20260101000000 +0000",
+              "stop": "20260101010000 +0000",
+              "title": "",
+              "description": "",
+              "catchupAttribute": null,
+              "catchupElement": ""
+            }
+          ],
+          "fields": {
+            "data-window-start": null,
+            "data-window-end": null,
+            "data-programme-limit": null,
+            "data-truncated-channels": null,
+            "data-truncated": null
+          },
+          "source": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "identity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture"
+        },
+        "guide": {
+          "channels": [],
+          "programmes": [
+            {
+              "channelId": "a",
+              "start": 1767225600,
+              "end": 1767229200,
+              "title": "",
+              "description": "",
+              "catchupId": ""
+            }
+          ],
+          "byId": {},
+          "byChannel": {
+            "a": [
+              {
+                "channelId": "a",
+                "start": 1767225600,
+                "end": 1767229200,
+                "title": "",
+                "description": "",
+                "catchupId": ""
+              }
+            ]
+          },
+          "byName": {},
+          "byAlias": {},
+          "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "feedIdentity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "coverage": {
+            "limited": false,
+            "windowStart": null,
+            "windowEnd": null,
+            "programmeLimit": null,
+            "truncatedChannels": 0
+          },
+          "warnings": []
+        },
+        "nullPrototypeFields": [
+          "byId",
+          "byChannel",
+          "byName",
+          "byAlias"
+        ]
+      }
+    },
+    {
+      "name": "only direct root channels and programmes are collected",
+      "xml": "<tv><wrapper><channel id=\"nested\"><display-name>Nested</display-name></channel><programme channel=\"a\" start=\"20260101000000 +0000\" stop=\"20260101010000 +0000\"><title>Nested programme</title></programme></wrapper><channel id=\"a\"><display-name>Direct</display-name></channel><programme channel=\"a\" start=\"20260101000000 +0000\" stop=\"20260101010000 +0000\"><title>Direct programme</title></programme></tv>",
+      "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+      "expected": {
+        "extracted": {
+          "stations": [
+            {
+              "id": "a",
+              "names": [
+                "Direct"
+              ],
+              "icons": []
+            }
+          ],
+          "programmes": [
+            {
+              "channel": "a",
+              "start": "20260101000000 +0000",
+              "stop": "20260101010000 +0000",
+              "title": "Direct programme",
+              "description": "",
+              "catchupAttribute": null,
+              "catchupElement": ""
+            }
+          ],
+          "fields": {
+            "data-window-start": null,
+            "data-window-end": null,
+            "data-programme-limit": null,
+            "data-truncated-channels": null,
+            "data-truncated": null
+          },
+          "source": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "identity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture"
+        },
+        "guide": {
+          "channels": [
+            {
+              "id": "a",
+              "names": [
+                "Direct"
+              ],
+              "logo": ""
+            }
+          ],
+          "programmes": [
+            {
+              "channelId": "a",
+              "start": 1767225600,
+              "end": 1767229200,
+              "title": "Direct programme",
+              "description": "",
+              "catchupId": ""
+            }
+          ],
+          "byId": {
+            "a": {
+              "id": "a",
+              "names": [
+                "Direct"
+              ],
+              "logo": ""
+            }
+          },
+          "byChannel": {
+            "a": [
+              {
+                "channelId": "a",
+                "start": 1767225600,
+                "end": 1767229200,
+                "title": "Direct programme",
+                "description": "",
+                "catchupId": ""
+              }
+            ]
+          },
+          "byName": {
+            "direct": [
+              "a"
+            ]
+          },
+          "byAlias": {
+            "direct": [
+              "a"
+            ]
+          },
+          "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "feedIdentity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "coverage": {
+            "limited": false,
+            "windowStart": null,
+            "windowEnd": null,
+            "programmeLimit": null,
+            "truncatedChannels": 0
+          },
+          "warnings": []
+        },
+        "nullPrototypeFields": [
+          "byId",
+          "byChannel",
+          "byName",
+          "byAlias"
+        ]
+      }
+    },
+    {
+      "name": "all direct display names retain descendant text and repeated aliases",
+      "xml": "<tv><channel id=\"a\"><display-name> First </display-name><wrapper><display-name>Indirect</display-name></wrapper><display-name>A<b>B</b>C</display-name><display-name> First </display-name></channel></tv>",
+      "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+      "expected": {
+        "extracted": {
+          "stations": [
+            {
+              "id": "a",
+              "names": [
+                " First ",
+                "ABC",
+                " First "
+              ],
+              "icons": []
+            }
+          ],
+          "programmes": [],
+          "fields": {
+            "data-window-start": null,
+            "data-window-end": null,
+            "data-programme-limit": null,
+            "data-truncated-channels": null,
+            "data-truncated": null
+          },
+          "source": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "identity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture"
+        },
+        "guide": {
+          "channels": [
+            {
+              "id": "a",
+              "names": [
+                "First",
+                "ABC"
+              ],
+              "logo": ""
+            }
+          ],
+          "programmes": [],
+          "byId": {
+            "a": {
+              "id": "a",
+              "names": [
+                "First",
+                "ABC"
+              ],
+              "logo": ""
+            }
+          },
+          "byChannel": {
+            "a": []
+          },
+          "byName": {
+            "first": [
+              "a"
+            ],
+            "abc": [
+              "a"
+            ]
+          },
+          "byAlias": {
+            "first": [
+              "a"
+            ],
+            "abc": [
+              "a"
+            ]
+          },
+          "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "feedIdentity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "coverage": {
+            "limited": false,
+            "windowStart": null,
+            "windowEnd": null,
+            "programmeLimit": null,
+            "truncatedChannels": 0
+          },
+          "warnings": []
+        },
+        "nullPrototypeFields": [
+          "byId",
+          "byChannel",
+          "byName",
+          "byAlias"
+        ]
+      }
+    },
+    {
+      "name": "whitespace CDATA numeric and predefined entities decode without markup",
+      "xml": "<tv><channel id=\"a\"><display-name> \nA&#32;&amp; B\t </display-name></channel><programme channel=\"a\" start=\"20260101000000 +0000\" stop=\"20260101010000 +0000\"><title> \n<![CDATA[A < B]]>&amp;&#x1F680;\t </title><desc> &#65;&quot;&apos;\r\n Text </desc></programme></tv>",
+      "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+      "expected": {
+        "extracted": {
+          "stations": [
+            {
+              "id": "a",
+              "names": [
+                " \nA & B\t "
+              ],
+              "icons": []
+            }
+          ],
+          "programmes": [
+            {
+              "channel": "a",
+              "start": "20260101000000 +0000",
+              "stop": "20260101010000 +0000",
+              "title": " \nA < B&🚀\t ",
+              "description": " A\"'\n Text ",
+              "catchupAttribute": null,
+              "catchupElement": ""
+            }
+          ],
+          "fields": {
+            "data-window-start": null,
+            "data-window-end": null,
+            "data-programme-limit": null,
+            "data-truncated-channels": null,
+            "data-truncated": null
+          },
+          "source": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "identity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture"
+        },
+        "guide": {
+          "channels": [
+            {
+              "id": "a",
+              "names": [
+                "A & B"
+              ],
+              "logo": ""
+            }
+          ],
+          "programmes": [
+            {
+              "channelId": "a",
+              "start": 1767225600,
+              "end": 1767229200,
+              "title": "A < B&🚀",
+              "description": "A\"'\n Text",
+              "catchupId": ""
+            }
+          ],
+          "byId": {
+            "a": {
+              "id": "a",
+              "names": [
+                "A & B"
+              ],
+              "logo": ""
+            }
+          },
+          "byChannel": {
+            "a": [
+              {
+                "channelId": "a",
+                "start": 1767225600,
+                "end": 1767229200,
+                "title": "A < B&🚀",
+                "description": "A\"'\n Text",
+                "catchupId": ""
+              }
+            ]
+          },
+          "byName": {
+            "a & b": [
+              "a"
+            ]
+          },
+          "byAlias": {
+            "a & b": [
+              "a"
+            ]
+          },
+          "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "feedIdentity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "coverage": {
+            "limited": false,
+            "windowStart": null,
+            "windowEnd": null,
+            "programmeLimit": null,
+            "truncatedChannels": 0
+          },
+          "warnings": []
+        },
+        "nullPrototypeFields": [
+          "byId",
+          "byChannel",
+          "byName",
+          "byAlias"
+        ]
+      }
+    },
+    {
+      "name": "missing channel IDs and programme IDs remain distinguishable during extraction",
+      "xml": "<tv><channel><display-name>No id</display-name></channel><channel id=\"\"><display-name>Empty id</display-name></channel><programme start=\"20260101000000\" stop=\"20260101010000\"><title>No channel</title></programme><programme channel=\"\" start=\"20260101000000\" stop=\"20260101010000\"><title>Empty channel</title></programme></tv>",
+      "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+      "expected": {
+        "extracted": {
+          "stations": [
+            {
+              "id": null,
+              "names": [
+                "No id"
+              ],
+              "icons": []
+            },
+            {
+              "id": "",
+              "names": [
+                "Empty id"
+              ],
+              "icons": []
+            }
+          ],
+          "programmes": [
+            {
+              "channel": null,
+              "start": "20260101000000",
+              "stop": "20260101010000",
+              "title": "No channel",
+              "description": "",
+              "catchupAttribute": null,
+              "catchupElement": ""
+            },
+            {
+              "channel": "",
+              "start": "20260101000000",
+              "stop": "20260101010000",
+              "title": "Empty channel",
+              "description": "",
+              "catchupAttribute": null,
+              "catchupElement": ""
+            }
+          ],
+          "fields": {
+            "data-window-start": null,
+            "data-window-end": null,
+            "data-programme-limit": null,
+            "data-truncated-channels": null,
+            "data-truncated": null
+          },
+          "source": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "identity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture"
+        },
+        "guide": {
+          "channels": [],
+          "programmes": [],
+          "byId": {},
+          "byChannel": {},
+          "byName": {},
+          "byAlias": {},
+          "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "feedIdentity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "coverage": {
+            "limited": false,
+            "windowStart": null,
+            "windowEnd": null,
+            "programmeLimit": null,
+            "truncatedChannels": 0
+          },
+          "warnings": [
+            "Ignored a programme with invalid channel or time",
+            "Ignored a programme with invalid channel or time"
+          ]
+        },
+        "nullPrototypeFields": [
+          "byId",
+          "byChannel",
+          "byName",
+          "byAlias"
+        ]
+      }
+    },
+    {
+      "name": "channel and programme identifier whitespace is passed through before core normalization",
+      "xml": "<tv><channel id=\" a \"><display-name> Name </display-name></channel><programme channel=\" a \" start=\" 20260101000000 +0000 \" stop=\"20260101010000 +0000\"><title>Space id</title></programme></tv>",
+      "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+      "expected": {
+        "extracted": {
+          "stations": [
+            {
+              "id": " a ",
+              "names": [
+                " Name "
+              ],
+              "icons": []
+            }
+          ],
+          "programmes": [
+            {
+              "channel": " a ",
+              "start": " 20260101000000 +0000 ",
+              "stop": "20260101010000 +0000",
+              "title": "Space id",
+              "description": "",
+              "catchupAttribute": null,
+              "catchupElement": ""
+            }
+          ],
+          "fields": {
+            "data-window-start": null,
+            "data-window-end": null,
+            "data-programme-limit": null,
+            "data-truncated-channels": null,
+            "data-truncated": null
+          },
+          "source": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "identity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture"
+        },
+        "guide": {
+          "channels": [
+            {
+              "id": "a",
+              "names": [
+                "Name"
+              ],
+              "logo": ""
+            }
+          ],
+          "programmes": [
+            {
+              "channelId": "a",
+              "start": 1767225600,
+              "end": 1767229200,
+              "title": "Space id",
+              "description": "",
+              "catchupId": ""
+            }
+          ],
+          "byId": {
+            "a": {
+              "id": "a",
+              "names": [
+                "Name"
+              ],
+              "logo": ""
+            }
+          },
+          "byChannel": {
+            "a": [
+              {
+                "channelId": "a",
+                "start": 1767225600,
+                "end": 1767229200,
+                "title": "Space id",
+                "description": "",
+                "catchupId": ""
+              }
+            ]
+          },
+          "byName": {
+            "name": [
+              "a"
+            ]
+          },
+          "byAlias": {
+            "name": [
+              "a"
+            ]
+          },
+          "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "feedIdentity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "coverage": {
+            "limited": false,
+            "windowStart": null,
+            "windowEnd": null,
+            "programmeLimit": null,
+            "truncatedChannels": 0
+          },
+          "warnings": []
+        },
+        "nullPrototypeFields": [
+          "byId",
+          "byChannel",
+          "byName",
+          "byAlias"
+        ]
+      }
+    },
+    {
+      "name": "repeated channel declarations merge aliases and retain first valid icon",
+      "xml": "<tv><channel id=\"a\"><display-name>First</display-name><icon src=\"/first.png\"/></channel><channel id=\"a\"><display-name>Second</display-name><icon src=\"/second.png\"/></channel><channel id=\"__proto__\"><display-name>Prototype</display-name></channel></tv>",
+      "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+      "expected": {
+        "extracted": {
+          "stations": [
+            {
+              "id": "a",
+              "names": [
+                "First"
+              ],
+              "icons": [
+                "/first.png"
+              ]
+            },
+            {
+              "id": "a",
+              "names": [
+                "Second"
+              ],
+              "icons": [
+                "/second.png"
+              ]
+            },
+            {
+              "id": "__proto__",
+              "names": [
+                "Prototype"
+              ],
+              "icons": []
+            }
+          ],
+          "programmes": [],
+          "fields": {
+            "data-window-start": null,
+            "data-window-end": null,
+            "data-programme-limit": null,
+            "data-truncated-channels": null,
+            "data-truncated": null
+          },
+          "source": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "identity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture"
+        },
+        "guide": {
+          "channels": [
+            {
+              "id": "a",
+              "names": [
+                "First",
+                "Second"
+              ],
+              "logo": "https://guide.test/first.png"
+            },
+            {
+              "id": "__proto__",
+              "names": [
+                "Prototype"
+              ],
+              "logo": ""
+            }
+          ],
+          "programmes": [],
+          "byId": {
+            "a": {
+              "id": "a",
+              "names": [
+                "First",
+                "Second"
+              ],
+              "logo": "https://guide.test/first.png"
+            },
+            "__proto__": {
+              "id": "__proto__",
+              "names": [
+                "Prototype"
+              ],
+              "logo": ""
+            }
+          },
+          "byChannel": {
+            "a": [],
+            "__proto__": []
+          },
+          "byName": {
+            "first": [
+              "a"
+            ],
+            "second": [
+              "a"
+            ],
+            "prototype": [
+              "__proto__"
+            ]
+          },
+          "byAlias": {
+            "first": [
+              "a"
+            ],
+            "second": [
+              "a"
+            ],
+            "prototype": [
+              "__proto__"
+            ]
+          },
+          "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "feedIdentity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "coverage": {
+            "limited": false,
+            "windowStart": null,
+            "windowEnd": null,
+            "programmeLimit": null,
+            "truncatedChannels": 0
+          },
+          "warnings": []
+        },
+        "nullPrototypeFields": [
+          "byId",
+          "byChannel",
+          "byName",
+          "byAlias"
+        ]
+      }
+    },
+    {
+      "name": "direct icons preserve source order with invalid first and indirect ignored",
+      "xml": "<tv><channel id=\"a\"><wrapper><icon src=\"https://ignored.test/icon.png\"/></wrapper><icon src=\"javascript:alert(1)\"/><icon/><icon src=\"../logos/icon.png?size=1&amp;theme=dark\"/><icon src=\"https://later.test/icon.png\"/></channel></tv>",
+      "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+      "expected": {
+        "extracted": {
+          "stations": [
+            {
+              "id": "a",
+              "names": [],
+              "icons": [
+                "javascript:alert(1)",
+                null,
+                "../logos/icon.png?size=1&theme=dark",
+                "https://later.test/icon.png"
+              ]
+            }
+          ],
+          "programmes": [],
+          "fields": {
+            "data-window-start": null,
+            "data-window-end": null,
+            "data-programme-limit": null,
+            "data-truncated-channels": null,
+            "data-truncated": null
+          },
+          "source": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "identity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture"
+        },
+        "guide": {
+          "channels": [
+            {
+              "id": "a",
+              "names": [],
+              "logo": "https://guide.test/xml/logos/icon.png?size=1&theme=dark"
+            }
+          ],
+          "programmes": [],
+          "byId": {
+            "a": {
+              "id": "a",
+              "names": [],
+              "logo": "https://guide.test/xml/logos/icon.png?size=1&theme=dark"
+            }
+          },
+          "byChannel": {
+            "a": []
+          },
+          "byName": {},
+          "byAlias": {},
+          "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "feedIdentity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "coverage": {
+            "limited": false,
+            "windowStart": null,
+            "windowEnd": null,
+            "programmeLimit": null,
+            "truncatedChannels": 0
+          },
+          "warnings": []
+        },
+        "nullPrototypeFields": [
+          "byId",
+          "byChannel",
+          "byName",
+          "byAlias"
+        ]
+      }
+    },
+    {
+      "name": "relative icon has no player-origin fallback without source URL",
+      "xml": "<tv><channel id=\"a\"><icon src=\"../relative.png\"/></channel></tv>",
+      "sourceUrl": null,
+      "expected": {
+        "extracted": {
+          "stations": [
+            {
+              "id": "a",
+              "names": [],
+              "icons": [
+                "../relative.png"
+              ]
+            }
+          ],
+          "programmes": [],
+          "fields": {
+            "data-window-start": null,
+            "data-window-end": null,
+            "data-programme-limit": null,
+            "data-truncated-channels": null,
+            "data-truncated": null
+          },
+          "source": "",
+          "identity": "anonymous:1"
+        },
+        "guide": {
+          "channels": [
+            {
+              "id": "a",
+              "names": [],
+              "logo": ""
+            }
+          ],
+          "programmes": [],
+          "byId": {
+            "a": {
+              "id": "a",
+              "names": [],
+              "logo": ""
+            }
+          },
+          "byChannel": {
+            "a": []
+          },
+          "byName": {},
+          "byAlias": {},
+          "sourceUrl": "",
+          "feedIdentity": "anonymous:1",
+          "coverage": {
+            "limited": false,
+            "windowStart": null,
+            "windowEnd": null,
+            "programmeLimit": null,
+            "truncatedChannels": 0
+          },
+          "warnings": []
+        },
+        "nullPrototypeFields": [
+          "byId",
+          "byChannel",
+          "byName",
+          "byAlias"
+        ]
+      }
+    },
+    {
+      "name": "absolute protocol relative and root icons resolve against uppercase source scheme",
+      "xml": "<tv><channel id=\"absolute\"><icon src=\"HTTPS://images.test/a.png\"/></channel><channel id=\"protocol\"><icon src=\"//images.test/b.png\"/></channel><channel id=\"root\"><icon src=\"/c.png\"/></channel></tv>",
+      "sourceUrl": "HTTPS://guide.test/xml/tv.xml?token=source",
+      "expected": {
+        "extracted": {
+          "stations": [
+            {
+              "id": "absolute",
+              "names": [],
+              "icons": [
+                "HTTPS://images.test/a.png"
+              ]
+            },
+            {
+              "id": "protocol",
+              "names": [],
+              "icons": [
+                "//images.test/b.png"
+              ]
+            },
+            {
+              "id": "root",
+              "names": [],
+              "icons": [
+                "/c.png"
+              ]
+            }
+          ],
+          "programmes": [],
+          "fields": {
+            "data-window-start": null,
+            "data-window-end": null,
+            "data-programme-limit": null,
+            "data-truncated-channels": null,
+            "data-truncated": null
+          },
+          "source": "HTTPS://guide.test/xml/tv.xml?token=source",
+          "identity": "HTTPS://guide.test/xml/tv.xml?token=source"
+        },
+        "guide": {
+          "channels": [
+            {
+              "id": "absolute",
+              "names": [],
+              "logo": "HTTPS://images.test/a.png"
+            },
+            {
+              "id": "protocol",
+              "names": [],
+              "logo": "https://images.test/b.png"
+            },
+            {
+              "id": "root",
+              "names": [],
+              "logo": "https://guide.test/c.png"
+            }
+          ],
+          "programmes": [],
+          "byId": {
+            "absolute": {
+              "id": "absolute",
+              "names": [],
+              "logo": "HTTPS://images.test/a.png"
+            },
+            "protocol": {
+              "id": "protocol",
+              "names": [],
+              "logo": "https://images.test/b.png"
+            },
+            "root": {
+              "id": "root",
+              "names": [],
+              "logo": "https://guide.test/c.png"
+            }
+          },
+          "byChannel": {
+            "absolute": [],
+            "protocol": [],
+            "root": []
+          },
+          "byName": {},
+          "byAlias": {},
+          "sourceUrl": "HTTPS://guide.test/xml/tv.xml?token=source",
+          "feedIdentity": "HTTPS://guide.test/xml/tv.xml?token=source",
+          "coverage": {
+            "limited": false,
+            "windowStart": null,
+            "windowEnd": null,
+            "programmeLimit": null,
+            "truncatedChannels": 0
+          },
+          "warnings": []
+        },
+        "nullPrototypeFields": [
+          "byId",
+          "byChannel",
+          "byName",
+          "byAlias"
+        ]
+      }
+    },
+    {
+      "name": "unsafe credential and whitespace icon URLs and unsafe source are rejected",
+      "xml": "<tv><channel id=\"a\"><icon src=\"https://u:p@images.test/a.png\"/><icon src=\"https://images.test/space logo.png\"/><icon src=\"data:image/png;base64,abc\"/><icon src=\"relative.png\"/></channel></tv>",
+      "sourceUrl": "javascript:alert(1)",
+      "expected": {
+        "extracted": {
+          "stations": [
+            {
+              "id": "a",
+              "names": [],
+              "icons": [
+                "https://u:p@images.test/a.png",
+                "https://images.test/space logo.png",
+                "data:image/png;base64,abc",
+                "relative.png"
+              ]
+            }
+          ],
+          "programmes": [],
+          "fields": {
+            "data-window-start": null,
+            "data-window-end": null,
+            "data-programme-limit": null,
+            "data-truncated-channels": null,
+            "data-truncated": null
+          },
+          "source": "",
+          "identity": "anonymous:1"
+        },
+        "guide": {
+          "channels": [
+            {
+              "id": "a",
+              "names": [],
+              "logo": ""
+            }
+          ],
+          "programmes": [],
+          "byId": {
+            "a": {
+              "id": "a",
+              "names": [],
+              "logo": ""
+            }
+          },
+          "byChannel": {
+            "a": []
+          },
+          "byName": {},
+          "byAlias": {},
+          "sourceUrl": "",
+          "feedIdentity": "anonymous:1",
+          "coverage": {
+            "limited": false,
+            "windowStart": null,
+            "windowEnd": null,
+            "programmeLimit": null,
+            "truncatedChannels": 0
+          },
+          "warnings": []
+        },
+        "nullPrototypeFields": [
+          "byId",
+          "byChannel",
+          "byName",
+          "byAlias"
+        ]
+      }
+    },
+    {
+      "name": "nonempty catchup attribute precedes direct catchup child",
+      "xml": "<tv><programme channel=\"a\" start=\"20260101000000 +0000\" stop=\"20260101010000 +0000\" catchup-id=\"  Attribute/42?x=1&amp;y=2  \"><title>Title</title><catchup-id>Child</catchup-id></programme></tv>",
+      "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+      "expected": {
+        "extracted": {
+          "stations": [],
+          "programmes": [
+            {
+              "channel": "a",
+              "start": "20260101000000 +0000",
+              "stop": "20260101010000 +0000",
+              "title": "Title",
+              "description": "",
+              "catchupAttribute": "  Attribute/42?x=1&y=2  ",
+              "catchupElement": "Child"
+            }
+          ],
+          "fields": {
+            "data-window-start": null,
+            "data-window-end": null,
+            "data-programme-limit": null,
+            "data-truncated-channels": null,
+            "data-truncated": null
+          },
+          "source": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "identity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture"
+        },
+        "guide": {
+          "channels": [],
+          "programmes": [
+            {
+              "channelId": "a",
+              "start": 1767225600,
+              "end": 1767229200,
+              "title": "Title",
+              "description": "",
+              "catchupId": "Attribute/42?x=1&y=2"
+            }
+          ],
+          "byId": {},
+          "byChannel": {
+            "a": [
+              {
+                "channelId": "a",
+                "start": 1767225600,
+                "end": 1767229200,
+                "title": "Title",
+                "description": "",
+                "catchupId": "Attribute/42?x=1&y=2"
+              }
+            ]
+          },
+          "byName": {},
+          "byAlias": {},
+          "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "feedIdentity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "coverage": {
+            "limited": false,
+            "windowStart": null,
+            "windowEnd": null,
+            "programmeLimit": null,
+            "truncatedChannels": 0
+          },
+          "warnings": []
+        },
+        "nullPrototypeFields": [
+          "byId",
+          "byChannel",
+          "byName",
+          "byAlias"
+        ]
+      }
+    },
+    {
+      "name": "empty catchup attribute permits direct child fallback",
+      "xml": "<tv><programme channel=\"a\" start=\"20260101000000 +0000\" stop=\"20260101010000 +0000\" catchup-id=\"\"><title>Title</title><catchup-id>Child</catchup-id></programme></tv>",
+      "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+      "expected": {
+        "extracted": {
+          "stations": [],
+          "programmes": [
+            {
+              "channel": "a",
+              "start": "20260101000000 +0000",
+              "stop": "20260101010000 +0000",
+              "title": "Title",
+              "description": "",
+              "catchupAttribute": "",
+              "catchupElement": "Child"
+            }
+          ],
+          "fields": {
+            "data-window-start": null,
+            "data-window-end": null,
+            "data-programme-limit": null,
+            "data-truncated-channels": null,
+            "data-truncated": null
+          },
+          "source": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "identity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture"
+        },
+        "guide": {
+          "channels": [],
+          "programmes": [
+            {
+              "channelId": "a",
+              "start": 1767225600,
+              "end": 1767229200,
+              "title": "Title",
+              "description": "",
+              "catchupId": "Child"
+            }
+          ],
+          "byId": {},
+          "byChannel": {
+            "a": [
+              {
+                "channelId": "a",
+                "start": 1767225600,
+                "end": 1767229200,
+                "title": "Title",
+                "description": "",
+                "catchupId": "Child"
+              }
+            ]
+          },
+          "byName": {},
+          "byAlias": {},
+          "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "feedIdentity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "coverage": {
+            "limited": false,
+            "windowStart": null,
+            "windowEnd": null,
+            "programmeLimit": null,
+            "truncatedChannels": 0
+          },
+          "warnings": []
+        },
+        "nullPrototypeFields": [
+          "byId",
+          "byChannel",
+          "byName",
+          "byAlias"
+        ]
+      }
+    },
+    {
+      "name": "whitespace catchup attribute retains its existing precedence",
+      "xml": "<tv><programme channel=\"a\" start=\"20260101000000 +0000\" stop=\"20260101010000 +0000\" catchup-id=\"   \"><title>Title</title><catchup-id>Child</catchup-id></programme></tv>",
+      "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+      "expected": {
+        "extracted": {
+          "stations": [],
+          "programmes": [
+            {
+              "channel": "a",
+              "start": "20260101000000 +0000",
+              "stop": "20260101010000 +0000",
+              "title": "Title",
+              "description": "",
+              "catchupAttribute": "   ",
+              "catchupElement": "Child"
+            }
+          ],
+          "fields": {
+            "data-window-start": null,
+            "data-window-end": null,
+            "data-programme-limit": null,
+            "data-truncated-channels": null,
+            "data-truncated": null
+          },
+          "source": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "identity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture"
+        },
+        "guide": {
+          "channels": [],
+          "programmes": [
+            {
+              "channelId": "a",
+              "start": 1767225600,
+              "end": 1767229200,
+              "title": "Title",
+              "description": "",
+              "catchupId": "Child"
+            }
+          ],
+          "byId": {},
+          "byChannel": {
+            "a": [
+              {
+                "channelId": "a",
+                "start": 1767225600,
+                "end": 1767229200,
+                "title": "Title",
+                "description": "",
+                "catchupId": "Child"
+              }
+            ]
+          },
+          "byName": {},
+          "byAlias": {},
+          "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "feedIdentity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "coverage": {
+            "limited": false,
+            "windowStart": null,
+            "windowEnd": null,
+            "programmeLimit": null,
+            "truncatedChannels": 0
+          },
+          "warnings": []
+        },
+        "nullPrototypeFields": [
+          "byId",
+          "byChannel",
+          "byName",
+          "byAlias"
+        ]
+      }
+    },
+    {
+      "name": "first direct catchup child includes descendant text and suppresses later child",
+      "xml": "<tv><programme channel=\"a\" start=\"20260101000000 +0000\" stop=\"20260101010000 +0000\"><title>Title</title><catchup-id>First<b>/Part</b></catchup-id><catchup-id>Later</catchup-id></programme></tv>",
+      "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+      "expected": {
+        "extracted": {
+          "stations": [],
+          "programmes": [
+            {
+              "channel": "a",
+              "start": "20260101000000 +0000",
+              "stop": "20260101010000 +0000",
+              "title": "Title",
+              "description": "",
+              "catchupAttribute": null,
+              "catchupElement": "First/Part"
+            }
+          ],
+          "fields": {
+            "data-window-start": null,
+            "data-window-end": null,
+            "data-programme-limit": null,
+            "data-truncated-channels": null,
+            "data-truncated": null
+          },
+          "source": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "identity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture"
+        },
+        "guide": {
+          "channels": [],
+          "programmes": [
+            {
+              "channelId": "a",
+              "start": 1767225600,
+              "end": 1767229200,
+              "title": "Title",
+              "description": "",
+              "catchupId": "First/Part"
+            }
+          ],
+          "byId": {},
+          "byChannel": {
+            "a": [
+              {
+                "channelId": "a",
+                "start": 1767225600,
+                "end": 1767229200,
+                "title": "Title",
+                "description": "",
+                "catchupId": "First/Part"
+              }
+            ]
+          },
+          "byName": {},
+          "byAlias": {},
+          "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "feedIdentity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "coverage": {
+            "limited": false,
+            "windowStart": null,
+            "windowEnd": null,
+            "programmeLimit": null,
+            "truncatedChannels": 0
+          },
+          "warnings": []
+        },
+        "nullPrototypeFields": [
+          "byId",
+          "byChannel",
+          "byName",
+          "byAlias"
+        ]
+      }
+    },
+    {
+      "name": "missing title description and catchup are passed as empty text and null attribute",
+      "xml": "<tv><programme channel=\"a\" start=\"20260101000000 +0000\" stop=\"20260101010000 +0000\"></programme></tv>",
+      "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+      "expected": {
+        "extracted": {
+          "stations": [],
+          "programmes": [
+            {
+              "channel": "a",
+              "start": "20260101000000 +0000",
+              "stop": "20260101010000 +0000",
+              "title": "",
+              "description": "",
+              "catchupAttribute": null,
+              "catchupElement": ""
+            }
+          ],
+          "fields": {
+            "data-window-start": null,
+            "data-window-end": null,
+            "data-programme-limit": null,
+            "data-truncated-channels": null,
+            "data-truncated": null
+          },
+          "source": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "identity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture"
+        },
+        "guide": {
+          "channels": [],
+          "programmes": [
+            {
+              "channelId": "a",
+              "start": 1767225600,
+              "end": 1767229200,
+              "title": "",
+              "description": "",
+              "catchupId": ""
+            }
+          ],
+          "byId": {},
+          "byChannel": {
+            "a": [
+              {
+                "channelId": "a",
+                "start": 1767225600,
+                "end": 1767229200,
+                "title": "",
+                "description": "",
+                "catchupId": ""
+              }
+            ]
+          },
+          "byName": {},
+          "byAlias": {},
+          "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "feedIdentity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "coverage": {
+            "limited": false,
+            "windowStart": null,
+            "windowEnd": null,
+            "programmeLimit": null,
+            "truncatedChannels": 0
+          },
+          "warnings": []
+        },
+        "nullPrototypeFields": [
+          "byId",
+          "byChannel",
+          "byName",
+          "byAlias"
+        ]
+      }
+    },
+    {
+      "name": "root coverage fields preserve raw values for shared normalization",
+      "xml": "<tv data-window-start=\"1000\" data-window-end=\"2000\" data-programme-limit=\"100\" data-truncated-channels=\"2\" data-truncated=\"true\"></tv>",
+      "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+      "expected": {
+        "extracted": {
+          "stations": [],
+          "programmes": [],
+          "fields": {
+            "data-window-start": "1000",
+            "data-window-end": "2000",
+            "data-programme-limit": "100",
+            "data-truncated-channels": "2",
+            "data-truncated": "true"
+          },
+          "source": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "identity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture"
+        },
+        "guide": {
+          "channels": [],
+          "programmes": [],
+          "byId": {},
+          "byChannel": {},
+          "byName": {},
+          "byAlias": {},
+          "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "feedIdentity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "coverage": {
+            "limited": true,
+            "windowStart": 1000,
+            "windowEnd": 2000,
+            "programmeLimit": 100,
+            "truncatedChannels": 2
+          },
+          "warnings": []
+        },
+        "nullPrototypeFields": [
+          "byId",
+          "byChannel",
+          "byName",
+          "byAlias"
+        ]
+      }
+    },
+    {
+      "name": "invalid optional coverage fields remain visible before validation",
+      "xml": "<tv data-window-start=\"Infinity\" data-window-end=\"0x20\" data-programme-limit=\"100.1\" data-truncated-channels=\"-2\" data-truncated=\"yes\"></tv>",
+      "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+      "expected": {
+        "extracted": {
+          "stations": [],
+          "programmes": [],
+          "fields": {
+            "data-window-start": "Infinity",
+            "data-window-end": "0x20",
+            "data-programme-limit": "100.1",
+            "data-truncated-channels": "-2",
+            "data-truncated": "yes"
+          },
+          "source": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "identity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture"
+        },
+        "guide": {
+          "channels": [],
+          "programmes": [],
+          "byId": {},
+          "byChannel": {},
+          "byName": {},
+          "byAlias": {},
+          "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "feedIdentity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "coverage": {
+            "limited": false,
+            "windowStart": null,
+            "windowEnd": null,
+            "programmeLimit": null,
+            "truncatedChannels": 0
+          },
+          "warnings": []
+        },
+        "nullPrototypeFields": [
+          "byId",
+          "byChannel",
+          "byName",
+          "byAlias"
+        ]
+      }
+    },
+    {
+      "name": "coverage is read only from exact lower-case root attributes",
+      "xml": "<tv DATA-TRUNCATED=\"true\" DATA-WINDOW-START=\"1000\" DATA-WINDOW-END=\"2000\"><channel id=\"a\" data-truncated=\"true\" data-window-start=\"1000\" data-window-end=\"2000\"/></tv>",
+      "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+      "expected": {
+        "extracted": {
+          "stations": [
+            {
+              "id": "a",
+              "names": [],
+              "icons": []
+            }
+          ],
+          "programmes": [],
+          "fields": {
+            "data-window-start": null,
+            "data-window-end": null,
+            "data-programme-limit": null,
+            "data-truncated-channels": null,
+            "data-truncated": null
+          },
+          "source": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "identity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture"
+        },
+        "guide": {
+          "channels": [
+            {
+              "id": "a",
+              "names": [],
+              "logo": ""
+            }
+          ],
+          "programmes": [],
+          "byId": {
+            "a": {
+              "id": "a",
+              "names": [],
+              "logo": ""
+            }
+          },
+          "byChannel": {
+            "a": []
+          },
+          "byName": {},
+          "byAlias": {},
+          "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "feedIdentity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "coverage": {
+            "limited": false,
+            "windowStart": null,
+            "windowEnd": null,
+            "programmeLimit": null,
+            "truncatedChannels": 0
+          },
+          "warnings": []
+        },
+        "nullPrototypeFields": [
+          "byId",
+          "byChannel",
+          "byName",
+          "byAlias"
+        ]
+      }
+    },
+    {
+      "name": "BOM XML prolog comments and inert external doctype permit parsing",
+      "xml": "﻿<?xml version=\"1.0\"?><!-- prolog --><!DOCTYPE tv SYSTEM \"https://no-network.test/xmltv.dtd\"><tv><programme channel=\"a\" start=\"20260101000000 +0000\" stop=\"20260101010000 +0000\"><title>Allowed</title></programme></tv>",
+      "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+      "expected": {
+        "extracted": {
+          "stations": [],
+          "programmes": [
+            {
+              "channel": "a",
+              "start": "20260101000000 +0000",
+              "stop": "20260101010000 +0000",
+              "title": "Allowed",
+              "description": "",
+              "catchupAttribute": null,
+              "catchupElement": ""
+            }
+          ],
+          "fields": {
+            "data-window-start": null,
+            "data-window-end": null,
+            "data-programme-limit": null,
+            "data-truncated-channels": null,
+            "data-truncated": null
+          },
+          "source": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "identity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture"
+        },
+        "guide": {
+          "channels": [],
+          "programmes": [
+            {
+              "channelId": "a",
+              "start": 1767225600,
+              "end": 1767229200,
+              "title": "Allowed",
+              "description": "",
+              "catchupId": ""
+            }
+          ],
+          "byId": {},
+          "byChannel": {
+            "a": [
+              {
+                "channelId": "a",
+                "start": 1767225600,
+                "end": 1767229200,
+                "title": "Allowed",
+                "description": "",
+                "catchupId": ""
+              }
+            ]
+          },
+          "byName": {},
+          "byAlias": {},
+          "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "feedIdentity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "coverage": {
+            "limited": false,
+            "windowStart": null,
+            "windowEnd": null,
+            "programmeLimit": null,
+            "truncatedChannels": 0
+          },
+          "warnings": []
+        },
+        "nullPrototypeFields": [
+          "byId",
+          "byChannel",
+          "byName",
+          "byAlias"
+        ]
+      }
+    },
+    {
+      "name": "doctype and entity looking text inside CDATA remains literal",
+      "xml": "<tv><programme channel=\"a\" start=\"20260101000000 +0000\" stop=\"20260101010000 +0000\"><title><![CDATA[<!DOCTYPE tv SYSTEM \"https://literal.test\"> <!ENTITY text>]]></title></programme></tv>",
+      "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+      "expected": {
+        "extracted": {
+          "stations": [],
+          "programmes": [
+            {
+              "channel": "a",
+              "start": "20260101000000 +0000",
+              "stop": "20260101010000 +0000",
+              "title": "<!DOCTYPE tv SYSTEM \"https://literal.test\"> <!ENTITY text>",
+              "description": "",
+              "catchupAttribute": null,
+              "catchupElement": ""
+            }
+          ],
+          "fields": {
+            "data-window-start": null,
+            "data-window-end": null,
+            "data-programme-limit": null,
+            "data-truncated-channels": null,
+            "data-truncated": null
+          },
+          "source": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "identity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture"
+        },
+        "guide": {
+          "channels": [],
+          "programmes": [
+            {
+              "channelId": "a",
+              "start": 1767225600,
+              "end": 1767229200,
+              "title": "<!DOCTYPE tv SYSTEM \"https://literal.test\"> <!ENTITY text>",
+              "description": "",
+              "catchupId": ""
+            }
+          ],
+          "byId": {},
+          "byChannel": {
+            "a": [
+              {
+                "channelId": "a",
+                "start": 1767225600,
+                "end": 1767229200,
+                "title": "<!DOCTYPE tv SYSTEM \"https://literal.test\"> <!ENTITY text>",
+                "description": "",
+                "catchupId": ""
+              }
+            ]
+          },
+          "byName": {},
+          "byAlias": {},
+          "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "feedIdentity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "coverage": {
+            "limited": false,
+            "windowStart": null,
+            "windowEnd": null,
+            "programmeLimit": null,
+            "truncatedChannels": 0
+          },
+          "warnings": []
+        },
+        "nullPrototypeFields": [
+          "byId",
+          "byChannel",
+          "byName",
+          "byAlias"
+        ]
+      }
+    },
+    {
+      "name": "internal entity declaration fails before DOM field extraction",
+      "xml": "<!DOCTYPE tv [<!ENTITY x \"value\">]><tv><programme channel=\"a\" start=\"20260101000000 +0000\" stop=\"20260101010000 +0000\"><title>&x;</title></programme></tv>",
+      "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+      "expected": {
+        "extracted": null,
+        "error": {
+          "name": "Error",
+          "code": "XML_ENTITIES",
+          "message": "XMLTV entity declarations are not supported"
+        }
+      }
+    },
+    {
+      "name": "multiple document declarations fail explicitly",
+      "xml": "<!DOCTYPE tv><!DOCTYPE tv><tv/>",
+      "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+      "expected": {
+        "extracted": null,
+        "error": {
+          "name": "Error",
+          "code": "XML_DOCTYPE",
+          "message": "Multiple XML document declarations are not supported"
+        }
+      }
+    },
+    {
+      "name": "wrong document root fails XMLTV validation",
+      "xml": "<guide><channel id=\"a\"/></guide>",
+      "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+      "expected": {
+        "extracted": null,
+        "error": {
+          "name": "Error",
+          "code": "XML_FORMAT",
+          "message": "The programme guide is not valid XMLTV"
+        }
+      }
+    },
+    {
+      "name": "malformed XML fails before DOM field extraction",
+      "xml": "<tv><channel id=\"a\"></tv>",
+      "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+      "expected": {
+        "extracted": null,
+        "error": {
+          "name": "Error",
+          "code": "XML_FORMAT",
+          "message": "The programme guide is not valid XMLTV"
+        }
+      }
+    },
+    {
+      "name": "parsererror element anywhere in document triggers existing format rejection",
+      "xml": "<tv><programme channel=\"a\" start=\"20260101000000 +0000\" stop=\"20260101010000 +0000\"><title>Title</title><desc><parsererror>Provider text</parsererror></desc></programme></tv>",
+      "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+      "expected": {
+        "extracted": null,
+        "error": {
+          "name": "Error",
+          "code": "XML_FORMAT",
+          "message": "The programme guide is not valid XMLTV"
+        }
+      }
+    },
+    {
+      "name": "qualified field names are ignored while unprefixed default-namespace fields match",
+      "xml": "<tv xmlns=\"urn:default\" xmlns:x=\"urn:qualified\"><channel id=\"a\"><x:display-name>Qualified</x:display-name><display-name>Unprefixed</display-name></channel><programme channel=\"a\" start=\"20260101000000 +0000\" stop=\"20260101010000 +0000\"><x:title>Qualified</x:title><title>Unprefixed</title><x:desc>Qualified desc</x:desc></programme></tv>",
+      "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+      "expected": {
+        "extracted": {
+          "stations": [
+            {
+              "id": "a",
+              "names": [
+                "Unprefixed"
+              ],
+              "icons": []
+            }
+          ],
+          "programmes": [
+            {
+              "channel": "a",
+              "start": "20260101000000 +0000",
+              "stop": "20260101010000 +0000",
+              "title": "Unprefixed",
+              "description": "",
+              "catchupAttribute": null,
+              "catchupElement": ""
+            }
+          ],
+          "fields": {
+            "data-window-start": null,
+            "data-window-end": null,
+            "data-programme-limit": null,
+            "data-truncated-channels": null,
+            "data-truncated": null
+          },
+          "source": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "identity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture"
+        },
+        "guide": {
+          "channels": [
+            {
+              "id": "a",
+              "names": [
+                "Unprefixed"
+              ],
+              "logo": ""
+            }
+          ],
+          "programmes": [
+            {
+              "channelId": "a",
+              "start": 1767225600,
+              "end": 1767229200,
+              "title": "Unprefixed",
+              "description": "",
+              "catchupId": ""
+            }
+          ],
+          "byId": {
+            "a": {
+              "id": "a",
+              "names": [
+                "Unprefixed"
+              ],
+              "logo": ""
+            }
+          },
+          "byChannel": {
+            "a": [
+              {
+                "channelId": "a",
+                "start": 1767225600,
+                "end": 1767229200,
+                "title": "Unprefixed",
+                "description": "",
+                "catchupId": ""
+              }
+            ]
+          },
+          "byName": {
+            "unprefixed": [
+              "a"
+            ]
+          },
+          "byAlias": {
+            "unprefixed": [
+              "a"
+            ]
+          },
+          "sourceUrl": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "feedIdentity": "https://guide.test/xml/daily/guide.xml.gz?token=fixture",
+          "coverage": {
+            "limited": false,
+            "windowStart": null,
+            "windowEnd": null,
+            "programmeLimit": null,
+            "truncatedChannels": 0
+          },
+          "warnings": []
+        },
+        "nullPrototypeFields": [
+          "byId",
+          "byChannel",
+          "byName",
+          "byAlias"
+        ]
+      }
+    }
+  ]
+}

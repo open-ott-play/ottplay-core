@@ -1,0 +1,26 @@
+{
+  "commit": "398a6113bb2e7f8a98e02638e4da99062f2a0fbb",
+  "repository": "ottplay-unification/ottplay-foss2",
+  "cases": 30,
+  "method": "Actual unmodified src/epg.js parseXML, real JSDOM DOMParser, actual src/providers.js and shared core; read-only observation of parseBrowserGuide arguments. Each case uses an isolated VM and DOM. No business algorithm copied.",
+  "sourceMatchesCommit": true,
+  "shippingSha256": {
+    "src/epg.js": "fe2db635dde1aba75f725c58fe74f51ee2347bff30d0482324bd962b15998f23",
+    "src/providers.js": "54e79b2c6a1723cb1f78225689d2666e7654c4f1c16917e9528a39fc3a65baeb",
+    "tests/load-core.cjs": "ea9ce78d5a6e1e857c871bb43d63da193529e8393feec927a828d43c9395219b",
+    "vendor/core-js.min.js": "19ef6c6270dd909cb78ea5f8eb67a9ae716b0415b0600fd3686332db14bfc8ab",
+    "vendor/ottplay-core.js": "4a8375270690dc65858e174f457f906d6c8b8ad7f1db520a8477a8eeae708ced",
+    "vendor/ottplay-core.manifest.json": "1f574aeb533a15d8e6efa82f6be161dce397a557dd3640f483f79888faa2313a",
+    "package-lock.json": "37e1c0b83c0122a2e617536efa9db97cccf2872c9285c3f6124cf3fd4f9f74e7"
+  },
+  "sourceSha256": "675fb6ab32a95c265840f71a24d1bb2f287123bdaa7bd645f53dc2cf736d6bd2",
+  "node": "v26.8.2",
+  "jsdom": "29.1.1",
+  "baselineSha256": "b50928d548d2921c68c24c05a8fbd2fe381e3913d34ad64fbd6b7066ebeb2b6e",
+  "inputsSha256": "d1698d24051eed1199b2898997b38c79180390393ef17997a3ca3b7ed92488c5",
+  "limitations": [
+    "JSDOM host coverage, not real television DOMParser acceptance.",
+    "The optional textContent-unavailable fallback and no-parser device branch are not exercised by this real JSDOM fixture.",
+    "The extraction observer records decoded values without intercepting DOMParser or replacing URL/core rules."
+  ]
+}

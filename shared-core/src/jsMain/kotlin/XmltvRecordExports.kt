@@ -2,6 +2,7 @@
 
 import play.ott.core.XmltvRecordFormat
 import play.ott.core.NativeRecordRules
+import play.ott.core.XmltvRecordError
 
 private fun recordFormat(value: String): XmltvRecordFormat = when (value) {
     "swift" -> XmltvRecordFormat.SWIFT
@@ -9,6 +10,8 @@ private fun recordFormat(value: String): XmltvRecordFormat = when (value) {
     "active-android" -> XmltvRecordFormat.ANDROID
     "rust" -> XmltvRecordFormat.RUST
     "rust-native" -> XmltvRecordFormat.RUST_NATIVE
+    "browser" -> XmltvRecordFormat.BROWSER
+    "node-streaming" -> XmltvRecordFormat.NODE_STREAMING
     else -> error("Unknown XMLTV record format")
 }
 
@@ -49,3 +52,51 @@ class XmltvRecords(format: String, trim: (String) -> String, identity: ((String)
 @JsExport
 fun nativeXmltvOrder(starts: Array<Double>, format: String): Array<Int> =
     NativeRecordRules.order(starts.toList(), recordFormat(format)).toTypedArray()
+
+private fun xmltvAttribute(attributes: dynamic, name: String): String? =
+    if (attributes[name] == null) null else attributes[name].unsafeCast<String>()
+
+private inline fun <T> webXmltvOperation(action: () -> T): T = try { action() } catch (error: XmltvRecordError) {
+    val code = error.code
+    val mapped: dynamic = js("new Error(code)")
+    mapped.code = code
+    throw mapped.unsafeCast<Throwable>()
+}
+
+/** Typed JS/DOM/SAX boundary; the existing common record interpreter owns field state. */
+@JsExport
+class WebXmltvRecords(format: String, admission: ((String, Double?, Double?) -> Boolean)? = null, icon: ((String) -> String)? = null) {
+    private val streaming = format == "node-streaming"
+    private val records = play.ott.core.XmltvRecords(recordFormat(format),
+        trim = { value -> value.asDynamic().trim().unsafeCast<String>() },
+        admission = admission ?: { _, _, _ -> true }, resolveIcon = icon ?: { it })
+
+    fun start(name: String, attributes: dynamic) = webXmltvOperation {
+        records.startDecoded(name, xmltvAttribute(attributes, "id"), xmltvAttribute(attributes, "channel"),
+            xmltvAttribute(attributes, "start"), xmltvAttribute(attributes, "stop"), xmltvAttribute(attributes, "src"),
+            xmltvAttribute(attributes, "catchup-id"))
+    }
+    fun wantsText(): Boolean = records.wantsText()
+    fun text(value: String) = webXmltvOperation { records.text(value) }
+    fun end(name: String): dynamic = webXmltvOperation {
+        records.end(name)
+        val row = records.takeWebRecord() ?: return@webXmltvOperation null
+        val result: dynamic = js("({})")
+        result.kind = row.kind
+        val value: dynamic = js("({})")
+        if (row.kind == "channel") {
+            value.id = row.id; value.names = row.names.toTypedArray()
+            if (streaming) value.icon = row.icon else value.icons = row.icons.toTypedArray()
+        } else if (streaming) {
+            value.kind = row.kind; value.id = row.id; value.start = row.start; value.stop = row.stop
+            value.begin = row.begin; value.end = row.end; value.title = row.title; value.desc = row.description
+            value.catchupId = row.catchupAttribute?.takeIf { it.isNotEmpty() } ?: row.catchupElement
+        } else {
+            value.channel = row.id; value.start = row.start; value.stop = row.stop
+            value.title = row.title; value.description = row.description
+            value.catchupAttribute = row.catchupAttribute; value.catchupElement = row.catchupElement
+        }
+        result.value = value
+        result
+    }
+}

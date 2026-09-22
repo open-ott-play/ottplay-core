@@ -14,7 +14,7 @@ OTT2.define("features", function (require) {
                 });
                 view.dialog(t("История просмотра", "Watch history"), html || '<p>' + t("История пуста.", "Your history is empty.") + '</p>');
             } else if (action === "removeHistory") {
-                context.persist(function (s) { s.history = s.history.filter(function (entry) { return entry.id !== value; }); delete s.bookmarks[value]; }); handle("history", "", {});
+                context.persist(function (s) { s.history = OttPlayCore.removeBrowserHistory(s.history, value); delete s.bookmarks[value]; }); handle("history", "", {});
             } else if (action === "renameFavoriteList") {
                 view.dialog(t("Переименовать список", "Rename collection"), view.field("collection-name", t("Название", "Name"), state.activeFavorites) + view.btn("collection-rename", "saveFavoriteName", t("Сохранить", "Save")));
             } else if (action === "saveFavoriteName") {

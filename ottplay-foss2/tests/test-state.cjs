@@ -11,6 +11,7 @@ const sandbox = vm.createContext({ OTT2: { define(name, factory) {
     modules[name] = factory(id => modules[id]); if (name === "state") state = modules[name];
 } } });
 vm.runInContext("Promise = undefined; fetch = undefined; Map = undefined; Set = undefined; URL = undefined; Object.assign = undefined;", sandbox);
+require("./load-core.cjs")(sandbox);
 vm.runInContext(fs.readFileSync(path.join(__dirname, "../src/security.js"), "utf8"), sandbox);
 vm.runInContext(code, sandbox);
 const plain = (value) => JSON.parse(JSON.stringify(value));
@@ -324,4 +325,15 @@ test('Previous channel and bounded playback preferences validate, migrate and re
     const clean=state.validate(malformed);
     assert.equal(clean.playbackPreferences.length,1); assert.equal(clean.playbackPreferences[0].audio,undefined);
     assert.equal(clean.playbackPreferences[0].aspect,undefined); assert.equal(clean.playbackPreferences[0].zoom,undefined);
+});
+
+
+test("captured durable state normalization preserves all public records and errors", () => {
+    const cases = JSON.parse(fs.readFileSync(path.join(__dirname, "fixtures/state/browser-state-before-core.json"), "utf8"));
+    for (const row of cases) {
+        let actual;
+        try { actual = { value: plain(state.validate(row.input)) }; }
+        catch (error) { actual = { error: { name: error.name, message: error.message } }; }
+        assert.deepEqual(actual, row.expected, row.name);
+    }
 });

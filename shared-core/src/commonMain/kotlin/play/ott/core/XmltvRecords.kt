@@ -1,6 +1,16 @@
 package play.ott.core
 
-enum class XmltvRecordFormat { SWIFT, ARCHIVED_ANDROID, ANDROID, RUST, RUST_NATIVE }
+enum class XmltvRecordFormat { SWIFT, ARCHIVED_ANDROID, ANDROID, RUST, RUST_NATIVE, BROWSER, NODE_STREAMING }
+
+/** Raw decoded web records preserve nullable DOM attributes until the existing guide normalizer. */
+data class XmltvWebRecord(
+    val kind: String, val id: String?, val names: List<String> = emptyList(), val icons: List<String?> = emptyList(),
+    val start: String? = null, val stop: String? = null, val title: String = "", val description: String = "",
+    val catchupAttribute: String? = null, val catchupElement: String = "", val icon: String = "",
+    val begin: Double? = null, val end: Double? = null,
+)
+
+class XmltvRecordError(val code: String) : RuntimeException(code)
 
 object NativeRecordRules {
     /** A permutation keeps host payloads native and preserves equal-start input order. */
@@ -17,9 +27,13 @@ class XmltvRecords(
     private val format: XmltvRecordFormat,
     private val trim: (String) -> String = { it.trim() },
     private val identity: (String) -> String = { it },
+    private val admission: (String, Double?, Double?) -> Boolean = { _, _, _ -> true },
+    private val resolveIcon: (String) -> String = { it },
 ) {
     private val rust = format == XmltvRecordFormat.RUST || format == XmltvRecordFormat.RUST_NATIVE
     private val android = format == XmltvRecordFormat.ANDROID
+    private val web = format == XmltvRecordFormat.BROWSER || format == XmltvRecordFormat.NODE_STREAMING
+    private val streaming = format == XmltvRecordFormat.NODE_STREAMING
     private val clock = NativeGuideClock(when (format) {
         XmltvRecordFormat.SWIFT -> NativeGuideFormat.SWIFT
         XmltvRecordFormat.ARCHIVED_ANDROID -> NativeGuideFormat.ARCHIVED_ANDROID
@@ -46,6 +60,20 @@ class XmltvRecords(
     private val text = StringBuilder()
     private var actions = mutableListOf<List<String>>()
     private var failed = false
+    private var depth = 0
+    private var webKind: String? = null
+    private var webId: String? = null
+    private var webStart: String? = null
+    private var webStop: String? = null
+    private var webBegin: Double? = null
+    private var webEnd: Double? = null
+    private var catchupAttribute: String? = null
+    private var catchupElement = ""
+    private var titleSeen = false
+    private var descriptionSeen = false
+    private var catchupSeen = false
+    private var icons = mutableListOf<String?>()
+    private var webRecord: XmltvWebRecord? = null
 
     private fun time(value: String): Time {
         encodedTimes[value]?.let { return it }
@@ -62,11 +90,12 @@ class XmltvRecords(
     }
 
     fun start(name: String, attributes: Map<String, String>) = startDecoded(name,
-        attributes["id"], attributes["channel"], attributes["start"], attributes["stop"], attributes["src"])
+        attributes["id"], attributes["channel"], attributes["start"], attributes["stop"], attributes["src"], attributes["catchup-id"])
 
     /** Flat decoded attributes avoid constructing a Kotlin map for every XML tag in JS hosts. */
-    fun startDecoded(name: String, id: String?, programmeId: String?, start: String?, stop: String?, icon: String?) {
+    fun startDecoded(name: String, id: String?, programmeId: String?, start: String?, stop: String?, icon: String?, catchup: String? = null) {
         if (failed) return
+        if (web) { startWeb(name, id, programmeId, start, stop, icon, catchup); return }
         when (name) {
             "channel" -> if (!android) {
                 channel = if (rust) id.orEmpty() else id
@@ -93,6 +122,11 @@ class XmltvRecords(
 
     fun text(value: String) {
         if (failed || field == null) return
+        if (web) {
+            text.append(value)
+            if (streaming && text.length > 16384) throw XmltvRecordError("EPG_FIELD_TOO_LARGE")
+            return
+        }
         if (rust || android || field == "display-name") text.append(value)
         else if (field == "title") title.append(value) else description.append(value)
     }
@@ -109,6 +143,7 @@ class XmltvRecords(
 
     fun end(name: String) {
         if (failed) return
+        if (web) { endWeb(); return }
         if (android) {
             if (name == field) {
                 if (name == "title" && title.isBlank()) { title.clear(); title.append(trim(text.toString())) }
@@ -164,4 +199,68 @@ class XmltvRecords(
     }
 
     fun drain(): List<List<String>> = actions.also { actions = mutableListOf() }
+
+    /** Web records use the same field accumulator, with explicit direct-child selection and
+     * first-element (DOM) versus first-nonempty (streaming) semantics. XML tokenization stays native.
+     */
+    private fun startWeb(name: String, id: String?, programmeId: String?, start: String?, stop: String?, icon: String?, catchup: String?) {
+        depth++
+        if (depth == 2 && (name == "channel" || name == "programme")) {
+            webKind = name
+            webId = if (name == "channel") id else programmeId
+            if (streaming) webId = trim(webId.orEmpty())
+            webStart = start; webStop = if (streaming) stop.orEmpty() else stop
+            webBegin = null; webEnd = null
+            if (streaming && name == "programme") {
+                webBegin = GuideTime.milliseconds(start.orEmpty(), GuideTimeFormat.BROWSER)?.div(1000)
+                webEnd = GuideTime.milliseconds(stop.orEmpty(), GuideTimeFormat.BROWSER)?.div(1000)
+                if (!admission(webId.orEmpty(), webBegin, webEnd)) { webKind = null; return }
+            }
+            aliases = mutableListOf(); icons = mutableListOf(); channelIcon = ""
+            title.clear(); description.clear(); field = null
+            titleSeen = false; descriptionSeen = false; catchupSeen = false
+            catchupAttribute = catchup; catchupElement = ""
+        }
+        val kind = webKind ?: return
+        if (streaming && webId.orEmpty().length > 512) throw XmltvRecordError("EPG_FIELD_TOO_LARGE")
+        if (depth != 3) return
+        if (kind == "channel" && name == "icon") {
+            if (streaming) {
+                if (icon.orEmpty().length > 8192) throw XmltvRecordError("EPG_FIELD_TOO_LARGE")
+                if (channelIcon.isEmpty()) channelIcon = resolveIcon(icon.orEmpty())
+            } else icons.add(icon)
+        }
+        if (kind == "channel" && name == "display-name" || kind == "programme" && (name == "title" || name == "desc" || name == "catchup-id")) {
+            if (!streaming && (name == "title" && titleSeen || name == "desc" && descriptionSeen || name == "catchup-id" && catchupSeen)) return
+            field = name; text.clear()
+        }
+    }
+
+    private fun endWeb() {
+        if (depth == 3 && field != null && webKind != null) {
+            val value = if (streaming) trim(text.toString()) else text.toString()
+            when (field) {
+                "display-name" -> {
+                    if (streaming && aliases.size >= 64) throw XmltvRecordError("EPG_FIELD_TOO_LARGE")
+                    aliases.add(value)
+                }
+                "title" -> { if (if (streaming) title.isEmpty() else !titleSeen) { title.clear(); title.append(value) }; titleSeen = true }
+                "desc" -> { if (if (streaming) description.isEmpty() else !descriptionSeen) { description.clear(); description.append(value) }; descriptionSeen = true }
+                "catchup-id" -> {
+                    if (if (streaming) catchupAttribute.orEmpty().isEmpty() && catchupElement.isEmpty() else !catchupSeen) catchupElement = value
+                    catchupSeen = true
+                }
+            }
+            field = null
+        }
+        if (depth == 2 && webKind != null) {
+            webRecord = XmltvWebRecord(webKind!!, webId, aliases, icons, webStart, webStop,
+                title.toString(), description.toString(), catchupAttribute, catchupElement, channelIcon, webBegin, webEnd)
+            webKind = null
+        }
+        depth--
+    }
+
+    fun takeWebRecord(): XmltvWebRecord? = webRecord.also { webRecord = null }
+    fun wantsText(): Boolean = field != null
 }

@@ -1,29 +1,9 @@
 /* Source-bound playback choices, independent of temporary engine track IDs. */
 OTT2.define("playback-preferences", function (require) {
     "use strict";
-    function text(value) { return String(value || "").replace(/^\s+|\s+$/g, "").toLowerCase(); }
-    function language(value) {
-        var aliases = { eng: "en", rus: "ru", deu: "de", ger: "de", fra: "fr", fre: "fr", spa: "es", ita: "it", ukr: "uk", pol: "pl", por: "pt" };
-        value = text(value).replace(/_/g, "-");
-        return aliases[value] || value;
-    }
     function matchTrack(tracks, choice, backend) {
-        var lang = language(choice.language), label = text(choice.label), candidates = tracks.slice(), exact;
-        if (lang) {
-            candidates = candidates.filter(function (track) { return language(track.language) === lang; });
-            if (!candidates.length) return null;
-        }
-        if (label) {
-            exact = candidates.filter(function (track) { return text(track.label) === label; });
-            if (exact.length === 1) return exact[0];
-            if (exact.length) candidates = exact;
-            else if (!lang) return null;
-        }
-        if ((lang || label) && candidates.length === 1) return candidates[0];
-        if (!lang && !label && choice.backend === backend) {
-            for (var i = 0; i < tracks.length; i++) if (tracks[i].id === choice.id) return tracks[i];
-        }
-        return null;
+        var index = OttPlayCore.playbackTrack(tracks, choice, backend);
+        return index < 0 ? null : tracks[index];
     }
     function create(context) {
         var media = context.media, active = null, preferred = null, previousReference = null, busy = false, applied = {};
@@ -31,31 +11,16 @@ OTT2.define("playback-preferences", function (require) {
         function begin(channel, reference, items) {
             active = reference; preferred = null; previousReference = null; applied = {};
             if (!active) return;
-            var entries = context.state().playbackPreferences || [], candidates = [], i;
-            for (i = 0; i < entries.length; i++) {
-                var entry = entries[i], ref = entry.reference;
-                if (ref.sourceId !== active.sourceId) continue;
-                if (ref.id === active.id) { preferred = entry; break; }
-                if (channel.kind !== "vod") {
-                    var restored = require("library").restoreChannel(items, ref);
-                    if (restored && restored.id === channel.id) candidates.push(entry);
-                }
-            }
-            if (!preferred && candidates.length === 1) preferred = candidates[0];
+            var entries = context.state().playbackPreferences || [];
+            var selected = OttPlayCore.libraryPreferenceIndex(entries, channel, active, items);
+            preferred = selected < 0 ? null : entries[selected];
             if (preferred) previousReference = preferred.reference;
         }
         function save(field, value) {
             if (!active) return;
-            var entry = { reference: active }, old = previousReference;
-            if (preferred) ["audio", "subtitle", "aspect", "zoom"].forEach(function (name) { if (preferred[name] !== undefined) entry[name] = preferred[name]; });
-            entry[field] = value;
+            var entry = OttPlayCore.libraryPreferenceEntry(active, preferred, field, value), old = previousReference;
             context.persist(function (state) {
-                state.playbackPreferences = (state.playbackPreferences || []).filter(function (item) {
-                    var ref = item.reference;
-                    return !(ref.sourceId === active.sourceId && (ref.id === active.id || old && ref.id === old.id));
-                });
-                state.playbackPreferences.unshift(entry);
-                state.playbackPreferences = state.playbackPreferences.slice(0, 200);
+                state.playbackPreferences = OttPlayCore.librarySavePreference(state.playbackPreferences || [], entry, old);
             });
             preferred = entry; previousReference = active;
         }

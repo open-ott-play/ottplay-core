@@ -18,9 +18,13 @@ channel selection and round-robin output budgets to this core.
 Browser and active Android EPG refresh, plus Rust server feed aggregation and
 persistence decisions, now use common refresh coordinators. Platform-specific
 failure, stale-feed and transaction behavior remains explicit in those profiles.
-**The product migration is not complete.**
+The latest integration also centralizes operator sessions/catalogs/VOD, durable
+state and import, channel identity, parental authorization and playback decisions.
+Control-server and SWOP wire policy is generated from one versioned contract.
+Automated qualification and retained device/provider acceptance are recorded
+separately; passing software contracts does not certify physical televisions.
 The five repository directories are isolated checkouts of the revisions recorded
-in [inventory.json](inventory.json); existing installations are not modified.
+in [checkouts.json](checkouts.json); existing installations are not modified.
 The independent `ottplay-foss2` client is also in scope.
 
 The requested outcome is one maintained implementation of player business logic
@@ -66,6 +70,26 @@ then runs FOSS2 contracts and Chromium EPG/compatibility journeys. Consumer PRs
 run their own native/platform CI. `validation.json` records earlier local
 qualification; its `reports/` references are local evidence, excluded from Git.
 Source publication is separate from a product release or deployment.
+
+## Current shared implementation
+
+The common source now also owns classic operator request/catalog behavior,
+VPortal navigation and media routes, browser request/session lifetime, persisted
+state validation and source identity, legacy import, backup portability, parental
+sessions, decoder choices, retry/recovery, seek/track restoration and native
+channel-switch admission. Platform compatibility differences are explicit profiles.
+The 48 retained provider entrypoints and device inventory remain present.
+
+Control-server and SWOP use generated wire policy from
+`contracts/ottplay-wire-v1.json`. Each repository carries a self-contained generator
+and a schema/source digest receipt; the workspace and consumer CI reject drift.
+Vitrine continues to consume the base player's packaged artifact.
+
+UI, focus, codec/media engines, device APIs, native URL/JSON/XML decoders, HTTP,
+storage, cryptographic primitives and OS lifecycle remain in their hosts. Existing
+controller/global names are compatibility entrypoints, with the migrated domain
+implementation removed from the adapters. Hardware and commercial account
+acceptance is still a separate release gate.
 
 ## Observed starting point
 
@@ -262,14 +286,19 @@ This is a structural guard, not proof of device or provider acceptance.
   profiles; additional fixtures exercise batch boundaries and error precedence.
   Native validation limits and errors remain covered by the shipping adapters.
 
-## Remaining work
+## Integration and release acceptance
 
-Remaining streaming field extraction, other
-operator sessions and catalog/identity rules, state migrations, playback
-controllers and service wire contracts still need migration. No whole client is yet
-fully free of inherited player logic. No release has been published or deployed.
-Archive URLs, M3U and Xtream availability metadata are migrated; other provider
-metadata and playback/timeshift state remain.
+The audited domain migration includes XMLTV field interpretation, operator
+sessions/catalogs/media/guide routes, state migration and reconciliation,
+parental policy, playback choices/recovery/navigation, and generated service
+wire contracts. All 48 provider entrypoints remain available. HTTP, DOM, media
+engines, platform security, storage transactions and UI effects stay in their
+host adapters; they are not alternative implementations of those shared rules.
+
+`validation.json` identifies the exact common artifact, immutable baseline
+contracts, completed automated checks and CI revisions. Physical TV/STB codec,
+DRM, provider-account and installation/rollback acceptance still requires the
+retained devices and accounts. No release has been published or deployed.
 
 ## Migration order
 
@@ -306,6 +335,6 @@ metadata and playback/timeshift state remain.
 - CI rejects legacy dependency reintroduction and unreviewed duplication;
   generated bundles are checked against their source revision and hashes.
 
-Passing the migrated guide tests does not satisfy the remaining product
-completion gates or certify physical devices. See `validation.json` for the
+Passing automated tests does not satisfy physical product
+acceptance or certify physical devices. See `validation.json` for the
 verified scope and outstanding checks.

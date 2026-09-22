@@ -6,6 +6,7 @@ const vm = require('node:vm');
 const modules = {};
 const context = vm.createContext({OTT2:{define(name,factory){modules[name]=factory(id=>modules[id]);}}});
 vm.runInContext('Promise=undefined; fetch=undefined; URL=undefined; Map=undefined; Set=undefined; Object.assign=undefined;',context);
+require('./load-core.cjs')(context);
 for(const name of ['security','state','library'])vm.runInContext(fs.readFileSync(path.join(__dirname,'../src/'+name+'.js'),'utf8'),context);
 const library=modules.library, state=modules.state, plain=value=>JSON.parse(JSON.stringify(value));
 function storage(){let value='';return {getItem(){return value;},setItem(key,next){value=next;}};}
@@ -67,4 +68,19 @@ test('long provider identities retain edits, reminders and bookmarks through val
     assert(id.length>160 && id.length<4096);
     repo.update(draft=>{library.edit(draft,id,{name:'Custom name',group:'My group',order:10});draft.bookmarks[id]=120;library.toggleReminder(draft,{id},{title:'Future',start:100,end:200});});
     const value=state.create(disk).snapshot();assert.equal(value.channelOverrides[id].name,'Custom name');assert.equal(value.bookmarks[id],120);assert.equal(value.reminders[0].channelId,id);
+});
+
+
+test('captured named favorites transitions preserve payload identity and errors', () => {
+    const captured = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures/state/favorites-before-core.json'), 'utf8'));
+    for (const input of captured) {
+        const value = plain(input.initial), before = { ...value.favorites };
+        let result, error;
+        try { result = library[input.operation](value, ...(input.args || [])); }
+        catch (failure) { error = { name: failure.name, message: failure.message }; }
+        const output = { state: plain(value), result: result === undefined ? { undefined: true } : plain(result),
+            origins: Object.keys(value.favorites).map(key => [key, Object.keys(before).filter(old => before[old] === value.favorites[key])]) };
+        if (error) output.error = error;
+        assert.deepEqual(output, input.expected, input.name);
+    }
 });

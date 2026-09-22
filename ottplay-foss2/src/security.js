@@ -5,9 +5,7 @@
  */
 OTT2.define("security", function () {
     "use strict";
-    var has = Object.prototype.hasOwnProperty, serial = 0, iterations = 2048, maxBlock = 300000;
-    var scopeNames = ["settings", "source", "import", "restore", "export", "proxy", "remote"];
-    var playbackActions = ["playback", "play", "archive", "vod", "history", "bookmark", "preview", "pip"];
+    var has = Object.prototype.hasOwnProperty, serial = 0, iterations = 2048;
     var constants = [1116352408, 1899447441, 3049323471, 3921009573, 961987163, 1508970993, 2453635748, 2870763221,
         3624381080, 310598401, 607225278, 1426881987, 1925078388, 2162078206, 2614888103, 3248222580,
         3835390401, 4022224774, 264347078, 604807628, 770255983, 1249150122, 1555081692, 1996064986,
@@ -62,35 +60,9 @@ OTT2.define("security", function () {
         for (i = 1; i < count; i++) digest = sha256(salt + ":" + digest);
         return digest;
     }
-    function defaults() {
-        return { schema: 1, enabled: false, salt: "", hash: "", iterations: iterations, protectedIds: [],
-            scopes: { settings: true, source: true, import: true, restore: true, export: true, proxy: true, remote: true },
-            sessionMinutes: 5, failures: 0, blockedUntil: 0 };
-    }
-    function validate(value) {
-        var result = defaults(), i, id;
-        if (value === undefined || value === null) return result;
-        if (typeof value !== "object" || Array.isArray(value) || value.schema !== 1 || typeof value.enabled !== "boolean") throw new Error("Unsupported parental-control format");
-        result.enabled = value.enabled === true;
-        if (result.enabled) {
-            if (typeof value.salt !== "string" || !/^[a-z0-9:.-]{16,160}$/i.test(value.salt) || typeof value.hash !== "string" || !/^[a-f0-9]{64}$/i.test(value.hash)) throw new Error("Invalid parental-control hash");
-            if (typeof value.iterations !== "number" || value.iterations % 1 || value.iterations < 1024 || value.iterations > 8192) throw new Error("Invalid parental-control work factor");
-            result.salt = value.salt; result.hash = value.hash.toLowerCase(); result.iterations = value.iterations;
-        }
-        if (value.protectedIds !== undefined && (!Array.isArray(value.protectedIds) || value.protectedIds.length > 50000)) throw new Error("Invalid protected channels");
-        for (i = 0; i < (value.protectedIds || []).length; i++) {
-            id = value.protectedIds[i];
-            if (typeof id !== "string" || !id || id.length > 4096) throw new Error("Invalid protected channel ID");
-            if (result.protectedIds.indexOf(id) === -1) result.protectedIds.push(id);
-        }
-        if (value.scopes !== undefined && (!value.scopes || typeof value.scopes !== "object" || Array.isArray(value.scopes))) throw new Error("Invalid protection scopes");
-        for (i = 0; i < scopeNames.length; i++) if (value.scopes && has.call(value.scopes, scopeNames[i])) result.scopes[scopeNames[i]] = value.scopes[scopeNames[i]] !== false;
-        result.sessionMinutes = typeof value.sessionMinutes === "number" && value.sessionMinutes >= 1 && value.sessionMinutes <= 30 ? Math.floor(value.sessionMinutes) : 5;
-        result.failures = typeof value.failures === "number" && isFinite(value.failures) ? Math.max(0, Math.min(30, Math.floor(value.failures))) : 0;
-        result.blockedUntil = typeof value.blockedUntil === "number" && isFinite(value.blockedUntil) ? Math.max(0, value.blockedUntil) : 0;
-        return result;
-    }
-    function validPin(pin) { return typeof pin === "string" && /^[0-9]{4,12}$/.test(pin); }
+    function defaults() { return OttPlayCore.parentalDefaults(); }
+    function validate(value) { return OttPlayCore.parentalValidate(value); }
+    function validPin(pin) { return OttPlayCore.parentalValidPin(pin); }
     function equal(left, right) {
         var different = left.length ^ right.length, i;
         for (i = 0; i < left.length; i++) different |= left.charCodeAt(i) ^ right.charCodeAt(i);
@@ -98,13 +70,10 @@ OTT2.define("security", function () {
     }
     function create(options) {
         options = options || {};
-        var local = defaults(), grantUntil = 0, lastClock = 0, identity = "", source = null;
+        var local = defaults(), session = new OttPlayCore.BrowserParentalSession();
         function clock() {
             var value = options.now ? options.now() : new Date().getTime();
-            if (typeof value !== "number" || !isFinite(value) || value < 0) { grantUntil = 0; return lastClock; }
-            if (value < lastClock) grantUntil = 0;
-            lastClock = value;
-            return value;
+            return session.clock(value);
         }
         function save(config) {
             local = validate(config);
@@ -116,40 +85,36 @@ OTT2.define("security", function () {
             var config = validate(state && has.call(state, "security") ? state.security : state);
             var currentIdentity = config.enabled + ":" + config.salt + ":" + config.hash;
             var currentSource = state && typeof state.activeSourceId === "string" ? state.activeSourceId : null;
-            if (identity !== currentIdentity || (source !== null && currentSource !== source)) grantUntil = 0;
-            identity = currentIdentity; source = currentSource;
+            session.observe(currentIdentity, currentSource);
             return config;
         }
-        function lock() { grantUntil = 0; }
+        function lock() { session.lock(); }
         function status() {
             var config = read(), time = clock();
-            if (config.blockedUntil > time + maxBlock) { config.blockedUntil = time + maxBlock; save(config); }
-            return { enabled: config.enabled, unlocked: config.enabled && grantUntil > time, expiresAt: grantUntil > time ? grantUntil : 0,
-                retryAfter: Math.max(0, Math.ceil((config.blockedUntil - time) / 1000)), failures: config.failures };
+            if (config.blockedUntil !== OttPlayCore.parentalBlock(config.blockedUntil, time)) { config.blockedUntil = OttPlayCore.parentalBlock(config.blockedUntil, time); save(config); }
+            return { enabled: config.enabled, unlocked: config.enabled && session.expires(time) > 0, expiresAt: session.expires(time),
+                retryAfter: OttPlayCore.parentalRetry(config.blockedUntil, time), failures: config.failures };
         }
         function verify(pin) {
             var config = read(), time = clock(), wait, correct;
             if (!config.enabled) return { ok: true, code: "DISABLED" };
-            if (config.blockedUntil > time + maxBlock) { config.blockedUntil = time + maxBlock; save(config); }
-            wait = Math.max(0, Math.ceil((config.blockedUntil - time) / 1000));
+            if (config.blockedUntil !== OttPlayCore.parentalBlock(config.blockedUntil, time)) { config.blockedUntil = OttPlayCore.parentalBlock(config.blockedUntil, time); save(config); }
+            wait = OttPlayCore.parentalRetry(config.blockedUntil, time);
             if (wait) return { ok: false, code: "RATE_LIMIT", retryAfter: wait };
             correct = validPin(pin) && equal(hashPin(pin, config.salt, config.iterations), config.hash);
             if (!correct) {
-                lock(); config.failures = Math.min(30, config.failures + 1);
-                if (config.failures >= 5) config.blockedUntil = time + Math.min(maxBlock, 30000 * Math.pow(2, Math.min(4, config.failures - 5)));
+                lock(); config.failures = OttPlayCore.parentalFailedCount(config.failures);
+                config.blockedUntil = OttPlayCore.parentalFailedBlock(config.failures, config.blockedUntil, time);
                 save(config);
-                return { ok: false, code: config.blockedUntil > time ? "RATE_LIMIT" : "WRONG_PIN", retryAfter: Math.max(0, Math.ceil((config.blockedUntil - time) / 1000)) };
+                return { ok: false, code: config.blockedUntil > time ? "RATE_LIMIT" : "WRONG_PIN", retryAfter: OttPlayCore.parentalRetry(config.blockedUntil, time) };
             }
             config.failures = 0; config.blockedUntil = 0; save(config);
-            grantUntil = time + config.sessionMinutes * 60000;
+            var grantUntil = session.grant(time, config.sessionMinutes);
             return { ok: true, code: "AUTHORIZED", expiresAt: grantUntil };
         }
         function isProtected(channelId, action) {
             var config = read();
-            if (!config.enabled) return false;
-            action = action || "playback";
-            if (playbackActions.indexOf(action) !== -1) return !channelId || config.protectedIds.indexOf(channelId) !== -1;
-            return !has.call(config.scopes, action) || config.scopes[action];
+            return OttPlayCore.parentalProtected(config, channelId, action);
         }
         function authorize(action, channelId, pin) {
             if (!isProtected(channelId, action)) return { ok: true, code: "UNPROTECTED" };
@@ -187,13 +152,12 @@ OTT2.define("security", function () {
             return result;
         }
         function setProtected(id, protect, pin) {
-            if (typeof id !== "string" || !id || id.length > 4096) return { ok: false, code: "CHANNEL_ID" };
+            if (!OttPlayCore.parentalChannelId(id)) return { ok: false, code: "CHANNEL_ID" };
             if (!read().enabled) return { ok: false, code: "PIN_NOT_CONFIGURED" };
             var result = authorize("security", "", pin), config, index;
             if (!result.ok) return result;
             config = read(); index = config.protectedIds.indexOf(id);
-            if (protect && index === -1) config.protectedIds.push(id);
-            else if (!protect && index !== -1) config.protectedIds.splice(index, 1);
+            OttPlayCore.editFavoriteSelection(config.protectedIds, id, protect ? "add" : "remove");
             save(config); return { ok: true, code: "UPDATED" };
         }
         function setScopes(scopes, pin) {

@@ -1,0 +1,361 @@
+{
+  "baseline": "f429f537497ec95c2bf92781e1ecee86c18bbfe8",
+  "observed": [
+    {
+      "url": "https://a.test/x.m3u8",
+      "mime": "",
+      "format": "",
+      "result": "hls"
+    },
+    {
+      "url": "https://a.test/x.m3u8",
+      "mime": "",
+      "format": "ts",
+      "result": "mpegts"
+    },
+    {
+      "url": "https://a.test/x.m3u8",
+      "mime": "audio/ogg",
+      "format": "",
+      "result": "file"
+    },
+    {
+      "url": "https://a.test/x.m3u8",
+      "mime": "audio/ogg",
+      "format": "ts",
+      "result": "file"
+    },
+    {
+      "url": "https://a.test/x.m3u8",
+      "mime": "application/dash+xml",
+      "format": "",
+      "result": "dash"
+    },
+    {
+      "url": "https://a.test/x.m3u8",
+      "mime": "application/dash+xml",
+      "format": "ts",
+      "result": "dash"
+    },
+    {
+      "url": "https://a.test/?file=x.mpd",
+      "mime": "",
+      "format": "",
+      "result": "dash"
+    },
+    {
+      "url": "https://a.test/?file=x.mpd",
+      "mime": "",
+      "format": "ts",
+      "result": "mpegts"
+    },
+    {
+      "url": "https://a.test/?file=x.mpd",
+      "mime": "audio/ogg",
+      "format": "",
+      "result": "file"
+    },
+    {
+      "url": "https://a.test/?file=x.mpd",
+      "mime": "audio/ogg",
+      "format": "ts",
+      "result": "file"
+    },
+    {
+      "url": "https://a.test/?file=x.mpd",
+      "mime": "application/dash+xml",
+      "format": "",
+      "result": "dash"
+    },
+    {
+      "url": "https://a.test/?file=x.mpd",
+      "mime": "application/dash+xml",
+      "format": "ts",
+      "result": "dash"
+    },
+    {
+      "url": "https://a.test/x.TS",
+      "mime": "",
+      "format": "",
+      "result": "mpegts"
+    },
+    {
+      "url": "https://a.test/x.TS",
+      "mime": "",
+      "format": "ts",
+      "result": "mpegts"
+    },
+    {
+      "url": "https://a.test/x.TS",
+      "mime": "audio/ogg",
+      "format": "",
+      "result": "file"
+    },
+    {
+      "url": "https://a.test/x.TS",
+      "mime": "audio/ogg",
+      "format": "ts",
+      "result": "file"
+    },
+    {
+      "url": "https://a.test/x.TS",
+      "mime": "application/dash+xml",
+      "format": "",
+      "result": "dash"
+    },
+    {
+      "url": "https://a.test/x.TS",
+      "mime": "application/dash+xml",
+      "format": "ts",
+      "result": "dash"
+    },
+    {
+      "url": "blob:x",
+      "mime": "",
+      "format": "",
+      "result": "file"
+    },
+    {
+      "url": "blob:x",
+      "mime": "",
+      "format": "ts",
+      "result": "mpegts"
+    },
+    {
+      "url": "blob:x",
+      "mime": "audio/ogg",
+      "format": "",
+      "result": "file"
+    },
+    {
+      "url": "blob:x",
+      "mime": "audio/ogg",
+      "format": "ts",
+      "result": "file"
+    },
+    {
+      "url": "blob:x",
+      "mime": "application/dash+xml",
+      "format": "",
+      "result": "dash"
+    },
+    {
+      "url": "blob:x",
+      "mime": "application/dash+xml",
+      "format": "ts",
+      "result": "dash"
+    },
+    {
+      "url": "https://a.test/x?format=video%2Fmp4",
+      "mime": "",
+      "format": "",
+      "result": "file"
+    },
+    {
+      "url": "https://a.test/x?format=video%2Fmp4",
+      "mime": "",
+      "format": "ts",
+      "result": "mpegts"
+    },
+    {
+      "url": "https://a.test/x?format=video%2Fmp4",
+      "mime": "audio/ogg",
+      "format": "",
+      "result": "file"
+    },
+    {
+      "url": "https://a.test/x?format=video%2Fmp4",
+      "mime": "audio/ogg",
+      "format": "ts",
+      "result": "file"
+    },
+    {
+      "url": "https://a.test/x?format=video%2Fmp4",
+      "mime": "application/dash+xml",
+      "format": "",
+      "result": "dash"
+    },
+    {
+      "url": "https://a.test/x?format=video%2Fmp4",
+      "mime": "application/dash+xml",
+      "format": "ts",
+      "result": "dash"
+    },
+    {
+      "url": "https://a.test/x?TYPE=%zz",
+      "mime": "",
+      "format": "",
+      "result": ""
+    },
+    {
+      "url": "https://a.test/x?TYPE=%zz",
+      "mime": "",
+      "format": "ts",
+      "result": "mpegts"
+    },
+    {
+      "url": "https://a.test/x?TYPE=%zz",
+      "mime": "audio/ogg",
+      "format": "",
+      "result": "file"
+    },
+    {
+      "url": "https://a.test/x?TYPE=%zz",
+      "mime": "audio/ogg",
+      "format": "ts",
+      "result": "file"
+    },
+    {
+      "url": "https://a.test/x?TYPE=%zz",
+      "mime": "application/dash+xml",
+      "format": "",
+      "result": "dash"
+    },
+    {
+      "url": "https://a.test/x?TYPE=%zz",
+      "mime": "application/dash+xml",
+      "format": "ts",
+      "result": "dash"
+    },
+    {
+      "url": "https://a.test/x.m3u8?type=FLV",
+      "mime": "",
+      "format": "",
+      "result": "flv"
+    },
+    {
+      "url": "https://a.test/x.m3u8?type=FLV",
+      "mime": "",
+      "format": "ts",
+      "result": "mpegts"
+    },
+    {
+      "url": "https://a.test/x.m3u8?type=FLV",
+      "mime": "audio/ogg",
+      "format": "",
+      "result": "file"
+    },
+    {
+      "url": "https://a.test/x.m3u8?type=FLV",
+      "mime": "audio/ogg",
+      "format": "ts",
+      "result": "file"
+    },
+    {
+      "url": "https://a.test/x.m3u8?type=FLV",
+      "mime": "application/dash+xml",
+      "format": "",
+      "result": "dash"
+    },
+    {
+      "url": "https://a.test/x.m3u8?type=FLV",
+      "mime": "application/dash+xml",
+      "format": "ts",
+      "result": "dash"
+    },
+    {
+      "url": "https://a.test/no-ext",
+      "mime": "",
+      "format": "",
+      "result": ""
+    },
+    {
+      "url": "https://a.test/no-ext",
+      "mime": "",
+      "format": "ts",
+      "result": "mpegts"
+    },
+    {
+      "url": "https://a.test/no-ext",
+      "mime": "audio/ogg",
+      "format": "",
+      "result": "file"
+    },
+    {
+      "url": "https://a.test/no-ext",
+      "mime": "audio/ogg",
+      "format": "ts",
+      "result": "file"
+    },
+    {
+      "url": "https://a.test/no-ext",
+      "mime": "application/dash+xml",
+      "format": "",
+      "result": "dash"
+    },
+    {
+      "url": "https://a.test/no-ext",
+      "mime": "application/dash+xml",
+      "format": "ts",
+      "result": "dash"
+    },
+    {
+      "value": "",
+      "result": ""
+    },
+    {
+      "value": "#EXTM3U",
+      "result": "hls"
+    },
+    {
+      "value": "﻿ \t#EXTM3U",
+      "result": "hls"
+    },
+    {
+      "value": "FLV123",
+      "result": "flv"
+    },
+    {
+      "value": " FLV123",
+      "result": ""
+    },
+    {
+      "value": "<MPD>",
+      "result": "dash"
+    },
+    {
+      "value": "<MPD/>",
+      "result": ""
+    },
+    {
+      "value": "<MPD",
+      "result": ""
+    },
+    {
+      "value": "<MPD x>",
+      "result": "dash"
+    },
+    {
+      "value": "<ns:MPD >",
+      "result": "dash"
+    },
+    {
+      "value": "<bad.prefix:MPD >",
+      "result": ""
+    },
+    {
+      "value": "<?XML hi> <!-- comment --> <DASH:mpd >",
+      "result": "dash"
+    },
+    {
+      "value": "<!--1--><!--2--><MPD>",
+      "result": "dash"
+    },
+    {
+      "value": "xxxxftyp",
+      "result": "file"
+    },
+    {
+      "value": "xxxxmoov",
+      "result": "file"
+    },
+    {
+      "value": "xxxxmoof",
+      "result": "file"
+    },
+    {
+      "value": "Ň...........................................................................................................................................................................................G...........................................................................................................................................................................................G",
+      "result": "mpegts"
+    }
+  ]
+}

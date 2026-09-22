@@ -6,6 +6,7 @@ const { execFileSync } = require("node:child_process");
 const root = path.resolve(__dirname, "..");
 const inventory = JSON.parse(fs.readFileSync(path.join(root, "inventory.json")));
 const core = path.join(root, "shared-core");
+execFileSync("python3", [path.join(root, "scripts/generate-wire-contracts.py"), "--check"], { stdio: "inherit" });
 function node(file, ...args) { execFileSync(process.execPath, [file, ...args], { cwd: root, stdio: "inherit" }); }
 node(path.join(core, "scripts/check-boundary.cjs"));
 node(path.join(core, "scripts/distribute.cjs"), "check-web", path.join(root, inventory.additional_client.path));
@@ -19,6 +20,17 @@ node(path.join(main, "tests/test_playlist_core.cjs"));
 node(path.join(main, "tests/test_xtream_core.cjs"));
 node(path.join(main, "tests/test_stalker_core.cjs"));
 node(path.join(main, "tests/test_guide_core.cjs"));
+for (const [file, apis, displaced] of [
+    ["core/src/main/kotlin/play/ott/nativeapp/core/LegacySourceImporter.kt", ["LegacySettingsImport.native"], /fun asObject|containsKey\("ottplay/],
+    ["core/src/main/kotlin/play/ott/nativeapp/core/ProviderRepository.kt", ["OperatorSources.relationship", "OperatorSources.credentials"], /config\.username\.isBlank/],
+    ["app/src/main/java/play/ott/nativeapp/data/SettingsBackupPolicy.kt", ["DurableSelections.validateBackup", "DurableSelections.mergeResume"], /while \(.*size|takeLast/],
+    ["app/src/main/java/play/ott/nativeapp/playback/ChannelNavigator.kt", ["ChannelNavigation", "policy.acceptCatalog", "policy.canCommit"], /distinctBy|Math\.floorMod|private var targetId/],
+    ["app/src/main/java/play/ott/nativeapp/playback/PlaybackProgressRecorder.kt", ["PlaybackRules.nativeResume"], /durationMs \/ 20/]
+]) {
+    const source = fs.readFileSync(path.join(root, "ottplay-android", file), "utf8");
+    for (const api of apis) assert(source.includes(api + "("), "Android must delegate " + api);
+    assert(!displaced.test(source), "Android domain policy reintroduced: " + file);
+}
 const guideAdapter = fs.readFileSync(path.join(root, "ottplay-android/core/src/main/kotlin/play/ott/nativeapp/core/XmltvParser.kt"), "utf8");
 assert(guideAdapter.includes("GuideProgrammeRules.androidOrder(") && guideAdapter.includes("XmltvRecords(XmltvRecordFormat.ANDROID)"), "Android programme rules must use the common core");
 assert(!/distinctBy|sortedWith|to > from/.test(guideAdapter), "Android programme normalization reintroduced");
@@ -97,4 +109,4 @@ for (const adapter of inventory.device_adapters) assert(fs.statSync(path.join(ma
 execFileSync("python3", [path.join(main, "tests/test_native_epg_cache.py"), "--check-sources-only"], { stdio: "inherit" });
 assert(inventory.product_decisions.retain_historical_tv_stb_platforms);
 assert(inventory.product_decisions.retain_all_named_provider_integrations);
-console.log("PASS unified guide/archive/playlist/Xtream/Stalker artifacts, native source ownership and retained provider/device inventory");
+console.log("PASS unified guide/archive/playlist/Xtream/Stalker artifacts, operator/state/playback delegation, native source ownership and retained provider/device inventory");

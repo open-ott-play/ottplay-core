@@ -1,0 +1,652 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "input": "{\"schema\":1,\"sources\":[{\"id\":\"one\",\"name\":\"One\",\"type\":\"m3u\",\"url\":\"https://example.test/list?secret=yes\"}],\"activeSourceId\":\"\",\"lastChannel\":null,\"previousChannel\":null,\"playbackPreferences\":[],\"channelReferences\":[],\"favorites\":{\"default\":[]},\"activeFavorites\":\"default\",\"history\":[],\"bookmarks\":{},\"channelOverrides\":{},\"favoriteItems\":{},\"reminders\":[],\"security\":{\"schema\":1,\"enabled\":false,\"salt\":\"\",\"hash\":\"\",\"iterations\":2048,\"protectedIds\":[],\"scopes\":{\"settings\":true,\"source\":true,\"import\":true,\"restore\":true,\"export\":true,\"proxy\":true,\"remote\":true},\"sessionMinutes\":5,\"failures\":0,\"blockedUntil\":0},\"settings\":{\"language\":\"ru\",\"interfaceVersion\":2,\"startupVersion\":1,\"fontFamily\":\"Caveat\",\"playerEngine\":\"auto\",\"streamFormat\":\"auto\",\"fontScale\":1,\"volume\":0.8,\"muted\":false,\"epgUrl\":\"\",\"epgUrls\":[],\"restore\":true,\"accent\":\"amber\",\"aspect\":\"auto\",\"zoom\":1,\"relay\":false}}",
+      "result": {
+        "format": "ottplay-foss2-v1",
+        "proposed": {
+          "schema": 1,
+          "sources": [
+            {
+              "id": "one",
+              "name": "One",
+              "type": "m3u",
+              "url": "https://example.test/list?secret=yes",
+              "text": "",
+              "username": "",
+              "password": "",
+              "mac": "",
+              "timezone": "UTC",
+              "language": "en",
+              "output": "m3u8"
+            }
+          ],
+          "activeSourceId": "one",
+          "lastChannel": null,
+          "previousChannel": null,
+          "playbackPreferences": [],
+          "channelReferences": [],
+          "favorites": {
+            "default": []
+          },
+          "activeFavorites": "default",
+          "history": [],
+          "bookmarks": {},
+          "channelOverrides": {},
+          "favoriteItems": {},
+          "reminders": [],
+          "security": {
+            "schema": 1,
+            "enabled": false,
+            "salt": "",
+            "hash": "",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          "settings": {
+            "language": "ru",
+            "interfaceVersion": 2,
+            "startupVersion": 1,
+            "fontFamily": "Caveat",
+            "playerEngine": "auto",
+            "streamFormat": "auto",
+            "fontScale": 1,
+            "volume": 0.8,
+            "muted": false,
+            "epgUrl": "",
+            "epgUrls": [],
+            "restore": true,
+            "accent": "amber",
+            "aspect": "auto",
+            "zoom": 1,
+            "relay": false
+          }
+        },
+        "warnings": [
+          "Source URLs and provider credentials are included. Confirm before replacing local settings."
+        ],
+        "containsSecrets": true,
+        "requiresSourceConfirmation": true,
+        "requiresParentalReview": false,
+        "legacy": false,
+        "summary": {
+          "sources": 1,
+          "language": "ru",
+          "fontFamily": "Caveat"
+        }
+      }
+    },
+    {
+      "input": "{\"schema\":1,\"sources\":[],\"activeSourceId\":\"\",\"lastChannel\":null,\"previousChannel\":null,\"playbackPreferences\":[],\"channelReferences\":[],\"favorites\":{\"default\":[]},\"activeFavorites\":\"default\",\"history\":[],\"bookmarks\":{},\"channelOverrides\":{},\"favoriteItems\":{},\"reminders\":[],\"security\":{\"schema\":1,\"enabled\":false,\"salt\":\"\",\"hash\":\"\",\"iterations\":2048,\"protectedIds\":[],\"scopes\":{\"settings\":true,\"source\":true,\"import\":true,\"restore\":true,\"export\":true,\"proxy\":true,\"remote\":true},\"sessionMinutes\":5,\"failures\":0,\"blockedUntil\":0},\"settings\":{\"language\":\"en\",\"interfaceVersion\":2,\"startupVersion\":1,\"fontFamily\":\"RobotoCondensed\",\"playerEngine\":\"auto\",\"streamFormat\":\"auto\",\"fontScale\":1,\"volume\":0.8,\"muted\":false,\"epgUrl\":\"\",\"epgUrls\":[\"https://guide.test/epg?token=secret\"],\"restore\":true,\"accent\":\"amber\",\"aspect\":\"auto\",\"zoom\":1,\"relay\":false}}",
+      "result": {
+        "format": "ottplay-foss2-v1",
+        "proposed": {
+          "schema": 1,
+          "sources": [],
+          "activeSourceId": "",
+          "lastChannel": null,
+          "previousChannel": null,
+          "playbackPreferences": [],
+          "channelReferences": [],
+          "favorites": {
+            "default": []
+          },
+          "activeFavorites": "default",
+          "history": [],
+          "bookmarks": {},
+          "channelOverrides": {},
+          "favoriteItems": {},
+          "reminders": [],
+          "security": {
+            "schema": 1,
+            "enabled": false,
+            "salt": "",
+            "hash": "",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          "settings": {
+            "language": "en",
+            "interfaceVersion": 2,
+            "startupVersion": 1,
+            "fontFamily": "RobotoCondensed",
+            "playerEngine": "auto",
+            "streamFormat": "auto",
+            "fontScale": 1,
+            "volume": 0.8,
+            "muted": false,
+            "epgUrl": "",
+            "epgUrls": [
+              "https://guide.test/epg?token=secret"
+            ],
+            "restore": true,
+            "accent": "amber",
+            "aspect": "auto",
+            "zoom": 1,
+            "relay": false
+          }
+        },
+        "warnings": [
+          "Source URLs and provider credentials are included. Confirm before replacing local settings."
+        ],
+        "containsSecrets": true,
+        "requiresSourceConfirmation": true,
+        "requiresParentalReview": false,
+        "legacy": false,
+        "summary": {
+          "sources": 0,
+          "language": "en",
+          "fontFamily": "RobotoCondensed"
+        }
+      }
+    },
+    {
+      "input": "{\"version\":1,\"settings\":{\"fontSize\":4,\"fontShift\":6,\"parentPin\":\"987654\",\"localHttpDeviceCode\":\"device-secret\"},\"favoritesArray\":[10,20],\"parentalArray\":[99]}",
+      "result": {
+        "format": "ottplay-foss-v1",
+        "proposed": {
+          "schema": 1,
+          "sources": [],
+          "activeSourceId": "",
+          "lastChannel": null,
+          "previousChannel": null,
+          "playbackPreferences": [],
+          "channelReferences": [],
+          "favorites": {
+            "default": []
+          },
+          "activeFavorites": "default",
+          "history": [],
+          "bookmarks": {},
+          "channelOverrides": {},
+          "favoriteItems": {},
+          "reminders": [],
+          "security": {
+            "schema": 1,
+            "enabled": false,
+            "salt": "",
+            "hash": "",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          "settings": {
+            "language": "en",
+            "interfaceVersion": 2,
+            "startupVersion": 1,
+            "fontFamily": "Liberation",
+            "playerEngine": "auto",
+            "streamFormat": "auto",
+            "fontScale": 1,
+            "volume": 0.8,
+            "muted": false,
+            "epgUrl": "",
+            "epgUrls": [],
+            "restore": true,
+            "accent": "amber",
+            "aspect": "auto",
+            "zoom": 1,
+            "relay": false
+          }
+        },
+        "warnings": [
+          "Legacy favorite IDs are provider-specific and were not guessed. Re-select favorites after loading the source.",
+          "Legacy protected-channel IDs cannot be matched safely. Set a new PIN and review protected channels before playback.",
+          "The old plaintext parental PIN was omitted. Set a new PIN in Parental controls.",
+          "The old JSON export contains no provider source credentials. Add your source separately.",
+          "Only preferences with an exact new equivalent were migrated; old key bindings and device-specific options were omitted.",
+          "Migration is a preview. Existing settings are unchanged until you confirm the import."
+        ],
+        "containsSecrets": false,
+        "requiresSourceConfirmation": false,
+        "requiresParentalReview": true,
+        "legacy": true,
+        "summary": {
+          "sources": 0,
+          "language": "en",
+          "fontFamily": "Liberation"
+        }
+      }
+    },
+    {
+      "input": "{\"ottplaylang\":\"_rus\",\"sFont\":\"6\",\"ottplayprov\":\"xtream\",\"m3um3uArr\":\"{\\\"active\\\":1,\\\"M3Us\\\":[{\\\"www\\\":\\\"https://a.test/one\\\",\\\"name\\\":\\\"First\\\"},{\\\"www\\\":\\\"https://b.test/two?token=secret\\\",\\\"name\\\":\\\"Second\\\"},{\\\"www\\\":\\\"\\\"}]}\",\"xtreamxtream_data\":\"{\\\"server\\\":\\\"https://x.test\\\",\\\"username\\\":\\\"user\\\",\\\"password\\\":\\\"secret\\\"}\",\"sLocalHttpEnabled\":\"1\",\"sLocalHttpDeviceCode\":\"remote-secret\"}",
+      "result": {
+        "format": "ottplay-storage-json",
+        "proposed": {
+          "schema": 1,
+          "sources": [
+            {
+              "id": "legacy-m3u-0",
+              "name": "First",
+              "type": "m3u",
+              "url": "https://a.test/one",
+              "text": "",
+              "username": "",
+              "password": "",
+              "mac": "",
+              "timezone": "UTC",
+              "language": "en",
+              "output": "m3u8"
+            },
+            {
+              "id": "legacy-m3u-1",
+              "name": "Second",
+              "type": "m3u",
+              "url": "https://b.test/two?token=secret",
+              "text": "",
+              "username": "",
+              "password": "",
+              "mac": "",
+              "timezone": "UTC",
+              "language": "en",
+              "output": "m3u8"
+            },
+            {
+              "id": "legacy-xtream-0",
+              "name": "Xtream",
+              "type": "xtream",
+              "url": "https://x.test",
+              "text": "",
+              "username": "user",
+              "password": "secret",
+              "mac": "",
+              "timezone": "UTC",
+              "language": "en",
+              "output": "m3u8"
+            }
+          ],
+          "activeSourceId": "legacy-xtream-0",
+          "lastChannel": null,
+          "previousChannel": null,
+          "playbackPreferences": [],
+          "channelReferences": [],
+          "favorites": {
+            "default": []
+          },
+          "activeFavorites": "default",
+          "history": [],
+          "bookmarks": {},
+          "channelOverrides": {},
+          "favoriteItems": {},
+          "reminders": [],
+          "security": {
+            "schema": 1,
+            "enabled": false,
+            "salt": "",
+            "hash": "",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          "settings": {
+            "language": "ru",
+            "interfaceVersion": 2,
+            "startupVersion": 1,
+            "fontFamily": "PTSansNarrow",
+            "playerEngine": "auto",
+            "streamFormat": "auto",
+            "fontScale": 1,
+            "volume": 0.8,
+            "muted": false,
+            "epgUrl": "",
+            "epgUrls": [],
+            "restore": true,
+            "accent": "amber",
+            "aspect": "auto",
+            "zoom": 1,
+            "relay": false
+          }
+        },
+        "warnings": [
+          "Unknown legacy storage keys, local-server access settings and device credentials were omitted.",
+          "Source URLs and provider credentials are included. Confirm before replacing local settings.",
+          "Migration is a preview. Existing settings are unchanged until you confirm the import."
+        ],
+        "containsSecrets": true,
+        "requiresSourceConfirmation": true,
+        "requiresParentalReview": false,
+        "legacy": true,
+        "summary": {
+          "sources": 3,
+          "language": "ru",
+          "fontFamily": "PTSansNarrow"
+        }
+      }
+    },
+    {
+      "input": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"sFont\">1</entry>\n<entry key=\"ottplaylang\">_eng</entry>\n<entry key=\"m3um3uArr\">{&quot;active&quot;:0,&quot;M3Us&quot;:[{&quot;www&quot;:&quot;https://example.test/list?x=1&amp;y=2&quot;,&quot;name&quot;:&quot;A &amp; B&quot;}]}</entry>\n</properties>",
+      "result": {
+        "format": "ottplay-properties-xml",
+        "proposed": {
+          "schema": 1,
+          "sources": [
+            {
+              "id": "legacy-m3u-0",
+              "name": "A & B",
+              "type": "m3u",
+              "url": "https://example.test/list?x=1&y=2",
+              "text": "",
+              "username": "",
+              "password": "",
+              "mac": "",
+              "timezone": "UTC",
+              "language": "en",
+              "output": "m3u8"
+            }
+          ],
+          "activeSourceId": "legacy-m3u-0",
+          "lastChannel": null,
+          "previousChannel": null,
+          "playbackPreferences": [],
+          "channelReferences": [],
+          "favorites": {
+            "default": []
+          },
+          "activeFavorites": "default",
+          "history": [],
+          "bookmarks": {},
+          "channelOverrides": {},
+          "favoriteItems": {},
+          "reminders": [],
+          "security": {
+            "schema": 1,
+            "enabled": false,
+            "salt": "",
+            "hash": "",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          "settings": {
+            "language": "en",
+            "interfaceVersion": 2,
+            "startupVersion": 1,
+            "fontFamily": "Roboto",
+            "playerEngine": "auto",
+            "streamFormat": "auto",
+            "fontScale": 1,
+            "volume": 0.8,
+            "muted": false,
+            "epgUrl": "",
+            "epgUrls": [],
+            "restore": true,
+            "accent": "amber",
+            "aspect": "auto",
+            "zoom": 1,
+            "relay": false
+          }
+        },
+        "warnings": [
+          "Unknown legacy storage keys, local-server access settings and device credentials were omitted.",
+          "Source URLs and provider credentials are included. Confirm before replacing local settings.",
+          "Migration is a preview. Existing settings are unchanged until you confirm the import."
+        ],
+        "containsSecrets": true,
+        "requiresSourceConfirmation": true,
+        "requiresParentalReview": false,
+        "legacy": true,
+        "summary": {
+          "sources": 1,
+          "language": "en",
+          "fontFamily": "Roboto"
+        }
+      }
+    },
+    {
+      "input": "{",
+      "error": {
+        "name": "Error",
+        "message": "Invalid settings JSON"
+      }
+    },
+    {
+      "input": "null",
+      "error": {
+        "name": "Error",
+        "message": "Unsupported settings format"
+      }
+    },
+    {
+      "input": "[]",
+      "error": {
+        "name": "Error",
+        "message": "Unsupported settings format"
+      }
+    },
+    {
+      "input": "{}",
+      "error": {
+        "name": "Error",
+        "message": "No recognized OTT-Play settings were found"
+      }
+    },
+    {
+      "input": "{\"schema\":99,\"sources\":[]}",
+      "error": {
+        "name": "Error",
+        "message": "Unsupported settings format"
+      }
+    },
+    {
+      "input": "{\"version\":1,\"settings\":[],\"parentalArray\":[]}",
+      "error": {
+        "name": "Error",
+        "message": "Unsupported legacy settings envelope"
+      }
+    },
+    {
+      "input": "{\"version\":1,\"settings\":{\"__proto__\":{\"polluted\":true}}}",
+      "error": {
+        "name": "Error",
+        "message": "Unsafe settings key"
+      }
+    },
+    {
+      "input": "{\"ottplaylang\":\"_eng\",\"constructor\":{}}",
+      "error": {
+        "name": "Error",
+        "message": "Unsafe settings key"
+      }
+    },
+    {
+      "input": "{\"m3um3uArr\":\"{\\\"M3Us\\\":[],\\\"__proto__\\\":{}}\"}",
+      "error": {
+        "name": "Error",
+        "message": "Unsafe settings key"
+      }
+    },
+    {
+      "input": "<!DOCTYPE properties [<!ENTITY x SYSTEM \"file:///etc/passwd\">]><properties><comment>OTT-Play Preferences</comment><entry key=\"sFont\">&x;</entry></properties>",
+      "error": {
+        "name": "Error",
+        "message": "Unsupported XML declaration"
+      }
+    },
+    {
+      "input": "<properties><comment>OTT-Play Preferences</comment><entry key=\"__proto__\">x</entry></properties>",
+      "error": {
+        "name": "Error",
+        "message": "Unsafe or duplicate settings key"
+      }
+    },
+    {
+      "input": "<properties><comment>OTT-Play Preferences</comment><entry key=\"sFont\">1</entry><entry key=\"sFont\">2</entry></properties>",
+      "error": {
+        "name": "Error",
+        "message": "Unsafe or duplicate settings key"
+      }
+    },
+    {
+      "input": "<properties><comment>OTT-Play Preferences</comment><script>bad</script><entry key=\"sFont\">1</entry></properties>",
+      "error": {
+        "name": "Error",
+        "message": "Malformed settings XML"
+      }
+    },
+    {
+      "input": "<properties><comment>OTT-Play Preferences</comment><entry key=\"sFont\">&#x110000;</entry></properties>",
+      "error": {
+        "name": "Error",
+        "message": "Invalid XML character"
+      }
+    },
+    {
+      "input": "{\"version\":1,\"settings\":{},\"parentalArray\":\"broken\"}",
+      "error": {
+        "name": "Error",
+        "message": "Invalid settings JSON"
+      }
+    },
+    {
+      "input": "{\"sFont\":2,\"m3um3uArr\":\"{\\\"M3Us\\\":[{\\\"www\\\":\\\"javascript:alert(1)\\\"},{\\\"www\\\":\\\"https://a.test/safe\\\",\\\"rechours\\\":10,\\\"medUrl\\\":\\\"https://unsupported.test\\\"}]}\",\"xtreamxtream_data\":\"\\u0001LZ\\u0001compressed\"}",
+      "result": {
+        "format": "ottplay-storage-json",
+        "proposed": {
+          "schema": 1,
+          "sources": [
+            {
+              "id": "legacy-m3u-1",
+              "name": "M3U 1",
+              "type": "m3u",
+              "url": "https://a.test/safe",
+              "text": "",
+              "username": "",
+              "password": "",
+              "mac": "",
+              "timezone": "UTC",
+              "language": "en",
+              "output": "m3u8"
+            }
+          ],
+          "activeSourceId": "legacy-m3u-1",
+          "lastChannel": null,
+          "previousChannel": null,
+          "playbackPreferences": [],
+          "channelReferences": [],
+          "favorites": {
+            "default": []
+          },
+          "activeFavorites": "default",
+          "history": [],
+          "bookmarks": {},
+          "channelOverrides": {},
+          "favoriteItems": {},
+          "reminders": [],
+          "security": {
+            "schema": 1,
+            "enabled": false,
+            "salt": "",
+            "hash": "",
+            "iterations": 2048,
+            "protectedIds": [],
+            "scopes": {
+              "settings": true,
+              "source": true,
+              "import": true,
+              "restore": true,
+              "export": true,
+              "proxy": true,
+              "remote": true
+            },
+            "sessionMinutes": 5,
+            "failures": 0,
+            "blockedUntil": 0
+          },
+          "settings": {
+            "language": "en",
+            "interfaceVersion": 2,
+            "startupVersion": 1,
+            "fontFamily": "RobotoCondensed",
+            "playerEngine": "auto",
+            "streamFormat": "auto",
+            "fontScale": 1,
+            "volume": 0.8,
+            "muted": false,
+            "epgUrl": "",
+            "epgUrls": [],
+            "restore": true,
+            "accent": "amber",
+            "aspect": "auto",
+            "zoom": 1,
+            "relay": false
+          }
+        },
+        "warnings": [
+          "A source with an unsupported or invalid URL was skipped.",
+          "Legacy archive-hour overrides and VPortal links need manual review and were not imported.",
+          "Compressed legacy Xtream source was skipped; export it as JSON in the old player first.",
+          "Unknown legacy storage keys, local-server access settings and device credentials were omitted.",
+          "Source URLs and provider credentials are included. Confirm before replacing local settings.",
+          "Migration is a preview. Existing settings are unchanged until you confirm the import."
+        ],
+        "containsSecrets": true,
+        "requiresSourceConfirmation": true,
+        "requiresParentalReview": false,
+        "legacy": true,
+        "summary": {
+          "sources": 1,
+          "language": "en",
+          "fontFamily": "RobotoCondensed"
+        }
+      }
+    }
+  ]
+}

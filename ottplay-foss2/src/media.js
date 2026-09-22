@@ -5,6 +5,7 @@
         function create(config) {
             var video = config.video;
             var environment = config.environment || root;
+            var core = environment.OttPlayCore || root.OttPlayCore;
             // The loader accepts each optional dependency once. A timed-out script
             // cannot change engines later by publishing a global constructor.
             var libraries = environment.OTT2Vendors || environment;
@@ -29,10 +30,8 @@
             var initialVideoFrames = null;
             var verifiedVideoFrames = false;
             var liveResume = null;
-            var mediaRecoveryUsed = false;
-            var enginePlan = [];
-            var engineIndex = 0;
-            var fallbackCount = 0;
+            var recovery = new core.PlaybackRecovery(2);
+            var engines = new core.PlaybackEngineSequence();
             var resumePosition = null;
             var nativeSource = null;
             var generation = 0;
@@ -40,7 +39,6 @@
             var destroyed = false;
             var paused = false;
             var suspended = false;
-            var retryCount = 0;
             var retryTimer = null;
             var stallTimer = null;
             var listeners = [];
@@ -60,7 +58,7 @@
             var originalStyle = video && video.style ? video.style.cssText : "";
             var stallTimeout = positive(options.stallTimeout, 15000);
             var retryDelay = positive(options.retryDelay, 1000);
-            var maxRetries = typeof options.maxRetries === "number" && isFinite(options.maxRetries) ? Math.max(0, Math.min(3, Math.floor(options.maxRetries))) : 3;
+            var retries = new core.PlaybackRetries(options.maxRetries, retryDelay);
 
             if (!video || typeof video.addEventListener !== "function") {
                 throw new Error("An HTML5 video element is required");
@@ -83,7 +81,7 @@
                     duration: number(video.duration),
                     paused: paused,
                     suspended: suspended,
-                    retries: retryCount,
+                    retries: retries.attempts(),
                     backend: backend,
                     engine: enginePreference,
                     format: streamFormat || "unknown",
@@ -91,7 +89,7 @@
                     detecting: detecting,
                     detectReason: detectReason,
                     lastError: lastError ? { code: lastError.code, message: lastError.message } : null,
-                    fallbackCount: fallbackCount,
+                    fallbackCount: engines.fallbacks(),
                     ready: adapterReady && !needsReload && !suspended && !!channel && state !== "error" && state !== "stopped",
                     seekRange: seekRange(),
                     volume: number(video.volume),
@@ -196,18 +194,17 @@
             function retry(code, message, token) {
                 if (!current(token) || paused || retryTimer !== null || state === "error") { return; }
                 clearTimer("stall");
-                if (!channel || channel.kind !== "live" || retryCount >= maxRetries) {
+                if (!retries.admit(!!channel && channel.kind === "live")) {
                     failure(code, message);
                     return;
                 }
-                retryCount += 1;
                 needsReload = true;
                 setState("retrying", "retry", { code: code, message: message });
                 retryTimer = environment.setTimeout(function () {
                     if (!current(token)) { return; }
                     retryTimer = null;
                     if (!paused) { preservePosition(); start(channel); }
-                }, retryDelay * retryCount);
+                }, retries.delay());
             }
 
             function watch(token) {
@@ -271,7 +268,7 @@
             }
 
             function inspectNativeTracks(token) {
-                if (!current(token) || paused || enginePreference !== "auto" || engineIndex + 1 >= enginePlan.length || backend !== "native" || streamFormat !== "hls" || knownRadio() || videoExpected || videoPresent() || videoProbeTried) { return; }
+                if (!current(token) || paused || !engines.canAdvance(enginePreference === "auto") || backend !== "native" || streamFormat !== "hls" || knownRadio() || videoExpected || videoPresent() || videoProbeTried) { return; }
                 // A missing native video track alone also describes radio. Only
                 // explicit video codecs in a bounded master response justify fallback.
                 if (!video.audioTracks || !video.audioTracks.length || !video.videoTracks || video.videoTracks.length || typeof environment.XMLHttpRequest !== "function") { return; }
@@ -343,11 +340,11 @@
             }
 
             function validEngine(value) {
-                return ["auto", "native", "hls.js", "shaka", "mpegts"].indexOf(value) >= 0;
+                return typeof value === "string" && core.playbackEngineValid(value);
             }
 
             function validFormat(value) {
-                return ["auto", "hls", "dash", "mpegts", "flv", "file"].indexOf(value) >= 0;
+                return typeof value === "string" && core.playbackFormatValid(value);
             }
 
             function mpegtsSupported() {
@@ -720,8 +717,7 @@
                     if (paused) { preservePosition(); cleanup(); needsReload = true; setState("paused"); return; }
                     if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
                         retry("hls_network_error", "The HLS stream could not be loaded", token);
-                    } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR && !mediaRecoveryUsed && typeof hls.recoverMediaError === "function") {
-                        mediaRecoveryUsed = true;
+                    } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR && recovery.media(typeof hls.recoverMediaError === "function")) {
                         var failed = data.frag && typeof data.frag.level === "number" ? data.frag.level : typeof data.level === "number" ? data.level : hls.currentLevel;
                         if (hls.levels && failed > 0 && failed < hls.levels.length) { hls.autoLevelCapping = failed - 1; hls.nextLevel = failed - 1; }
                         setState("loading", "recovery");
@@ -796,47 +792,21 @@
                 watch(token);
             }
 
-            function formatOf(value) {
-                value = String(value || "").toLowerCase();
-                if (/mpegurl|m3u8/.test(value)) { return "hls"; }
-                if (/dash\+xml|(?:^|[\/.])mpd(?:[;?]|$)/.test(value) || value === "dash") { return "dash"; }
-                if (/flv/.test(value)) { return "flv"; }
-                if (/mp2t|mpegts|mpeg-ts/.test(value) || value === "ts") { return "mpegts"; }
-                if (/video\/(?:mp4|webm|ogg|quicktime)|audio\/(?:mpeg|mp4|aac|ogg)/.test(value) || value === "file") { return "file"; }
-                return "";
-            }
+            function formatOf(value) { return core.playbackFormat(String(value || "")); }
 
             function declaredFormat(next) {
-                var value = formatOf(next.mime || next.contentType || "") || formatOf(next.format || "") || formatOf(next.type || "");
                 var url = next.url || "";
                 var hint = /[?&](?:output|format|extension|container|type)=([^&#]+)/i.exec(url);
-                if (value) { detectReason = "declared_type"; return value; }
+                var decoded = "";
                 if (hint) {
-                    try { value = formatOf(decodeURIComponent(hint[1])); } catch (ignore) { value = formatOf(hint[1]); }
-                    if (value) { detectReason = "url_hint"; return value; }
+                    try { decoded = decodeURIComponent(hint[1]); } catch (ignore) { decoded = hint[1]; }
                 }
-                detectReason = "url_extension";
-                if (/\.m3u8(?:[?#]|$)/i.test(url)) { return "hls"; }
-                if (/\.mpd(?:[?#]|$)/i.test(url)) { return "dash"; }
-                if (/\.flv(?:[?#]|$)/i.test(url)) { return "flv"; }
-                if (/\.(?:ts|m2ts)(?:[?#]|$)/i.test(url)) { return "mpegts"; }
-                if (/\.(?:mp4|m4v|m4a|webm|ogg|mp3|aac|mov)(?:[?#]|$)/i.test(url) || /^blob:/i.test(url)) { return "file"; }
-                return "";
+                var result = core.playbackDeclaredFormat(String(next.mime || next.contentType || ""), String(next.format || ""), String(next.type || ""), decoded, url);
+                detectReason = result.reason;
+                return result.format;
             }
 
-            function bodyFormat(text) {
-                var value = String(text || "").slice(0, 4096);
-                var clean = value.replace(/^\uFEFF/, "").replace(/^\s+/, "");
-                var i;
-                if (value.slice(0, 3) === "FLV") { return "flv"; }
-                if (/^#EXTM3U/.test(clean)) { return "hls"; }
-                if (/^(?:<\?xml[^>]*>\s*)?(?:<!--[\s\S]*?-->\s*)?<(?:(?:[\w-]+):)?MPD[\s>]/i.test(clean)) { return "dash"; }
-                for (i = 0; i < Math.min(188, value.length - 376); i += 1) {
-                    if ((value.charCodeAt(i) & 255) === 71 && (value.charCodeAt(i + 188) & 255) === 71 && (value.charCodeAt(i + 376) & 255) === 71) { return "mpegts"; }
-                }
-                if (value.slice(4, 8) === "ftyp" || value.slice(4, 8) === "moov" || value.slice(4, 8) === "moof") { return "file"; }
-                return "";
-            }
+            function bodyFormat(text) { return core.playbackBodyFormat(String(text || "")); }
 
             /* Probe only unlabelled URLs. Abort on a type/signature, 64 KiB or 4 seconds. */
             function probe(next, token, done) {
@@ -886,21 +856,9 @@
 
             function planEngines(format) {
                 var cap = capabilities();
-                var list = [];
-                if (enginePreference !== "auto") { return [enginePreference]; }
-                if (format === "hls") {
-                    if (lgDevice() || cap.nativeHls && !chromiumDevice()) { list.push("native"); }
-                    if (cap.hlsJs) { list.push("hls.js"); }
-                    if (cap.shaka) { list.push("shaka"); }
-                    if (cap.nativeHls && list.indexOf("native") < 0) { list.push("native"); }
-                } else if (format === "dash") {
-                    if (cap.shaka) { list.push("shaka"); }
-                    if (cap.nativeDash) { list.push("native"); }
-                } else if (format === "mpegts" || format === "flv") {
-                    if (cap.mpegts) { list.push("mpegts"); }
-                    if (supports(format === "flv" ? "video/x-flv" : "video/mp2t")) { list.push("native"); }
-                } else { list.push("native"); }
-                return list;
+                cap.lg = lgDevice(); cap.chromium = chromiumDevice();
+                cap.nativeTransport = (format === "flv" || format === "mpegts") && supports(format === "flv" ? "video/x-flv" : "video/mp2t");
+                return core.playbackEngines(format, enginePreference, cap);
             }
 
             function preservePosition() {
@@ -923,9 +881,7 @@
                 if (!range) { return; }
                 if (liveResume) {
                     position = Math.max(range.start, range.end - liveResume.distance);
-                    for (var at = 1; at < range.ranges.length; at += 1) {
-                        if (position > range.ranges[at - 1].end && position < range.ranges[at].start) { position = range.ranges[at].start; break; }
-                    }
+                    position = core.playbackSeek(position, range.start, range.end, range.ranges, true);
                 }
                 try {
                     video.currentTime = Math.max(range.start, Math.min(position, range.end));
@@ -938,9 +894,9 @@
             }
 
             function fallback(reason, token) {
-                if (!current(token) || enginePreference !== "auto" || engineIndex + 1 >= enginePlan.length) { return false; }
+                if (!current(token) || !engines.canAdvance(enginePreference === "auto")) { return false; }
                 preservePosition();
-                engineIndex += 1; fallbackCount += 1; retryCount = 0;
+                engines.advance(); retries.reset();
                 emit("enginefallback", { code: reason, message: "Trying another compatible playback engine" });
                 start(channel);
                 return true;
@@ -992,8 +948,8 @@
                     var choice;
                     if (!current(token)) { return; }
                     streamFormat = format;
-                    if (!enginePlan.length) { enginePlan = planEngines(format); engineIndex = 0; }
-                    choice = enginePlan[engineIndex];
+                    if (engines.empty()) { engines.set(planEngines(format)); }
+                    choice = engines.current();
                     cap = capabilities();
                     if (!choice) { failure((format || "stream") + "_unsupported", "No compatible " + (format || "stream") + " engine is available on this device"); return; }
                     backend = choice;
@@ -1057,8 +1013,8 @@
                     }
                     enginePreference = selection.engine || next.engine || enginePreference;
                     formatPreference = selection.format || (validFormat(next.format) ? next.format : "auto");
-                    streamFormat = ""; detectReason = "none"; lastError = null; enginePlan = []; engineIndex = 0; fallbackCount = 0; resumePosition = null; liveResume = null; mediaRecoveryUsed = false;
-                    retryCount = 0;
+                    streamFormat = ""; detectReason = "none"; lastError = null; engines.reset(); resumePosition = null; liveResume = null; recovery.reset();
+                    retries.reset();
                     paused = false;
                     start(next);
                     return state !== "error";
@@ -1067,7 +1023,7 @@
                     if (destroyed || !validEngine(value)) { return false; }
                     if (enginePreference === value && state !== "error") { return true; }
                     preservePosition(); enginePreference = value; lastError = null;
-                    enginePlan = []; engineIndex = 0; fallbackCount = 0; retryCount = 0; mediaRecoveryUsed = false;
+                    engines.reset(); retries.reset(); recovery.reset();
                     if (channel && !suspended && state !== "stopped" && state !== "idle") { start(channel); }
                     else { emit("engine"); }
                     return state !== "error";
@@ -1075,7 +1031,7 @@
                 setFormat: function (value) {
                     if (destroyed || !validFormat(value)) { return false; }
                     preservePosition(); formatPreference = value; streamFormat = ""; lastError = null;
-                    enginePlan = []; engineIndex = 0; fallbackCount = 0; retryCount = 0; mediaRecoveryUsed = false;
+                    engines.reset(); retries.reset(); recovery.reset();
                     if (channel && !suspended && state !== "stopped" && state !== "idle") { start(channel); }
                     else { emit("engine"); }
                     return state !== "error";
@@ -1085,7 +1041,7 @@
                     paused = false; lastError = null;
                     if (suspended) { emit("suspended"); return true; }
                     if (needsReload || state === "error" || state === "stopped" || state === "ended" || state === "retrying") {
-                        retryCount = 0;
+                        retries.reset();
                         start(channel);
                     } else { requestPlay(generation); }
                     return true;
@@ -1135,17 +1091,10 @@
                 seek: function (seconds) {
                     var range;
                     var target;
-                    var i;
                     if (destroyed || !channel || typeof seconds !== "number" || !isFinite(seconds)) { return false; }
                     range = seekRange();
                     if (!range) { return false; }
-                    target = Math.max(range.start, Math.min(seconds, range.end));
-                    for (i = 1; i < range.ranges.length; i += 1) {
-                        if (target > range.ranges[i - 1].end && target < range.ranges[i].start) {
-                            target = target - range.ranges[i - 1].end < range.ranges[i].start - target ? range.ranges[i - 1].end : range.ranges[i].start;
-                            break;
-                        }
-                    }
+                    target = core.playbackSeek(seconds, range.start, range.end, range.ranges);
                     try { video.currentTime = target; resumePosition = null; liveResume = null; emit("seek"); return true; }
                     catch (ignore) { return false; }
                 },

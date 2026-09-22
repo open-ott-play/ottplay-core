@@ -45,6 +45,10 @@ function fixture(settings = {}) {
     Object.assign(environment, settings.environment || {});
     environment.window = environment;
     const context = vm.createContext(environment);
+    const initialGlobals = { Promise: environment.Promise, Map: environment.Map, Set: environment.Set, URL: environment.URL, document: environment.document };
+    environment.document = undefined;
+    require("./load-core.cjs")(context);
+    Object.assign(environment, initialGlobals);
     vm.runInContext("Object.assign=undefined;Object.entries=undefined;Array.from=undefined;Array.prototype.includes=undefined;", context);
     vm.runInContext(source, context, { filename: "media.js" });
     const player = module.create({ video, environment, onEvent(event) { events.push(event); }, options: settings.options || {} });
