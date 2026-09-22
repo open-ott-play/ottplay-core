@@ -41,7 +41,12 @@ node scripts/distribute.cjs install-native /absolute/path/to/ottplay-foss
 
 `pack:core` invokes the compiler, then writes `dist/ottplay-core.manifest.json`
 with deterministic source and artifact hashes. It refuses inputs changed during
-compilation. Consumers pin generated artifacts rather than maintaining source
+compilation. Kotlin 2.4.20 emits empty collection marker interfaces in varying
+orders; the packer canonicalizes only those verified method-free markers.
+Other arrays and interfaces retain compiler order. Shape assertions and a
+regression test reject added marker behavior. Clean macOS, incremental macOS
+and GitHub Linux builds produce the same normalized JS bytes. `check:js`
+exercises the distributed file, including this packaging step. Consumers pin generated artifacts rather than maintaining source
 copies. They run without a sibling checkout or compiler installation. To check
 an update against this source build, use `check-web`, `check-native` or `check-jvm` with the same
 explicit consumer paths. Do not hand-edit generated JS/JAR files or receipts.

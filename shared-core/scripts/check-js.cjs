@@ -6,7 +6,7 @@ const vm = require("node:vm");
 const { parse } = require("acorn");
 
 const root = path.resolve(__dirname, "..");
-const file = path.join(root, "build/compileSync/js/main/productionExecutable/kotlin/OttPlayCore.js");
+const file = path.join(root, "dist/ottplay-core.js");
 const bundle = fs.readFileSync(file, "utf8");
 parse(bundle, { ecmaVersion: 5, sourceType: "script" });
 

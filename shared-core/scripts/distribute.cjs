@@ -5,6 +5,7 @@ const path = require("node:path");
 const crypto = require("node:crypto");
 const assert = require("node:assert/strict");
 const { execFileSync } = require("node:child_process");
+const { canonicalJavaScript } = require("./canonical-js.cjs");
 const root = path.resolve(__dirname, "..");
 const dist = path.join(root, "dist");
 const version = require("../package.json").version;
@@ -19,7 +20,7 @@ function inputs(directory = "src") {
 function sourceReceipt() {
     const files = [...inputs(), "build.gradle.kts", "settings.gradle.kts", "gradle.properties",
         "gradle/wrapper/gradle-wrapper.properties", "gradle/wrapper/gradle-wrapper.jar", "package.json",
-        "scripts/distribute.cjs", "LICENSE", "licenses/kotlin-LICENSE.txt", "licenses/kotlin-NOTICE.txt"].sort();
+        "scripts/distribute.cjs", "scripts/canonical-js.cjs", "LICENSE", "licenses/kotlin-LICENSE.txt", "licenses/kotlin-NOTICE.txt"].sort();
     const hashes = Object.fromEntries(files.map(file => [file, sha256(read(file))]));
     return { sha256: sha256(JSON.stringify(hashes)), files: hashes };
 }
@@ -30,7 +31,7 @@ function build() {
     assert.deepEqual(sourceReceipt(), source, "Source changed during compilation; retry the distribution build");
     fs.mkdirSync(dist, { recursive: true });
     const jsRoot = "build/compileSync/js/main/productionExecutable/kotlin/";
-    const script = read(jsRoot + "OttPlayCore.js").toString().replace(/^\/\/# sourceMappingURL=.*$/gm, "");
+    const script = canonicalJavaScript(read(jsRoot + "OttPlayCore.js").toString()).replace(/^\/\/# sourceMappingURL=.*$/gm, "");
     // A stable browser name; CommonJS continues to use the compiler's exports.
     const alias = '\n;(function (root) { if (typeof module !== "object" || !module.exports) root.OttPlayCore = root["play.ott:ottplay-shared-core"]; }(typeof self !== "undefined" ? self : this));\n';
     const outputs = {
