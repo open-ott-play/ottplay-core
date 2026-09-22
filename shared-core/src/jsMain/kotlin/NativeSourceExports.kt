@@ -27,3 +27,23 @@ fun nativeGuideRefresh(failed: Boolean, empty: Boolean, stale: Boolean): String 
 
 @JsExport
 fun nativeGuideEvictSourceSet(count: Int, existing: Boolean): Boolean = NativeGuideSources.evictSourceSet(count, existing)
+
+@JsExport
+fun nativeGuideLoadStart(force: Boolean): String = NativeSourceLoad.start(force).name
+
+@JsExport
+fun nativeGuideLoadNext(action: String, succeeded: Boolean, channels: Int, format: String): String =
+    NativeSourceLoad.next(NativeSourceLoadAction.valueOf(action), succeeded, channels,
+        when (format) {
+            "swift" -> NativeSourceFormat.SWIFT
+            "android" -> NativeSourceFormat.ANDROID
+            else -> error("Unknown native source format")
+        }).name
+
+@JsExport
+class NativeGuideSourceBatch(count: Int) {
+    private val batch = NativeSourceBatch(count)
+    fun next(): Int = batch.next()
+    fun advance(succeeded: Boolean, channels: Int) = batch.advance(succeeded, channels)
+    fun failure(): Int = batch.failure()
+}

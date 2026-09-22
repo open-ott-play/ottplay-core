@@ -242,9 +242,18 @@ This is a structural guard, not proof of device or provider acceptance.
   output limits. Ten common scenarios exercise the rules on JVM, JS and macOS;
   the public bridge also runs in both ES5 API simulations.
 
+- `NativeSourceLoad` selects fresh disk, network, memory and stale-disk outcomes
+  for Swift and archived Android. `NativeSourceBatch` owns ordered partial
+  success and first-error selection. The adapters retain only effects and native
+  payload/error storage for these decisions. The platform write-failure and
+  second-parse contracts are explicit compatibility profiles.
+- 77 additional contracts were verified on unchanged revision `d24f07be` before
+  migration, then on the shared implementation. These include real write
+  failures and delayed callbacks, plus the existing 118 source/cache cases.
+
 ## Remaining work
 
-Remaining native cache policies, other operator sessions and catalog/identity rules, state migrations, playback
+Other operator sessions and catalog/identity rules, state migrations, playback
 controllers and service wire contracts still need migration. No whole client is yet
 fully free of inherited player logic. No release has been published or deployed.
 Archive URLs, M3U and Xtream availability metadata are migrated; other provider

@@ -30,6 +30,25 @@ function verify(context, profile) {
     assert.equal(core.nativeGuideRefresh(true, true, false), "FAIL");
     assert.equal(core.nativeGuideEvictSourceSet(8, false), true);
     assert.equal(core.nativeGuideEvictSourceSet(8, true), false);
+    assert.equal(core.nativeGuideLoadStart(false), "READ_FRESH_DISK");
+    assert.equal(core.nativeGuideLoadStart(true), "FETCH");
+    for (const format of ["swift", "android"]) {
+        assert.equal(core.nativeGuideLoadNext("FETCH", true, 0, format), "READ_MEMORY");
+        assert.equal(core.nativeGuideLoadNext("READ_MEMORY", true, 0, format), "USE_MEMORY");
+        assert.equal(core.nativeGuideLoadNext("READ_MEMORY", false, 0, format), "READ_STALE_DISK");
+        assert.equal(core.nativeGuideLoadNext("READ_STALE_DISK", true, 1, format), "USE_STALE_DISK");
+        assert.equal(core.nativeGuideLoadNext("WRITE_DISK", false, 1, format), format === "swift" ? "READ_MEMORY" : "USE_NETWORK");
+    }
+    assert.equal(core.nativeGuideLoadNext("REPARSE_NETWORK", false, 0, "swift"), "FAIL");
+    const batch = new core.NativeGuideSourceBatch(3);
+    assert.equal(batch.next(), 0); batch.advance(false, 0);
+    assert.equal(batch.next(), 1); batch.advance(true, 0);
+    assert.equal(batch.next(), 2); batch.advance(false, 0);
+    assert.equal(batch.next(), -1); assert.equal(batch.failure(), 0);
+    const partialBatch = new core.NativeGuideSourceBatch(2);
+    partialBatch.advance(false, 0); partialBatch.advance(true, 1);
+    assert.equal(partialBatch.failure(), -1);
+    assert.equal(new core.NativeGuideSourceBatch(0).failure(), -1);
     for (const [input, expected] of [
         ["19700101000000 +0000", 0], ["197001010530 +0530", 0],
         ["19691231203000 -03:30", 0], ["19691231235959Z", -1000],

@@ -68,13 +68,14 @@ for (const [file, forbidden] of [
     ["src/plugins/m3u-proxy.ts", /normalizeNativeEpgName|nativeEpgMatchScore/]
 ]) assert(!forbidden.test(fs.readFileSync(path.join(main, file), "utf8")), "Migrated guide logic reintroduced: " + file);
 for (const [file, required] of [
-    ["mobile-xmltv-epg/src/ios/MobileXmltvEpg.swift", ["nativeGuideSources", "nativeGuideUnowned", "nativeGuideLookup", "nativeGuideDisk"]],
-    ["mobile-xmltv-epg/src/android/play/ott/foss/plugin/MobileXmltvEpgPlugin.kt", ["NativeGuideSources.urls", "NativeGuideSources.unowned", "NativeGuideSources.lookupAndroid", "NativeGuideSources.diskAndroid"]],
+    ["mobile-xmltv-epg/src/ios/MobileXmltvEpg.swift", ["nativeGuideSources", "nativeGuideUnowned", "nativeGuideLookup", "nativeGuideDisk", "nativeGuideLoadStart", "nativeGuideLoadNext", "NativeGuideSourceBatch"]],
+    ["mobile-xmltv-epg/src/android/play/ott/foss/plugin/MobileXmltvEpgPlugin.kt", ["NativeGuideSources.urls", "NativeGuideSources.unowned", "NativeGuideSources.lookupAndroid", "NativeGuideSources.diskAndroid", "NativeSourceLoad.start", "NativeSourceLoad.next", "NativeSourceBatch("]],
     ["src-rs/core/src/native_xmltv.rs", ["shared_guide::unowned", "shared_guide::source_fresh", "shared_guide::source_refresh", "shared_guide::evict_source_set"]]
 ]) {
     const source = fs.readFileSync(path.join(main, file), "utf8");
     for (const api of required) assert(source.includes(api), "Native source/cache rules must use " + api);
     assert(!/TTL_SECONDS|const TTL:|private let ttl:|cdn\.epg\.one|channels\.contains_key\(&id\)/.test(source), "Native source/cache decisions reintroduced: " + file);
+    if (file.startsWith("mobile-xmltv-epg/")) assert(!/firstError|fun fallback\(|if\s*\(?\s*!force\)?[,\s]+(?:let xml|\{\s*val cached)/.test(source), "Native offline fallback decisions reintroduced: " + file);
 }
 const repository = fs.readFileSync(path.join(root, "ottplay-android/app/src/main/java/play/ott/nativeapp/data/NativeRepository.kt"), "utf8");
 assert(repository.includes("providers.epgSources(source, catalog)"), "Active Android EPG sources must use the core adapter");

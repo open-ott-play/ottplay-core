@@ -171,8 +171,22 @@ Swift's remains exclusive. Swift supplies Foundation trimming and canonical
 Unicode equality as host primitives. Active Android retains untrimmed URLs and
 explicit-source-first ordering; archived Play still has no bundled default.
 Hosts retain locks, HTTP/XML/gzip/file operations, clock and metadata decoding,
-and callback execution. Per-source offline memory/disk fallback orchestration
-and write-error handling remain in the adapters.
+and callback execution.
+
+`NativeSourceLoad` owns fresh-disk/network admission, memory-before-stale-disk
+fallback and write-error policy. Swift requires a successful disk write and
+retains its second network parse; that parse's failure terminates without
+fallback. Android keeps the parsed network response when writing fails. Any
+present memory result, including an empty guide, precedes stale disk. Native
+adapters retain payloads and original errors while executing the selected effect.
+`NativeSourceBatch` continues sequential loads after errors and selects the first
+failure only when no source produced channels. Channel ownership remains shared.
+
+Another 77 contracts (39 Swift, 38 Kotlin) were qualified on unchanged adapter
+revision `d24f07be` before migration. They exercise distinct memory/disk/network
+payloads, real write failures, delayed/coalesced callbacks, timestamps, ordered
+source batches and Swift's second-parse failure. Eight new common tests exercise
+the state transitions on JVM, JavaScript and macOS.
 
 The actual Swift/Kotlin adapters each pass 59 source/cache cases qualified
 against main revision `ab69d2f`, including forced/coalesced loads, exact TTL,
@@ -195,7 +209,7 @@ remain in place. A fixed baseline of 110 actual HTTP responses from source
 revision `b34ae28` verifies exact output and failures. Ten common tests and all
 three JS ABI environments exercise this implementation.
 
-Transport, remaining native cache policies, other operator session logic and durable
+Transport, other operator session logic and durable
 state still need migration. See [workspace status](../README.md) and
 [validation](validation.json); physical targets are not certified by VM tests.
 

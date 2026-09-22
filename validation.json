@@ -704,5 +704,61 @@
       "XML/gzip and URL codecs",
       "UTF-8 measurement and output serialization"
     ]
+  },
+  "native_fallback": {
+    "source_sha256": "eac5c02b7ee8df54875c1d5afd77951c129f6f567fa99b62fbc5cfe95f6edf14",
+    "baseline_commit": "d24f07be2abf536977dce0cdae7807fed8bd28dc",
+    "recorded_contracts": {
+      "Swift": 39,
+      "Kotlin": 38,
+      "total": 77
+    },
+    "existing_native_source_cache_contracts": 118,
+    "common_tests": {
+      "JVM": {
+        "tests": 108,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "JavaScript": {
+        "tests": 106,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "macOS": {
+        "tests": 106,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    "es5_abi_profiles": 3,
+    "foss2_tests": 351,
+    "android_core_tests": 53,
+    "android_app_tests": 85,
+    "rust_tests": 67,
+    "archived_android_edition_scenarios": 37,
+    "fixture_sha256": "bbc4cfdf077c2f122f920b1fa3da81f76ae17747c5a40b6598282e115c74cce5",
+    "migrated": [
+      "fresh-disk and network admission",
+      "memory-before-stale-disk fallback",
+      "platform write failure and repeated parse policy",
+      "sequential source batch partial success and first error"
+    ],
+    "host_boundaries": [
+      "HTTP, XML/gzip, files and metadata invalidation",
+      "native payload and original error storage",
+      "locks, clock and callback execution"
+    ],
+    "retained_compatibility": [
+      "empty memory is a usable fallback",
+      "any offline success renews the memory timestamp",
+      "Swift write failure triggers fallback; Android returns fresh network",
+      "Swift second parse failure terminates without fallback",
+      "first source owns a channel; empty successful sources do not hide the first batch error"
+    ],
+    "report": "reports/native-fallback/validation.json"
   }
 }
