@@ -9,6 +9,7 @@ const core = path.join(root, "shared-core");
 function node(file, ...args) { execFileSync(process.execPath, [file, ...args], { cwd: root, stdio: "inherit" }); }
 node(path.join(core, "scripts/check-boundary.cjs"));
 node(path.join(core, "scripts/distribute.cjs"), "check-web", path.join(root, inventory.additional_client.path));
+node(path.join(root, inventory.additional_client.path, "scripts/check-core.cjs"));
 node(path.join(core, "scripts/distribute.cjs"), "check-jvm", path.join(root, "ottplay-android"));
 const main = path.join(root, "ottplay-foss");
 node(path.join(core, "scripts/distribute.cjs"), "check-native", main);

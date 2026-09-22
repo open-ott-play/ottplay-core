@@ -114,6 +114,13 @@ guide and loaded images in Chromium. Its latest run artifact is
 `test-results/browser-epg-report.json`; read the run date/results before using it
 as evidence for an edited version.
 
+The Node filter's selection, archive windows, bounded retention and round-robin
+output policy live in the shared `StreamingGuide` implementation. HTTP, XML/gzip,
+URL validation and UTF-8 serialization remain here. The 110 responses captured
+before migration in `tests/fixtures/streaming-guide-before-core.json` preserve
+metadata ambiguity, current/next priority, late channel discovery and byte
+budget behavior through `tests/test-streaming-guide-core.cjs`.
+
 Public-feed availability and the user's real channel coverage require a separate
 live check. Synthetic fixtures are not a private-provider acceptance test.
 Proprietary portal EPG, channel-specific authentication and physical LG firmware

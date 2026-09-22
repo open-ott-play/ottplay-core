@@ -143,6 +143,10 @@ XMLTV record normalization, feed merging/affinity, partial-window coverage and
 bounded lookup caching also use the core. XML parsing and URL codecs stay here.
 Forty-four captured cases preserve metadata ownership, duplicate precedence,
 missing-stop inference, shifted schedules and source-scoped identities.
+The Node companion delegates streaming guide retention, archive-depth merging,
+candidate selection and output budgets to the same core. Its adapter retains
+HTTP, XML/gzip decoding, URL validation and UTF-8 serialization. Another 110
+captured HTTP responses verify exact output ordering and truncation behavior.
 `npm run check:core` verifies its source receipt, artifact hashes and delegation.
 Update it through the shared-core distribution script; do not edit the generated
 bundle or restore an application-local copy of these rules. The existing ES5

@@ -17,9 +17,12 @@ const core = html.indexOf('src="/vendor/ottplay-core.js"');
 assert(polyfills >= 0 && polyfills < core && core < html.indexOf('src="/src/epg.js"'), "Core must load after polyfills and before EPG");
 for (const file of ["src/epg.js", "scripts/epg.cjs"]) {
     const source = fs.readFileSync(path.join(root, file), "utf8");
-    for (const api of ["parseBrowserXmltvTime", "canonicalChannelName", "selectGuideSchedule", ...(file === "src/epg.js" ? ["parseBrowserGuide", "mergeBrowserGuides", "matchedGuideChannel"] : ["chooseGuideChannel"])]) assert(source.includes("core." + api + "("), file + " must use core." + api);
+    for (const api of ["parseBrowserXmltvTime", "canonicalChannelName", ...(file === "src/epg.js" ? ["selectGuideSchedule", "parseBrowserGuide", "mergeBrowserGuides", "matchedGuideChannel"] : ["streamingGuideIdentities", "StreamingGuideFilter"])]) assert(source.includes("core." + api + "("), file + " must use core." + api);
     assert(!source.includes("setUTCFullYear"), "XMLTV date arithmetic belongs to shared core: " + file);
 }
+const streaming = fs.readFileSync(path.join(root, "scripts/epg.cjs"), "utf8");
+for (const api of ["channel", "accepts", "programme", "output"]) assert(streaming.includes("guide." + api + "("), "Streaming guide must use core " + api);
+assert(!/candidateDepths|programmeCap|nextCandidates|function priority|86400|for \(let round/.test(streaming), "Streaming guide selection or retention reintroduced");
 const epg = fs.readFileSync(path.join(root, "src/epg.js"), "utf8");
 assert(epg.includes("new core.BrowserGuideLookup("), "Guide lookup cache must use the common core");
 assert(!/function (?:addName|mergeCoverage|coverageNumber|plainMatchedId)|retainedEntries|nextStart|list\.sort/.test(epg), "Displaced guide normalization/cache implementation reintroduced");

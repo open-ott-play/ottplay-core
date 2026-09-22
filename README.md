@@ -13,6 +13,8 @@ caching, classic-player schedule/cache rules and Android programme ordering
 now also delegate to the common core. Native source selection, first-source
 ownership, memory/disk cache decisions and Rust atomic refresh decisions also
 run in this core, with explicit platform compatibility profiles.
+The Node guide filter also delegates identity/depth merging, streaming retention,
+channel selection and round-robin output budgets to this core.
 **The product migration is not complete.**
 The five repository directories are isolated checkouts of the revisions recorded
 in [inventory.json](inventory.json); existing installations are not modified.
@@ -230,9 +232,19 @@ Run `node scripts/check-unification.cjs` after building/distributing the core.
 It verifies migrated artifacts and the retained provider/device file inventory.
 This is a structural guard, not proof of device or provider acceptance.
 
+- `StreamingGuide` owns the Node companion's request identity/depth merging,
+  candidate matching, metadata precedence, archive windows, bounded programme
+  retention and round-robin output budgets. Payloads remain opaque to the core;
+  XML/gzip/HTTP, URL validation, UTF-8 byte counts and response serialization
+  stay in the adapter. The displaced Node algorithms were deleted.
+- 110 captured HTTP responses preserve exact XML order, coverage attributes,
+  ambiguous metadata, late candidate discovery, fractional limits and UTF-8
+  output limits. Ten common scenarios exercise the rules on JVM, JS and macOS;
+  the public bridge also runs in both ES5 API simulations.
+
 ## Remaining work
 
-Streaming guide retention and remaining native cache policies, other operator sessions and catalog/identity rules, state migrations, playback
+Remaining native cache policies, other operator sessions and catalog/identity rules, state migrations, playback
 controllers and service wire contracts still need migration. No whole client is yet
 fully free of inherited player logic. No release has been published or deployed.
 Archive URLs, M3U and Xtream availability metadata are migrated; other provider

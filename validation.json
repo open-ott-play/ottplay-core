@@ -353,7 +353,7 @@
   "physical_device_acceptance": false,
   "published_or_deployed": false,
   "remaining": [
-    "Streaming guide retention and remaining native cache policies",
+    "Remaining native cache policies",
     "Other operator catalogs/sessions and cross-catalog channel identity/state migrations",
     "Durable state, playback and timeshift controllers",
     "Service wire contracts",
@@ -677,5 +677,32 @@
         }
       ]
     }
+  },
+  "streaming_guide": {
+    "source_sha256": "af95a2ee0059f7d6f392b35c058435bd921d909cbb1f78f3c28513215ef0363a",
+    "baseline_commit": "b34ae283bb59402c6d6807cd1af7539124af62df",
+    "captured_http_contracts": 110,
+    "common_tests": {
+      "JVM": 100,
+      "JavaScript": 98,
+      "macOS": 98
+    },
+    "es5_abi_profiles": 3,
+    "foss2_tests": 351,
+    "android_core_tests": 53,
+    "android_app_tests": 85,
+    "report": "reports/streaming-guide/validation.json",
+    "migrated": [
+      "request identity and archive-depth merging",
+      "candidate and metadata ownership",
+      "streaming archive windows and current/next retention",
+      "round-robin programme and UTF-8 byte budgets"
+    ],
+    "host_boundaries": [
+      "HTTP, cancellation, clock and cache I/O",
+      "wire DTO validation",
+      "XML/gzip and URL codecs",
+      "UTF-8 measurement and output serialization"
+    ]
   }
 }

@@ -11,24 +11,17 @@ const core = require("../vendor/ottplay-core.js");
 
 const DEFAULT_EPG_URL = "https://cdn.epg.one/epg2.xml.gz";
 const MB = 1024 * 1024;
-const normalize = value => core.normalizedChannelName(String(value || ""));
 const canonicalName = value => core.canonicalChannelName(String(value || ""));
 const escape = value => String(value || "").replace(/[&<>"']/g, character => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;" }[character]));
 function time(value) { return core.parseBrowserXmltvTime(String(value || "")); }
 function identities(dto) {
     if (!dto || typeof dto !== "object" || Array.isArray(dto) || Object.keys(dto).some(key => key !== "channels") || !Array.isArray(dto.channels) || !dto.channels.length || dto.channels.length > 16384) throw new Error("EPG_REQUEST");
-    const unique = new Map();
     for (const row of dto.channels) {
         if (!row || typeof row !== "object" || Array.isArray(row) || Object.keys(row).some(key => !["id", "tvgId", "tvgName", "name", "archiveDays"].includes(key))) throw new Error("EPG_REQUEST");
         for (const key of Object.keys(row)) if (key !== "archiveDays" && (typeof row[key] !== "string" || row[key].length > 512 || /[\u0000-\u001f\u007f]/.test(row[key]))) throw new Error("EPG_REQUEST");
         if (row.archiveDays !== undefined && (typeof row.archiveDays !== "number" || !Number.isFinite(row.archiveDays) || row.archiveDays < 0 || row.archiveDays > 7)) throw new Error("EPG_REQUEST");
-        const identity = [String(row.tvgId || "").trim(), normalize(row.tvgName), normalize(row.name)];
-        if (!identity.some(Boolean)) throw new Error("EPG_REQUEST");
-        const key = JSON.stringify(identity), previous = unique.get(key);
-        identity.push(Math.max(1, row.archiveDays || 0, previous ? previous[3] : 0));
-        unique.set(key, identity);
     }
-    return Array.from(unique.values()).sort((left, right) => JSON.stringify(left).localeCompare(JSON.stringify(right)));
+    return core.streamingGuideIdentities(dto.channels).sort((left, right) => JSON.stringify(left).localeCompare(JSON.stringify(right)));
 }
 function createEPG(configuration = {}) {
     const request = configuration.request || ((url, options, callback) => https.request(url, options, callback));
@@ -100,22 +93,10 @@ function createEPG(configuration = {}) {
     }
     function createJob(key, requested) {
         const job = { key, listeners: new Set(), started: false, start, cancel: () => finish(499, "EPG_CANCELLED") };
-        const wantedIds = new Set(requested.map(row => row[0]).filter(Boolean));
-        const wantedNames = new Set(requested.flatMap(row => row.slice(1, 3)).filter(Boolean));
-        const wantedAliases = new Set(Array.from(wantedNames, canonicalName).filter(Boolean));
-        const idDepths = new Map(), nameDepths = new Map(), aliasDepths = new Map(), candidateDepths = new Map();
-        function retainDepth(map, key, days) { if (key) map.set(key, Math.max(map.get(key) || 1, days)); }
-        for (const row of requested) {
-            retainDepth(idDepths, row[0], row[3]);
-            for (const name of row.slice(1, 3)) { retainDepth(nameDepths, name, row[3]); retainDepth(aliasDepths, canonicalName(name), row[3]); }
-        }
-        const metadata = new Map(), aliases = new Map(), canonicalAliases = new Map(), programmes = new Map(), nextCandidates = new Map(), truncated = new Set();
+        const guide = new core.StreamingGuideFilter(requested, now() / 1000, limits.programmes, limits.perChannel);
         const parser = new SaxesParser(), utf8 = new StringDecoder("utf8");
-        const clock = now() / 1000, startWindow = clock - Math.max(...requested.map(row => row[3])) * 86400, endWindow = clock + 86400;
         let done = false, outgoing = null, incoming = null, decoder = null, timer;
-        let wire = 0, decoded = 0, programmeCount = 0, depth = 0, sawRoot = false, item = null, field = null, gap = 0;
-        let programmeCap = limits.perChannel, candidateCount = wantedIds.size;
-        function priority(entry) { return entry.begin <= clock && (entry.end === null || entry.end > clock) ? -1000000000000 + clock - entry.begin : nextCandidates.get(entry.id) === entry ? -500000000000 + entry.begin - clock : Math.abs(entry.begin - clock); }
+        let wire = 0, decoded = 0, depth = 0, sawRoot = false, item = null, field = null, gap = 0;
         function invalid(code) { const error = new Error(code); error.code = code; throw error; }
         function finish(status, body) {
             if (done) return;
@@ -135,8 +116,7 @@ function createEPG(configuration = {}) {
             if (depth === 2 && tag.name === "channel") item = { kind: "channel", id: String(tag.attributes.id || "").trim(), names: [], icon: "" };
             else if (depth === 2 && tag.name === "programme") {
                 const id = String(tag.attributes.channel || "").trim(), begin = time(tag.attributes.start), end = time(tag.attributes.stop);
-                const channelStart = clock - Math.max(idDepths.get(id) || 1, candidateDepths.get(id) || 1) * 86400;
-                item = begin !== null && begin < endWindow && (end === null ? begin >= channelStart : end > channelStart && end > begin) && (wantedIds.has(id) || metadata.has(id)) ? { kind: "programme", id, start: String(tag.attributes.start), stop: String(tag.attributes.stop || ""), begin, end, title: "", desc: "", catchupId: String(tag.attributes["catchup-id"] || "") } : null;
+                item = guide.accepts(id, begin, end) ? { kind: "programme", id, start: String(tag.attributes.start), stop: String(tag.attributes.stop || ""), begin, end, title: "", desc: "", catchupId: String(tag.attributes["catchup-id"] || "") } : null;
             }
             if (!item) return;
             if (item.id.length > 512) invalid("EPG_FIELD_TOO_LARGE");
@@ -160,41 +140,8 @@ function createEPG(configuration = {}) {
             }
             if (depth === 2 && item) {
                 if (item.kind === "channel") {
-                    const matches = item.names.map(normalize).filter(name => wantedNames.has(name));
-                    const canonicalMatches = item.names.map(canonicalName).filter(name => wantedAliases.has(name));
-                    if (wantedIds.has(item.id) || matches.length || canonicalMatches.length) {
-                        if (metadata.size >= 16384 && !metadata.has(item.id)) invalid("EPG_TOO_LARGE");
-                        let days = idDepths.get(item.id) || 1;
-                        for (const name of matches) days = Math.max(days, nameDepths.get(name) || 1);
-                        for (const name of canonicalMatches) days = Math.max(days, aliasDepths.get(name) || 1);
-                        retainDepth(candidateDepths, item.id, days);
-                        const previous = metadata.get(item.id);
-                        if (previous) { previous.names = Array.from(new Set(previous.names.concat(item.names))); if (!previous.icon) previous.icon = item.icon; }
-                        else { metadata.set(item.id, item); if (!wantedIds.has(item.id)) candidateCount++; }
-                        for (const name of matches) { if (!aliases.has(name)) aliases.set(name, new Set()); aliases.get(name).add(item.id); }
-                        for (const name of canonicalMatches) { if (!canonicalAliases.has(name)) canonicalAliases.set(name, new Set()); canonicalAliases.get(name).add(item.id); }
-                    }
-                } else {
-                    // Reserve an equal bounded share for every candidate, including
-                    // programme-only exact IDs, before retaining any schedule.
-                    programmeCap = Math.max(1, Math.min(programmeCap, Math.floor(limits.programmes / Math.max(1, candidateCount, requested.length))));
-                    if (!programmes.has(item.id)) programmes.set(item.id, []);
-                    const entries = programmes.get(item.id);
-                    if (item.begin > clock && (!nextCandidates.has(item.id) || item.begin < nextCandidates.get(item.id).begin)) {
-                        nextCandidates.set(item.id, item);
-                        entries.sort((left, right) => priority(left) - priority(right));
-                    }
-                    const score = priority(item);
-                    if (entries.length >= programmeCap) {
-                        truncated.add(item.id);
-                        if (score >= priority(entries[entries.length - 1])) { item = null; depth--; return; }
-                        entries.pop(); programmeCount--;
-                    }
-                    if (programmeCount >= limits.programmes) { truncated.add(item.id); item = null; depth--; return; }
-                    let low = 0, high = entries.length;
-                    while (low < high) { const middle = (low + high) >>> 1; if (priority(entries[middle]) <= score) low = middle + 1; else high = middle; }
-                    entries.splice(low, 0, item); programmeCount++;
-                }
+                    if (!guide.channel(item.id, item.names, item.icon)) invalid("EPG_TOO_LARGE");
+                } else guide.programme(item.id, item.begin, item.end, item);
                 item = null;
             }
             depth--;
@@ -214,46 +161,13 @@ function createEPG(configuration = {}) {
             try {
                 parser.write(utf8.end()).close();
                 if (!sawRoot) invalid("EPG_XML");
-                const selected = new Set(), selectedDepths = new Map();
-                function select(id, days) { selected.add(id); retainDepth(selectedDepths, id, days); }
-                for (const row of requested) {
-                    const candidates = (index, key) => Array.from(index.get(key) || []);
-                    const id = core.chooseGuideChannel(
-                        row[0] && (metadata.has(row[0]) || programmes.has(row[0])) ? [row[0]] : [],
-                        row.slice(1, 3).map(name => candidates(aliases, name)),
-                        row.slice(1, 3).map(name => candidates(canonicalAliases, canonicalName(name)))
-                    );
-                    if (id !== null) select(id, row[3]);
-                }
-                let xml = "", size = 512;
-                function append(value) { size += Buffer.byteLength(value); if (size > limits.output) invalid("EPG_TOO_LARGE"); xml += value; }
-                // Keep relevant unselected metadata too: removing one side of an
-                // ambiguous alias would make the browser falsely see a unique name.
-                const visibleMetadata = new Set([...metadata.keys(), ...selected]);
-                for (const id of visibleMetadata) {
-                    const channel = metadata.get(id) || { names: [], icon: "" };
-                    append('<channel id="' + escape(id) + '">' + channel.names.map(name => '<display-name>' + escape(name) + '</display-name>').join("") + (channel.icon ? '<icon src="' + escape(channel.icon) + '"/>' : "") + '</channel>');
-                }
-                const schedules = Array.from(selected, id => {
-                    const lower = clock - (selectedDepths.get(id) || 1) * 86400;
-                    const entries = (programmes.get(id) || []).filter(entry => entry.end === null ? entry.begin >= lower : entry.end > lower);
-                    const selection = core.selectGuideSchedule(entries.map(entry => ({ start: entry.begin, end: entry.end })), clock, true);
-                    const current = entries[selection.current], next = entries[selection.next];
-                    return { id, entries: [current, next].filter(Boolean).concat(entries.filter(entry => entry !== current && entry !== next)) };
-                });
-                let outputCount = 0;
-                // Round-robin serialization gives every channel its current and
-                // next programme before spending remaining bytes on nearby shows.
-                for (let round = 0; round < limits.perChannel; round++) for (const schedule of schedules) {
-                    const entry = schedule.entries[round];
-                    if (!entry) continue;
-                    const fragment = '<programme channel="' + escape(schedule.id) + '" start="' + escape(entry.start) + '"' + (entry.stop ? ' stop="' + escape(entry.stop) + '"' : "") + (entry.catchupId ? ' catchup-id="' + escape(entry.catchupId) + '"' : "") + '><title>' + escape(entry.title) + '</title>' + (entry.desc ? '<desc>' + escape(entry.desc) + '</desc>' : "") + '</programme>';
-                    const bytes = Buffer.byteLength(fragment);
-                    if (size + bytes > limits.output || outputCount >= limits.programmes) { truncated.add(schedule.id); continue; }
-                    append(fragment); outputCount++;
-                }
-                const truncatedChannels = Array.from(truncated).filter(id => selected.has(id)).length;
-                const header = '<?xml version="1.0" encoding="UTF-8"?><tv generator-info-name="OTT-play 2 filtered guide" data-window-start="' + Math.floor(startWindow) + '" data-window-end="' + Math.floor(endWindow) + '" data-programme-limit="' + programmeCap + '" data-truncated-channels="' + truncatedChannels + '" data-truncated="' + (truncatedChannels ? 'true' : 'false') + '">';
+                let xml = "";
+                const coverage = guide.output(limits.output,
+                    (id, names, icon) => '<channel id="' + escape(id) + '">' + names.map(name => '<display-name>' + escape(name) + '</display-name>').join("") + (icon ? '<icon src="' + escape(icon) + '"/>' : "") + '</channel>',
+                    (id, entry) => '<programme channel="' + escape(id) + '" start="' + escape(entry.start) + '"' + (entry.stop ? ' stop="' + escape(entry.stop) + '"' : "") + (entry.catchupId ? ' catchup-id="' + escape(entry.catchupId) + '"' : "") + '><title>' + escape(entry.title) + '</title>' + (entry.desc ? '<desc>' + escape(entry.desc) + '</desc>' : "") + '</programme>',
+                    value => Buffer.byteLength(value), value => { xml += value; });
+                if (!coverage) invalid("EPG_TOO_LARGE");
+                const header = '<?xml version="1.0" encoding="UTF-8"?><tv generator-info-name="OTT-play 2 filtered guide" data-window-start="' + coverage.start + '" data-window-end="' + coverage.end + '" data-programme-limit="' + coverage.programmeLimit + '" data-truncated-channels="' + coverage.truncatedChannels + '" data-truncated="' + (coverage.truncatedChannels ? 'true' : 'false') + '">';
                 finish(200, header + xml + '</tv>');
             } catch (error) { finish(502, /^EPG_/.test(error.code || "") ? error.code : "EPG_XML"); }
         }

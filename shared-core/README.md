@@ -181,7 +181,21 @@ malformed metadata, Unicode URL/channel equality and integer overflow.
 JavaScriptCore distributions; Rust tests partial HTTP failure and source-set
 isolation through QuickJS. These run in the existing native CI suites.
 
-Transport, streaming guide retention, remaining native cache policies, other operator session logic and durable
+`StreamingGuide` owns the Node companion's identity/archive-depth merging,
+candidate indexes, first-icon/merged-name metadata, streaming window admission,
+current/next priority and bounded programme retention. The output pass preserves
+ambiguous metadata and shares the byte/programme budget across channels in rounds.
+The host supplies XML encoders, UTF-8 lengths and an output sink. Programme
+payloads keep their original identity and discarded payloads are released.
+
+Compatibility includes programme-only exact IDs, first equal-priority entries,
+late candidate discovery without retroactive pruning, open stops and fractional
+archive depth. The Node adapter's existing transport, XML and request bounds
+remain in place. A fixed baseline of 110 actual HTTP responses from source
+revision `b34ae28` verifies exact output and failures. Ten common tests and all
+three JS ABI environments exercise this implementation.
+
+Transport, remaining native cache policies, other operator session logic and durable
 state still need migration. See [workspace status](../README.md) and
 [validation](validation.json); physical targets are not certified by VM tests.
 

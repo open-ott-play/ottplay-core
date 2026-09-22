@@ -175,6 +175,24 @@ function verify(context, profile) {
     const order = [1, 2, 3];
     assert.equal(JSON.stringify(core.legacyGuideCacheOrder(order, 2, 2, false)), "[3]");
     assert.equal(JSON.stringify(order), "[2,1]");
+    const streamRows = core.streamingGuideIdentities([{ tvgId: " a ", name: " News HD ", archiveDays: 3 }, { tvgId: "a", name: "news hd", archiveDays: 7 }]);
+    assert.equal(JSON.stringify(streamRows), '[["a","","news hd",7]]');
+    const stream = new core.StreamingGuideFilter(streamRows, 1000, 4, 2);
+    assert.equal(stream.channel("a", ["News HD"], "icon"), true);
+    assert.equal(stream.accepts("a", 900, 1100), true);
+    assert.equal(stream.accepts("unrequested", 900, 1100), false);
+    const livePayload = { title: "Live" }, nextPayload = { title: "Next" };
+    stream.programme("a", 900, 1100, livePayload);
+    stream.programme("a", 800, 900, { title: "History" });
+    stream.programme("a", 5000, null, nextPayload);
+    const streamPayloads = [], streamOutput = [];
+    const streamCoverage = stream.output(1024, (id, names, icon) => id + names[0] + icon,
+        (id, payload) => { streamPayloads.push(payload); return id + payload.title; }, value => value.length, value => streamOutput.push(value));
+    assert.equal(streamPayloads[0], livePayload);
+    assert.equal(streamPayloads[1], nextPayload);
+    assert.equal(JSON.stringify(streamOutput), '["aNews HDicon","aLive","aNext"]');
+    assert.equal(streamCoverage.truncatedChannels, 1);
+    assert.equal(streamCoverage.start, 1000 - 7 * 86400);
     const archive = { url: "https://video.test/live?token=a", mode: "append", source: "&s=${start}&d={duration:60}&id={catchup-id}", days: 2,
         start: 1767225600, end: 1767229200, now: 1767232800, correction: 0, programmeId: "Кино/🎬" };
     const calendar = () => [2026, 1, 1, 0, 0, 0];
