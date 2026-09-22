@@ -231,6 +231,25 @@ with additional native batch/error boundaries. The actual shipping adapters run
 these fixtures in their existing CI suites. Native XMLTV field limits, root/DTD
 guards, decompress limits and programme caps remain platform protections.
 
+`BrowserGuideRefresh` owns source normalization/order, per-URL stale-feed
+retention, progressive merge selection, callback generations, status, retry
+backoff and automatic-refresh notification decisions. Browser code keeps parsed
+payloads and performs requests, cancellation, guide merging and UI updates.
+Eighteen pre-migration scenarios preserve 67 complete state snapshots, including
+removed/reordered sources, empty success, cancellation and foreground refresh.
+
+`NativeGuideRefresh` owns sequential fetch/error/commit transitions for active
+Android and the Rust server. Android stops at the first failed feed, preserves
+data when there are no URLs, and validates the full current source under the
+host's refresh lock before committing. Rust continues after feed errors and
+returns a fresh empty result even when all feeds fail; a database-open error
+propagates, while a persistence error still returns fresh memory. Rust metadata
+uses shared first-feed ownership and its timer consumes the shared interval.
+Hosts retain original errors, payloads, clocks, mutexes and atomic SQLite writes.
+Captured public-API tests preserve eighteen Android and twenty-eight Rust
+outcomes. Additional Android tests retain cancellation, completion-order commits
+and full rollback on a later insert failure. SQL conflict behavior is unchanged.
+
 The source uses the OttPlay MIT license. Generated JavaScript includes Kotlin's
 Apache-2.0 runtime notices in `ottplay-core.LICENSE.txt`. The standard Gradle
 wrapper retains its Apache-2.0 notices and pinned distribution checksum.

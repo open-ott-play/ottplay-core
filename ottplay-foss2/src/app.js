@@ -7,10 +7,11 @@ OTT2.define("app", function (require) {
         var devices = require("devices"), profile = devices.detect(environment);
         var request = require("transport").create(environment, { relay: function () { return saved.settings.relay; } }), providers = require("providers").create({ request: request, portalTransport: function () { return saved.settings.relay; } }), epg = require("epg");
         var guideLookup = epg.createLookup ? epg.createLookup({ limit: 4096 }) : null, decoratedCatalog = null, decoratedSource = null, overrideSignature = JSON.stringify(saved.channelOverrides), decoratedSignature = "";
-        var channels = [], guide = null, sourceEpoch = 0, guideEpoch = 0, resolveEpoch = 0, cancelSource, cancelGuide, cancelResolve, lastEpgUrls = [], sourceEpgUrls = [];
-        var defaultEpgUrl = "https://cdn.epg.one/epg2.xml.gz", guideInfo = { phase: "idle", total: 0, done: 0, errors: [] };
+        var channels = [], guide = null, sourceEpoch = 0, resolveEpoch = 0, cancelSource, cancelGuide, cancelResolve, sourceEpgUrls = [];
+        var guideRefresh = new environment.OttPlayCore.BrowserGuideRefresh();
+        var defaultEpgUrl = "https://cdn.epg.one/epg2.xml.gz", guideInfo = guideRefresh.snapshot().info;
         var identity = require("channel-identity"), identityReport = null, catalogSourceId = "";
-        var guideDue = 0, guideFailures = 0, guideFeeds = {}, hostSuspended = false;
+        var guideFeeds = {}, hostSuspended = false;
         var television = ["pc", "pc2", "nodejs", "edem"].indexOf(profile.id) === -1;
         hostSuspended = television && !!(d.hidden || d.webkitHidden);
         var library = require("library"), browsing = false, browseItems = null, discovered = [], parentsById = {}, breadcrumbs = [], browseEpoch = 0, cancelBrowse, guidePage = 0, reminderTimer, notifiedReminders = {}, startupRestore = null, pinChallenge = null, pendingMigration = null;
@@ -508,8 +509,8 @@ OTT2.define("app", function (require) {
             if (!restore) startupRestore = null;
             gate.lock();
             if (cancelSource) cancelSource(); if (cancelGuide) cancelGuide(); if (cancelBrowse) cancelBrowse();
-            clearBrowse(); identityReport = null; catalogSourceId = ""; guideDue = 0; guideFailures = 0; guideFeeds = {}; lastEpgUrls = []; sourceEpgUrls = []; guideInfo = { phase: "idle", total: 0, done: 0, errors: [] }; if (providers.close && saved.activeSourceId) providers.close(saved.activeSourceId);
-            var epoch = ++sourceEpoch; guideEpoch++; stopPlayback(); channels = []; guide = null; if (guideLookup) guideLookup.clear(); loading = true; loadingSourceId = item.id; showHome();
+            clearBrowse(); identityReport = null; catalogSourceId = ""; guideRefresh.reset(true); guideFeeds = {}; sourceEpgUrls = []; guideInfo = guideRefresh.snapshot().info; if (providers.close && saved.activeSourceId) providers.close(saved.activeSourceId);
+            var epoch = ++sourceEpoch; stopPlayback(); channels = []; guide = null; if (guideLookup) guideLookup.clear(); loading = true; loadingSourceId = item.id; showHome();
             function done(error, result) {
                 if (destroyed || epoch !== sourceEpoch) return;
                 var restoreNow = restore && startupRestore === restore;
@@ -558,42 +559,34 @@ OTT2.define("app", function (require) {
             }
         }
         function refreshGuideIfDue() {
-            if (!destroyed && !loading && !(d.hidden || d.webkitHidden) && channels.length && guideDue && Date.now() >= guideDue && guideInfo.phase !== "loading") loadEPG(preferredEpgUrls(), true);
+            if (!loading && !(d.hidden || d.webkitHidden) && channels.length && guideRefresh.isDue(Date.now())) loadEPG(preferredEpgUrls(), true);
         }
         function loadEPG(urls, automatic) {
             if (destroyed) return;
-            if (typeof urls === "string") urls = urls ? [urls] : [];
-            urls = (urls || []).map(function (url) { return url === "http://epg.it999.ru/epg2.xml.gz" ? defaultEpgUrl : url; }).filter(function (url, index, all) { return typeof url === "string" && all.indexOf(url) === index; }).slice(0, 10);
+            urls = guideRefresh.normalize(urls);
             if (!urls.length) { view.toast(t("Укажите URL XMLTV в настройках.", "Set an XMLTV URL in Settings.")); return; }
-            if (cancelGuide) cancelGuide(); var epoch = ++guideEpoch, cancellations = [], results = [], pending = urls.length;
-            var previousFeeds = guideFeeds;
+            if (cancelGuide) cancelGuide();
+            var change = guideRefresh.begin(urls, !!automatic), epoch = change.generation, cancellations = [], previousFeeds = guideFeeds;
             guideFeeds = {};
-            urls.forEach(function (url) { if (Object.prototype.hasOwnProperty.call(previousFeeds, url)) guideFeeds[url] = previousFeeds[url]; });
-            if (lastEpgUrls.join("\n") !== urls.join("\n")) {
-                var retained = urls.map(function (url) { return guideFeeds[url]; }).filter(function (entry) { return !!entry; });
+            change.feeds.forEach(function (url) { guideFeeds[url] = previousFeeds[url]; });
+            if (change.merge) {
+                var retained = change.feeds.map(function (url) { return guideFeeds[url]; });
                 guide = retained.length ? epg.mergeGuides(retained) : null;
-                guideFailures = 0;
                 if (guideLookup) guideLookup.clear();
             }
-            lastEpgUrls = urls.slice();
-            guideInfo = { phase: "loading", total: urls.length, done: 0, errors: [] }; if (homeVisible) render();
+            guideInfo = change.info; if (homeVisible) render();
             cancelGuide = function () { cancellations.forEach(function (cancel) { if (typeof cancel === "function") cancel(); }); };
             urls.forEach(function (url, index) {
                 cancellations.push(request(url, function (error, content) {
-                    if (destroyed || epoch !== guideEpoch) return;
-                    try { if (error) throw error; results[index] = epg.parseXML(content, environment.DOMParser, url); guideFeeds[url] = results[index]; }
-                    catch (parseError) { guideInfo.errors.push(parseError.code || "NETWORK"); }
-                    pending--;
-                    guideInfo.done++;
-                    var available = urls.map(function (feed) { return guideFeeds[feed]; }).filter(function (entry) { return !!entry; });
-                    if (results[index] && available.length) guide = epg.mergeGuides(available);
-                    if (!pending) {
-                        guideInfo.phase = results.some(function (entry) { return !!entry; }) ? "ready" : "error";
-                        guideFailures = guideInfo.errors.length ? guideFailures + 1 : 0;
-                        guideDue = Date.now() + (guideFailures ? Math.min(1800000, 60000 * Math.pow(2, Math.min(guideFailures - 1, 5))) : 1800000);
-                    }
+                    if (!guideRefresh.accepts(epoch)) return;
+                    var parsed, errorCode = null;
+                    try { if (error) throw error; parsed = epg.parseXML(content, environment.DOMParser, url); guideFeeds[url] = parsed; }
+                    catch (parseError) { errorCode = parseError.code || "NETWORK"; }
+                    var update = guideRefresh.complete(epoch, index, !!parsed, errorCode, Date.now());
+                    guideInfo = update.info;
+                    if (update.merge) guide = epg.mergeGuides(update.feeds.map(function (feed) { return guideFeeds[feed]; }));
                     if (homeVisible) render();
-                    if (!pending && guideInfo.errors.length && (!automatic || !guide)) view.toast(available.length ? t("Часть источников EPG недоступна.", "Some EPG sources are unavailable.") : "EPG: " + epgError(guideInfo.errors[0]));
+                    if (update.notify) view.toast(update.feeds.length ? t("Часть источников EPG недоступна.", "Some EPG sources are unavailable.") : "EPG: " + epgError(guideInfo.errors[0]));
                 }, { builtinEPG: url === defaultEpgUrl || url === "http://epg.it999.ru/epg2.xml.gz", channels: channels.filter(function (channel) { return channel.kind !== "vod" && channel.kind !== "folder"; }).map(function (channel) { return { id: channel.id, tvgId: channel.tvgId || "", tvgName: channel.tvgName || "", name: channel.name, archiveDays: Math.max(0, Math.min(7, (Number(channel.catchup && channel.catchup.days || channel.archiveDays) || 0))) }; }) }));
             });
         }
@@ -669,7 +662,7 @@ OTT2.define("app", function (require) {
             else if (name === "loadSource") loadSource(source(value));
             else if (name === "deleteSource") view.dialog(t("Удалить источник?", "Delete source?"), '<p>' + t("Остальные источники и избранное сохранятся.", "Other sources and favorites will be preserved.") + '</p>' + view.btn("confirm-delete", "confirmDelete", t("Удалить", "Delete"), value));
             else if (name === "confirmDelete") {
-                if (value === saved.activeSourceId || value === loadingSourceId) { if (cancelSource) cancelSource(); if (cancelGuide) cancelGuide(); sourceEpoch++; guideEpoch++; clearBrowse(); identityReport = null; catalogSourceId = ""; guideFeeds = {}; guideDue = 0; guideFailures = 0; lastEpgUrls = []; stopPlayback(); channels = []; guide = null; if (guideLookup) guideLookup.clear(); loading = false; loadingSourceId = ""; }
+                if (value === saved.activeSourceId || value === loadingSourceId) { if (cancelSource) cancelSource(); if (cancelGuide) cancelGuide(); sourceEpoch++; guideRefresh.reset(false); clearBrowse(); identityReport = null; catalogSourceId = ""; guideFeeds = {}; stopPlayback(); channels = []; guide = null; if (guideLookup) guideLookup.clear(); loading = false; loadingSourceId = ""; }
                 if (providers.close) providers.close(value);
                 persist(function (s) { s.sources = s.sources.filter(function (entry) { return entry.id !== value; }); }); view.closeDialog(); render();
             } else if (name === "channel") channelDialog(getChannel(value));
@@ -745,7 +738,7 @@ OTT2.define("app", function (require) {
                     saved = repository.importJSON(JSON.stringify(incoming)); overrideSignature = JSON.stringify(saved.channelOverrides); if (guideLookup) guideLookup.clear(); view.closeDialog();
                     gate.lock(); startupRestore = false;
                     if (saved.activeSourceId && !values.reviewParental) loadSource(source(saved.activeSourceId));
-                    else { sourceEpoch++; guideEpoch++; if (cancelSource) cancelSource(); if (cancelGuide) cancelGuide(); clearBrowse(); identityReport = null; catalogSourceId = ""; guideFeeds = {}; guideDue = 0; guideFailures = 0; lastEpgUrls = []; channels = []; guide = null; loading = false; loadingSourceId = ""; showHome(); }
+                    else { sourceEpoch++; guideRefresh.reset(false); if (cancelSource) cancelSource(); if (cancelGuide) cancelGuide(); clearBrowse(); identityReport = null; catalogSourceId = ""; guideFeeds = {}; channels = []; guide = null; loading = false; loadingSourceId = ""; showHome(); }
                 }
                 catch (error) { view.toast(t("Импорт отклонён. Текущие настройки сохранены.", "Import rejected. Current settings were preserved.")); }
             } else if (name === "sleep") {
@@ -928,7 +921,7 @@ OTT2.define("app", function (require) {
         else if (saved.activeSourceId) loadSource(source(saved.activeSourceId));
         function destroy() {
             if (destroyed) return;
-            saveBookmark(); gate.lock(); destroyed = true; browseEpoch++; if (cancelBrowse) cancelBrowse(); environment.clearTimeout(reminderTimer); sourceEpoch++; guideEpoch++; resolveEpoch++;
+            saveBookmark(); gate.lock(); destroyed = true; browseEpoch++; if (cancelBrowse) cancelBrowse(); environment.clearTimeout(reminderTimer); sourceEpoch++; guideRefresh.destroy(); resolveEpoch++;
             if (cancelSource) cancelSource(); if (cancelGuide) cancelGuide(); if (cancelResolve) cancelResolve();
             if (fileReader) { fileReader.onload = null; fileReader.onerror = null; try { fileReader.abort(); } catch (ignore) {} fileReader = null; }
             exitFullscreen(); if (providers.close) saved.sources.forEach(function (entry) { providers.close(entry.id); }); media.destroy(); if (typeof stopDevices === "function") stopDevices();

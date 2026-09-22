@@ -46,6 +46,7 @@ function fixture(options = {}) {
     Object.assign(environment, options.environment || {});
     environment.window = environment;
     const context = vm.createContext(environment);
+    require("./load-core.cjs")(context);
     for (const file of ["security", "library", "channel-identity", "features", "playback-preferences", "playback-view", "playback-info", "state", "media", "devices"]) vm.runInContext(fs.readFileSync(path.join(__dirname, "../src/" + file + ".js"), "utf8"), context);
     const securityCreate = modules.security.create;
     modules.security.create = function (config) { config.now = () => securityClock; return securityCreate(config); };

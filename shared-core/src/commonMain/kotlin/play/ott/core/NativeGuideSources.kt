@@ -23,9 +23,11 @@ object NativeGuideSources {
 
     /** First source owns the entire channel, including an absent schedule or icon. */
     fun unowned(existing: Collection<String>, incoming: List<String>, identity: (String) -> String = { it }): List<String> {
-        val seen = existing.map(identity).toMutableSet()
-        return incoming.filter { seen.add(identity(it)) }
+        return claim(existing.map(identity).toMutableSet(), incoming, identity)
     }
+
+    internal fun claim(seen: MutableSet<String>, incoming: List<String>, identity: (String) -> String = { it }): List<String> =
+        incoming.filter { seen.add(identity(it)) }
 
     fun fresh(age: Double): Boolean = age < TTL
     private fun lookup(fresh: Boolean, force: Boolean, pending: Boolean): NativeCacheLookup = when {

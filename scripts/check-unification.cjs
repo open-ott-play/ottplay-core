@@ -87,6 +87,11 @@ for (const [file, required] of [
 }
 const repository = fs.readFileSync(path.join(root, "ottplay-android/app/src/main/java/play/ott/nativeapp/data/NativeRepository.kt"), "utf8");
 assert(repository.includes("providers.epgSources(source, catalog)"), "Active Android EPG sources must use the core adapter");
+assert(repository.includes("NativeGuideRefresh(") && repository.includes("NativeGuideRefreshAction.VALIDATE_SOURCE"), "Active Android refresh must use shared transitions");
+assert(!/urls\.flatMap\s*\{\s*providers\.loadEpg/.test(repository), "Android refresh aggregation policy reintroduced");
+const serverRefresh = fs.readFileSync(path.join(main, "src-rs/core/src/lib.rs"), "utf8");
+assert(serverRefresh.includes("shared_guide::GuideRefresh::new(") && serverRefresh.includes("refresh.unowned(") && serverRefresh.includes("shared_guide::refresh_interval("), "Server guide refresh must use shared transitions, ownership and interval");
+assert(!/all_channels\.entry|Duration::from_secs\(2 \* 3600\)/.test(serverRefresh), "Server refresh policy reintroduced");
 for (const provider of inventory.provider_directories) assert(fs.statSync(path.join(main, "prov", provider)).isDirectory(), "Retained provider removed: " + provider);
 for (const adapter of inventory.device_adapters) assert(fs.statSync(path.join(main, adapter)).isFile(), "Retained device removed: " + adapter);
 execFileSync("python3", [path.join(main, "tests/test_native_epg_cache.py"), "--check-sources-only"], { stdio: "inherit" });

@@ -36,4 +36,8 @@ assert(providers.includes("new root.OttPlayCore.XtreamClient("), "Xtream must de
 assert(!/function (?:normalizeXtream|normalizeSeries|streamUrl|numericId)\(/.test(providers), "Displaced Xtream rules reintroduced");
 assert(providers.includes("new root.OttPlayCore.StalkerClient(") && providers.includes("OttPlayCore.stalkerConfig("), "Stalker must delegate to the common core");
 assert(!/function (?:portalItem|pagedPortal|portalRequest)|get_ordered_list|create_link/.test(providers), "Displaced Stalker rules reintroduced");
+const app = fs.readFileSync(path.join(root, "src/app.js"), "utf8");
+assert(app.includes("new environment.OttPlayCore.BrowserGuideRefresh("), "Browser refresh must use the common core");
+for (const api of ["normalize", "begin", "accepts", "complete", "reset", "destroy", "isDue"]) assert(app.includes("guideRefresh." + api + "("), "Browser refresh must use shared " + api);
+assert(!/guideEpoch|guideDue|guideFailures|lastEpgUrls|results\.some|Math\.pow/.test(app), "Browser refresh retention/backoff/generation policy reintroduced");
 console.log("PASS shared core receipt, bootstrap order and guide/archive/playlist/Xtream/Stalker delegation");

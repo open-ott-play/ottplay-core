@@ -924,5 +924,85 @@
     "python_portable_branch_coverage_percent": 81,
     "ci_inventory": "119/119 reachable"
   },
-  "latest_validation_stage": "xmltv_records"
+  "latest_validation_stage": "epg_refresh",
+  "epg_refresh": {
+    "source_sha256": "675fb6ab32a95c265840f71a24d1bb2f287123bdaa7bd645f53dc2cf736d6bd2",
+    "baseline_commits": {
+      "source": "b2cd27f2a0ffafc99a5c1ca2f2b9ac9134582cb2",
+      "main": "8855d7789441cb03605dcabbfd61055259cbfbe6",
+      "android": "0be1caded9963f3ee3ca8ed0f54674e895696716"
+    },
+    "consumer_commits": {
+      "main": "22ea343ba989494398c51dae02962dda362190d4",
+      "android": "33ecfc2cb6d3b18e52b6629c1158c255b57a529f"
+    },
+    "captured_refresh_contracts": {
+      "browser": 18,
+      "browser_snapshots": 67,
+      "active_Android": 18,
+      "Rust_server": 28,
+      "Rust_background_cases": 5,
+      "total": 64
+    },
+    "additional_qualified_boundaries": {
+      "browser_callback_lifecycle": 6,
+      "android_cancellation_concurrency_rollback": 3
+    },
+    "common_tests": {
+      "JVM": {
+        "tests": 136,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "JavaScript": {
+        "tests": 134,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "macOS": {
+        "tests": 134,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    "es5_abi_profiles": 3,
+    "foss2_tests": 352,
+    "android_core_tests": 56,
+    "android_app_tests": 89,
+    "rust_workspace_tests": 71,
+    "native_policy_fallback_contracts": 195,
+    "archived_parser_contracts": 46,
+    "archived_android_edition_cases": 37,
+    "base_player_es5_scripts": 206,
+    "ci_inventory": "119/119 reachable",
+    "fixture_sha256": {
+      "ottplay-foss2/tests/fixtures/epg-refresh/before-core.json": "21d1402ff96de1d24f4d779efbe26441796f627d577d1108a417123ee2a72b00",
+      "ottplay-android/app/src/test/resources/epg-refresh-before-core.json": "521c3410b6f2a301ce1d285e870f718ecbbe65ff4a3056080dc94605f641bd27",
+      "ottplay-foss/src-rs/core/tests/fixtures/xmltv-refresh-before-core.json": "4627c64edb8cdf627a90e144b90df8e00190b467efc4a9b21072594f83ee68e6",
+      "ottplay-foss/src-rs/core/tests/fixtures/xmltv-refresh-boundaries-before-core.json": "e88b6f4ffa0c368896b7ad6c1ae9b9c50260e523f4c37a292cfd4824562032aa"
+    },
+    "migrated": [
+      "Browser per-URL retention, configured merge order and progressive refresh outcomes",
+      "Browser callback generations, backoff/deadline and notification decisions",
+      "Active Android sequential fetch admission and guarded commit policy",
+      "Rust server feed error, first metadata ownership, database failure and refresh interval decisions"
+    ],
+    "host_boundaries": [
+      "HTTP/XML and parsed payload ownership",
+      "cancellation execution and original error objects",
+      "clocks, UI, timers, mutexes and exact current source reads",
+      "SQLite transaction and insertion semantics"
+    ],
+    "retained_compatibility": [
+      "Android no URLs preserves old data; empty successful feeds clear it",
+      "Android first failure aborts; complete SourceConfig equality is checked under the existing lock",
+      "Browser stale feeds survive independently and removed/reordered feeds are applied immediately",
+      "Rust all-failed feeds return fresh empty cache; pool-open failure propagates, persist failure does not"
+    ],
+    "report": "reports/epg-refresh-delivery/validation.json",
+    "physical_device_acceptance": false
+  }
 }

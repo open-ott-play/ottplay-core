@@ -15,6 +15,9 @@ ownership, memory/disk cache decisions and Rust atomic refresh decisions also
 run in this core, with explicit platform compatibility profiles.
 The Node guide filter also delegates identity/depth merging, streaming retention,
 channel selection and round-robin output budgets to this core.
+Browser and active Android EPG refresh, plus Rust server feed aggregation and
+persistence decisions, now use common refresh coordinators. Platform-specific
+failure, stale-feed and transaction behavior remains explicit in those profiles.
 **The product migration is not complete.**
 The five repository directories are isolated checkouts of the revisions recorded
 in [inventory.json](inventory.json); existing installations are not modified.
@@ -261,7 +264,7 @@ This is a structural guard, not proof of device or provider acceptance.
 
 ## Remaining work
 
-EPG source aggregation/refresh, remaining streaming field extraction, other
+Remaining streaming field extraction, other
 operator sessions and catalog/identity rules, state migrations, playback
 controllers and service wire contracts still need migration. No whole client is yet
 fully free of inherited player logic. No release has been published or deployed.
