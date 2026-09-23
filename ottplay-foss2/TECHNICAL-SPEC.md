@@ -4,7 +4,8 @@ Status: requirements for the new product, not a statement of completed acceptanc
 The user requested a new interface and then clarified the approach: first document
 the old player's complete requirements, then implement an independent replacement
 from scratch without repeating its design mistakes. “HS5” means the previously
-specified ECMAScript 5. Behavioral reference: `../ottplay-foss`, version 1.1.43,
+specified ECMAScript 5. Behavioral reference: the sibling consumer repository
+`ottplay-foss` (resolved from the source checkout's parent), version 1.1.43,
 commit `73a7ab59799aa5deb425df4fa4875f6939204e83`.
 
 ## 1. Purpose and boundaries

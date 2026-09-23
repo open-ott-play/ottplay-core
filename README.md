@@ -1,4 +1,4 @@
-# OttPlay unification workspace
+# OttPlay core and FOSS2
 
 Status: common guide rules run in FOSS2, main web/iOS/Rust and Android consumers;
 archive URL rules run in FOSS2, Android and all 13 main-player archive adapters.
@@ -23,9 +23,10 @@ state and import, channel identity, parental authorization and playback decision
 Control-server and SWOP wire policy is generated from one versioned contract.
 Automated qualification and retained device/provider acceptance are recorded
 separately; passing software contracts does not certify physical televisions.
-The five repository directories are isolated checkouts of the revisions recorded
-in [checkouts.json](checkouts.json); existing installations are not modified.
-The independent `ottplay-foss2` client is also in scope.
+The five independent consumer repositories live beside this repository, normally
+under `~/victron`. [checkouts.json](checkouts.json) records the exact integration
+revisions used for isolated reproduction. The independent `ottplay-foss2` client
+stays in this repository with the common source.
 
 The requested outcome is one maintained implementation of player business logic
 across the entire OttPlay family, with no copied legacy implementation in the new
@@ -36,37 +37,69 @@ authoritative implementations.
 
 ## Reproduce this source tree
 
-This private repository owns `shared-core` and `ottplay-foss2`. The other five
-repositories remain independently versioned consumers/services. Their exact
-integration commits are pinned in `checkouts.json`; `inventory.json` retains
-the original revisions used to capture migration contracts.
+This repository owns `shared-core`, its distribution tooling, the service wire
+contracts and `ottplay-foss2`. Its Git remote remains `ottplay-unification`; the
+local folder may be named `ottplay-core`. The other five repositories remain
+independently versioned consumers/services. Their integration commits are pinned
+in `checkouts.json`; `inventory.json` retains the original revisions used to
+capture migration contracts.
 
-With GitHub access to the organization (including the private Android repo):
+The default layout is:
+
+```text
+~/victron/
+  ottplay-core/                 # this repository (local name is not significant)
+    shared-core/
+    contracts/
+    ottplay-foss2/
+  ottplay-foss/
+  ottplay-android/
+  ottplay-control-server/
+  ottplay-swop/
+  ottplay-web-vitrine/
+```
+
+All orchestration resolves consumer paths through `scripts/consumer_paths.py`.
+The default consumer root is this checkout's parent directory, regardless of the
+current working directory or the name of this checkout. Set
+`OTTPLAY_CONSUMER_ROOT` to a nonempty absolute path to use another directory.
+Run `python3 scripts/consumer_paths.py` to inspect the resolved layout. FOSS2,
+shared-core and local reports always remain inside this checkout.
+
+For a pinned reproduction, use a fresh directory so that existing development
+checkouts are untouched. GitHub access is required, including the private Android
+repository:
 
 ```sh
+export OTTPLAY_CONSUMER_ROOT="$(mktemp -d)"
 python3 scripts/checkouts.py
-cd shared-core
-npm ci
-./gradlew --no-daemon jvmTest jsNodeTest
-npm run pack:core
-npm run check:js
-cd ../ottplay-foss2
-npm ci
-npm test
-cd ../ottplay-foss
-npm ci --ignore-scripts
-cd ..
+(cd shared-core && npm ci && ./gradlew --no-daemon jvmTest jsNodeTest && npm run pack:core && npm run check:js)
+(cd ottplay-foss2 && npm ci && npm test)
+(cd "$OTTPLAY_CONSUMER_ROOT/ottplay-foss" && npm ci --ignore-scripts)
 node scripts/check-unification.cjs
 ```
 
-The checkout helper refuses to move an existing checkout to a different
-revision. Consumer artifacts can be verified and built without this source
-repository. To update the shared implementation, compile it once and use the
-three install commands documented in `shared-core/README.md`, then update
-consumer branches and their pins together.
+The checkout helper only clones missing repositories. Existing paths must be
+the root of the configured Git repository, with the exact pinned commit and no
+local changes; it refuses symlinks, wrong origins and other revisions. It never
+fetches, resets, moves or cleans an existing checkout. A newer development
+checkout is expected to fail this pin check; use a separate consumer root for
+reproduction. Unset `OTTPLAY_CONSUMER_ROOT` to resume using sibling checkouts.
+
+Consumer artifacts can be verified and built without this source repository.
+To update the shared implementation, compile it once and use the three install
+commands documented in `shared-core/README.md`, then update consumer branches
+and their pins together. For wire policy, run `python3 scripts/workspace-wire.py`
+to distribute or add `--check` for read-only verification. This runner reuses the
+canonical generator and preserves its bytes and consumer receipts. Consumer-local
+`scripts/generate-wire-contracts.py --check` remains self-contained and unchanged.
+
+Run `python3 -m unittest discover -s scripts/tests -v` for layout and checkout
+safety tests. These use temporary local repositories and need no network access.
 
 GitHub Actions rebuilds the common JVM/ES5 outputs and checks the browser pin,
-then runs FOSS2 contracts and Chromium EPG/compatibility journeys. Consumer PRs
+then runs FOSS2 contracts and Chromium EPG/compatibility journeys. Its wire job
+clones pinned consumers into an explicit runner-temporary directory. Consumer PRs
 run their own native/platform CI. `validation.json` records earlier local
 qualification; its `reports/` references are local evidence, excluded from Git.
 Source publication is separate from a product release or deployment.

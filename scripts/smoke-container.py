@@ -1,12 +1,13 @@
 """Check the locally built Alpine image without retaining a running container."""
 import hashlib
 import json
-from pathlib import Path
 import subprocess
 import time
 import urllib.request
 
-main = Path(__file__).resolve().parents[1] / "ottplay-foss"
+from consumer_paths import consumer_path
+
+main = consumer_path("ottplay-foss")
 container = subprocess.check_output([
     "docker", "run", "--rm", "-d", "--platform", "linux/arm64",
     "-p", "127.0.0.1::8080", "ottplay-unification-container-check",
