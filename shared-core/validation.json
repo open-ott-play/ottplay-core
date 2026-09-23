@@ -883,5 +883,13 @@
     "tests": "reports/final-unification/final-core-tests.log",
     "pack": "reports/final-unification/final-pack.log",
     "es5": "reports/final-unification/final-js-abi.log"
+  },
+  "source_ci": {
+    "url": "https://github.com/open-ott-play/ottplay-unification/actions/runs/35799166432",
+    "head": "d76471b5f3dde2b5657449aa1d4a384374d82ac5",
+    "jobs": 3,
+    "conclusion": "success",
+    "linux_macos_artifacts_identical": 5,
+    "core_source_sha256": "1f6d25045ad80c3ee449f6ed2affbf051bfff73939c4db9833da7ee22e1da67f"
   }
 }

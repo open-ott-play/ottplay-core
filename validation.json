@@ -4,7 +4,7 @@
   "audited_domain_migration_complete": true,
   "full_product_migration_complete": false,
   "retained_platforms_and_providers": true,
-  "validated_at_utc": "2026-09-22T23:48:18.677730+00:00",
+  "validated_at_utc": "2026-09-23T00:04:17.601862+00:00",
   "previous_validation_revision": "f429f537497ec95c2bf92781e1ecee86c18bbfe8",
   "core_source_sha256": "1f6d25045ad80c3ee449f6ed2affbf051bfff73939c4db9833da7ee22e1da67f",
   "artifacts": {
@@ -99,13 +99,81 @@
       "previous_gzip_bytes": 126848,
       "raw_budget": 475000,
       "gzip_budget": 130000
+    },
+    "ci": {
+      "url": "https://github.com/open-ott-play/ottplay-foss/actions/runs/35799096537",
+      "head": "4e11d5cd6985a88a19ee1f54aa679491f2832b3b",
+      "jobs": 20,
+      "conclusion": "success",
+      "package": {
+        "run": "https://github.com/open-ott-play/ottplay-foss/actions/runs/35799096537",
+        "headSha": "4e11d5cd6985a88a19ee1f54aa679491f2832b3b",
+        "checkoutSha": "bbede5e45ad3047c39899845aab0df229e2b3e77",
+        "checkoutParents": [
+          "c20a178ac9f228dcd872aaf95e09d3af1602ab74",
+          "4e11d5cd6985a88a19ee1f54aa679491f2832b3b"
+        ],
+        "archiveSha256": "bc4b2a8a4579275d58be021bdbda6f6660e69942b70bd72ea11fa9d3f7595fde",
+        "archiveBytes": 4000312,
+        "files": 228,
+        "buildInfo": {
+          "bundleSha256": "7b0aefc5cb093ed99658ab2821720fe63864d2d2f216b857a89d39bbd8e1071c",
+          "revision": "bbede5e45ad3047c39899845aab0df229e2b3e77",
+          "version": "1.1.44"
+        },
+        "bundleReport": [
+          {
+            "bytes": 473261,
+            "gzipBytes": 129772,
+            "path": "dist/stbPlayer.js",
+            "sha256": "7b0aefc5cb093ed99658ab2821720fe63864d2d2f216b857a89d39bbd8e1071c"
+          },
+          {
+            "bytes": 473219,
+            "gzipBytes": 129846,
+            "path": "src-tauri/frontend/dist/stbPlayer.js",
+            "sha256": "08e188d7e06e36a145f5be63800de1b650baa960c091ea884b02b20cd8dee16c"
+          },
+          {
+            "bytes": 473219,
+            "gzipBytes": 129846,
+            "path": "dist-mobile/dist/stbPlayer.js",
+            "sha256": "08e188d7e06e36a145f5be63800de1b650baa960c091ea884b02b20cd8dee16c"
+          }
+        ],
+        "sharedCoreSourceSha256": "1f6d25045ad80c3ee449f6ed2affbf051bfff73939c4db9833da7ee22e1da67f",
+        "sharedCoreJsSha256": "ec2b011bf6d327055b3790fdecbf288235b3812f3688c2b1f93ef68c1242c6a6",
+        "status": "PASS",
+        "qualityGate": {
+          "attempt": 1,
+          "status": "completed",
+          "conclusion": "success",
+          "passedJobs": 20
+        }
+      }
     }
   },
   "foss2": {
     "unit_tests": 402,
     "es5_grammar": "passed",
     "asset_and_core_receipts": "passed",
-    "full_browser_acceptance": "running; recorded separately in final delivery receipt"
+    "full_browser_acceptance": {
+      "gates": 12,
+      "passed": true,
+      "source_fingerprints_unchanged": true,
+      "report": "reports/final-unification/delivery/foss2-acceptance.json"
+    },
+    "package": {
+      "version": "0.6.0-beta.1",
+      "archive": "reports/final-unification/delivery/0.6.0-beta.1/ottplay-foss2-0.6.0-beta.1.zip",
+      "files": 176,
+      "bytes": 2332161,
+      "sha256": "524d5daa6fdc1ca6e2089f2ce52ae8a046f1341804a1c699ea7c41dc281269d0",
+      "verified_files": 175,
+      "full_acceptance_gates": 12,
+      "core_source_sha256": "1f6d25045ad80c3ee449f6ed2affbf051bfff73939c4db9833da7ee22e1da67f",
+      "inputs_match_tested_release": true
+    }
   },
   "android": {
     "tests": {
@@ -168,7 +236,18 @@
         "sha256": "dc87ab514284641026dabf2a0e2582a28ad2bb9af2d160793269f3b28ab45b45"
       }
     ],
-    "core_jar_sha256": "f77263c612a34bc526a427bd8ff98c9222caec369bd51d0684c0cc4a67d2f859"
+    "core_jar_sha256": "f77263c612a34bc526a427bd8ff98c9222caec369bd51d0684c0cc4a67d2f859",
+    "ci": {
+      "url": "https://github.com/open-ott-play/ottplay-android/actions/runs/35798303991",
+      "head": "163f7aaacb0848e93e1e8020b3b53c558840e6fb",
+      "jobs": 3,
+      "conclusion": "success",
+      "device_tests": {
+        "phone-api35": 26,
+        "androidtv-api36": 26
+      },
+      "artifact_digests_verified": true
+    }
   },
   "wire": {
     "schema_sha256": "23a19dae2cb07334edadb2cb938749303dd44f0e81ad205352aa2a049c5b6ca4",
@@ -389,8 +468,7 @@
   "published_or_deployed": false,
   "remaining": [
     "Retained physical TV/STB codec and DRM acceptance",
-    "Provider-account and installation/rollback acceptance on retained devices",
-    "Final source and consumer CI artifacts are recorded separately after push; release promotion is not part of this change"
+    "Provider-account and installation/rollback acceptance on retained devices"
   ],
   "reports": {
     "common": "reports/final-unification/final-core-tests.log",
@@ -442,5 +520,21 @@
     "ottplay-android/core/src/test/resources/xtream-before-core.json": "4421c1d92306ccce53fb2a8e058d786dcdc3b0f49c6068ce7ec47fd59d23a5c1",
     "ottplay-android/app/src/test/resources/android-selections-before-core.json": "74fb1c5adde1188d2a887f259a61e718f5336c7c35ffb1321fa0eaff9b4d6eb9",
     "ottplay-android/app/src/test/resources/epg-refresh-before-core.json": "521c3410b6f2a301ce1d285e870f718ecbbe65ff4a3056080dc94605f641bd27"
+  },
+  "source_commit": "d76471b5f3dde2b5657449aa1d4a384374d82ac5",
+  "automated_integration_complete": true,
+  "source_ci": {
+    "url": "https://github.com/open-ott-play/ottplay-unification/actions/runs/35799166432",
+    "head": "d76471b5f3dde2b5657449aa1d4a384374d82ac5",
+    "jobs": 3,
+    "conclusion": "success",
+    "linux_macos_artifacts_identical": 5,
+    "core_source_sha256": "1f6d25045ad80c3ee449f6ed2affbf051bfff73939c4db9833da7ee22e1da67f"
+  },
+  "integration_prs": {
+    "player": "https://github.com/open-ott-play/ottplay-foss/pull/511",
+    "android": "https://github.com/open-ott-play/ottplay-android/pull/16",
+    "control": "https://github.com/open-ott-play/ottplay-control-server/pull/10",
+    "swop": "https://github.com/open-ott-play/ottplay-swop/pull/24"
   }
 }
