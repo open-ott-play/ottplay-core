@@ -1,6 +1,6 @@
 {
   "name": "ottplay-foss2",
-  "version": "0.6.0-beta.1",
+  "version": "0.6.0-beta.2",
   "private": true,
   "description": "Independent ES5 IPTV player and its technical specification",
   "scripts": {

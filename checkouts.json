@@ -1,19 +1,19 @@
 {
   "ottplay-foss": {
     "url": "https://github.com/open-ott-play/ottplay-foss.git",
-    "revision": "4e11d5cd6985a88a19ee1f54aa679491f2832b3b"
+    "revision": "900be00019b9d2de33a56b48b3eac399df9a5522"
   },
   "ottplay-android": {
     "url": "https://github.com/open-ott-play/ottplay-android.git",
-    "revision": "163f7aaacb0848e93e1e8020b3b53c558840e6fb"
+    "revision": "88b7944f3028440cca64b49f46140a585656390c"
   },
   "ottplay-control-server": {
     "url": "https://github.com/open-ott-play/ottplay-control-server.git",
-    "revision": "f3f515680e9bd0e71f4bf7298b7e70f87b5c5f6f"
+    "revision": "ce3ae9593f05ba157ec1e37aa46859f6dd6af4ae"
   },
   "ottplay-swop": {
     "url": "https://github.com/open-ott-play/ottplay-swop.git",
-    "revision": "e45361403a5a4e7109d3ab69d3bc730725c57da4"
+    "revision": "5caa0853fded09ddd7293bb6d48c9b60ebaeac86"
   },
   "ottplay-web-vitrine": {
     "url": "https://github.com/open-ott-play/ottplay-web-vitrine.git",

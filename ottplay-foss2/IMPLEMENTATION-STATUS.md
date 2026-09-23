@@ -1,6 +1,6 @@
 # OTT-play FOSS 2 implementation status
 
-Version `0.6.0-beta.1`, 2026-09-18. See [beta release notes](docs/RELEASE-0.6.0-beta.1.md) for the resolved deep-audit findings and validation boundary. This is an independent ES5 application with a compact LG-oriented interface and working browser playback. English is the first-run and unknown-language default; Russian is selectable and persists across reloads. RobotoCondensed is the default local font. The original player's application code is not used.
+Version `0.6.0-beta.2`, 2026-09-22. See [beta release notes](docs/RELEASE-0.6.0-beta.2.md) for the shared-core integration, upgrade instructions and validation boundary. This is an independent ES5 application with a compact LG-oriented interface and working browser playback. English is the first-run and unknown-language default; Russian is selectable and persists across reloads. RobotoCondensed is the default local font. The original player's application code is not used.
 
 This document distinguishes the delivered interface from the broader ecosystem requirements in [Technical specification](TECHNICAL-SPEC.md). ES5 parsing, remote profiles and physical hardware playback are separate checks.
 
@@ -141,10 +141,10 @@ The original `ottplay-foss` is neither modified nor used as the application runt
 
 ## Beta 0.6.0-beta.1 verification
 
-The 0.5.0 verification counts and device observations above are historical. Current beta acceptance is recorded in the release `validation.json` and `test-results/verification.json`, with the final archive checksum and per-file SHA-256 manifest. Android automatic browser input uses DOM numeric codes; only an explicit Android profile selects native KeyEvent codes.
+The 0.5.0 verification counts and device observations above are historical. The earlier beta's acceptance belongs to its own release records; it does not qualify changed sources. Android automatic browser input uses DOM numeric codes; only an explicit Android profile selects native KeyEvent codes.
 
 
-## Local shared-core migration
+## Beta 0.6.0-beta.2 shared-core integration
 
 The browser and Node guide filter now consume the same generated OttPlay
 multiplatform core for XMLTV timestamps, normalized/canonical names, ordered
@@ -152,8 +152,12 @@ channel matching and current/next selection. The browser's cached schedule
 window uses that selection too. Platform XML decoding, HTTP, feed indexes and
 UI remain in this client. Archive URL decisions and M3U metadata parsing,
 grouping, duplicate handling, archive availability and identity inputs now use
-the same core. URL resolution and hashes remain injected host primitives;
-non-M3U provider sessions and durable state still need migration. Browser M3U
+the same core. URL resolution and hashes remain injected host primitives.
+Xtream and Stalker sessions/catalogs, source validation, request cancellation
+decisions and the bounded series cache now use that core as well. Durable
+selections, backups, legacy settings import, parental sessions and playback
+recovery/position rules share the same implementation. The client retains
+storage, HTTP, native JSON/XML decoding, UI and media-engine effects. Browser M3U
 inputs are bounded to 32 Mi UTF-16 code units, 1 Mi per line and 100,000 unique
 channels. Twenty-six captured pre-migration M3U results retain channel IDs and
 metadata, including archive overrides, relative URLs and variant streams.
@@ -163,8 +167,10 @@ by `npm run check:core`. Updates come from the shared core distribution tool;
 no sibling checkout, Java installation or compiler is needed to run FOSS2.
 The kernel loads locally after the existing core-js bootstrap.
 
-Validation of this working tree: all 344 Node test cases, ES5/resource/vendor/core
-checks, Chromium provider/video and EPG journeys, and the page/Worker
-compatibility suite passed.
-These results do not certify physical TV/STB firmware or update a published
-release's qualification. No supported target or provider was removed.
+The beta's `validation.json` fingerprints the exact packaged inputs and records
+all twelve sequential acceptance stages: Node/ES5/resource/vendor/core checks
+and eleven Chromium journeys, including generated-media playback, providers,
+EPG, compatibility, navigation and window controls. The archive manifest records
+every shipped file and `SHA256SUMS` identifies the immutable package.
+These checks do not certify physical TV/STB firmware or commercial accounts.
+No supported target or provider was removed.

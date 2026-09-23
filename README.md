@@ -298,7 +298,9 @@ host adapters; they are not alternative implementations of those shared rules.
 `validation.json` identifies the exact common artifact, immutable baseline
 contracts, completed automated checks and CI revisions. Physical TV/STB codec,
 DRM, provider-account and installation/rollback acceptance still requires the
-retained devices and accounts. No release has been published or deployed.
+retained devices and accounts. Beta packages use the repositories' release
+channels; release publication and production deployment are separate.
+FOSS2 beta notes are in [RELEASE-0.6.0-beta.2.md](ottplay-foss2/docs/RELEASE-0.6.0-beta.2.md).
 
 ## Migration order
 

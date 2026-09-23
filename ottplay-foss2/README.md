@@ -1,6 +1,6 @@
 # OTT-play FOSS 2
 
-**Beta 0.6.0-beta.1** — [release notes and upgrade instructions](docs/RELEASE-0.6.0-beta.1.md).
+**Beta 0.6.0-beta.2** — [release notes and upgrade instructions](docs/RELEASE-0.6.0-beta.2.md).
 
 An independent IPTV player with an ES5 application runtime and a compact interface for LG televisions and remote controls, inspired by OTT-play FOSS. The original player is a requirements reference, not a runtime dependency. The application, state model, providers and controllers are newly written. Existing font resources are retained with their notices.
 
@@ -9,8 +9,8 @@ An independent IPTV player with an ES5 application runtime and a compact interfa
 ## Run
 
 ```sh
-cd ottplay-foss2-0.6.0-beta.1
-npm ci
+cd ottplay-foss2-0.6.0-beta.2
+npm ci --omit=dev
 npm start
 ```
 
@@ -147,6 +147,12 @@ The Node companion delegates streaming guide retention, archive-depth merging,
 candidate selection and output budgets to the same core. Its adapter retains
 HTTP, XML/gzip decoding, URL validation and UTF-8 serialization. Another 110
 captured HTTP responses verify exact output ordering and truncation behavior.
+Provider source validation, request/session lifetime and the bounded series cache
+are coordinated by the core. Durable selections, backups, legacy settings import,
+parental sessions and playback recovery/position decisions use the same pinned
+implementation. HTTP, storage, DOM focus, decoders and media-engine effects remain
+in this client's adapters. The beta archive includes that generated core and its
+source receipt; running it requires no sibling checkout or Kotlin toolchain.
 `npm run check:core` verifies its source receipt, artifact hashes and delegation.
 Update it through the shared-core distribution script; do not edit the generated
 bundle or restore an application-local copy of these rules. The existing ES5
