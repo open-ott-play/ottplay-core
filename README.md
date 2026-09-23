@@ -37,12 +37,23 @@ authoritative implementations.
 
 ## Reproduce this source tree
 
-This repository owns `shared-core`, its distribution tooling, the service wire
-contracts and `ottplay-foss2`. Its Git remote remains `ottplay-unification`; the
-local folder may be named `ottplay-core`. The other five repositories remain
+The [open-ott-play/ottplay-core](https://github.com/open-ott-play/ottplay-core)
+repository owns `shared-core`, its distribution tooling, the service wire
+contracts and `ottplay-foss2`. Its usual local checkout is `~/victron/ottplay-core`.
+The other five repositories remain
 independently versioned consumers/services. Their integration commits are pinned
 in `checkouts.json`; `inventory.json` retains the original revisions used to
 capture migration contracts.
+
+To clone the source repository into the flat workspace:
+
+```sh
+cd ~/victron
+git clone git@github.com:open-ott-play/ottplay-core.git ottplay-core
+```
+
+The repository was previously named `ottplay-unification`. Historical evidence
+and generated provenance headers retain that name and their original hashes.
 
 The default layout is:
 
