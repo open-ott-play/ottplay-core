@@ -1,9 +1,33 @@
 name: Shared core
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    branches: [main]
+  pull_request:
+  merge_group:
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
+  scope:
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/change-scope.yml@dc291e8c6635d8a0c5d2cc33a4ffd83d1956625b
+    with:
+      force-full: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' }}
+      documentation-paths: >-
+        ["contracts/README.md", "shared-core/README.md",
+        "ottplay-foss2/README.md", "ottplay-foss2/TECHNICAL-SPEC.md",
+        "ottplay-foss2/IMPLEMENTATION-STATUS.md", "ottplay-foss2/MEDIA-API.md",
+        "ottplay-foss2/THIRD-PARTY-NOTICES.md",
+        "ottplay-foss2/docs/ARCHITECTURE-RISKS.md",
+        "ottplay-foss2/docs/DEEP-COMPATIBILITY-AUDIT-20260918.md",
+        "ottplay-foss2/docs/DEVICE-CONTRACTS.md",
+        "ottplay-foss2/docs/ENGINE-COMPATIBILITY.md", "ottplay-foss2/docs/EPG.md",
+        "ottplay-foss2/docs/FEATURE-INVENTORY.md", "ottplay-foss2/docs/PROVIDER-API.md",
+        "ottplay-foss2/docs/RELEASE-0.6.0-beta.1.md",
+        "ottplay-foss2/docs/RELEASE-0.6.0-beta.2.md"]
+
   portable:
+    needs: scope
+    if: ${{ needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only' }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     defaults:
@@ -36,6 +60,8 @@ jobs:
           if-no-files-found: error
 
   browser-client:
+    needs: scope
+    if: ${{ needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     defaults:
@@ -68,6 +94,8 @@ jobs:
           if-no-files-found: warn
 
   wire-contracts:
+    needs: scope
+    if: ${{ needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:

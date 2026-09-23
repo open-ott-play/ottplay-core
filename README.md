@@ -332,6 +332,14 @@ This is a structural guard, not proof of device or provider acceptance.
 
 ## Integration and release acceptance
 
+CI classifies the complete Git diff with the pinned shared toolkit before
+starting the Kotlin, browser and wire-contract jobs. Changes limited to ordinary
+documentation and the exact documentation paths listed in `core.yml` skip those
+jobs. Source, tests, fixtures, assets, configuration and unknown paths still run
+full validation; a Markdown extension alone does not exempt a file. Pull requests
+and merge-queue commits are checked, and push CI runs on `main`. Manual runs always
+perform full validation. A documentation-only run produces no build artifacts.
+
 The audited domain migration includes XMLTV field interpretation, operator
 sessions/catalogs/media/guide routes, state migration and reconciliation,
 parental policy, playback choices/recovery/navigation, and generated service
