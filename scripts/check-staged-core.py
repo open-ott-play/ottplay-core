@@ -1,10 +1,11 @@
 """Compare packaged browser, Capacitor and built iOS resources to the core receipt."""
-from pathlib import Path
 import hashlib
 import json
 
-root = Path(__file__).resolve().parents[1]
-main = root / 'ottplay-foss'
+from consumer_paths import SOURCE_ROOT, consumer_path
+
+root = SOURCE_ROOT
+main = consumer_path('ottplay-foss')
 manifest = json.loads((root / 'shared-core/dist/ottplay-core.manifest.json').read_text())
 resources = []
 for relative in [

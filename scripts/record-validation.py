@@ -8,12 +8,14 @@ import re
 import shutil
 import xml.etree.ElementTree as ET
 
+from consumer_paths import SOURCE_ROOT, consumer_path, workspace_path
+
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('stage', choices=['stalker', 'guide'])
 args = parser.parse_args()
 stage = args.stage
 ci_count = 117 if stage == 'guide' else 116
-root = Path(__file__).resolve().parents[1]
+root = SOURCE_ROOT
 manifest = json.loads((root / 'shared-core/dist/ottplay-core.manifest.json').read_text())
 source = manifest['source']['sha256']
 now = datetime.datetime.now(datetime.timezone.utc).isoformat()
@@ -65,7 +67,7 @@ fixture_files = {
 }
 counts = {}
 for key, file in fixture_files.items():
-    fixture = json.loads((root / file).read_text())
+    fixture = json.loads(workspace_path(file).read_text())
     counts[key] = len(fixture if isinstance(fixture, list) else fixture['cases'])
 counts['total'] = sum(counts.values())
 stalker = dict(
@@ -79,7 +81,7 @@ stalker = dict(
                             'base-player numeric/hash IDs, raw URLs and numeric-prefix EPG fields', 'BEST LiST distinct M3U fallback URL forms'],
     cancellation='browser load cancellation exercised at all stages; stale sessions and string generations rejected; existing page cancellation passed',
     es5='modern and two old-API simulations passed; forbidden Unicode RegExp calls removed from Xtream fallback and antifriz logo rewrite',
-    fixture_sha256={file: hashlib.sha256((root / file).read_bytes()).hexdigest() for file in fixture_files.values()},
+    fixture_sha256={file: hashlib.sha256(workspace_path(file).read_bytes()).hexdigest() for file in fixture_files.values()},
     benchmark=json.loads(read('benchmark.json')) if stage == 'stalker' else json.loads((root/'reports/stalker-benchmark.json').read_text()),
 )
 benchmark = json.loads(read('benchmark.json'))
@@ -99,13 +101,13 @@ v = json.loads((root / 'validation.json').read_text())
 v.update(scope='guide_archive_playlist_xtream_and_stalker_core_integration', core_source_sha256=source,
          shared_core_tests=core['total_tests'], validated_at_utc=now, stalker=stalker)
 a = v['android']
-android = root / 'ottplay-android'
+android = consumer_path('ottplay-android')
 a['core_test_suites'] = suites(android / 'core', 'test')
 a['app_test_suites'] = suites(android / 'app', 'testDebugUnitTest')
 a['core_tests'] = sum(row['tests'] for row in a['core_test_suites'])
 a['app_unit_tests'] = sum(row['tests'] for row in a['app_test_suites'])
 for name in ['debug_apk', 'release_apk']:
-    data = (root / a[name]['path']).read_bytes()
+    data = workspace_path(a[name]['path']).read_bytes()
     a[name].update(sha256=hashlib.sha256(data).hexdigest(), bytes=len(data))
 a['shared_domain_scope'] = list(dict.fromkeys(a['shared_domain_scope'] + ['Stalker MAG/JSON-RPC sessions and catalogs']))
 a['stalker_recorded_contracts'] = counts['android']
@@ -150,7 +152,7 @@ if stage == 'guide':
                                          'browser latest overlap and half-open ends', 'classic earliest overlap and inclusive ends',
                                          'classic one-hour miss retry and 12-hour response TTL', 'Android first duplicate interval'],
                  host_boundaries=['XML decoding and decompression limits', 'URL codec', 'transport/cancellation and UI', 'storage and wall clock'],
-                 fixture_sha256={file:hashlib.sha256((root/file).read_bytes()).hexdigest() for file in files}, benchmark=benchmark)
+                 fixture_sha256={file:hashlib.sha256(workspace_path(file).read_bytes()).hexdigest() for file in files}, benchmark=benchmark)
     core.update(scope='integrated_guide_feed_cache_archive_playlist_xtream_and_stalker_rules', guide_feed_cache=guide)
     v.update(scope='guide_feed_cache_archive_playlist_xtream_and_stalker_core_integration', guide_feed_cache=guide)
     a['shared_domain_scope'] = list(dict.fromkeys(a['shared_domain_scope'] + ['XMLTV programme validation/deduplication/order']))

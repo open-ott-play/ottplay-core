@@ -5,13 +5,20 @@
 policy, interfaces, identifiers, limits and endpoint names. Update this source
 and the generator together; never maintain policy in generated consumer files.
 
-Run `python3 scripts/generate-wire-contracts.py` from this checkout to distribute,
-and append `--check` to check all consumers without writing. Each shipping
+Run `python3 scripts/workspace-wire.py` from this source checkout to distribute,
+and append `--check` to check all consumers without writing. It imports the
+canonical generator's output functions, preserves the generator bytes, and uses
+`scripts/consumer_paths.py` to find sibling repositories (or the absolute
+`OTTPLAY_CONSUMER_ROOT` override). Use `--target main`, `swop` or `control` to
+limit the workspace operation. It requires existing checkouts with the configured
+origin, but permits development branches and local changes. Each shipping
 consumer contains a generated copy of the schema, generator and source receipt;
 `python3 scripts/generate-wire-contracts.py --check` in any consumer works offline
 without this checkout. Python 3 is required; the Go target also uses `gofmt`.
 Receipts bind both the schema bytes and generator bytes. The source checkout
 checks receipt, generator, schema and generated implementation equality.
+Do not run the canonical generator's old multi-repository entrypoint from this
+source checkout: workspace path resolution belongs to `workspace-wire.py`.
 
 Profiles deliberately retain the existing wire behavior:
 

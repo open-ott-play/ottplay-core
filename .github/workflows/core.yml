@@ -76,5 +76,8 @@ jobs:
         with:
           go-version: '1.26.8'
           cache: false
+      - name: Use isolated pinned consumer checkouts
+        run: echo "OTTPLAY_CONSUMER_ROOT=$RUNNER_TEMP/ottplay-consumers" >> "$GITHUB_ENV"
+      - run: python3 -m unittest discover -s scripts/tests -v
       - run: python3 scripts/checkouts.py --only ottplay-foss --only ottplay-swop --only ottplay-control-server
-      - run: python3 scripts/generate-wire-contracts.py --check
+      - run: python3 scripts/workspace-wire.py --check
