@@ -340,6 +340,12 @@ full validation; a Markdown extension alone does not exempt a file. Pull request
 and merge-queue commits are checked, and push CI runs on `main`. Manual runs always
 perform full validation. A documentation-only run produces no build artifacts.
 
+New commits cancel superseded runs on the same ref, and JVM/JS validation caches
+Gradle dependencies. Core distribution artifacts are uploaded only from `main`
+pushes and manual runs, with one-day retention. Browser reports are retained for
+one day after a successful job or three days after a failed/cancelled job. PRs
+still run the complete checks without uploading duplicate distribution archives.
+
 The audited domain migration includes XMLTV field interpretation, operator
 sessions/catalogs/media/guide routes, state migration and reconciliation,
 parental policy, playback choices/recovery/navigation, and generated service
