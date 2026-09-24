@@ -80,7 +80,26 @@ class OperatorPlaylistClient(url: String, relay: String, intercepted: Boolean, p
     }
 }
 
-/** Wire codecs only; the common session owns request/fallback and catalog rules. */
+/** Stable provider identities for the active browser catalog path. */
+@JsExport
+class OperatorChannelClient(config: dynamic, encode: (String) -> String) {
+    private val input = wire(config)
+    private val base = input["server"].string()
+    private val source = XtreamSource("operator", input["user"].string(), input["pass"].string())
+    private val addresses = XtreamAddresses(source, { path, query -> base + "/" + path.joinToString("/") { encode(it) } +
+        if (query.isEmpty()) "" else query.joinToString("&", "?") { encode(it.first) + "=" + encode(it.second) } }, encode)
+    private val session = OperatorChannelSession(base, addresses)
+    fun action(): String = session.action().name
+    fun request(): String = session.request()
+    fun reject() = session.reject()
+    fun accept(value: dynamic) {
+        try { session.accept(wire(value)) }
+        catch (error: OperatorCatalogFailure) { operatorError(error) }
+    }
+    fun channelCatalog(): dynamic = channelCatalogRows(session.catalog())
+}
+
+/** Compatibility client for consumers of the historical numeric catalog. */
 @JsExport
 class OperatorClient(config: dynamic, encode: (String) -> String, hash: (dynamic) -> Double) {
     private val input = wire(config)
