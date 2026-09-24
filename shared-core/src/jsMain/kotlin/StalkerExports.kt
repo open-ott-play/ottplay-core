@@ -65,12 +65,13 @@ class StalkerClient(input: dynamic, generation: Int, private val component: (Str
 }
 
 @JsExport
-class LegacyStalkerClient(portal: String, mac: String) {
+class LegacyStalkerClient(private val portal: String, private val mac: String) {
     private val core=LegacyStalker(portal,mac)
     fun endpoint()=core.endpoint
     fun api(method: String, params: dynamic): dynamic=unwire(core.api(method,wire(params).properties))
     fun request(): dynamic=core.request?.let(::unwire)
     fun accept(response: dynamic): dynamic=try {core.accept(wire(response));null}catch(error:StalkerFailure){failure(error.code)}
+    fun channelCatalog(): dynamic = channelCatalogRows(ChannelCatalog.stalker(core.channels, portal, mac))
     fun catalog(hash: (dynamic)->Double): dynamic {
         val catalog=core.catalog {hash(unwire(it))};val result: dynamic=js("({})")
         result.ids=catalog.entries.map {it.id}.toTypedArray();result.channels=js("Object.create(null)");result.groups=js("Object.create(null)")
