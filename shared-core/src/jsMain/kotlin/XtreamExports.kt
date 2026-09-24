@@ -28,6 +28,7 @@ class XtreamClient(input: dynamic, legacy: Boolean,
     fun shortEpgUrl(id: String): String = addresses.legacyShortEpg(id)
     fun fallbackPlaylist(networkFailure: Boolean): String = addresses.legacyPlaylist(base,networkFailure)
     fun guide(data: dynamic, clock: (dynamic) -> Double): dynamic = legacyGuide(LegacyXtream.guide(wire(data)) { clock(unwire(it)) })
+    fun channelCatalog(): dynamic = channelCatalogRows(ChannelCatalog.xtream(session.data, addresses))
     fun legacyCatalog(hash: (dynamic) -> Double): dynamic {
         val catalog = LegacyXtream.catalog(session.data, addresses) { hash(unwire(it)) }
         val result: dynamic = js("({})")
