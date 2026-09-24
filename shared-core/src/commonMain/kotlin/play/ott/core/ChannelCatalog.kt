@@ -3,7 +3,8 @@ package play.ott.core
 /** Provider identity is independent of labels, category position and UI numeric IDs. */
 data class CatalogChannel(val itemId: String, val providerId: String, val name: String,
     val groupId: String, val groupName: String, val logo: String, val url: String,
-    val archiveHours: Double = 0.0, val archiveMode: String = "")
+    val archiveHours: Double = 0.0, val archiveMode: String = "",
+    val legacyReference: LegacyChannelReference? = null)
 
 object ChannelCatalog {
     fun xtream(data: Map<String, ProviderValue>, addresses: XtreamAddresses): List<CatalogChannel> {
@@ -19,7 +20,7 @@ object ChannelCatalog {
             val categoryId = row["category_id"].string()
             CatalogChannel("xtream:stream:$providerId", providerId, row["name"].takeIf { it.truthy() }?.string() ?: providerId,
                 "xtream:category:$categoryId", groups[categoryId] ?: "Other", row["stream_icon"].takeIf { it.truthy() }?.string() ?: "",
-                addresses.legacyStream(providerId))
+                addresses.legacyStream(providerId), legacyReference = LegacyChannelReference.xtream(row))
         }
     }
 
@@ -47,7 +48,7 @@ object ChannelCatalog {
             CatalogChannel("stalker:channel:$identity", providerId ?: "", row["name"].takeIf { it.truthy() }?.string() ?: identity,
                 "stalker:category:$groupId", group, logo,
                 rawUrl ?: portal.trimEnd('/') + "/stalker_portal/stream/" + providerId + ".m3u8?mac=" + mac,
-                hours, if (row["archive"].truthy()) "append" else "")
+                hours, if (row["archive"].truthy()) "append" else "", LegacyChannelReference.stalker(row))
         }
     }
 }

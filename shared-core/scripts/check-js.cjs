@@ -237,6 +237,15 @@ function verify(context, profile) {
     assert.equal(classic.request(), "https://xc.test//player_api.php?username=a%2Fb&password=x%3F%26");
     assert.equal(classic.fallbackPlaylist(false), "https://xc.test//get.php?username=a%2Fb&password=x%3F%26&type=m3u_plus&output=ts");
     assert.equal(classic.fallbackPlaylist(true), "https://xc.test/get.php?username=a%2Fb&password=x%3F%26&type=m3u_plus&output=ts");
+    classic.accept({ live_streams: [{ stream_id: 1, name: "" }, { stream_id: 2, name: 2 }, { stream_id: 3 }] });
+    const migrationChannels = classic.channelCatalog();
+    assert.equal(migrationChannels[0].itemId, "xtream:stream:1");
+    assert.equal(migrationChannels[0].name, "1");
+    assert.equal(JSON.stringify(migrationChannels[0].legacyReference), '{"kind":"name-hash","value":""}');
+    assert.equal(Object.prototype.hasOwnProperty.call(migrationChannels[1], "legacyReference"), false);
+    assert.equal(Object.prototype.hasOwnProperty.call(migrationChannels[2], "legacyReference"), false);
+    migrationChannels[0].legacyReference.value = "mutated display";
+    assert.equal(classic.channelCatalog()[0].legacyReference.value, "");
     const portal = { id: "portal", url: "https://p.test/c/", mac: "00:1A:79:01:02:03", language: "en", timezone: "UTC", profile: {} };
     Object.assign(portal, core.stalkerConfig(portal));
     const stalker = new core.StalkerClient(portal, 7, encodeURIComponent, value => value, value => /^https?:\/\//.test(value) ? value : "");
@@ -263,6 +272,15 @@ function verify(context, profile) {
     assert.equal(rpc.request().method, "get_channels");
     assert.equal(rpc.accept({ result: [{ id: "42", name: "News", archive: "0x10" }] }), null);
     assert.equal(rpc.catalog(() => 42).channels[42].rec, 16);
+    assert.equal(JSON.stringify(rpc.channelCatalog()[0].legacyReference), '{"kind":"numeric-id","value":42}');
+    const migrationRpc = new core.LegacyStalkerClient("https://p.test/", portal.mac);
+    migrationRpc.accept({ result: {} });
+    migrationRpc.accept({ result: [{ ch_id: 43, name: "By ch_id" }, { ch_id: 44, name: "" }, { id: "invalid", name: "Invalid old ID" }, { id: "48", name: 48 }] });
+    assert.equal(migrationRpc.channelCatalog()[0].providerId, "43");
+    assert.equal(JSON.stringify(migrationRpc.channelCatalog()[0].legacyReference), '{"kind":"name-hash","value":"By ch_id"}');
+    assert.equal(Object.prototype.hasOwnProperty.call(migrationRpc.channelCatalog()[1], "legacyReference"), false);
+    assert.equal(Object.prototype.hasOwnProperty.call(migrationRpc.channelCatalog()[2], "legacyReference"), false);
+    assert.equal(JSON.stringify(migrationRpc.channelCatalog()[3].legacyReference), '{"kind":"numeric-id","value":48}');
     assert.equal(rpc.guide({ result: [{ start: "0x10", end: "32seconds" }] })[0].time, 16);
     const decodedStations = [{ id: "__proto__", names: ["News HD"], icons: ["https://img.test/news"] }];
     const decodedShows = [
