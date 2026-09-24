@@ -24,6 +24,53 @@ Names retain regional and time-shift labels. Exact IDs precede ordered exact
 names, then unique quality aliases; ambiguity does not pick an arbitrary ID.
 Schedules use half-open intervals, the latest starting overlap and stable ties.
 
+## Playback sessions, history and seek intent
+
+`PlaybackSession.kt` owns a typed `LIVE` / `ARCHIVE` / `VOD` target with explicit
+source and channel identities. Category indices, signed playback sentinels,
+storage keys and presentation fields are host compatibility concerns.
+
+The JavaScript facade exposes `playbackSessionTransition(current, target,
+history, observedPosition, limit, historyKinds?)`. Each visit contains `sourceId`, `channelId`,
+`kind` (`live`, `archive` or `vod`), optional `archiveStart`, and an opaque
+`payload`. Only archive targets have `archiveStart`, measured in epoch seconds.
+Payloads retain object identity and are never interpreted by the core. The result
+contains `current`, `history`, and `effects`. History keeps the most recent
+departure for each source/channel/kind, excludes the destination and is bounded
+by `limit` (maximum 1,000). Changing presentation/category alone is not a new
+channel identity. Live and archive visits remain distinct.
+Optional `historyKinds` selects the recorded kinds, defaulting to all three.
+Filtering occurs before deduplication and the history bound. A channel-only
+consumer passes `["live", "archive"]` so a VOD departure cannot evict a previous
+channel. Position effects still occur for kinds excluded from history; unknown
+kind names are rejected.
+
+`observedPosition` is media seconds, including for archives. An archived
+departure advances its saved `archiveStart` by that offset without modifying
+the input. Leaving VOD emits `save-position` with its observed position; entering
+a different VOD target emits `restore-position`. Storage and resume actions stay
+with the host. A null target means departure only. Invalid observed positions
+do not overwrite an existing position.
+
+`playbackSeekPlan(target, request)` returns one of `seek`, `open-archive`,
+`go-live`, `restart` or `noop`. Request intents are `offset`, `absolute`, `begin`,
+`restart` and `go-live`. `position` is the observed media position. For VOD,
+`absolute.value` is media seconds; for live/archive it is an epoch. An archive
+offset adds the target's explicit `archiveStart` to the media position and delta.
+The host supplies `now`, `archiveAvailable` and optional `archiveEarliest`;
+`begin` on a channel requires that explicit retention boundary. Archive results
+return `archiveStart`; media results return `position`. Seeking to/past the live
+edge returns `go-live` for an archive. Positive live offsets restart when
+`restartAllowed` is true (default). Negative VOD targets clamp to zero; an
+overshoot beyond a known positive `duration` returns `noop` unless the host
+requests `overshoot: "clamp"`. `liveEdgeTolerance` defaults to zero.
+
+`new PlaybackSessionOwnership()` issues opaque tickets through `begin()`.
+`accepts(ticket)` admits only its current ticket; `cancel()` revokes it. A ticket
+cannot be reused across controllers, a later operation, or cancellation even
+when the source/channel identifiers happen to match. Hosts use this boundary
+before applying delayed media effects; the core owns no timers or callbacks.
+
 ## Build and distribute
 
 Requires JDK 17+, Node.js and the included Gradle wrapper:
