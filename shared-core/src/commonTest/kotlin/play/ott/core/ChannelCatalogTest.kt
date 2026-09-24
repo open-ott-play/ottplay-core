@@ -69,10 +69,11 @@ class ChannelCatalogTest {
             row("id" to "invalid", "ch_id" to "44", "name" to "Invalid old ID"),
             row("ch_id" to "45", "name" to ""),
             ProviderValue.obj(mapOf("id" to ProviderValue(ProviderValueKind.NUMBER, "0"), "ch_id" to ProviderValue.text("46"), "name" to ProviderValue.text("Zero old ID"))),
-            ProviderValue.obj(mapOf("ch_id" to ProviderValue.text("47"), "name" to ProviderValue(ProviderValueKind.NUMBER, "47")))
+            ProviderValue.obj(mapOf("ch_id" to ProviderValue.text("47"), "name" to ProviderValue(ProviderValueKind.NUMBER, "47"))),
+            ProviderValue.obj(mapOf("id" to ProviderValue.text("48"), "name" to ProviderValue(ProviderValueKind.NUMBER, "48")))
         )), "https://portal.test", "MAC")
-        assertEquals(listOf("42", "43", "invalid", "45", "46", "47"), catalog.map { it.providerId })
-        assertEquals(listOf(LegacyChannelReference.NumericId(42.0), LegacyChannelReference.Label("Only ch_id"), null, null, LegacyChannelReference.Label("Zero old ID"), null), catalog.map { it.legacyReference })
+        assertEquals(listOf("42", "43", "invalid", "45", "46", "47", "48"), catalog.map { it.providerId })
+        assertEquals(listOf(LegacyChannelReference.NumericId(42.0), LegacyChannelReference.Label("Only ch_id"), null, null, LegacyChannelReference.Label("Zero old ID"), null, LegacyChannelReference.NumericId(48.0)), catalog.map { it.legacyReference })
         assertEquals("45", catalog[3].name)
         assertEquals("stalker:channel:43", catalog[1].itemId)
     }

@@ -275,11 +275,12 @@ function verify(context, profile) {
     assert.equal(JSON.stringify(rpc.channelCatalog()[0].legacyReference), '{"kind":"numeric-id","value":42}');
     const migrationRpc = new core.LegacyStalkerClient("https://p.test/", portal.mac);
     migrationRpc.accept({ result: {} });
-    migrationRpc.accept({ result: [{ ch_id: 43, name: "By ch_id" }, { ch_id: 44, name: "" }, { id: "invalid", name: "Invalid old ID" }] });
+    migrationRpc.accept({ result: [{ ch_id: 43, name: "By ch_id" }, { ch_id: 44, name: "" }, { id: "invalid", name: "Invalid old ID" }, { id: "48", name: 48 }] });
     assert.equal(migrationRpc.channelCatalog()[0].providerId, "43");
     assert.equal(JSON.stringify(migrationRpc.channelCatalog()[0].legacyReference), '{"kind":"name-hash","value":"By ch_id"}');
     assert.equal(Object.prototype.hasOwnProperty.call(migrationRpc.channelCatalog()[1], "legacyReference"), false);
     assert.equal(Object.prototype.hasOwnProperty.call(migrationRpc.channelCatalog()[2], "legacyReference"), false);
+    assert.equal(JSON.stringify(migrationRpc.channelCatalog()[3].legacyReference), '{"kind":"numeric-id","value":48}');
     assert.equal(rpc.guide({ result: [{ start: "0x10", end: "32seconds" }] })[0].time, 16);
     const decodedStations = [{ id: "__proto__", names: ["News HD"], icons: ["https://img.test/news"] }];
     const decodedShows = [

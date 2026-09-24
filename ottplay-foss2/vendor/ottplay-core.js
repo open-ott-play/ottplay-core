@@ -14239,28 +14239,44 @@ if (typeof String.prototype.startsWith === 'undefined') {
   };
   protoOf(Companion_14).stalker_erfk5x_k$ = function (row) {
     var name = row.get_6bo4tg_k$('name');
-    if (!name.kind_1.equals(ProviderValueKind_TEXT_getInstance()) || !name.truthy_eb26j6_k$())
+    if (!name.truthy_eb26j6_k$())
       return null;
     var id = row.get_6bo4tg_k$('id');
-    if (!id.truthy_eb26j6_k$())
-      return new Label(name.scalar_1);
-    // Inline function 'kotlin.takeIf' call
-    var this_0 = id.number_h3u0fr_k$();
-    var tmp;
-    if (isFinite(this_0)) {
-      tmp = this_0;
-    } else {
-      tmp = null;
+    if (id.truthy_eb26j6_k$()) {
+      // Inline function 'kotlin.takeIf' call
+      var this_0 = id.number_h3u0fr_k$();
+      var tmp;
+      if (isFinite(this_0)) {
+        tmp = this_0;
+      } else {
+        tmp = null;
+      }
+      var tmp0_safe_receiver = tmp;
+      var tmp_0;
+      if (tmp0_safe_receiver == null) {
+        tmp_0 = null;
+      } else {
+        // Inline function 'kotlin.let' call
+        tmp_0 = new NumericId(tmp0_safe_receiver);
+      }
+      return tmp_0;
     }
-    var tmp0_safe_receiver = tmp;
-    var tmp_0;
-    if (tmp0_safe_receiver == null) {
-      tmp_0 = null;
+    // Inline function 'kotlin.takeIf' call
+    var tmp_1;
+    if (name.kind_1.equals(ProviderValueKind_TEXT_getInstance())) {
+      tmp_1 = name;
+    } else {
+      tmp_1 = null;
+    }
+    var tmp1_safe_receiver = tmp_1;
+    var tmp_2;
+    if (tmp1_safe_receiver == null) {
+      tmp_2 = null;
     } else {
       // Inline function 'kotlin.let' call
-      tmp_0 = new NumericId(tmp0_safe_receiver);
+      tmp_2 = new Label(tmp1_safe_receiver.scalar_1);
     }
-    return tmp_0;
+    return tmp_2;
   };
   var Companion_instance_14;
   function Companion_getInstance_14() {

@@ -11,11 +11,11 @@ sealed class LegacyChannelReference {
 
         fun stalker(row: ProviderValue): LegacyChannelReference? {
             val name = row["name"]
-            if (name.kind != ProviderValueKind.TEXT || !name.truthy()) return null
+            if (!name.truthy()) return null
             // The old JSON-RPC catalog selected row.id, never its ch_id fallback.
             val id = row["id"]
-            if (!id.truthy()) return Label(name.scalar)
-            return id.number().takeIf { it.isFinite() }?.let { NumericId(it) }
+            if (id.truthy()) return id.number().takeIf { it.isFinite() }?.let { NumericId(it) }
+            return name.takeIf { it.kind == ProviderValueKind.TEXT }?.let { Label(it.scalar) }
         }
     }
 }

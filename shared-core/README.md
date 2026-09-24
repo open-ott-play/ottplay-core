@@ -46,8 +46,9 @@ import: `{kind: "name-hash", value: originalLabel}` or
 `itemId`, `providerId`, group membership, display names, or stream routing.
 Xtream keeps the original string label, including an empty string, before its
 display-name fallback. Stalker keeps the old `id` selection; a channel identified
-only by `ch_id` used a name hash in the old catalog. Missing/non-string labels and
-invalid numeric references do not gain guessed import aliases. Consumers must
+only by `ch_id` used a name hash in the old catalog. Missing/non-string hash labels
+and invalid numeric references do not gain guessed import aliases. Stalker's
+explicit numeric `id` remains eligible with any originally truthy name. Consumers must
 not infer migration references from a modern display label or provider ID.
 
 ## Playback sessions, history and seek intent
