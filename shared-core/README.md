@@ -24,6 +24,22 @@ Names retain regional and time-shift labels. Exact IDs precede ordered exact
 names, then unique quality aliases; ambiguity does not pick an arbitrary ID.
 Schedules use half-open intervals, the latest starting overlap and stable ties.
 
+`guideScheduleSelection(rows, now, nextCount)` exposes that schedule policy to
+hosts with normalized numeric `start`/`end` epoch seconds. It returns the original
+`current` row or null, chronological `following` rows and `retryAt`. Invalid or
+empty intervals are ignored. Equal-start overlaps retain input order. Following
+contains future rows; the count is floored and bounded to 0..1000 (NaN becomes
+zero, positive infinity becomes 1000). Gaps still expose nearest future rows.
+Retry is the earliest current end, future start or one-hour deadline, independent
+of the visible row count. An invalid clock returns no rows and retryAt zero.
+`legacyGuideSelection` remains available for existing inclusive-end clients.
+
+`guideProgrammeId(sourceId, channelId, providerId, start)` provides an opaque,
+scoped programme key. A nonempty provider ID owns identity; otherwise a finite
+broadcast start does. Correcting title or end time does not change the key.
+When the provider supplies no ID, changing start time necessarily creates a new
+identity. Storage, reminder scheduling and callback lifetime remain host ports.
+
 ## Playback sessions, history and seek intent
 
 `PlaybackSession.kt` owns a typed `LIVE` / `ARCHIVE` / `VOD` target with explicit

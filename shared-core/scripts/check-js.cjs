@@ -14,6 +14,17 @@ function verify(context, profile) {
     vm.runInContext(bundle, context, { timeout: 10000 });
     const core = context["play.ott:ottplay-shared-core"];
     assert(core, profile + ": classic-script export is available");
+    const timelineRows = [{id:"old",start:0,end:10},{id:"new",start:10,end:20},{id:"overlap",start:12,end:18},{id:"tie",start:12,end:19},null,{start:"0",end:100}];
+    const selected = core.guideScheduleSelection(timelineRows,12,3);
+    assert.strictEqual(selected.current,timelineRows[2]);
+    assert.strictEqual(core.guideScheduleSelection(timelineRows,10,0).current,timelineRows[1]);
+    assert.strictEqual(core.guideScheduleSelection(timelineRows,18,0).current,timelineRows[3]);
+    assert.equal(selected.retryAt,18);
+    assert.deepEqual(Array.from(core.guideScheduleSelection(timelineRows,-1,2).following),timelineRows.slice(0,2));
+    assert.equal(core.guideProgrammeId("s","c",null,0),"programme:1:s1:c7:start:0");
+    assert.equal(core.guideProgrammeId("s","c",42,0),core.guideProgrammeId("s","c","42",20));
+    assert.notEqual(core.guideProgrammeId("s","c",42,0),core.guideProgrammeId("s","other",42,0));
+
     const archivePayload = { label: "Opaque presentation", nested: { retained: true } };
     const archiveVisit = { sourceId: "source-a", channelId: "one", kind: "archive", archiveStart: 1000, payload: archivePayload };
     const liveVisit = { sourceId: "source-a", channelId: "one", kind: "live", payload: { category: 3 } };
