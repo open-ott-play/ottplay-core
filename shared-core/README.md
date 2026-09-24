@@ -40,6 +40,16 @@ broadcast start does. Correcting title or end time does not change the key.
 When the provider supplies no ID, changing start time necessarily creates a new
 identity. Storage, reminder scheduling and callback lifetime remain host ports.
 
+`channelCatalog()` entries may carry `legacyReference` for one-time bookmark
+import: `{kind: "name-hash", value: originalLabel}` or
+`{kind: "numeric-id", value: originalNumericId}`. This metadata does not affect
+`itemId`, `providerId`, group membership, display names, or stream routing.
+Xtream keeps the original string label, including an empty string, before its
+display-name fallback. Stalker keeps the old `id` selection; a channel identified
+only by `ch_id` used a name hash in the old catalog. Missing/non-string labels and
+invalid numeric references do not gain guessed import aliases. Consumers must
+not infer migration references from a modern display label or provider ID.
+
 ## Playback sessions, history and seek intent
 
 `PlaybackSession.kt` owns a typed `LIVE` / `ARCHIVE` / `VOD` target with explicit
