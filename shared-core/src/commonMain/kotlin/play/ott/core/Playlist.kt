@@ -50,12 +50,29 @@ object Playlist {
 
     fun titleComma(value: String): Int {
         var quote: Char? = null
+        var valueStart = false
+        var bareValue = false
         value.forEachIndexed { index, character ->
-            if (quote == character) quote = null
-            else if (quote == null && character in "\"'") quote = character
-            else if (quote == null && character == ',') return index
+            if (quote != null) {
+                if (quote == character) quote = null
+            } else if (character == ',') return index
+            else if (CoreText.space(character)) bareValue = false
+            else if (valueStart) {
+                valueStart = false
+                if (character in "\"'") quote = character else bareValue = true
+            } else if (character == '=' && !bareValue) valueStart = true
         }
         return -1
+    }
+
+    /** Scan one EXTINF record, already bounded by the next record marker. */
+    internal fun recordUri(lines: List<String>, onDirective: (String) -> Unit = {}): String {
+        for (index in 1 until lines.size) {
+            val value = CoreText.trim(lines[index])
+            if (value.isEmpty()) continue
+            if (value.startsWith('#')) onDirective(value) else return value
+        }
+        return ""
     }
 
     private fun archive(attrs: Map<String, String>, defaults: Map<String, String>, format: PlaylistFormat,

@@ -74,15 +74,16 @@ class PlaylistTest {
         assertEquals("'News", ProviderPlaylist.attribute("tvg-name='News world'", "tvg-name"))
         assertEquals(12.0, ProviderPlaylist.integer("12days"))
     }
-    @Test fun providerProfilesRetainBlankUriAndGroupDuplicates() {
+    @Test fun providerProfilesSkipBlankUriLinesAndRetainGroupDuplicates() {
         val text = "#EXTM3U\n#EXTINF:-1 group-title=\"A\",First\n\nhttps://t/1\n#EXTINF:-1 group-title=\"B\",Second\nhttps://t/1"
         val generic = ProviderPlaylist.read(text, ProviderPlaylistFormat.GENERIC, { 1.0 })
         val base = ProviderPlaylist.read(text, ProviderPlaylistFormat.M3U, { if (it.isEmpty()) 2.0 else 1.0 })
         assertEquals("First", generic.entries.single().name)
         assertEquals(listOf("A", "B"), generic.groupOrder)
         assertEquals(listOf(1.0), generic.groups["B"])
-        assertEquals("Second", base.entries.single().name)
-        assertEquals(listOf(2.0), base.groups["A"])
-        assertEquals(3, base.entries.single().category)
+        assertEquals("First", base.entries.single().name)
+        assertEquals(listOf(1.0), base.groups["A"])
+        assertEquals(listOf(1.0), base.groups["B"])
+        assertEquals(2, base.entries.single().category)
     }
 }

@@ -203,7 +203,38 @@ function verify(context, profile) {
     assert.equal(operator.channels.id.channel_name, "First");
     const antifriz = core.parseOperatorPlaylist('#EXTM3U\n#EXTINF:-1 tvg-logo="https://img.test/logo",News\nhttps://v.test/live/token/id.ts', "antifriz", () => 0, []);
     assert.equal(antifriz.channels.id.logo, "http://img.test/logo");
-    assert.equal(core.parsePlaylistMedia('#EXTM3U\n#EXTINF:-1,Film, extra\n#comment\nhttps://v.test/movie')[0].name, "Film");
+    assert.equal(core.parsePlaylistMedia('#EXTM3U\n#EXTINF:-1,Film, extra\n#comment\nhttps://v.test/movie')[0].name, "Film, extra");
+    const quotedRaw = '-1 tvg-name="News, World" group-title="TV" catchup-days=2 catchup=append catchup-source="?s={utc},x" tvg-shift=1.5,Actual, title';
+    const quotedSource = '#EXTM3U\r\n#EXTINF:' + quotedRaw + '\r\n \t\r\n#EXTVLCOPT:http-user-agent=Agent\r\n https://v.test/a?x=1,2 \r\n';
+    for (const kind of ["m3u", "generic"]) {
+        const inputs = [];
+        const parsed = core.parseProviderPlaylist(quotedSource, kind, url => { inputs.push(url); return 2147483649; }, 96);
+        assert.deepEqual(inputs, ["https://v.test/a?x=1,2"], profile + ": exact trimmed URL owns provider identity");
+        assert.equal(JSON.stringify(parsed.ids), "[2147483649]");
+        assert.equal(parsed.entries[0].name, "Actual, title");
+        assert.equal(parsed.entries[0].raw, quotedRaw + "\r");
+        assert.equal(parsed.entries[0].titleHashInput, quotedRaw.slice(quotedRaw.indexOf(',') + 1).trim());
+        assert.equal(parsed.groups.TV[0], 2147483649);
+        if (kind === "m3u") {
+            assert.equal(parsed.channels[2147483649].rec, 48);
+            assert.equal(parsed.channels[2147483649].ca, "append");
+            assert.equal(parsed.channels[2147483649].caso, "?s={utc},x");
+            assert.equal(parsed.channels[2147483649].ts, -5400);
+        }
+    }
+    const recordsWithGaps = '#EXTM3U\n#EXTINF:-1,Missing\n\n#comment\n#EXTINF:-1,Found, suffix\n\n#EXTGRP:Local\nhttps://v.test/found\n#EXTINF:-1,Truncated\n#comment';
+    const recovered = core.parseProviderPlaylist(recordsWithGaps, "m3u", url => url ? -2147483648 : 0, 0);
+    assert.equal(JSON.stringify(recovered.ids), "[-2147483648]");
+    assert.equal(recovered.entries[0].name, "Found, suffix");
+    assert.equal(recovered.entries[0].group, "Local");
+    const recoveredMedia = core.parsePlaylistMedia(recordsWithGaps);
+    assert.equal(recoveredMedia.length, 1);
+    assert.equal(recoveredMedia[0].name, "Found, suffix");
+    assert.equal(recoveredMedia[0].url, "https://v.test/found");
+    assert.equal(core.parsePlaylistMedia('#EXTINF:-1 tvg-logo="https://img/a,b",Film, part two\n\n#comment\nhttps://v.test/movie')[0].name, "Film, part two");
+    const bareApostrophe = "#EXTM3U\n#EXTINF:-1 group-title=Kids'Club,Children's programme\nhttps://v.test/kids";
+    assert.equal(core.parseProviderPlaylist(bareApostrophe, "m3u", () => 7, 0).entries[0].name, "Children's programme");
+    assert.equal(core.parseBrowserPlaylist(bareApostrophe, "s", "s", value => value, value => value, value => value).channels[0].name, "Children's programme");
     const xcInput = { id: "source", username: "a/b", password: "x?&", output: "m3u8", base: "https://xc.test" };
     const render = (parts, query) => xcInput.base + "/" + parts.map(encodeURIComponent).join("/") +
         (query.length ? "?" + query.map(pair => pair.map(encodeURIComponent).join("=")).join("&") : "");
