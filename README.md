@@ -78,8 +78,7 @@ Run `python3 scripts/consumer_paths.py` to inspect the resolved layout. FOSS2,
 shared-core and local reports always remain inside this checkout.
 
 For a pinned reproduction, use a fresh directory so that existing development
-checkouts are untouched. GitHub access is required, including the private Android
-repository:
+checkouts are untouched. GitHub access is required to clone the pinned consumers:
 
 ```sh
 export OTTPLAY_CONSUMER_ROOT="$(mktemp -d)"
@@ -98,9 +97,11 @@ checkout is expected to fail this pin check; use a separate consumer root for
 reproduction. Unset `OTTPLAY_CONSUMER_ROOT` to resume using sibling checkouts.
 
 Consumer artifacts can be verified and built without this source repository.
-To update the shared implementation, compile it once and use the three install
-commands documented in `shared-core/README.md`, then update consumer branches
-and their pins together. For wire policy, run `python3 scripts/workspace-wire.py`
+CI delivers qualified compiler outputs through signed vendor update PRs, as
+described in [core delivery](CORE-DELIVERY.md). For local development, compile once
+and use the three install commands in `shared-core/README.md`. The integration
+snapshot in `checkouts.json` is updated separately after consumer acceptance.
+For wire policy, run `python3 scripts/workspace-wire.py`
 to distribute or add `--check` for read-only verification. This runner reuses the
 canonical generator and preserves its bytes and consumer receipts. Consumer-local
 `scripts/generate-wire-contracts.py --check` remains self-contained and unchanged.
@@ -341,10 +342,11 @@ and merge-queue commits are checked, and push CI runs on `main`. Manual runs alw
 perform full validation. A documentation-only run produces no build artifacts.
 
 New commits cancel superseded runs on the same ref, and JVM/JS validation caches
-Gradle dependencies. Core distribution artifacts are uploaded only from `main`
-pushes and manual runs, with one-day retention. Browser reports are retained for
-one day after a successful job or three days after a failed/cancelled job. PRs
-still run the complete checks without uploading duplicate distribution archives.
+Gradle dependencies. Successful portable builds upload one distribution archive
+with seven-day retention. Browser CI downloads that exact artifact and tests it
+in its disposable FOSS2 checkout, including on PRs. Only qualified `main` pushes
+and manual runs may deliver vendor PRs. Browser reports are retained for one day
+after a successful job or three days after a failed/cancelled job.
 
 The audited domain migration includes XMLTV field interpretation, operator
 sessions/catalogs/media/guide routes, state migration and reconciliation,

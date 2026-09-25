@@ -16,7 +16,7 @@ jobs:
     with:
       force-full: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' }}
       documentation-paths: >-
-        ["contracts/README.md", "shared-core/README.md",
+        ["CORE-DELIVERY.md", "contracts/README.md", "shared-core/README.md",
         "ottplay-foss2/README.md", "ottplay-foss2/TECHNICAL-SPEC.md",
         "ottplay-foss2/IMPLEMENTATION-STATUS.md", "ottplay-foss2/MEDIA-API.md",
         "ottplay-foss2/THIRD-PARTY-NOTICES.md",
@@ -33,6 +33,9 @@ jobs:
     if: ${{ needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only' }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    outputs:
+      artifact-id: ${{ steps.distribution.outputs.artifact-id }}
+      artifact-digest: ${{ steps.distribution.outputs.artifact-digest }}
     defaults:
       run:
         working-directory: shared-core
@@ -55,17 +58,16 @@ jobs:
       - run: npm run pack:core
       - run: npm run check:js
       - run: npm run check:core
-      - run: node scripts/distribute.cjs check-web ../ottplay-foss2
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+      - id: distribution
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: ottplay-shared-core
           path: shared-core/dist/
           if-no-files-found: error
-          retention-days: 1
+          retention-days: 7
 
   browser-client:
-    needs: scope
+    needs: [scope, portable]
     if: ${{ needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -80,6 +82,18 @@ jobs:
           cache: npm
           cache-dependency-path: ottplay-foss2/package-lock.json
       - run: npm ci --ignore-scripts
+      - name: Verify the committed client pin before staging the candidate
+        run: node scripts/check-core.cjs
+      - name: Download the exact compiler output qualified by this run
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          artifact-ids: ${{ needs.portable.outputs.artifact-id }}
+          path: shared-core/dist
+      - name: Stage the new core in the disposable browser checkout
+        run: |
+          npm ci --ignore-scripts --prefix ../shared-core
+          node ../shared-core/scripts/distribute.cjs install-web "$PWD"
+          node ../shared-core/scripts/distribute.cjs check-web "$PWD"
       - run: npm test
       - run: npx playwright install --with-deps chromium
       - name: Generate synthetic playback fixture
@@ -115,3 +129,45 @@ jobs:
       - run: python3 -m unittest discover -s scripts/tests -v
       - run: python3 scripts/checkouts.py --only ottplay-foss --only ottplay-swop --only ottplay-control-server
       - run: python3 scripts/workspace-wire.py --check
+
+  deliver:
+    needs: [portable, browser-client, wire-contracts]
+    if: >-
+      vars.CORE_DELIVERY_ENABLED == 'true' &&
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    permissions:
+      contents: read
+      actions: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - repository: open-ott-play/ottplay-foss
+            destination: vendor
+            files: '["ottplay-core.js","ottplay-core.jar","ottplay-core.manifest.json","ottplay-core.LICENSE.txt"]'
+          - repository: open-ott-play/ottplay-android
+            destination: core/vendor
+            files: '["ottplay-core.jar","ottplay-core.manifest.json","ottplay-core.LICENSE.txt"]'
+          - repository: open-ott-play/ottplay-core
+            destination: ottplay-foss2/vendor
+            files: '["ottplay-core.js","ottplay-core.manifest.json","ottplay-core.LICENSE.txt"]'
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/vendor-update.yml@829f524edc0e1701867de9b2db6a9ad5e75efc35
+    with:
+      toolkit-revision: '829f524edc0e1701867de9b2db6a9ad5e75efc35'
+      source-workflow: .github/workflows/core.yml
+      source-tree: shared-core
+      artifact-id: ${{ needs.portable.outputs.artifact-id }}
+      artifact-digest: ${{ needs.portable.outputs.artifact-digest }}
+      artifact-files: '["ottplay-core.js","ottplay-core.d.ts","ottplay-core.jar","ottplay-core.manifest.json","ottplay-core.LICENSE.txt"]'
+      manifest: ottplay-core.manifest.json
+      manifest-name: ottplay-shared-core
+      qualifying-jobs: '["portable","browser-client","wire-contracts"]'
+      target-repository: ${{ matrix.repository }}
+      destination-prefix: ${{ matrix.destination }}
+      copy-files: ${{ matrix.files }}
+      committer-name: ${{ vars.CORE_DELIVERY_COMMITTER_NAME }}
+      committer-email: ${{ vars.CORE_DELIVERY_COMMITTER_EMAIL }}
+    secrets:
+      DELIVERY_TOKEN: ${{ secrets.BOT_PAT }}
+      DELIVERY_SIGNING_KEY: ${{ secrets.CORE_DELIVERY_SIGNING_KEY }}
