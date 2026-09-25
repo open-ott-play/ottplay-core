@@ -398,3 +398,5 @@ FOSS2 beta notes are in [RELEASE-0.6.0-beta.2.md](ottplay-foss2/docs/RELEASE-0.6
 Passing automated tests does not satisfy physical product
 acceptance or certify physical devices. See `validation.json` for the
 verified scope and outstanding checks.
+
+CI placement and k3s admission are documented in [CI-RUNNERS.md](docs/CI-RUNNERS.md).
