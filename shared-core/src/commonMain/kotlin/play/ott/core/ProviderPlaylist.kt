@@ -10,9 +10,9 @@ data class ProviderPlaylistEntry(
 data class ProviderPlaylistResult(val header: String, val entries: List<ProviderPlaylistEntry>,
     val groups: Map<String, List<Double>>, val groupOrder: List<String>)
 
-/** Retained provider wire profiles share scanning, grouping and deduplication.
- * Legacy quirks are explicit: first comma, case-sensitive EXTINF markers, and
- * the main M3U provider stopping at an empty URI line. No legacy script is run.
+/** Provider wire profiles share lexical scanning, grouping and deduplication.
+ * URL identity, archive rules and the companion title-hash input remain stable;
+ * display titles use the unquoted delimiter and URI scanning skips blank lines.
  */
 object ProviderPlaylist {
     internal fun blocks(text: String) = text.split("#EXTINF:")
@@ -85,19 +85,20 @@ object ProviderPlaylist {
             val lines = block.split('\n')
             val raw = lines[0]
             var group = if (generic) quoted(raw, "group-title") else attribute(raw, "group-title")
-            var url = ""
-            for (line in lines.drop(1)) {
-                val value = CoreText.trim(line)
-                if (generic && value.isEmpty()) continue
-                if (!value.startsWith('#')) { url = value; break }
+            val url = Playlist.recordUri(lines) { value ->
                 if (!generic && group.isEmpty() && value.contains("#EXTGRP:")) group = CoreText.trim(value.substringAfter("#EXTGRP:").substringBefore("#EXTGRP:"))
             }
             if (generic && url.isEmpty()) continue
             if (group.isEmpty()) group = previousGroup.ifEmpty { if (generic) "Other" else "" }
             else previousGroup = group
             if (generic) previousGroup = group
-            val comma = raw.indexOf(',')
+            val comma = Playlist.titleComma(raw)
             val title = if (comma > 0) CoreText.trim(raw.substring(comma + 1)) else ""
+            // Companion EPG/logo requests hash this historical input. It is a
+            // wire compatibility field, independent of the corrected label.
+            val hashComma = raw.indexOf(',')
+            val titleHashInput = if (hashComma == comma) title
+                else if (hashComma > 0) CoreText.trim(raw.substring(hashComma + 1)) else ""
             val epgId = if (generic) "" else attribute(raw, "tvg-id")
             val epgName = if (generic) "" else attribute(raw, "tvg-name")
             val name = if (generic) if (comma > 0) title else "???"
@@ -115,7 +116,7 @@ object ProviderPlaylist {
                 if (generic) name else epgName, if (generic) 0.0 else hours(raw, defaultHours),
                 if (generic) "" else attribute(raw, "catchup").ifEmpty { attribute(raw, "catchup-type") }.ifEmpty { defaultMode },
                 if (generic) "" else attribute(raw, "catchup-source").ifEmpty { defaultSource }, shift, raw,
-                if (comma > 0) title else "", generated)
+                titleHashInput, generated)
         }
         return ProviderPlaylistResult(header, entries.values.toList(), groups, groups.keys.toList())
     }

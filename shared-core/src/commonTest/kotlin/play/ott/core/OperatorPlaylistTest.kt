@@ -37,7 +37,7 @@ class OperatorPlaylistTest {
         assertEquals(listOf("A", "B"), categories.entries.map { it.group })
         assertTrue(OperatorPlaylist.read(sample, "shura", { 0.0 }).entries.isEmpty())
         val media = OperatorPlaylist.media(sample)
-        assertEquals(listOf("First", "Copy"), media.map { it.name })
+        assertEquals(listOf("First, suffix", "Copy"), media.map { it.name })
         assertEquals(media[0].url, media[1].url)
     }
 }

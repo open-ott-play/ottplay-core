@@ -24,6 +24,14 @@ Names retain regional and time-shift labels. Exact IDs precede ordered exact
 names, then unique quality aliases; ambiguity does not pick an arbitrary ID.
 Schedules use half-open intervals, the latest starting overlap and stable ties.
 
+The generic and M3U provider readers use the shared quote-aware EXTINF delimiter
+and skip blank lines/directives before a record's URI. Media playlist titles
+retain commas after that delimiter. These lexical corrections preserve trimmed
+URI/hash identity, provider deduplication, group order and archive rules. The
+`raw` and `titleHashInput` fields retain their companion EPG/logo wire meaning;
+`titleHashInput` can therefore differ from the corrected display title. The
+eight specialized operator playlist profiles keep their separate wire policies.
+
 `guideScheduleSelection(rows, now, nextCount)` exposes that schedule policy to
 hosts with normalized numeric `start`/`end` epoch seconds. It returns the original
 `current` row or null, chronological `following` rows and `retryAt`. Invalid or

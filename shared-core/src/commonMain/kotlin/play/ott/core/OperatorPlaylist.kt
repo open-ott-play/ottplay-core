@@ -26,8 +26,9 @@ object OperatorPlaylist {
     }
     fun media(text: String): List<PlaylistMedia> = ProviderPlaylist.blocks(text).drop(1).mapNotNull { block ->
         val lines = block.split('\n')
-        val title = lines[0].split(',').getOrNull(1)
-        val url = next(lines, true)
+        val comma = Playlist.titleComma(lines[0])
+        val title = if (comma < 0) null else lines[0].substring(comma + 1)
+        val url = Playlist.recordUri(lines)
         if (url.isEmpty()) null else PlaylistMedia(title?.let(CoreText::trim).orEmpty(), title == null, url, attr(lines[0], "tvg-logo"))
     }
     fun read(text: String, profile: String, hash: (String) -> Double, existing: Set<String> = emptySet()): OperatorCatalog {
