@@ -176,4 +176,20 @@ class XtreamTest {
         assertFalse(text("true").flag())
         assertTrue(ProviderValue(ProviderValueKind.BOOLEAN, "true").flag())
     }
+    @Test fun wirePrimitiveKindsAndSignedExponentBoundariesRemainDistinct() {
+        for (kind in ProviderValueKind.entries) {
+            val expected = when (kind) {
+                ProviderValueKind.TEXT, ProviderValueKind.NUMBER, ProviderValueKind.BOOLEAN -> "payload"
+                else -> ""
+            }
+            assertEquals(expected, ProviderValue(kind, "payload").primitive())
+        }
+        for ((input, expected) in listOf("+1" to 1.0, "-1" to -1.0, "+.5" to 0.5, "1e+2" to 100.0,
+            "1E-2" to 0.01, ".1e1" to 1.0, "-0e+0" to -0.0)) {
+            assertEquals(expected, text(input).number(), input)
+        }
+        for (input in listOf("+", "-", ".", "1e", "1E+", "1e-", "e1", "1e+-2", "1e2x")) {
+            assertTrue(text(input).number().isNaN(), input)
+        }
+    }
 }

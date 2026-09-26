@@ -53,6 +53,12 @@ class GuideFeedTest {
         assertEquals(listOf("0","2","10","4294967294","01","a","4294967295","-1"),
             GuideFeeds.keyOrder(listOf("01","10","a","2","4294967295","4294967294","-1","0")))
     }
+    @Test fun publicMapOrderingRejectsNonCanonicalIndicesAndRetainsNamedOrder() {
+        val named = listOf("", "00", "01", "+1", "-0", "-1", "1.0", "1e2", " 1", "1 ", "\u0661", "4294967295", "99999999999")
+        val keys = named.take(4) + listOf("100", "4294967294", "9", "10", "0", "2", "2") + named.drop(4)
+        assertEquals(listOf("0", "2", "2", "9", "10", "100", "4294967294") + named, GuideFeeds.keyOrder(keys))
+        assertEquals(emptyList(), GuideFeeds.keyOrder(emptyList()))
+    }
     @Test fun coverageRejectsLooseNumbersAndKeepsWindowEnvelope() {
         val invalid = GuideCoverage.parse(mapOf("data-window-start" to "0x10", "data-window-end" to "20", "data-programme-limit" to "1.5"))
         assertEquals(GuideCoverage(), invalid)

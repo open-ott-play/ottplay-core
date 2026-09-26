@@ -3,6 +3,22 @@ package play.ott.core
 import kotlin.test.*
 
 class ProviderPlaylistScanningTest {
+    @Test fun shiftPrefixesKeepPartialExponentsSeparateFromStrictNumberCoercion() {
+        for ((input, prefix) in listOf("1e" to 1.0, "1e+" to 1.0, "1e-" to 1.0, "1e+-2" to 1.0,
+            "1e+2suffix" to 100.0, "+.5tail" to 0.5, "-.5E-2tail" to -0.005,
+            "Infinitytail" to Double.POSITIVE_INFINITY, "-Infinitytail" to Double.NEGATIVE_INFINITY)) {
+            val playlist = "#EXTM3U\n#EXTINF:-1 tvg-shift=\"$input\",Title\nhttps://tv.test/one"
+            val entry = ProviderPlaylist.read(playlist, ProviderPlaylistFormat.M3U, { 1.0 }).entries.single()
+            assertEquals(kotlin.math.floor(prefix * -3600), entry.shift, input)
+            assertTrue(ProviderValue.text(input).number().isNaN(), input)
+        }
+        for (input in listOf("", "+", "-", ".", "e1", "0x10")) {
+            val playlist = "#EXTM3U\n#EXTINF:-1 tvg-shift=\"$input\",Title\nhttps://tv.test/one"
+            assertEquals(0.0, ProviderPlaylist.read(playlist, ProviderPlaylistFormat.M3U, { 1.0 }).entries.single().shift, input)
+        }
+        assertEquals(16.0, ProviderValue.text("0x10").number())
+    }
+
     @Test fun quotesOpenAtAttributeValueBoundariesNotAtBareApostrophes() {
         for (raw in listOf("-1 group-title=Kids'Club,Actual, title", "-1 tvg-name = 'News, world',Actual, title", "-1 tvg-logo=https://img/x='a,Actual, title")) {
             val comma = Playlist.titleComma(raw)
