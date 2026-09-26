@@ -3,7 +3,8 @@ const assert = require("node:assert/strict");
 const vm = require("node:vm");
 const fs = require("node:fs");
 const path = require("node:path");
-const { minifyJavaScript } = require("./minify-js.cjs");
+const { parse } = require("acorn");
+const { minifyJavaScript, privateFunctionNames } = require("./minify-js.cjs");
 
 const fixture = `(function (root, factory) {
     if (typeof define === 'function' && define.amd) define(['exports'], factory);
@@ -84,6 +85,55 @@ async function main() {
             assert.deepEqual(JSON.parse(JSON.stringify(core.payload())), { enabled: true, disabled: false, label: "Кино" });
         }
     }
+    const privateFixture = `(function (exports) {
+        function recursivePrivateHelper(value) { return value > 0 ? recursivePrivateHelper(value - 1) + 1 : 0; }
+        function registeredCallback(first, second, unused) { return this.value + first; }
+        function RegisteredConstructor() { this.name = this.constructor.name; }
+        var metadata = { callback: registeredCallback, constructor: RegisteredConstructor };
+        exports.run = function (value) { return recursivePrivateHelper(value); };
+        exports.callback = function () { return metadata.callback; };
+        exports.instance = function () { return new metadata.constructor(); };
+    }(this.OttPlayCore = {}));`;
+    const ast = source => parse(source, { ecmaVersion: 5, sourceType: "script" });
+    assert.deepEqual(privateFunctionNames(ast(privateFixture)), ["recursivePrivateHelper"]);
+    const compactPrivate = await minifyJavaScript(privateFixture);
+    assert(!compactPrivate.includes("recursivePrivateHelper"), "Non-escaping recursive helper names are compacted");
+    for (const source of [privateFixture, compactPrivate]) {
+        const core = load(source, "browser");
+        assert.equal(core.run(12), 12);
+        assert.equal(core.callback().name, "registeredCallback");
+        assert.equal(core.callback().length, 3);
+        assert.equal(core.callback().call({ value: 4 }, 3), 7);
+        assert.equal(core.instance().name, "RegisteredConstructor");
+    }
+    const shadowed = `(function (exports) {
+        function repeatedHelper(value) { return value + 1; }
+        exports.run = function (value) { return repeatedHelper(value); };
+        exports.inspect = function () {
+            function repeatedHelper(first, unused) { return first; }
+            return [repeatedHelper.name, repeatedHelper.length];
+        };
+    }(this.OttPlayCore = {}));`;
+    assert(!privateFunctionNames(ast(shadowed)).includes("repeatedHelper"), "Name matching cannot distinguish shadowed bindings");
+    const shadowedCore = load(await minifyJavaScript(shadowed), "browser");
+    assert.equal(shadowedCore.run(3), 4);
+    assert.deepEqual(Array.from(shadowedCore.inspect()), ["repeatedHelper", 2]);
+    for (const reflect of [
+        'eval("returnValue = reflectedHelper.name")',
+        'returnValue = arguments["cal" + "lee"].name',
+        'returnValue = arguments.callee.name',
+        'returnValue = reflectedHelper.caller',
+        'returnValue = Function("return 1")()'
+    ]) {
+        const reflected = `(function (exports) {
+            function reflectedHelper(value) { var returnValue; ${reflect}; return value; }
+            exports.run = function (value) { return reflectedHelper(value); };
+        }(this.OttPlayCore = {}));`;
+        assert.deepEqual(privateFunctionNames(ast(reflected)), [], "Dynamic reflection keeps original names: " + reflect);
+        const compact = await minifyJavaScript(reflected);
+        assert(compact.includes("reflectedHelper"));
+        assert.equal(load(compact, "browser").run(9), 9);
+    }
     if (process.argv.includes("--compiled")) {
         const root = path.resolve(__dirname, "..");
         const compiler = fs.readFileSync(path.join(root, "build/compileSync/js/main/productionExecutable/kotlin/OttPlayCore.js"), "utf8");
@@ -93,6 +143,6 @@ async function main() {
         assert.deepEqual(publicSurface(packed), publicSurface(original), "Compiled public exports and prototypes survive distribution");
         console.log("PASS compiled core public ABI: " + Object.keys(packed).length + " exports");
     }
-    console.log("PASS core minifier: ES5, deterministic output, browser/CommonJS/AMD, exception names, callback ABI, live exports and payload types");
+    console.log("PASS core minifier: ES5, deterministic output, browser/CommonJS/AMD, exception names, callback ABI, live exports, private names and reflection");
 }
 main().catch(error => { console.error(error); process.exitCode = 1; });
