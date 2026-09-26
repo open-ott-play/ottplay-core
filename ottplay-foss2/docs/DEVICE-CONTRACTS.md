@@ -1,12 +1,14 @@
 # Device, input and resource contracts
 
-Status: implementation requirements derived from the local `ottplay-foss` source, inspected 2026-09-14. This document is a specification, not a claim that the new player has passed physical-device testing. Paths below are relative to `/Users/vmedvedev/victron/ottplay-foss` unless stated otherwise.
+This specification defines device selection, numeric input, resource and native
+capability requirements. Physical-device acceptance is separate from automated
+browser tests.
 
-The new player must be implemented independently in ECMAScript 5. Original JavaScript, compiled bundles, provider scripts, initialization wrappers, global variables and UI code must not be loaded or copied as the implementation. Numeric remote codes, observed resource names, format rules and behavior are compatibility data. Fonts may be retained as licensed assets with their notices.
+## 1. Device support
 
-## 1. What the old device support actually establishes
-
-There are **24 shipped profiles**, each in `stb/<profile>/stb.js`. These mainly specify remote key codes. Most do not implement a manufacturer playback API. In particular, profile existence does not prove AVPlay, OIPF, MAG native playback, NetCast plugin playback, decoder, DRM or PiP support. The common source `src/core/index.ts` implements HTML media playback with optional HLS/Shaka libraries.
+The **24 device profiles** select remote key codes and detection behavior. A
+profile does not establish manufacturer playback, decoder, DRM or PiP support.
+The player uses HTML media with optional capability-checked media libraries.
 
 Separate the following acceptance levels in every release report:
 
@@ -20,7 +22,7 @@ Passing one level must not be reported as passing a later level. UA emulation ca
 
 ## 1.1. Complete retained target inventory
 
-The requested organization README is available locally as `../.github.open-ott-play/README.md`; it points to `../.github.open-ott-play/profile/README.md`. The organization profile identifies 24 device families and names Samsung Tizen, LG webOS, Panasonic Viera, Infomir MAG, Dune HD, Android TV and desktop. The product README's visible device table lists 20 rows; it is not the complete profile inventory. `src/devices.js` and the original `stb/` inventory establish these 24 retained profile IDs:
+`src/devices.js` defines these 24 profile IDs:
 
 - LG: `lg/webos`, `lg/netcast`.
 - Samsung: `samsung/tizen`, `samsung/maple` (Orsay).
@@ -28,7 +30,7 @@ The requested organization README is available locally as `../.github.open-ott-p
 - Other television/browser targets: `hbbtv`, `panasonic`, `philips`, `sony`, `sharp`, `toshiba`, `hisense`, `skyworth`, `tcl`, `vewd`.
 - Desktop/browser profiles: `pc`, `pc2`, `nodejs`.
 
-These IDs select detection and remote input behavior. The new player has one shared HTML video/MSE implementation and does not load a different unverified media engine merely because an ID exists. Native HTML media is the baseline where supported; Hls.js, Shaka and mpegts.js become candidates only after capability checks. Proprietary AVPlay, OIPF, NetCast, MAG, Dune or Android decoder bridges require separately implemented and validated adapters.
+These IDs select detection and remote input behavior. The player has one shared HTML video/MSE implementation and does not load a different unverified media engine merely because an ID exists. Native HTML media is the baseline where supported; Hls.js, Shaka and mpegts.js become candidates only after capability checks. Proprietary AVPlay, OIPF, NetCast, MAG, Dune or Android decoder bridges require separately implemented and validated adapters.
 
 ## 1.2. Legacy runtime groups and support boundaries
 
@@ -42,13 +44,13 @@ The default UI language is English, with the existing Russian setting available.
 
 ## 2. Device selection
 
-The implementation must have one device detector. Unlike the old bootstrap and bundle, it must not maintain two algorithms that can diverge. Source evidence: `src/app/device.ts:detectDevice`, `index.html` pre-bundle detector and `tests/fixtures/device-detection.json`.
+The application uses one device detector for startup and subsequent profile selection.
 
 Required precedence:
 
 1. An allowlisted explicit `/f/<profile>` route, including `lg/webos`, `lg/netcast`, `samsung/tizen` and `samsung/maple`. The suffix may be empty, `/`, `/index.html` or a nested document path.
-2. An allowlisted `?device=<profile>` override when the route does not supply a valid profile. This query override is a new convenience contract.
-3. Explicit webOS UA tokens (`web0s`, `webos`), then `netcast`, then the old broad LG compatibility fallback.
+2. An allowlisted `?device=<profile>` override when the route does not supply a valid profile.
+3. Explicit webOS UA tokens (`web0s`, `webos`), then `netcast`, then the broad LG compatibility fallback.
 4. MAG bridge shape or a bounded MAG model token/Infomir STB UA. Detection only reads method availability; it does not call hardware methods. A throwing bridge getter cannot prevent UA fallback.
 5. Tizen before Maple; Dune; Android; HbbTV/OIPF; Viera; Philips; Hisense; Sony; TCL; Sharp; Toshiba; Skyworth; Vewd; Spark; NodeJS/Electron; otherwise PC.
 
@@ -76,7 +78,7 @@ Required actions are `up`, `down`, `left`, `right`, `ok`, `back`, `exit`, `quit`
 
 The `info` action comes from each profile's `INFO` fact: PC/MAG 73, Maple 99, LG/Tizen 457 and Android 165. There is no universal I, Q or L alias on TV profiles. PC, PC2, NodeJS and Edem retain `POWER=81` for quit and `INFO=73` for information.
 
-Only `pc`, `pc2`, `nodejs` and `edem` add the following numeric desktop extensions to the observed legacy facts:
+Only `pc`, `pc2`, `nodejs` and `edem` add the following numeric desktop extensions:
 
 - `FULLSCREEN=76` → `fullscreen`.
 - `SPACE=32` → `playPause`; `CONTEXT_MENU=93` → `menu`.
@@ -88,7 +90,7 @@ Only `pc`, `pc2`, `nodejs` and `edem` add the following numeric desktop extensio
 - `MEDIA_NEXT=176` → `next`; `MEDIA_PREVIOUS=177` → `previous`.
 - `MEDIA_VOLUME_UP=175` → `volumeUp`; `MEDIA_VOLUME_DOWN=174` → `volumeDown`; `MEDIA_MUTE=173` → `mute`.
 
-These additions do not alter Appendix A's source inventory. They are not global fallbacks. Maple 32/33 remain Yellow/Blue, Maple 99 remains Info, Android 9 remains digit 2, and Dune/MAG 33/34 remain channel keys. Multiple numeric codes may map to one semantic action: on the desktop profiles 80, 32 and 179 all mean `playPause`, and both 51 and 99 mean `digit3`. Desktop multimedia and keypad aliases are not inherited by TV profiles.
+These extensions supplement the profile codes in Appendix A and are not global fallbacks. Maple 32/33 remain Yellow/Blue, Maple 99 remains Info, Android 9 remains digit 2, and Dune/MAG 33/34 remain channel keys. Multiple numeric codes may map to one semantic action: on the desktop profiles 80, 32 and 179 all mean `playPause`, and both 51 and 99 mean `digit3`. Desktop multimedia and keypad aliases are not inherited by TV profiles.
 
 Explicit combined Play/Pause codes and shared nonzero PLAY/PAUSE codes normalize to `playPause`. Tizen 10252 remains combined Play/Pause, while 415 and 19 remain separate Play and Pause. A misleading `MediaPlayPause` label never overrides the numeric command. The player controller decides pause versus resume and suppresses unwanted repeats; the normalizer remains stateless. Fast-forward/rewind codes normalize to `forward`/`rewind`, with seek steps and repeat policy owned by the controller.
 
@@ -105,19 +107,21 @@ Explicit combined Play/Pause codes and shared nonzero PLAY/PAUSE codes normalize
 - Release recovery is explicit profile metadata. `keyReleaseTimeout=0` on `pc`, `pc2`, `nodejs` and `edem` keeps held controls suppressed until keyup or focus loss. Transport, mute, previous-channel, track/picture options and PiP use this guard even when the browser omits `event.repeat`; directional navigation and volume retain repetition. Other profiles use a 350 ms inactivity timeout so a lost or absent keyup cannot suppress subsequent activations indefinitely. Each repeated keydown refreshes that bound; an event explicitly marked `repeat` remains suppressed. Keyup, focus loss and teardown clear held-control state. This is a compatibility policy, not a claim that every remote omits keyup or has the same repeat cadence; physical-device verification must record actual event behavior.
 - Pointer/touch clicks resolve to the same commands as remote actions. Layout cannot rely on hover.
 
-The complete observed numeric profile facts appear in Appendix A. When two old actions share a code, define precedence or a context rule explicitly rather than relying on object iteration order. PC `AUDIO` and `STOP` are both 83, so Stop retains priority. PC `ASPECT` shares 76 with the desktop fullscreen extension, so fullscreen wins. Tizen MTS 10195 opens audio options, PictureSize 10140 opens picture options, and PreviousChannel 10190 restores the previously watched broadcast.
+The numeric profile mappings appear in Appendix A. When two actions share a code, define precedence or a context rule explicitly rather than relying on object iteration order. PC `AUDIO` and `STOP` are both 83, so Stop retains priority. PC `ASPECT` shares 76 with the desktop fullscreen extension, so fullscreen wins. Tizen MTS 10195 opens audio options, PictureSize 10140 opens picture options, and PreviousChannel 10190 restores the previously watched broadcast.
 
-## 4. Native integration requirements and evidence boundaries
+## 4. Native integration requirements
 
 ### Android
 
-Old `stb/android/stb.js` invokes the common initializer and only checks for an `Android` object. It does not establish ExoPlayer playback. Native Android features require a separately implemented and versioned bridge. Detect a real native shell independently from the `android` UA; do not treat a normal Chrome browser or the marked test WebView as that shell.
-
-Evidence for later native features: `src/plugins/mobile-native-media.ts`, `src/plugins/dash-exo-player.ts`, `src/plugins/native-bridge.ts`, `docs/device-detection-testing.md`. The web fallback in mobile-native-media returns unsupported for shell-only operations. Preserve this honest boundary.
+Native Android features require a separately implemented and versioned bridge.
+Detect a real native shell independently from the `android` UA; a normal Chrome
+browser or test WebView does not establish ExoPlayer or shell-only operations.
 
 ### Dune
 
-Old `stb/dune/stb.js` only checks for the `Dune` object after common initialization. That establishes no proprietary playback or sleep API contract. New Dune-native integration must be feature-detected and tested separately. Do not preserve the old unconditional archive end-time adjustment merely because the device is named Dune; any provider/device-specific time rule needs an observed fixture.
+A `Dune` object alone does not establish proprietary playback or sleep APIs.
+Native integration must be feature-detected and tested separately. Any
+provider/device-specific archive time rule requires an explicit contract.
 
 ### Enigma2, Edem and Inext
 
@@ -129,41 +133,48 @@ HbbTV, Hisense, Panasonic, Philips, Sharp, Skyworth, Sony, TCL, Toshiba and Vewd
 
 ### LG NetCast
 
-The old adapter supplies key mappings and labels. It does not call a NetCast native media plugin. Retain Back=8 and the profile's distinct transport values. Do not load WebOS-only helpers simply because the brand is LG.
+The profile supplies key mappings and labels; it does not enable a NetCast native media plugin. Retain Back=8 and the distinct transport values. Do not load webOS-only helpers simply because the brand is LG.
 
 ### LG webOS
 
-The old adapter attempts the following optional helpers, guarded by method availability and exceptions: `webOS.system.hideSplashScreen()`, `webOS.device.cursorVisible(false)`, `webOS.platform.setWindowOrientation('landscape')`, `webOS.app.requestWindowFocus()`. Presence of `PalmSystem` is only a shell signal. These observed calls are not a guarantee that every firmware supports those API shapes.
+Optional webOS helpers include `webOS.system.hideSplashScreen()`,
+`webOS.device.cursorVisible(false)`,
+`webOS.platform.setWindowOrientation('landscape')` and
+`webOS.app.requestWindowFocus()`. Guard each helper by method availability and
+exception handling. `PalmSystem` is only a shell signal; each firmware requires
+its own API checks.
 
-Requirements: startup must succeed when every helper is absent or throws; cursor use must remain usable for Magic Remote users; orientation/focus changes must respect host lifecycle. The old startup modification that removed PiP items from the user's hidden-menu list is **not** a requirement and must not be repeated. Availability is capability-derived, and user preferences stay intact.
-
-Old common playback forces Auto on webOS without rewriting a saved engine preference. New engine selection should use actual media capability/stream type and a cancellable native-start probe, not force an unsupported engine. Back=461 is mandatory. LG's default Left opens Menu in playback, while an explicitly saved shortcut wins.
+Startup must succeed when helpers are absent or throw. Cursor navigation remains
+available to Magic Remote users, orientation/focus changes respect host lifecycle,
+and user preferences remain intact. Engine selection uses media capabilities,
+stream type and a cancellable native-start probe. Back=461 is mandatory. LG's
+default Left opens Menu during playback; an explicitly saved shortcut wins.
 
 ### MAG
 
-Detection recognizes the presence of callable `gSTB.GetDeviceModel`, `gSTB.GetDeviceMacAddress` or `gSTB.GetMACAddress` without invoking them. The old runtime adapter optionally retrieves MAC through `GetMACAddress()` or `GetDeviceMacAddress()` after startup and falls back to software identity on failure.
+Detection recognizes the presence of callable `gSTB.GetDeviceModel`, `gSTB.GetDeviceMacAddress` or `gSTB.GetMACAddress` without invoking them.
 
-Use a generated device ID as the normal application identity. Retrieve a hardware MAC only when a configured provider's authorized protocol requires it; keep it out of routine logs/export. A MAC getter does not establish support for gSTB playback, DRM, authentication or Ministra handshake. The new player must not report classic MAG portal support merely from this profile.
+Use a generated device ID as the normal application identity. Retrieve a hardware MAC only when a configured provider's authorized protocol requires it; keep it out of routine logs/export. A MAC getter does not establish support for gSTB playback, DRM, authentication or Ministra handshake. The player must not report classic MAG portal support merely from this profile.
 
 ### NodeJS/Electron and PC/PC2
 
-These are browser keyboard profiles. A NodeJS/Electron UA does not grant filesystem, IPC or native-window access. For plain browsers, implement supported HTML fullscreen APIs with feature detection. Tauri fullscreen and OS window state are separate from in-page video sizing. PC2 has the same observed numeric map as PC; keep both recognized profile IDs.
+These are browser keyboard profiles. A NodeJS/Electron UA does not grant filesystem, IPC or native-window access. For plain browsers, implement supported HTML fullscreen APIs with feature detection. Tauri fullscreen and OS window state are separate from in-page video sizing. PC2 has the same numeric map as PC; keep both recognized profile IDs.
 
 ### Samsung Maple/Orsay
 
-The old adapter only checks `Common.API`; it does not establish AVPlay or Samsung plugin playback. Arrow/OK/Back values are distinct from DOM defaults: Up=8, Down=5, Left=4, Right=6, OK=12, Back=88, Exit=45. Do not normalize raw code 8 to Back before consulting this profile.
+The presence of `Common.API` does not establish AVPlay or Samsung plugin playback. Arrow/OK/Back values are distinct from DOM defaults: Up=8, Down=5, Left=4, Right=6, OK=12, Back=88, Exit=45. Do not normalize raw code 8 to Back before consulting this profile.
 
 ### Samsung Tizen
 
 Best-effort register non-navigation keys through `tizen.tvinputdevice.registerKey(name)` when callable. Missing privilege, missing API, throwing access or one unsupported key must not abort startup or later registrations. Arrows, Enter and Back are not explicitly registered. Registration must be idempotent per host/API instance; repeated application initialization must not register duplicate keys. `init()` returns a cleanup function and must not take ownership of keys registered by another component.
 
-Observed registration names: digits `0`–`9`, `VolumeUp`, `VolumeDown`, `VolumeMute`, `ChannelUp`, `ChannelDown`, `ChannelList`, `PreviousChannel`, `MediaPlayPause`, `MediaRewind`, `MediaFastForward`, `MediaPlay`, `MediaPause`, `MediaStop`, `MediaRecord`, `MediaTrackPrevious`, `MediaTrackNext`, `ColorF0Red`, `ColorF1Green`, `ColorF2Yellow`, `ColorF3Blue`, `Menu`, `Tools`, `Info`, `Exit`, `PictureSize`, `MTS`, `Guide`. The containing native application needs its input privilege; a browser cannot acquire it with ES5 code.
+Registration names: digits `0`–`9`, `VolumeUp`, `VolumeDown`, `VolumeMute`, `ChannelUp`, `ChannelDown`, `ChannelList`, `PreviousChannel`, `MediaPlayPause`, `MediaRewind`, `MediaFastForward`, `MediaPlay`, `MediaPause`, `MediaStop`, `MediaRecord`, `MediaTrackPrevious`, `MediaTrackNext`, `ColorF0Red`, `ColorF1Green`, `ColorF2Yellow`, `ColorF3Blue`, `Menu`, `Tools`, `Info`, `Exit`, `PictureSize`, `MTS`, `Guide`. The containing native application needs its input privilege; a browser cannot acquire it with ES5 code.
 
-The old source does not implement `webapis.avplay` in this profile. Any future AVPlay adapter requires independent prepare/play/pause/stop/seek/error/teardown contracts. Back=10009, Exit=10182 and combined Play/Pause=10252 must remain distinct facts.
+The profile does not implement `webapis.avplay`. An AVPlay adapter requires prepare/play/pause/stop/seek/error/teardown contracts. Back=10009, Exit=10182 and combined Play/Pause=10252 must remain distinct facts.
 
 ### Spark
 
-Old `stb/spark/stb.js` checks an `STB` object for diagnostics only. No callable media API is established by that check. Retain the numeric input contract; native playback remains separately unverified.
+The presence of an `STB` object does not establish a callable media API. Retain the numeric input contract; native playback remains separately unverified.
 
 ## 5. Playback capability contract
 
@@ -177,7 +188,8 @@ Determine capabilities at runtime: HTML video element, `canPlayType`, native HLS
 - Audio/subtitle options require actual tracks; unsupported software volume or PiP is unavailable, not successful. Subtitle Off remains explicit.
 - Codec, DRM, multi-decoder and background-playback claims require device-level tests. ES5 syntax does not solve codec support, CORS, TLS, certificates, mixed content or autoplay policy.
 
-Legacy shared media files were `js/hls.min.js` (0.14.17) and `js/shaka-player.compiled.js` (patched 3.3.19); native packages use different libraries. These are inventory facts, **not approval to import old player runtime code or a requirement to freeze those libraries**. If new optional vendor libraries are introduced, record exact versions, licenses, hashes and their ES5/API requirements; keep the initial application independent of modern CDN availability.
+Optional vendor libraries require exact versions, licenses, hashes and ES5/API
+requirements. Application startup must not depend on CDN availability.
 
 ## 6. Fonts, icons, layouts and language resources
 
@@ -191,33 +203,34 @@ Retain selectable font labels System, Roboto, Roboto Condensed, Caveat, Liberati
 - `PTSansNarrow-Regular.ttf` → PTSansNarrow.
 - `fontello.eot`, `fontello.woff2`, `fontello.woff`, `fontello.ttf`, `fontello.svg` → Fontello icon face.
 
-**Known old asset defect:** `LiberationSans-Regular.ttf` has the same bytes as `Roboto-Regular.ttf` and embeds family Roboto. There are six text filenames/menu aliases but five distinct text payloads. Preserve mapping if retaining appearance; do not describe the payload as an independently verified Liberation font. A later replacement is a deliberate visual change, with separate license/metric testing.
+**Font alias:** `LiberationSans-Regular.ttf` has the same bytes as `Roboto-Regular.ttf` and embeds family Roboto. There are six text filenames/menu aliases but five distinct text payloads. Preserve mapping if retaining appearance; do not describe the payload as a distinct Liberation font. A later replacement is a deliberate visual change, with separate license/metric testing.
 
-Evidence: `stbPlayer/1280.css` font declarations; `src/index.ts:fontFamilyList`/`setFontSize`; `licenses/android/bundled-font-metadata.txt`; `THIRD-PARTY-NOTICES.md`. Retain notices and hashes for reused fonts. Fontello has mixed glyph provenance; do not assume every icon shares one license.
+Asset metadata is in `licenses/bundled-font-metadata.txt` and
+`THIRD-PARTY-NOTICES.md`. Retain the notices and hashes. Fontello has mixed glyph
+provenance; do not assume every icon shares one license.
 
 Fonts are local and must work without Google Fonts or a CDN. Supply a system fallback while loading or on failure. Required visual fixtures: Cyrillic, Latin with diacritics, Greek, Hebrew, Armenian, Turkish, long text, numeric clocks and all UI icon fallbacks. Resource existence alone is not proof of glyph coverage. If a glyph is absent, fallback must keep the interface readable. Font selection cannot change application behavior or cursor indices.
 
-The old 20 translation resources are `_arm`, `_bel`, `_bul`, `_eng`, `_fra`, `_ger`, `_gre`, `_heb`, `_hun`, `_ita`, `_lat`, `_lit`, `_pol`, `_por`, `_rou`, `_rus`, `_spa`, `_tur`, `_ukr`, `_uzb`. Their content is a translation inventory, not permission to execute old language JavaScript. The new implementation uses data dictionaries and explicit fallback.
+Translations use data dictionaries with an explicit language fallback.
 
-New layout must remain operable without CSS Grid, flexbox, custom properties, `inset`, `gap`, `object-fit`, `contain`, CSS animation or modern selector support. Use an explicit stable layout baseline, bounded rows and predictable text overflow. Optional enhancements must not hide focus or content. Validate 720p, 1080p, 4K and smaller embedded viewport dimensions; system font and each selectable face; unavailable-font conditions; RTL language behavior and long menu translations.
+Layout must remain operable without CSS Grid, flexbox, custom properties, `inset`, `gap`, `object-fit`, `contain`, CSS animation or modern selector support. Use an explicit stable layout baseline, bounded rows and predictable text overflow. Optional enhancements must not hide focus or content. Validate 720p, 1080p, 4K and smaller embedded viewport dimensions; system font and each selectable face; unavailable-font conditions; RTL language behavior and long menu translations.
 
 ## 7. Acceptance tests
 
 - Every one of the 24 profile IDs resolves from its explicit route; unknown profiles fail closed to detection/PC without dynamic resource loading.
-- For every implemented nonzero profile action, normalize the exact observed code and test collisions through defined context rules. Test `keyCode`/`which` precedence, invalid numeric values, throwing getters, misleading `key`/`code` labels and key-only events. Zero and unknown profile codes never dispatch; no TV profile receives implicit PC aliases.
+- For every implemented nonzero profile action, normalize the exact profile code and test collisions through defined context rules. Test `keyCode`/`which` precedence, invalid numeric values, throwing getters, misleading `key`/`code` labels and key-only events. Zero and unknown profile codes never dispatch; no TV profile receives implicit PC aliases.
 - Test missing APIs, throwing native getters, partial bridge shapes, repeated init/cleanup, and Tizen per-key registration failure.
 - Test MAG precedence over Maple and wrong MAG word matches; webOS/NetCast distinction; Android versus native shell distinction.
 - Test complete navigation, Return, dedicated Exit, Power and Info on actual numeric browser events, not only by calling action functions. Cover Android Return/Exit sharing, Maple transport/color/keypad collisions, desktop extensions, multiple codes for one action, editable inputs, direct Power/Q exit versus dedicated Exit confirmation, exactly-once teardown from fullscreen or dialogs, strict and bounded repeat suppression, lost keyup recovery and expanded-description scrolling with remote codes.
 - Parse every delivered application, polyfill and vendor JS file, including the HLS worker payload, using an ES5 grammar. Remove Promise, fetch, Map, Set, Symbol, URL and modern array/typed-array helpers before boot; verify supplied helpers precede vendor evaluation in both page and worker realms. Require decoded synthetic HLS playback, worker failure fallback, and a usable interface when native MSE or binary storage is absent.
 - Verify fonts by resource existence/hash and rendering. Report physical-device coverage separately by model and firmware.
 
-## Appendix A. Exact observed profile key facts
+## Appendix A. Profile key codes
 
-Each profile below cites its original data file. Values are factual configuration only. `0` means absent. Names retain the old labels to disambiguate keys and are not the new implementation's API.
+`0` means absent. Profile labels identify numeric keys; the application resolves
+them to the semantic actions described above.
 
 ### android
-
-Source: `stb/android/stb.js`.
 
 - Navigation: UP=19, DOWN=20, LEFT=21, RIGHT=22, ENTER=66, RETURN=4, EXIT=4, SETUP=82, TOOLS=82.
 - Color: RED=183, GREEN=184, YELLOW=185, BLUE=186.
@@ -228,8 +241,6 @@ Source: `stb/android/stb.js`.
 
 ### dune
 
-Source: `stb/dune/stb.js`.
-
 - Navigation: UP=38, DOWN=40, LEFT=37, RIGHT=39, ENTER=13, RETURN=8, EXIT=27, SETUP=84, TOOLS=84.
 - Color: RED=112, GREEN=113, YELLOW=114, BLUE=115.
 - Transport: PLAY=80, PAUSE=80, STOP=83, RW=82, FF=70, PREV=188, NEXT=190, REC=0.
@@ -238,8 +249,6 @@ Source: `stb/dune/stb.js`.
 - Digits N0–N9: 48, 49, 50, 51, 52, 53, 54, 55, 56, 57.
 
 ### e2
-
-Source: `stb/e2/stb.js`.
 
 - Navigation: UP=38, DOWN=40, LEFT=37, RIGHT=39, ENTER=13, RETURN=8, EXIT=27, SETUP=84, TOOLS=84.
 - Color: RED=112, GREEN=113, YELLOW=114, BLUE=115.
@@ -250,8 +259,6 @@ Source: `stb/e2/stb.js`.
 
 ### edem
 
-Source: `stb/edem/stb.js`.
-
 - Navigation: UP=38, DOWN=40, LEFT=37, RIGHT=39, ENTER=13, RETURN=8, EXIT=27, SETUP=192, TOOLS=84.
 - Color: RED=90, GREEN=88, YELLOW=67, BLUE=86.
 - Transport: PLAY=80, PAUSE=80, STOP=83, RW=82, FF=70, PREV=188, NEXT=190, REC=0.
@@ -260,8 +267,6 @@ Source: `stb/edem/stb.js`.
 - Digits N0–N9: 48, 49, 50, 51, 52, 53, 54, 55, 56, 57.
 
 ### hbbtv
-
-Source: `stb/hbbtv/stb.js`.
 
 - Navigation: UP=38, DOWN=40, LEFT=37, RIGHT=39, ENTER=13, RETURN=8, EXIT=27, SETUP=458, TOOLS=459.
 - Color: RED=403, GREEN=404, YELLOW=405, BLUE=406.
@@ -272,8 +277,6 @@ Source: `stb/hbbtv/stb.js`.
 
 ### hisense
 
-Source: `stb/hisense/stb.js`.
-
 - Navigation: UP=38, DOWN=40, LEFT=37, RIGHT=39, ENTER=13, RETURN=8, EXIT=27, SETUP=458, TOOLS=459.
 - Color: RED=403, GREEN=404, YELLOW=405, BLUE=406.
 - Transport: PLAY=415, PAUSE=19, STOP=413, RW=412, FF=417, PREV=424, NEXT=425, REC=416.
@@ -282,8 +285,6 @@ Source: `stb/hisense/stb.js`.
 - Digits N0–N9: 48, 49, 50, 51, 52, 53, 54, 55, 56, 57.
 
 ### inext
-
-Source: `stb/inext/stb.js`.
 
 - Navigation: UP=38, DOWN=40, LEFT=37, RIGHT=39, ENTER=13, RETURN=8, EXIT=27, SETUP=84, TOOLS=84.
 - Color: RED=112, GREEN=113, YELLOW=114, BLUE=115.
@@ -294,8 +295,6 @@ Source: `stb/inext/stb.js`.
 
 ### lg/netcast
 
-Source: `stb/lg/netcast/stb.js`.
-
 - Navigation: UP=38, DOWN=40, LEFT=37, RIGHT=39, ENTER=13, RETURN=8, EXIT=27, SETUP=458, TOOLS=459.
 - Color: RED=403, GREEN=404, YELLOW=405, BLUE=406.
 - Transport: PLAY=415, PAUSE=19, STOP=413, RW=82, FF=70, PREV=188, NEXT=190, REC=416.
@@ -304,8 +303,6 @@ Source: `stb/lg/netcast/stb.js`.
 - Digits N0–N9: 48, 49, 50, 51, 52, 53, 54, 55, 56, 57.
 
 ### lg/webos
-
-Source: `stb/lg/webos/stb.js`.
 
 - Navigation: UP=38, DOWN=40, LEFT=37, RIGHT=39, ENTER=13, RETURN=461, EXIT=27, SETUP=458, TOOLS=459.
 - Color: RED=403, GREEN=404, YELLOW=405, BLUE=406.
@@ -316,8 +313,6 @@ Source: `stb/lg/webos/stb.js`.
 
 ### mag
 
-Source: `stb/mag/stb.js`.
-
 - Navigation: UP=38, DOWN=40, LEFT=37, RIGHT=39, ENTER=13, RETURN=8, EXIT=27, SETUP=122, TOOLS=122.
 - Color: RED=112, GREEN=113, YELLOW=114, BLUE=115.
 - Transport: PLAY=68, PAUSE=80, STOP=83, RW=82, FF=70, PREV=188, NEXT=190, REC=0.
@@ -326,8 +321,6 @@ Source: `stb/mag/stb.js`.
 - Digits N0–N9: 48, 49, 50, 51, 52, 53, 54, 55, 56, 57.
 
 ### nodejs
-
-Source: `stb/nodejs/stb.js`.
 
 - Navigation: UP=38, DOWN=40, LEFT=37, RIGHT=39, ENTER=13, RETURN=8, EXIT=27, SETUP=192, TOOLS=84.
 - Color: RED=90, GREEN=88, YELLOW=67, BLUE=86.
@@ -338,8 +331,6 @@ Source: `stb/nodejs/stb.js`.
 
 ### panasonic
 
-Source: `stb/panasonic/stb.js`.
-
 - Navigation: UP=38, DOWN=40, LEFT=37, RIGHT=39, ENTER=13, RETURN=8, EXIT=27, SETUP=458, TOOLS=459.
 - Color: RED=403, GREEN=404, YELLOW=405, BLUE=406.
 - Transport: PLAY=415, PAUSE=19, STOP=413, RW=412, FF=417, PREV=424, NEXT=425, REC=416.
@@ -348,8 +339,6 @@ Source: `stb/panasonic/stb.js`.
 - Digits N0–N9: 48, 49, 50, 51, 52, 53, 54, 55, 56, 57.
 
 ### pc
-
-Source: `stb/pc/stb.js`.
 
 - Navigation: UP=38, DOWN=40, LEFT=37, RIGHT=39, ENTER=13, RETURN=8, EXIT=27, SETUP=192, TOOLS=84.
 - Color: RED=90, GREEN=88, YELLOW=67, BLUE=86.
@@ -360,8 +349,6 @@ Source: `stb/pc/stb.js`.
 
 ### pc2
 
-Source: `stb/pc2/stb.js`.
-
 - Navigation: UP=38, DOWN=40, LEFT=37, RIGHT=39, ENTER=13, RETURN=8, EXIT=27, SETUP=192, TOOLS=84.
 - Color: RED=90, GREEN=88, YELLOW=67, BLUE=86.
 - Transport: PLAY=80, PAUSE=80, STOP=83, RW=82, FF=70, PREV=188, NEXT=190, REC=0.
@@ -370,8 +357,6 @@ Source: `stb/pc2/stb.js`.
 - Digits N0–N9: 48, 49, 50, 51, 52, 53, 54, 55, 56, 57.
 
 ### philips
-
-Source: `stb/philips/stb.js`.
 
 - Navigation: UP=38, DOWN=40, LEFT=37, RIGHT=39, ENTER=13, RETURN=8, EXIT=27, SETUP=458, TOOLS=459.
 - Color: RED=403, GREEN=404, YELLOW=405, BLUE=406.
@@ -382,8 +367,6 @@ Source: `stb/philips/stb.js`.
 
 ### samsung/maple
 
-Source: `stb/samsung/maple/stb.js`.
-
 - Navigation: UP=8, DOWN=5, LEFT=4, RIGHT=6, ENTER=12, RETURN=88, EXIT=45, SETUP=31, TOOLS=31.
 - Color: RED=29, GREEN=30, YELLOW=32, BLUE=33.
 - Transport: PLAY=71, PAUSE=75, STOP=73, RW=74, FF=72, PREV=68, NEXT=69, REC=0.
@@ -392,8 +375,6 @@ Source: `stb/samsung/maple/stb.js`.
 - Digits N0–N9: 48, 49, 50, 51, 52, 53, 54, 55, 56, 57.
 
 ### samsung/tizen
-
-Source: `stb/samsung/tizen/stb.js`.
 
 - Navigation: UP=38, DOWN=40, LEFT=37, RIGHT=39, ENTER=13, RETURN=10009, EXIT=10182, SETUP=18, TOOLS=10135.
 - Color: RED=403, GREEN=404, YELLOW=405, BLUE=406.
@@ -404,8 +385,6 @@ Source: `stb/samsung/tizen/stb.js`.
 
 ### sharp
 
-Source: `stb/sharp/stb.js`.
-
 - Navigation: UP=38, DOWN=40, LEFT=37, RIGHT=39, ENTER=13, RETURN=8, EXIT=27, SETUP=458, TOOLS=459.
 - Color: RED=403, GREEN=404, YELLOW=405, BLUE=406.
 - Transport: PLAY=415, PAUSE=19, STOP=413, RW=412, FF=417, PREV=424, NEXT=425, REC=416.
@@ -414,8 +393,6 @@ Source: `stb/sharp/stb.js`.
 - Digits N0–N9: 48, 49, 50, 51, 52, 53, 54, 55, 56, 57.
 
 ### skyworth
-
-Source: `stb/skyworth/stb.js`.
 
 - Navigation: UP=38, DOWN=40, LEFT=37, RIGHT=39, ENTER=13, RETURN=8, EXIT=27, SETUP=458, TOOLS=459.
 - Color: RED=403, GREEN=404, YELLOW=405, BLUE=406.
@@ -426,8 +403,6 @@ Source: `stb/skyworth/stb.js`.
 
 ### sony
 
-Source: `stb/sony/stb.js`.
-
 - Navigation: UP=38, DOWN=40, LEFT=37, RIGHT=39, ENTER=13, RETURN=8, EXIT=27, SETUP=458, TOOLS=459.
 - Color: RED=403, GREEN=404, YELLOW=405, BLUE=406.
 - Transport: PLAY=415, PAUSE=19, STOP=413, RW=412, FF=417, PREV=424, NEXT=425, REC=416.
@@ -436,8 +411,6 @@ Source: `stb/sony/stb.js`.
 - Digits N0–N9: 48, 49, 50, 51, 52, 53, 54, 55, 56, 57.
 
 ### spark
-
-Source: `stb/spark/stb.js`.
 
 - Navigation: UP=38, DOWN=40, LEFT=37, RIGHT=39, ENTER=13, RETURN=8, EXIT=27, SETUP=84, TOOLS=84.
 - Color: RED=112, GREEN=113, YELLOW=114, BLUE=115.
@@ -448,8 +421,6 @@ Source: `stb/spark/stb.js`.
 
 ### tcl
 
-Source: `stb/tcl/stb.js`.
-
 - Navigation: UP=38, DOWN=40, LEFT=37, RIGHT=39, ENTER=13, RETURN=8, EXIT=27, SETUP=458, TOOLS=459.
 - Color: RED=403, GREEN=404, YELLOW=405, BLUE=406.
 - Transport: PLAY=415, PAUSE=19, STOP=413, RW=412, FF=417, PREV=424, NEXT=425, REC=416.
@@ -459,8 +430,6 @@ Source: `stb/tcl/stb.js`.
 
 ### toshiba
 
-Source: `stb/toshiba/stb.js`.
-
 - Navigation: UP=38, DOWN=40, LEFT=37, RIGHT=39, ENTER=13, RETURN=8, EXIT=27, SETUP=458, TOOLS=459.
 - Color: RED=403, GREEN=404, YELLOW=405, BLUE=406.
 - Transport: PLAY=415, PAUSE=19, STOP=413, RW=412, FF=417, PREV=424, NEXT=425, REC=416.
@@ -469,8 +438,6 @@ Source: `stb/toshiba/stb.js`.
 - Digits N0–N9: 48, 49, 50, 51, 52, 53, 54, 55, 56, 57.
 
 ### vewd
-
-Source: `stb/vewd/stb.js`.
 
 - Navigation: UP=38, DOWN=40, LEFT=37, RIGHT=39, ENTER=13, RETURN=8, EXIT=27, SETUP=458, TOOLS=459.
 - Color: RED=403, GREEN=404, YELLOW=405, BLUE=406.

@@ -1,9 +1,7 @@
 # OTT-play FOSS 2 — 0.6.0-beta.2
 
-This beta packages the completed shared-core integration in the independent ES5
-client. Its version and archive are separate from the original OTT-play FOSS and
-native Android release channels. The previous `0.6.0-beta.1` notes and artifacts
-remain historical records.
+This beta packages the shared OttPlay core in the ES5 client. Its version and
+archive are separate from the OTT-play FOSS and native Android release channels.
 
 ## Changes
 
@@ -23,8 +21,7 @@ remain historical records.
 
 The compact interface, English/Russian selection, remote profiles, fonts and
 Window Controls Overlay remain available. Existing media-library pins are
-unchanged. Captured migration fixtures preserve prior public outputs, callback
-ordering and partial-failure behavior.
+unchanged. Tests cover public outputs, callback ordering and partial failures.
 
 ## Install or upgrade
 

@@ -1,8 +1,7 @@
 # Provider and EPG contracts
 
-The provider module is independently authored ES5. It does not load, translate,
-execute or import the old player's provider JavaScript. Metadata stays plain data;
-only the view may render it, with escaping.
+The provider module uses ES5. Metadata stays plain data; only the view may
+render it, with escaping.
 
 ## Interface
 
@@ -83,11 +82,6 @@ and duration up to include the complete programme. This may include up to one
 extra minute at either boundary; timestamps are not interpreted in the device's
 local timezone. XMLTV is at `xmltv.php` with the same encoded credentials.
 
-Protocol references: [series endpoint and episode contract in an independent
-client](https://github.com/MyNameIsKillua/IPTV-by-Killua/blob/main/docs/XTREAM_API.md)
-and [Kodi's Xtream catch-up URL contract](https://github.com/kodi-pvr/pvr.iptvsimple/blob/Piers/src/iptvsimple/data/Channel.cpp).
-These are compatibility evidence, not proof of a particular subscription.
-
 ## Standard Stalker / Ministra STB API
 
 Use the portal `/c/` URL, `/c/index.html`, or explicit `/server/load.php`,
@@ -118,13 +112,6 @@ explicitly instead of silently choosing an arbitrary stream.
 Catalog pagination has a 50,000-item/5,000-page limit. Repeated pages fail even
 when the number of raw repeated records would equal `total_items`. Cancelled
 pages cannot commit an old session. Empty arrays are valid catalogs.
-
-Protocol references: [Kodi STB calls and endpoint
-resolution](https://github.com/kodi-pvr/pvr.stalker/blob/Piers/src/stalker/SAPI.cpp),
-[STB parameters](https://github.com/kodi-pvr/pvr.stalker/blob/Piers/lib/libstalkerclient/stb.c),
-[cookie/bearer contract](https://github.com/kodi-pvr/pvr.stalker/blob/Piers/lib/libstalkerclient/request.c),
-and [published middleware VOD implementation](https://github.com/iptvhakr/stalker_portal/blob/master/server/lib/vod.class.php).
-The middleware source is a public mirror, not a claim of current vendor support.
 
 ## EPG
 
@@ -178,15 +165,14 @@ No universal archive URL is guessed from retention alone.
 ## Verification boundary
 
 Automated fixtures match published response shapes and contain synthetic account
-and media data. Tests cover independent runtime ES5, 10,000-channel parsing,
+and media data. Tests cover runtime ES5, 10,000-channel parsing,
 relative URLs, source identity, empty catalogs, series navigation, Stalker
 handshake/pagination/VOD/link resolution, authorization, duplicate callbacks,
 cancellation, unsafe URLs and archive minute/retention boundaries. They are not
 captured customer credentials or a live-operator acceptance test.
 
-The old tree's 48 names are inventory, not 48 verified implementations. An
-operator-provided M3U/Xtream URL can use its matching generic protocol. Branded
-proprietary adapters, the old FOSS JSON-RPC `/stalker_portal/api/` variant,
+An operator-provided M3U/Xtream URL can use its matching generic protocol. Branded
+proprietary adapters, the FOSS JSON-RPC `/stalker_portal/api/` variant,
 Stalker vendor-specific authentication/DRM/advert playlists, portal EPG/archive,
 VPortal/fXML, and physical decoder acceptance remain separate unverified scope.
 No compatibility claim is based solely on a provider's brand or device UA.

@@ -140,9 +140,9 @@ Apple portability validation is opt-in:
 ./gradlew --no-daemon -Papple=true macosArm64Test linkDebugFrameworkIosSimulatorArm64
 ```
 
-The common scenarios run on JVM, JavaScript and native macOS. JVM also compares
-the calendar with the JDK across four centuries and checks the retained Android
-parser contract, including every BMP character around the timestamp. The JS ABI
+The common scenarios run on JVM, JavaScript and native macOS. JVM validates
+calendar dates across four centuries and the Android parser contract, including
+every BMP character around the timestamp. The JS ABI
 harness parses ES5 syntax and tests modern and two older-API simulations, with
 2,928 calendar oracle dates and 65,536 whitespace inputs per environment.
 
@@ -182,9 +182,8 @@ profiles; Dune end padding, absolute timeshift thresholds and the historical
 kb-team `.mdp` spelling remain deliberate compatibility data. These adapters
 no longer expand placeholders or calculate archive durations themselves.
 
-The 272 provider input/output fixtures in the main repository record baseline
-`7d47b0ca391e4b1d1fe282cb4bf11a2bfe17e80a`. They run against the actual provider
-adapters and compiled ES5 core. The independent common suite exercises retained
+Provider input/output fixtures run against the actual adapters and compiled
+ES5 core. The common suite exercises retained
 client differences on all three targets, including malformed tokens, signed
 queries, Unicode component bytes and exact retention/absolute-shift boundaries.
 
@@ -198,8 +197,8 @@ and duplicate policy. Existing Android limits also bound browser M3U inputs:
 43 main-player playlist adapters and three media catalogs. They preserve even
 awkward compatibility details such as first-comma titles, blank URI handling,
 week-based TVTeam archives and operator-specific ID path segments. Null-prototype
-JS maps safely represent groups named `__proto__`. Fixed baseline fixtures test
-743 adapter cases; no old parser body is bundled as a fallback.
+JS maps safely represent groups named `__proto__`. Fixtures exercise the provider
+adapters and their format-specific behavior.
 
 `XtreamSession` selects account/catalog requests and validates replies without
 performing HTTP. `XtreamLoad` processes native sections as they arrive, preserving
@@ -214,7 +213,7 @@ acceptance, optional native 404/405/501 sections, extension and direct-URL rules
 and the base player's raw stream references. Hosts supply JSON and URL codecs,
 HTTP/cancellation, hashing, localization and Date/IANA decoding. The JS ABI
 converts public models without normalizing provider catalogs independently.
-Pre-migration fixtures cover 58 FOSS2, 68 Android and 13 base-player contracts.
+Fixtures cover FOSS2, Android and base-player protocol contracts.
 
 `StalkerProtocol` owns MAG/JSON-RPC envelopes, request/header policy, MAC/profile
 validation, token and media-link interpretation. `StalkerPages` preserves browser
@@ -225,8 +224,7 @@ and base-player request order, RPC catalogs, identities and short EPG records.
 `StalkerTokens` and `StalkerRetry` own bounded cache/retry policy; the Android host
 serializes access and performs cancellable HTTP.
 
-Captured baselines cover 52 browser, 63 Android and 19 base-player scenarios.
-Twelve additional BEST LiST cases cover its removed duplicate Xtream parser and
+Tests cover browser, Android and base-player scenarios, including BEST LiST
 M3U fallback spellings. The shared classic Xtream factory supplies both providers.
 ES5 runtime simulations cover these APIs and the antifriz logo rewrite; source
 checks forbid Kotlin `replaceFirst`, whose JS implementation needs a Unicode
@@ -244,8 +242,8 @@ Merged programme objects and unambiguous schedule aliases preserve identity.
 `LegacyGuideSchedule` retains inclusive programme ends and the first overlapping
 start, while `GuideSchedule` retains half-open/latest-start browser semantics.
 Android uses `GuideProgrammeRules` for interval validation, duplicate retention
-and deterministic ordering. Captured contracts cover 44 browser, 44 classic
-and 33 Android cases; XML parser protections stay in the host.
+and deterministic ordering. Tests cover browser, classic and Android profiles;
+XML parser protections stay in the host.
 
 `NativeGuideSources` owns native URL selection/deduplication, channel ownership,
 cache hit/coalescing precedence, disk identity/TTL, Rust source-set capacity and
@@ -265,14 +263,12 @@ adapters retain payloads and original errors while executing the selected effect
 `NativeSourceBatch` continues sequential loads after errors and selects the first
 failure only when no source produced channels. Channel ownership remains shared.
 
-Another 77 contracts (39 Swift, 38 Kotlin) were qualified on unchanged adapter
-revision `d24f07be` before migration. They exercise distinct memory/disk/network
-payloads, real write failures, delayed/coalesced callbacks, timestamps, ordered
-source batches and Swift's second-parse failure. Eight new common tests exercise
-the state transitions on JVM, JavaScript and macOS.
+Native contracts exercise distinct memory/disk/network payloads, real write
+failures, delayed/coalesced callbacks, timestamps, ordered source batches and
+Swift's second-parse failure. Common tests exercise state transitions on JVM,
+JavaScript and macOS.
 
-The actual Swift/Kotlin adapters each pass 59 source/cache cases qualified
-against main revision `ab69d2f`, including forced/coalesced loads, exact TTL,
+Swift/Kotlin source/cache tests include forced/coalesced loads, exact TTL,
 malformed metadata, Unicode URL/channel equality and integer overflow.
 `tests/test_native_epg_cache.py` executes these through the real JVM and
 JavaScriptCore distributions; Rust tests partial HTTP failure and source-set
@@ -288,13 +284,11 @@ payloads keep their original identity and discarded payloads are released.
 Compatibility includes programme-only exact IDs, first equal-priority entries,
 late candidate discovery without retroactive pruning, open stops and fractional
 archive depth. The Node adapter's existing transport, XML and request bounds
-remain in place. A fixed baseline of 110 actual HTTP responses from source
-revision `b34ae28` verifies exact output and failures. Ten common tests and all
-three JS ABI environments exercise this implementation.
+remain in place. HTTP tests verify exact output and failures. Common tests and
+all three JS ABI environments exercise this implementation.
 
-Transport, other operator session logic and durable
-state still need migration. See [workspace status](../README.md) and
-[validation](validation.json); physical targets are not certified by VM tests.
+See the [repository overview](../README.md) for integration and release checks;
+physical targets are not certified by VM tests.
 
 `XmltvRecords` now interprets decoded native XMLTV events for Swift, archived
 Kotlin, active Android and both Rust profiles. It owns channel metadata/alias
@@ -309,7 +303,7 @@ The compatibility profiles preserve concatenated, first and last field rules,
 Foundation canonical ID equality, empty/missing attributes and QuickXML empty
 element events. Conditional Rust decoding failures retain their original error
 and precedence; malformed Swift input still clears only channels/programmes.
-Fixtures captured before migration cover 100 parser results across five profiles,
+Parser fixtures cover five profiles,
 with additional native batch/error boundaries. The actual shipping adapters run
 these fixtures in their existing CI suites. Native XMLTV field limits, root/DTD
 guards, decompress limits and programme caps remain platform protections.
@@ -318,7 +312,7 @@ guards, decompress limits and programme caps remain platform protections.
 retention, progressive merge selection, callback generations, status, retry
 backoff and automatic-refresh notification decisions. Browser code keeps parsed
 payloads and performs requests, cancellation, guide merging and UI updates.
-Eighteen pre-migration scenarios preserve 67 complete state snapshots, including
+Refresh scenarios cover complete state snapshots, including
 removed/reordered sources, empty success, cancellation and foreground refresh.
 
 `NativeGuideRefresh` owns sequential fetch/error/commit transitions for active
@@ -329,8 +323,7 @@ returns a fresh empty result even when all feeds fail; a database-open error
 propagates, while a persistence error still returns fresh memory. Rust metadata
 uses shared first-feed ownership and its timer consumes the shared interval.
 Hosts retain original errors, payloads, clocks, mutexes and atomic SQLite writes.
-Captured public-API tests preserve eighteen Android and twenty-eight Rust
-outcomes. Additional Android tests retain cancellation, completion-order commits
+Public-API tests cover Android and Rust outcomes. Additional Android tests retain cancellation, completion-order commits
 and full rollback on a later insert failure. SQL conflict behavior is unchanged.
 
 The source uses the OttPlay MIT license. Generated JavaScript includes Kotlin's
