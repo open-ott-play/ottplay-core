@@ -2,7 +2,7 @@
 
 **Beta 0.6.0-beta.2** — [release notes and upgrade instructions](docs/RELEASE-0.6.0-beta.2.md).
 
-An independent IPTV player with an ES5 application runtime and a compact interface for LG televisions and remote controls, inspired by OTT-play FOSS. The original player is a requirements reference, not a runtime dependency. The application, state model, providers and controllers are newly written. Existing font resources are retained with their notices.
+An IPTV player with an ES5 application runtime and a compact interface for LG televisions and remote controls. Bundled fonts and media libraries are distributed with their notices.
 
 **English is the default.** Switch to Russian in **Settings → Size and language**. The selected language persists on the device, including after a reload. A missing or unsupported language setting falls back to English. The default font is the bundled **RobotoCondensed**; other fonts and sizes remain selectable.
 
@@ -14,7 +14,7 @@ npm ci --omit=dev
 npm start
 ```
 
-Open **http://127.0.0.1:8092/**. There is no application build step. The bundled fonts and media libraries are served locally. The server runs independently of the original project. Automatic programme-guide loading uses the public EPG.ONE feed described below.
+Open **http://127.0.0.1:8092/**. There is no application build step. The bundled fonts and media libraries are served locally. Automatic programme-guide loading uses the public EPG.ONE feed described below.
 
 To make the player available to devices on your own network, explicitly choose a network listener:
 
@@ -93,7 +93,7 @@ Native MediaSource (including the WebKit prefix), real binary buffers, stream tr
 
 ## Programme guide and channel logos
 
-EPG source priority is **custom URLs → playlist URLs → built-in EPG.ONE**. The built-in fallback is `https://cdn.epg.one/epg2.xml.gz`, the feed used by the original player's native editions. A playlist with only `tvg-id` and no XMLTV URL therefore still gets an automatic guide attempt. Clear the XMLTV field and save to restore automatic source selection; use **Programme guide → Refresh** to retry a failed download.
+EPG source priority is **custom URLs → playlist URLs → built-in EPG.ONE**. The built-in fallback is `https://cdn.epg.one/epg2.xml.gz`. A playlist with only `tvg-id` and no XMLTV URL therefore still gets an automatic guide attempt. Clear the XMLTV field and save to restore automatic source selection; use **Programme guide → Refresh** to retry a failed download.
 
 The local Node server downloads and decompresses the built-in guide, then returns channel metadata and a bounded programme window for the requested channels. The TV does not download or parse the full compressed feed. This built-in route works without enabling the optional provider relay. It requires the supplied server and internet access; hosting only the static files does not provide it. The browser sends channel IDs/names to this local service; stream URLs and provider credentials are excluded.
 
@@ -119,9 +119,9 @@ The application scripts are ES5 and use callback-based XHR. The interface and na
 
 The 24 legacy device profiles and 192 URL routes are retained as **input/detection contracts**. They are not a claim that 24 firmware-specific media engines have been implemented or tested. Playback uses the device's HTML5 element, native HLS where available, and locally bundled Hls.js 1.7.3, Shaka Player 5.2.10 and mpegts.js 1.8.2 where runtime capabilities allow them. All three vendor bundles parse as ES5 but need additional APIs; unsupported environments keep the native path. LG webOS 1/2 lack MSE, while later firmware capabilities still need checking on the actual television.
 
-The original font names and all eleven font resources are preserved. The original `LiberationSans-Regular.ttf` is a Roboto alias, not a distinct Liberation face; provenance records this rather than silently replacing it.
+Eleven bundled font resources provide the selectable font families. `LiberationSans-Regular.ttf` is a Roboto alias, not a distinct Liberation face; asset metadata records the actual family.
 
-AVPlay/OIPF/gSTB and other native firmware playback bridges, proprietary operator protocols, vendor DRM, cloud/dealer services, native installers and eighteen additional translations are outside this delivered interface. See `IMPLEMENTATION-STATUS.md` for the boundary between working code, tested behavior and the broader technical specification.
+AVPlay/OIPF/gSTB and other native firmware playback bridges, proprietary operator protocols, vendor DRM, cloud/dealer services, native installers and eighteen additional translations are outside this delivered interface.
 
 ## Verification
 
@@ -132,21 +132,18 @@ delegate to it. M3U accepts up to 100,000 unique entries, 32 Mi UTF-16 code unit
 per input and 1 Mi per line. Relative URL resolution stays with the browser adapter.
 Xtream account/catalog request order, normalization, identities, stream routes
 and series/season rules use the same core. The browser retains HTTP/cancellation,
-URL codecs and a bounded series cache. The 58 captured Xtream migration cases
-preserve its existing wire and catalog behavior.
+URL codecs and a bounded series cache. Xtream tests cover wire and catalog behavior.
 Stalker/Ministra authentication, request order, pagination, catalogs, folder
 hierarchies and create-link interpretation also delegate to this core. The
 browser retains cancellable HTTP and URL/JSON codecs; session tokens and opaque
-commands are private. Captured baselines cover 52 portal scenarios, with separate
-cancellation and stale-generation tests.
+commands are private. Portal tests cover cancellation and stale generations.
 XMLTV record normalization, feed merging/affinity, partial-window coverage and
 bounded lookup caching also use the core. XML parsing and URL codecs stay here.
-Forty-four captured cases preserve metadata ownership, duplicate precedence,
-missing-stop inference, shifted schedules and source-scoped identities.
+Tests cover metadata ownership, duplicate precedence, missing-stop inference,
+shifted schedules and source-scoped identities.
 The Node companion delegates streaming guide retention, archive-depth merging,
 candidate selection and output budgets to the same core. Its adapter retains
-HTTP, XML/gzip decoding, URL validation and UTF-8 serialization. Another 110
-captured HTTP responses verify exact output ordering and truncation behavior.
+HTTP, XML/gzip decoding, URL validation and UTF-8 serialization. HTTP tests verify exact output ordering and truncation behavior.
 Provider source validation, request/session lifetime and the bounded series cache
 are coordinated by the core. Durable selections, backups, legacy settings import,
 parental sessions and playback recovery/position decisions use the same pinned
@@ -178,21 +175,21 @@ OTT2_TEST_MEDIA=/absolute/path/to/test.mp4 npm run test:window-controls-browser
 
 Run browser suites sequentially to bound CPU and memory use. `npm test` checks lazy bootstrap order, polyfill behavior, application/provider/PIN/migration/state behavior, all device mappings, relay constraints, ES5 syntax, resource hashes and reproducible vendor assets. One relay test creates two temporary loopback HTTP servers.
 
-The EPG suite exercises automatic loading, channel logos, current/next, explicit-source overrides, failure status and cancellation with synthetic fixtures. Its local artifact is [the EPG browser report](test-results/browser-epg-report.json). Server tests cover streamed gzip/XML parsing, request bounds, matching ambiguity, cancellation and cached results. A successful synthetic run does not certify public-feed availability or coverage of a private operator's channels.
+The EPG suite exercises automatic loading, channel logos, current/next, explicit-source overrides, failure status and cancellation with synthetic fixtures. Its local artifact is `test-results/browser-epg-report.json`. Server tests cover streamed gzip/XML parsing, request bounds, matching ambiguity, cancellation and cached results. A successful synthetic run does not certify public-feed availability or coverage of a private operator's channels.
 
-The compatibility suite removes modern APIs independently in the page and Worker, verifies real HLS decoding and actual Worker init/transmux completion with workers enabled, and tests failed/missing Workers and unavailable native MSE/binary APIs. Its [compatibility report](test-results/browser-compat-report.json) records simulated legacy behavior, not physical firmware certification.
+The compatibility suite removes modern APIs independently in the page and Worker, verifies real HLS decoding and actual Worker init/transmux completion with workers enabled, and tests failed/missing Workers and unavailable native MSE/binary APIs. Its `test-results/browser-compat-report.json` records simulated legacy behavior, not physical firmware certification.
 
 For the browse, scroll, controls and provider journeys, set `OTT2_TEST_MEDIA=/absolute/path/to/test.mp4` to a local synthetic H.264 MP4 before running the commands above. The browse, scroll and controls suites require it, and the provider suite needs valid media bytes to verify playback reliably; an empty HTTP response is not a playback fixture. The general UI suite also uses this option.
 
-The startup suite also requires `OTT2_TEST_MEDIA`. It launches Chromium with autoplay permitted to verify returning directly to the saved channel, including repeated URL-query rotations and equivalent M3U broadcast copies, then uses a synthetic `NotAllowedError` to check that blocked autoplay retains Play and the saved mute setting. That rejection fixture verifies the recovery UI rather than a browser's changing autoplay eligibility policy. The [startup browser report](test-results/browser-startup-report.json) records the run and source hashes.
+The startup suite also requires `OTT2_TEST_MEDIA`. It launches Chromium with autoplay permitted to verify returning directly to the saved channel, including repeated URL-query rotations and equivalent M3U broadcast copies, then uses a synthetic `NotAllowedError` to check that blocked autoplay retains Play and the saved mute setting. That rejection fixture verifies the recovery UI rather than a browser's changing autoplay eligibility policy. The `test-results/browser-startup-report.json` records the run and source hashes.
 
-The window-controls suite also requires `OTT2_TEST_MEDIA`. It checks decoded playback, ordinary-layout fallback, macOS/Windows title-bar geometry, navigation, dialogs, the on-screen keyboard, small windows and real Fullscreen API transitions. Its WCO display mode and `titlebar-area-*` CSS inputs are explicitly simulated; native window buttons and dragging are outside that automated check. See the [automated report](test-results/browser-window-controls-report.json) and the separate [installed Chrome app observations](test-results/browser-live-window-controls-report.json).
+The window-controls suite also requires `OTT2_TEST_MEDIA`. It checks decoded playback, ordinary-layout fallback, macOS/Windows title-bar geometry, navigation, dialogs, the on-screen keyboard, small windows and real Fullscreen API transitions. Its WCO display mode and `titlebar-area-*` CSS inputs are explicitly simulated; native window buttons and dragging are outside that automated check. The automated report is written to `test-results/browser-window-controls-report.json`.
 
-The [scroll browser report](test-results/browser-scroll-report.json) covers real mouse wheel and trackpad input, legacy wheel events, channel cursor/EPG updates, nested scroll boundaries and uninterrupted decoding. Small-window settings and sidebar checks use 130% text size.
+The `test-results/browser-scroll-report.json` covers real mouse wheel and trackpad input, legacy wheel events, channel cursor/EPG updates, nested scroll boundaries and uninterrupted decoding. Small-window settings and sidebar checks use 130% text size.
 
-The playback controls suite exercises direct numeric Q exit, dedicated Exit confirmation and cancellation, actual fullscreen transitions, footer timing/expansion by keyboard and mouse, editable-field exceptions, full EPG scrolling and media teardown when tab closure is unavailable. Profile contract tests cover all 24 maps, numeric collisions and rejection of named-key fallbacks. Check the [playback controls report](test-results/browser-controls-report.json) timestamp and source hashes for the tested revision.
+The playback controls suite exercises direct numeric Q exit, dedicated Exit confirmation and cancellation, actual fullscreen transitions, footer timing/expansion by keyboard and mouse, editable-field exceptions, full EPG scrolling and media teardown when tab closure is unavailable. Profile contract tests cover all 24 maps, numeric collisions and rejection of named-key fallbacks. Check the `test-results/browser-controls-report.json` timestamp and source hashes for the tested revision.
 
-The browser tests use Playwright Chromium. `test:media-browser` and `test:engines-browser` also require FFmpeg; the media suite generates HLS/DASH fixtures and verifies actual decoding, audio switching and paused seeking. The engine suite generates HLS/TS/FLV media, checks extensionless URL detection by headers and body signatures, and verifies engine switching while paused. Set `FFMPEG=/absolute/path/to/ffmpeg` when it is not on PATH. The UI test accepts `OTT2_TEST_MEDIA=/absolute/path/to/test.mp4` to include actual MP4 playback. Automated browser tests use synthetic fixtures and temporary local servers. Their reports are local run artifacts: [UI report](test-results/browser-report.json), [provider report](test-results/browser-providers-report.json), [engine report](test-results/browser-engines-report.json), [media report](test-results/browser-media-report.json), and [verification record](test-results/verification.json). Check the recorded run time and source hashes before treating an older report as evidence for current edits.
+The browser tests use Playwright Chromium. `test:media-browser` and `test:engines-browser` also require FFmpeg; the media suite generates HLS/DASH fixtures and verifies actual decoding, audio switching and paused seeking. The engine suite generates HLS/TS/FLV media, checks extensionless URL detection by headers and body signatures, and verifies engine switching while paused. Set `FFMPEG=/absolute/path/to/ffmpeg` when it is not on PATH. The UI test accepts `OTT2_TEST_MEDIA=/absolute/path/to/test.mp4` to include actual MP4 playback. Automated browser tests use synthetic fixtures and temporary local servers. Their reports are local run artifacts: `test-results/browser-report.json`, `test-results/browser-providers-report.json`, `test-results/browser-engines-report.json`, `test-results/browser-media-report.json`, and `test-results/verification.json`. Check the recorded run time and source hashes before treating an older report as evidence for current edits.
 
 ## Reproduce bundled media dependencies
 
@@ -207,19 +204,16 @@ npm run check:vendors
 
 `vendor/runtime-manifest.json` records the lockfile, builder, package versions and all generated asset hashes. `check:vendors` independently derives the expected bytes and rejects changed packages, assets, licenses or stale fingerprints. An intentional dependency upgrade requires rebuilding and repeating ES5, Worker and playback tests; a matching hash alone does not certify a TV firmware.
 
-## Architecture and reference documents
+## Documentation
 
-- `TECHNICAL-SPEC.md`: source-derived requirements, acceptance rules and target extensions.
-- `docs/FEATURE-INVENTORY.md`: old-player behavior and source evidence.
+- `TECHNICAL-SPEC.md`: product requirements, acceptance rules and target extensions.
 - `docs/DEVICE-CONTRACTS.md`: routes, key maps, font and platform boundaries.
-- `docs/ARCHITECTURE-RISKS.md`: design decisions and old-system risks.
-- `docs/PROVIDER-API.md`: independent provider and EPG contracts.
+- `docs/PROVIDER-API.md`: provider and EPG contracts.
 - `docs/EPG.md`: automatic sources, logos, matching, server filtering and limits.
 - `MEDIA-API.md`: media lifecycle, capability APIs and actual playback tests.
 - `docs/ENGINE-COMPATIBILITY.md`: native/MSE decisions, LG firmware boundaries and MPEG-TS/FLV dependency verification.
-- `IMPLEMENTATION-STATUS.md`: delivered scope and verification status.
 - `THIRD-PARTY-NOTICES.md`, `assets/provenance.json`: resources and licenses.
 
 Runtime modules have explicit dependencies through the small `OTT2` registry. State, transport, provider parsing, EPG, security, migration, collection operations, view, keyboard and playback are separate modules. The application controller owns cancellations, session generations and teardown. Data from playlists is rendered as escaped text, not executable HTML.
 
-The old project is not modified or required at startup. The MIT application license does not replace third-party resource licenses.
+The MIT application license does not replace third-party resource licenses.

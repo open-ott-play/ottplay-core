@@ -5,7 +5,7 @@ const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypt
 const root=path.resolve(__dirname,'..');
 const digest=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
 const roots=['src','ui','vendor','fonts','icons','licenses','assets','docs','scripts','tests'];
-const top=['index.html','manifest.webmanifest','package.json','package-lock.json','LICENSE','README.md','TECHNICAL-SPEC.md','IMPLEMENTATION-STATUS.md','MEDIA-API.md','THIRD-PARTY-NOTICES.md'];
+const top=['index.html','manifest.webmanifest','package.json','package-lock.json','LICENSE','README.md','TECHNICAL-SPEC.md','MEDIA-API.md','THIRD-PARTY-NOTICES.md'];
 function files(base=root) {
     const result=[];
     function add(name) {

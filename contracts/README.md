@@ -45,10 +45,8 @@ Worker Requests/Responses, KV, crypto and HTML stay native. Browser URLs, storag
 DOM and transport execution stay in their adapters. Shared generated predicates
 replace handwritten wire decisions; the generator has no player-core dependency.
 
-Immutable before-migration fixtures in each consumer exercise 81 actual player
-command-handler cases, 90 Go validator/HTTP cases and 27 Worker service scenarios.
-Their provenance records the original checkout revisions; generated policy is
-never used to construct expected data.
+Consumer fixtures exercise player command handlers, Go validators/HTTP and
+Worker service scenarios. Expected data is independent of generated policy.
 
 `ottplay-web-vitrine` is already an artifact consumer. Its verified
 `ottplay-foss-dist.tar.gz` contains the player; the vitrine's own source only

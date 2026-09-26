@@ -1,12 +1,7 @@
 # OTT-play 2: technical specification
 
-Status: requirements for the new product, not a statement of completed acceptance.
-The user requested a new interface and then clarified the approach: first document
-the old player's complete requirements, then implement an independent replacement
-from scratch without repeating its design mistakes. “HS5” means the previously
-specified ECMAScript 5. Behavioral reference: the sibling consumer repository
-`ottplay-foss` (resolved from the source checkout's parent), version 1.1.43,
-commit `73a7ab59799aa5deb425df4fa4875f6939204e83`.
+This specification defines product requirements and acceptance criteria.
+Implemented capabilities and current limitations are described in [README.md](README.md).
 
 ## 1. Purpose and boundaries
 
@@ -17,12 +12,8 @@ The interface retains the character of OTT-play: dark surfaces, high contrast
 selection, labels readable from a distance, a dense list, visible focus and few
 actions before playback starts.
 
-The new project must not load `stbPlayer.js`, use the old player's DOM, or import
-its modules, provider scripts or build system. Old source code may be consulted
-as documentary evidence of behavior. Hardware key codes and external protocol
-formats are contract data, not architecture to copy. Local fonts and explicitly
-licensed third-party media libraries are allowed; each resource must have a
-separate provenance record.
+Application modules use explicit dependencies. Local fonts and third-party media
+libraries carry their own licenses and asset metadata.
 
 Native Tauri/Capacitor installers, server integrations, package signing, store
 publication and installation on physical devices are separate deliverables.
@@ -30,18 +21,12 @@ An Android browser profile does not constitute a new Android APK. A Tizen key
 map does not demonstrate AVPlay or DRM operation. Compatibility claims must stay
 within the verified playback path.
 
-## 2. Requirement sources
+## 2. Acceptance
 
-The detailed catalog and function references are in `docs/FEATURE-INVENTORY.md`.
-The 24 device contracts and font contracts are in `docs/DEVICE-CONTRACTS.md`.
-Architectural risks and their mitigation are in `docs/ARCHITECTURE-RISKS.md`.
-Observed behavior takes priority over contradictory legacy comments. Bugs must
-not be reproduced merely to achieve superficial similarity.
-
-Each requirement needs four independent states: documented, implemented,
-automatically verified, and verified on a device. A successful build or syntax
-parse does not replace either form of behavioral verification. Actual readiness
-is recorded in `IMPLEMENTATION-STATUS.md`.
+Device routes, key maps and font contracts are in
+[Device contracts](docs/DEVICE-CONTRACTS.md). Automated verification and
+physical-device acceptance are separate: a successful build or syntax parse
+does not establish playback behavior on a particular firmware.
 
 ## 3. Required compatibility
 
@@ -109,13 +94,11 @@ Local families are Roboto, RobotoCondensed, Caveat, Liberation, Gabriela and
 PTSansNarrow; Fontello resources include EOT/WOFF2/WOFF/TTF/SVG. Preserve family
 names. Commands must not rely on emoji or remote icon fonts for their meaning:
 every icon has text. Failed font downloads must not prevent navigation. All menus
-use the selected family and scale. The reference project has a resource defect:
-LiberationSans-Regular.ttf is byte-identical to Roboto-Regular.ttf. The initial
-delivery retains the compatible alias and documents its actual family; it must
-not claim to include a distinct Liberation font.
+use the selected family and scale. LiberationSans-Regular.ttf contains the
+Roboto family; the selectable Liberation alias must not claim to supply a
+distinct Liberation font.
 
-Localization is a separate component concern. The old project's complete language
-catalog remains a release requirement. Missing translations use understandable
+Localization is a separate component concern. Missing translations use understandable
 fallback text rather than a resource key. Initial source languages are English,
 which is the first-run default, and Russian. Other translations have separate
 readiness states. Time formatting respects the time zone; channel names retain
@@ -135,8 +118,8 @@ Probes must not change volume, playback, device settings or credentials.
 The required product families include Samsung Tizen, LG webOS, Panasonic Viera,
 Infomir MAG, Dune HD, Android TV and desktop browsers. Their browser profiles and
 native playback bridges have independent acceptance criteria. Any extra device
-families found in the reference documentation must be inventoried before a wider
-support claim is made.
+families require documented capabilities and acceptance before a wider support
+claim is made.
 
 ### COMP-06. Numeric input and semantic actions
 
@@ -155,7 +138,7 @@ LG/Tizen 457 and Android 165. Maple 73 remains Stop; Android 19 remains Up.
 An explicitly selected TV profile must use its remote codes even when opened
 in a desktop browser.
 
-Only `pc`, `pc2`, `nodejs` and `edem` extend their observed maps with
+Only `pc`, `pc2`, `nodejs` and `edem` extend their numeric maps with
 `FULLSCREEN=76`, `SPACE=32`, `CONTEXT_MENU=93`, `TAB=9`, `PAGE_UP=33`,
 `PAGE_DOWN=34`, `HOME=36` and `END=35`. These resolve to `fullscreen`,
 `playPause`, `menu`, `tab`, `pageUp`, `pageDown`, `home` and `end` respectively.
@@ -167,8 +150,8 @@ digits 48–57, and multimedia aliases `MEDIA_PLAY_PAUSE=179`, `MEDIA_STOP=178`,
 Multiple codes may select one semantic action without replacing existing codes.
 These desktop profiles retain `POWER=81` and `INFO=73`; other profiles do not
 inherit Q/L/I aliases, keypad/media aliases or standard browser navigation codes.
-Maple 99 therefore remains Info rather than desktop keypad digit 3. Exact source facts
-and additions are distinguished in `docs/DEVICE-CONTRACTS.md`.
+Maple 99 therefore remains Info rather than desktop keypad digit 3. Exact numeric
+mappings are listed in `docs/DEVICE-CONTRACTS.md`.
 
 `PRECH` maps to `previousChannel`, restoring the previously confirmed live
 broadcast through source and playback PIN checks. `PREV` and multimedia Previous
@@ -341,9 +324,9 @@ series/seasons/episodes, EPG and catch-up where the API supports them. Stalker:
 MAC/portal, handshake, profile, categories, channel pages and obtaining a playable
 link before playback. Session tokens are excluded from UI/logs/exports by default.
 
-Named providers from the reference player remain in the inventory. They must not
-load as arbitrary executable JavaScript plugins. Use a generic protocol only when
-equivalence is established. Proprietary adapters require their own contract,
+Providers must not load as arbitrary executable JavaScript plugins. Use a
+generic adapter only for its supported protocol. Proprietary adapters require
+their own contract,
 fixture responses and explicit readiness state.
 
 ### SRC-02. Identifiers and source switching
@@ -444,7 +427,7 @@ Verify hardware decoders, DRM and certificates separately on the relevant platfo
 Auto is the default and considers the device profile and detected stream format.
 LG HLS tries native playback first; Chromium uses a supported HLS MSE engine.
 DASH, raw HTTP MPEG-TS/FLV and ordinary files route to suitable available backends.
-An independent upstream transmuxer with ES5 syntax may handle MPEG-TS/FLV; this
+A third-party transmuxer with ES5 syntax may handle MPEG-TS/FLV; this
 does not promise an additional codec decoder.
 
 Detect extensionless URLs through Content-Type or initial signatures using a
@@ -506,7 +489,7 @@ including after server filtering. Current/next are calculated from time interval
 expired data is marked. The XML parser does not execute scripts.
 
 EPG-01a: source priority is explicit user URLs, playlist URLs, then a built-in
-public XMLTV feed as in the reference player. Clearing the user field restores
+public XMLTV feed. Clearing the user field restores
 automatic selection. The UI distinguishes loading, unmatched channels, empty/stale
 schedules and source errors. Refresh cancels its predecessor; a failed feed must
 not hide successfully loaded feeds.
@@ -709,50 +692,5 @@ separate from prohibited application-module monkey patches.
     Native dragging and physical TV/STB behavior need their own evidence.
 
 Release threshold: required implemented features have no known blockers and
-unverified platform scenarios are listed. “All features of the old player” may be
-claimed only after the complete inventory is closed, including provider protocols,
-native integrations and hardware checks. A working new foundation is not described
-as a completed port.
-
-## 13. Implementation sequence
-
-First establish this specification and the contract inventory. Then implement an
-independent executable vertical journey: source → catalog → command → playback →
-error/recovery → storage. Follow with EPG/catch-up, favorites/VOD, settings,
-parental access, protocol adapters and platform capabilities. Keep the application
-runnable and verify behavior at each step. Do not defer its first execution until
-a large final port has combined every module.
-
-The final stage is an evidence-based compatibility matrix, hardware testing,
-packaging and release. User credentials, local services, the installed application
-and original `ottplay-foss` are not changed automatically.
-
-## Delivery clarifications dated 2026-09-14
-
-The entire interface defaults to English. An explicit Russian selection survives
-restart; an unknown/missing language falls back to English. Loading text, startup
-errors and persistent media controls are part of this contract. Languages in the
-legacy catalog beyond English/Russian remain a separate extension.
-
-`IMPLEMENTATION-STATUS.md` records currently implemented journeys and firmware,
-provider and external-service boundaries. This broader specification does not
-assert that every integration is already available.
-
-The user identified LG TV as the priority platform and requested a denser
-interface, automatic engine detection and manual engine switching. These are
-captured in UX-04, PLAY-02a and acceptance checks 11–12. Successful playback of one
-real channel in Chrome is separate from physical LG acceptance.
-
-The latest navigation requirements add direct live-channel click/OK playback,
-video-click access to the channel list, continuous preview playback and a hidden
-section menu controlled by the visible Menu button or remote Menu key. The
-compatibility update requires polyfills before media libraries and inside HLS
-workers. English is required for comments and project documentation. These
-requirements do not remove hardware/API limitations or the separate physical
-device acceptance boundary.
-
-Input handling uses only numeric event codes and the selected device profile.
-Desktop labels such as Q, L and I describe the usual keyboard caps for codes
-81, 76 and 73; they are not string comparisons or universal remote aliases.
-Return, dedicated Exit, Power, Info and description scrolling use the same
-semantic action path across old and modern devices.
+unverified platform scenarios are listed, including provider protocols, native
+integrations and hardware checks.

@@ -1,12 +1,12 @@
 # Playback engines and legacy-device compatibility
 
-Implementation and local regression evidence updated on 2026-09-16. This document separates stream transport, browser APIs and hardware codecs. A matching URL extension alone is not playback proof.
+This document separates stream transport, browser APIs and hardware codecs. A matching URL extension alone is not playback proof.
 
 ## Bootstrap and runtime requirements
 
 The application uses ES5 classic scripts. `index.html` loads `src/compat.js` first to capture native binary/worker capabilities and object-URL functions, then the local `vendor/core-js.min.js`, then `src/compat-ready.js`. Application modules and `src/boot.js` follow. The bootstrap checks the installed helpers before evaluating any optional media library. The interface starts immediately after module registration with no optional media requests. `OTT2VendorLoader` loads an engine on demand, deduplicates in-flight requests and applies a five-second bound. Script completion supports both standard load events and legacy `readyState` events. Failed/timed-out engines are quarantined for the page session, and `OTT2Vendors` stores accepted references independently of late globals. Canceling a session removes its callback without interrupting another subscriber.
 
-The pinned full Hls.js 1.7.3 UMD bundle has ES5 syntax but requires newer globals and helpers. Its upstream documents an ES2016 baseline and ES2017 helpers for the full build, with no bundled core-js. The local 3.50.0 polyfill bundle supplies Promise, Symbol/iterators, strong/weak collections, Object/Array/String/Number/Math helpers, typed-array helpers and URL/URLSearchParams. The compatibility helper verifies the APIs actually used by the vendored engines and retains `webkitURL` blob functions when URL construction is replaced. This changes the old behavior where missing language helpers excluded an otherwise usable MSE backend. [Hls.js 1.7.3 requirements](https://github.com/video-dev/hls.js/blob/v1.7.3/README.md).
+The pinned full Hls.js 1.7.3 UMD bundle has ES5 syntax but requires newer globals and helpers. Its upstream documents an ES2016 baseline and ES2017 helpers for the full build, with no bundled core-js. The local 3.50.0 polyfill bundle supplies Promise, Symbol/iterators, strong/weak collections, Object/Array/String/Number/Math helpers, typed-array helpers and URL/URLSearchParams. The compatibility helper verifies the APIs actually used by the vendored engines and retains `webkitURL` blob functions when URL construction is replaced. [Hls.js 1.7.3 requirements](https://github.com/video-dev/hls.js/blob/v1.7.3/README.md).
 
 Do not equate polyfilled typed arrays with native browser binary storage. The loader records working native ArrayBuffer, DataView and typed arrays **before** polyfills run, and requires that original capability for MSE engines. MediaSource, codecs, DRM CDMs, native decoder surfaces, device bridges, transferable buffers, TLS and server CORS policy cannot be supplied by these JavaScript helpers. Missing optional playback support leaves the catalog, settings and available native playback usable.
 
@@ -36,11 +36,11 @@ LG's format lists include TS and multiple video/audio codecs, with model-specifi
 
 Use automatic selection for normal operation. Keep manual engine selection available when a provider or TV firmware needs a particular path. An unavailable engine should be described as unavailable rather than silently changing a saved manual preference. A supported backend can still reject a particular stream.
 
-## Independent mpegts.js dependency
+## mpegts.js dependency
 
 `vendor/mpegts.min.js` is the unchanged, minified `dist/mpegts.js` from official npm `mpegts.js@1.8.2`; its archive integrity and SHA-256 are recorded in `vendor/mpegts.provenance.json`. It passes Acorn with `ecmaVersion: 5`. Source references to TypeScript describe upstream authoring and do not mean TypeScript is executed by this application.
 
-The Apache license, extracted bundle notice and full MIT dependency license texts are included alongside it. The old OttPlay source was inspected only to understand behavior. None of its playback implementation was reused.
+The Apache license, extracted bundle notice and full MIT dependency license texts are included alongside it.
 
 The bundle has its own limited polyfills. Loading it nevertheless remains optional: ES5 grammar does not supply MediaSource, typed arrays or streaming network APIs. The shared application gate checks the installed language helpers, native MSE, original binary APIs and object URLs. After evaluation, the upstream loader probes decide whether streaming is usable; absent `fetch` alone does not exclude a browser with a supported native streaming XHR loader. Devices without usable MSE continue through the native path.
 
@@ -63,18 +63,5 @@ VOD/archive engine changes retain seconds. Live changes retain distance behind t
 ## Reproducible local vendors
 
 `npm run build:vendors` derives all 11 pinned JavaScript/license assets from the installed exact npm distributions. `npm run check:vendors` verifies the derived bytes and `vendor/runtime-manifest.json`, including the lockfile and builder fingerprints. Hls.js and its Worker remain paired at 1.7.3, Shaka at 5.2.10, mpegts.js at 1.8.2 and core-js at 3.50.0. This maintainer pipeline adds no runtime build step. Dependency changes still require ES5 parsing and page/Worker playback checks.
-
-## Earlier dependency verification
-
-The unchanged bundle was tested in headless Chromium against locally generated, eight-second H.264/AAC media at 320×180, 25 fps:
-
-- Native direct HTTP MPEG-TS: rejected with media error 4.
-- mpegts.js, the same TS bytes: video decoded, playback time advanced beyond 0.3 seconds, both audio and video tracks identified.
-- Native direct HTTP FLV: rejected with media error 4.
-- mpegts.js, the same FLV bytes: decoded and advanced with both tracks identified.
-- Both mpegts.js runs: zero engine errors and zero page errors; instances destroyed after use.
-- With modern globals removed, upstream evaluation survived but reported `mseLivePlayback: false` and a range-only XHR loader. This confirms why a basic MSE check is insufficient.
-
-These are dependency-level tests using synthetic streams. Application integration tests cover engine choice and lifecycle separately. Actual LG firmware, provider access, decoder support and the user's channel URLs require their own playback evidence.
 
 Recoverable Shaka errors retain the adapter under the bounded no-progress watchdog; critical errors use the normal fallback policy. Pending VOD/archive position and live DVR offset survive an intermediate engine failure without usable metadata. TV host suspension releases resources; foreground restores position and explicit pause intent through the controller-authorized `suspend()`/`resume()` API.

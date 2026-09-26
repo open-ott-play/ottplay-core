@@ -8,13 +8,6 @@ it requests `https://cdn.epg.one/epg2.xml.gz`. Clearing and saving the XMLTV fie
 restores this automatic selection. Changing a source cancels the previous guide
 load and clears its metadata; cancelled responses cannot populate the new source.
 
-This default reproduces an existing source contract: the original companion's
-`src-rs/server/src/main.rs:epg_urls` and desktop's
-`src-tauri/src/commands/tauri_commands.rs:init_xmltv_urls` fall back to
-`http://epg.it999.ru/epg2.xml.gz`. The original mobile Full edition uses the
-HTTPS CDN URL above. These source facts do not establish current network
-availability or coverage of every channel.
-
 ## Built-in feed
 
 The supplied Node server implements `POST /api/epg` with an application/json body:
@@ -105,7 +98,7 @@ no matches, outdated guide dates or errors. Current/next labels refresh every
 fetching the public feed every 30 seconds. A successful refresh replaces guide
 data; a failed refresh does not invent programmes.
 
-## Evidence and boundaries
+## Tests and boundaries
 
 `tests/test-epg.cjs` exercises parser, metadata, names, merging, time shifts and
 archive contracts. `tests/test-epg-service.cjs` exercises the streaming service
@@ -116,8 +109,7 @@ as evidence for an edited version.
 
 The Node filter's selection, archive windows, bounded retention and round-robin
 output policy live in the shared `StreamingGuide` implementation. HTTP, XML/gzip,
-URL validation and UTF-8 serialization remain here. The 110 responses captured
-before migration in `tests/fixtures/streaming-guide-before-core.json` preserve
+URL validation and UTF-8 serialization remain here. The response fixtures in `tests/fixtures/streaming-guide-before-core.json` cover
 metadata ambiguity, current/next priority, late channel discovery and byte
 budget behavior through `tests/test-streaming-guide-core.cjs`.
 
@@ -125,13 +117,6 @@ Public-feed availability and the user's real channel coverage require a separate
 live check. Synthetic fixtures are not a private-provider acceptance test.
 Proprietary portal EPG, channel-specific authentication and physical LG firmware
 remain separate compatibility boundaries.
-
-The recorded live run at `2026-09-14T15:40:44.168Z` requested 1,562 playlist
-channels; its shared programme budget produced a per-channel cap of 18 and a
-limited result containing 14,217 programmes. See
-[the live EPG report](../test-results/epg-live-report.json). This is a dated server
-fetch/filter/matching result, not proof that every channel has a complete
-48-hour schedule or that the result was tested on physical LG hardware.
 
 ## Channel browsing
 
