@@ -65,7 +65,15 @@ OTT2.define("app", function (require) {
             overrideSignature = JSON.stringify(saved.channelOverrides);
             if (!repository.status().persistent) view.toast(t("Настройки доступны в этой сессии; сохранение недоступно.", "Settings are in memory; persistent storage is unavailable."));
         }
-        function getChannel(id) { var all = library.decorate(channels.concat(discovered), saved.channelOverrides, true); for (var i = 0; i < all.length; i++) if (all[i].id === id) return all[i]; return savedItem(id); }
+        function getChannel(id) {
+            var all = catalog(true), i;
+            for (i = 0; i < all.length; i++) if (all[i].id === id) return all[i];
+            if (discovered.length) {
+                all = library.decorate(channels.concat(discovered), saved.channelOverrides, true);
+                for (i = 0; i < all.length; i++) if (all[i].id === id) return all[i];
+            }
+            return savedItem(id);
+        }
         function savedItem(id) { var item = saved.favoriteItems[id]; return item && item.sourceId === saved.activeSourceId ? { id: id, sourceId: item.sourceId, name: item.name, kind: "vod", group: "", restorePath: true } : null; }
         function favoriteCatalog() {
             var all = [], known = Object.create(null);
@@ -469,7 +477,10 @@ OTT2.define("app", function (require) {
         }
         function clearBrowse() { browsing = false; browseEpoch++; if (cancelBrowse) cancelBrowse(); cancelBrowse = null; browseItems = null; discovered = []; parentsById = {}; breadcrumbs = []; }
         function rememberBrowse(node, items) {
-            items.forEach(function (entry) { parentsById[entry.id] = (parentsById[node.id] || []).concat([node.id]); discovered = discovered.filter(function (old) { return old.id !== entry.id; }); discovered.push(entry); });
+            var latest = Object.create(null);
+            items.forEach(function (entry, index) { parentsById[entry.id] = (parentsById[node.id] || []).concat([node.id]); latest[entry.id] = index; });
+            discovered = discovered.filter(function (entry) { return !Object.prototype.hasOwnProperty.call(latest, entry.id); });
+            items.forEach(function (entry, index) { if (latest[entry.id] === index) discovered.push(entry); });
         }
         function restoreSavedItem(ch, resume) {
             var record = saved.favoriteItems[ch.id], sourceConfig = source(ch.sourceId);

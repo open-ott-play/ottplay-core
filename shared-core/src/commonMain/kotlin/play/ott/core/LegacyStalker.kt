@@ -29,13 +29,17 @@ class LegacyStalker(val portal: String, private val mac: String) {
             rows=if(selected.isArray)selected else ProviderValue.array(rows.properties.values.filter { it.isObject && it["name"].truthy() })
         }
         val entries=mutableListOf<LegacyStalkerEntry>();val seen=mutableSetOf<Double>();val groups=linkedMapOf<String,MutableList<Double>>()
+        val groupCategories=mutableMapOf<String,Int>()
         for(row in rows.elements) {
             if(!row.truthy() || !row["name"].truthy())continue
             val id=if(row["id"].truthy())row["id"].number() else hash(row["name"])
             var category=firstTruthy(row["genre"],row["categories"],row["category"],ProviderValue.text("Other"))
             if(category.isArray)category=firstTruthy(category.elements.firstOrNull() ?: ProviderValue.missing,ProviderValue.text("Other"))
             val group=if(category.kind==ProviderValueKind.TEXT)category.scalar else "Other"
-            if(group.isNotEmpty() && id!=0.0 && !id.isNaN())groups.getOrPut(group){mutableListOf()}.add(id)
+            if(group.isNotEmpty() && id!=0.0 && !id.isNaN())groups.getOrPut(group){
+                groupCategories[group]=groups.size+2
+                mutableListOf()
+            }.add(id)
             if(!id.isNaN() && !seen.add(id))continue
             val url=if(row["url"].truthy())row["url"] else ProviderValue.text(portal.trimEnd('/')+"/stalker_portal/stream/"+row["id"].string()+".m3u8?mac="+mac)
             var logo=firstTruthy(row["logo"],row["icon"],row["tv_icon"],ProviderValue.text(""))
@@ -45,7 +49,7 @@ class LegacyStalker(val portal: String, private val mac: String) {
             }
             val archive=integer(row["archive"]).takeIf { it!=0.0 } ?: integer(row["archive_duration"])
             entries.add(LegacyStalkerEntry(id,row["name"],firstTruthy(row["id"],row["ch_id"],ProviderValue.text("")).string(),group,
-                groups.keys.indexOf(group)+2,logo,url,if(row["archive"].truthy())"append" else "",archive))
+                groupCategories[group] ?: 1,logo,url,if(row["archive"].truthy())"append" else "",archive))
         }
         return LegacyStalkerCatalog(entries,groups)
     }
