@@ -6,7 +6,7 @@ const vm = require("node:vm");
 const test = require("node:test");
 
 function fixture(options = {}) {
-    const modules = {}, nodes = {}, handlers = {}, timers = new Map(), sourceCalls = [], resolveCalls = [], guideCalls = [], toasts = [], mediaLoads = [];
+    const modules = {}, nodes = {}, handlers = {}, timers = new Map(), sourceCalls = [], resolveCalls = [], browseCalls = [], guideCalls = [], toasts = [], mediaLoads = [];
     let securityClock = Date.now();
     let timerId = 0, viewAction, model, stored, media, controller, destroyViewCalls = 0, destroyMediaCalls = 0, dialogCalls = 0, dialog = false, dialogTitle = "", selectedId = "", focusedId = "", menuOpen = false;
     const ids = ["foss2-home", "player-video", "player-osd", "player-status", "player-title", "player-home", "player-pause", "player-stop", "player-fullscreen", "player-stage", "player-info-hitarea", "player-programme-title", "player-programme-time", "player-programme-details", "player-description", "player-next"];
@@ -75,7 +75,8 @@ function fixture(options = {}) {
     modules.transport = { create() { return function (url, callback, requestOptions) { const call = {url, callback, options: requestOptions, cancelled: false}; guideCalls.push(call); return function () { call.cancelled = true; }; }; } };
     modules.providers = { httpUrl(value) { return /^https?:\/\//.test(value || '') ? value : ''; }, create() { return {
         load(source, callback) { const call = { source, callback, cancelled: false }; sourceCalls.push(call); return function () { call.cancelled = true; }; },
-        resolve(channel, callback) { const call = { channel, callback, cancelled: false }; resolveCalls.push(call); return function () { call.cancelled = true; }; }
+        resolve(channel, callback) { const call = { channel, callback, cancelled: false }; resolveCalls.push(call); return function () { call.cancelled = true; }; },
+        browse(source, node, callback) { const call = { source, node, callback, cancelled: false }; browseCalls.push(call); return function () { call.cancelled = true; }; }
     }; } };
     modules.epg = options.epg || {};
     modules.view = { create(config) {
@@ -97,7 +98,7 @@ function fixture(options = {}) {
     const film = { id: "source:film", name: "Film", kind: "vod", url: "https://media.example/film.mp4", group: "Movies" };
     if (!options.deferSource) sourceCalls[0].callback(null, { channels: [live, film].concat(options.extraChannels || []), epgUrls: options.epgUrls || [], warnings: [] });
     return {
-        controller, nodes, document, video, media, environment, timers, sourceCalls, resolveCalls, guideCalls, toasts, mediaLoads, live, film,
+        controller, nodes, document, video, media, environment, timers, sourceCalls, resolveCalls, browseCalls, guideCalls, toasts, mediaLoads, live, film,
         action(name, value, values) { viewAction(name, value, values); },
         key(command, extra = {}) { handlers.keydown(Object.assign({ command, preventDefault() {} }, extra)); },
         keyDown(keyCode, extra = {}) { const event = Object.assign({ keyCode, preventDefault() { this.defaultPrevented = true; } }, extra); if (handlers.keydown) handlers.keydown(event); return event; },
@@ -296,6 +297,66 @@ test("channel edits and hidden state persist and history metadata stays source-l
     assert.equal(f.model.rows[0].name, "Edited");
     f.action("screen", "vod");
     assert.equal(f.model.rows[0].id, f.film.id);
+    f.controller.destroy();
+});
+
+test("opening a channel reuses catalog decoration and observes edits, hiding and source replacement", () => {
+    let reads = 0;
+    const extra = Array.from({length: 100}, (_, i) => ({id: 'source:extra-' + i, kind: 'live', group: '', url: 'https://media.example/' + i + '.mp4', get name() { reads++; return 'Extra ' + i; }}));
+    const f = fixture({extraChannels: extra});
+    reads = 0;
+    for (let i = 0; i < 10; i++) f.action('channel', f.live.id);
+    assert.equal(reads, 0, 'Selecting one channel must not copy and sort unrelated provider records');
+    assert.equal(f.dialogTitle, 'Live');
+    f.action('saveChannel', f.live.id, {'channel-name': 'Hidden edit', 'channel-group': '', 'channel-order': '50', 'channel-hidden': true});
+    f.action('channel', f.live.id);
+    assert.equal(f.dialogTitle, 'Hidden edit', 'Explicit lookup retains hidden channels and refreshed overrides');
+    f.action('resetChannel', f.live.id);
+    f.action('channel', f.live.id);
+    assert.equal(f.dialogTitle, 'Live');
+    f.action('loadSource', 'source');
+    f.sourceCalls[1].callback(null, {channels: [{...f.live, name: 'Replacement'}], epgUrls: [], warnings: []});
+    f.action('channel', f.live.id);
+    assert.equal(f.dialogTitle, 'Replacement', 'Replaced source arrays invalidate the decorated catalog');
+    f.controller.destroy();
+});
+
+test("revisited folders keep unaffected discoveries and the final duplicate in provider order", () => {
+    const folder = {id: 'source:series', sourceId: 'source', kind: 'folder', name: 'Series', group: ''};
+    const episode = (id, name) => ({id: 'source:' + id, sourceId: 'source', kind: 'vod', name, group: '', url: 'https://media.example/' + id + '.mp4'});
+    const f = fixture({extraChannels: [folder]});
+    f.action('channel', folder.id);
+    f.browseCalls[0].callback(null, {items: [episode('a', 'A'), episode('b', 'B')]});
+    f.action('channel', folder.id);
+    f.browseCalls[1].callback(null, {items: [episode('b', 'Stale B'), episode('c', 'C'), episode('b', 'Latest B')]});
+    f.action('play', 'source:a');
+    assert.equal(f.resolveCalls.at(-1).channel.name, 'A');
+    assert.equal(f.resolveCalls.at(-1).channel.originalIndex, 3);
+    f.action('play', 'source:c');
+    assert.equal(f.resolveCalls.at(-1).channel.originalIndex, 4);
+    f.action('play', 'source:b');
+    assert.equal(f.resolveCalls.at(-1).channel.name, 'Latest B');
+    assert.equal(f.resolveCalls.at(-1).channel.originalIndex, 5);
+    f.action('favorite', 'source:b');
+    assert.deepEqual(f.saved.favoriteItems['source:b'].parents, [folder.id], 'Retained items keep the path used to restore nested favorites');
+    f.controller.destroy();
+});
+
+test("remembering a large folder scans earlier discoveries once", () => {
+    let idReads = 0;
+    const folder = {id: 'source:series', sourceId: 'source', kind: 'folder', name: 'Series', group: ''};
+    const episodes = Array.from({length: 200}, (_, i) => ({get id() { idReads++; return 'source:old-' + i; }, sourceId: 'source', kind: 'vod', name: 'Old ' + i, group: ''}));
+    const f = fixture({extraChannels: [folder]});
+    f.action('channel', folder.id);
+    f.browseCalls[0].callback(null, {items: episodes});
+    f.action('channel', folder.id);
+    idReads = 0;
+    f.browseCalls[1].callback(null, {items: Array.from({length: 200}, (_, i) => ({id: 'source:new-' + i, sourceId: 'source', kind: 'vod', name: 'New ' + i, group: ''}))});
+    assert(idReads <= episodes.length * 2, 'Folder size must not multiply scans of previously discovered records: ' + idReads);
+    f.action('channel', 'source:old-199');
+    assert.equal(f.dialogTitle, 'Old 199');
+    f.action('channel', 'source:new-199');
+    assert.equal(f.dialogTitle, 'New 199');
     f.controller.destroy();
 });
 

@@ -137,4 +137,25 @@ class StalkerTest {
         assertEquals(16.0,programmes.single().start);assertEquals(32.0,programmes.single().end)
         val failed=LegacyStalker("",mac);failed.accept(obj());failure("LEGACY_CONNECT"){failed.accept(obj())}
     }
+
+    @Test fun legacyCategoriesKeepInsertionOrderAndDuplicateMembership() {
+        val client=LegacyStalker("https://p.test",mac)
+        client.accept(obj("result" to obj()))
+        client.accept(obj("result" to array(
+            row("id" to "0", "name" to "Zero", "genre" to "Skipped"),
+            row("id" to "1", "name" to "First", "genre" to "__proto__"),
+            row("id" to "1", "name" to "Duplicate", "genre" to "Second"),
+            row("id" to "2", "name" to "Second", "genre" to "Second"),
+            row("id" to "3", "name" to "Third", "genre" to "__proto__"),
+            row("id" to "invalid", "name" to "Invalid", "genre" to "Second"),
+            row("id" to "4", "name" to "Other", "genre" to "Third")
+        )))
+        val result=client.catalog {99.0}
+        assertEquals(listOf("__proto__", "Second", "Third"), result.groups.keys.toList())
+        assertEquals(listOf(1.0, 3.0), result.groups["__proto__"])
+        assertEquals(listOf(1.0, 2.0), result.groups["Second"])
+        assertEquals(listOf(1, 2, 3, 2, 3, 4), result.entries.map { it.category })
+        assertEquals("First", result.entries[1].name.string())
+        assertTrue(result.entries[4].id.isNaN())
+    }
 }

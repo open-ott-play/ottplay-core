@@ -121,7 +121,10 @@
         function matchedId(channel, guide) { return core.matchedGuideChannel(channel, guide); }
 
         function matchMetadata(channel, guide) {
-            var id = matchedId(channel, guide);
+            return metadataById(matchedId(channel, guide), guide);
+        }
+
+        function metadataById(id, guide) {
             var i;
             if (!id) return null;
             if (guide.byId && has(guide.byId, id)) return guide.byId[id];
@@ -153,7 +156,7 @@
                     var key = JSON.stringify([channel && channel.tvgId, channel && channel.tvgName, channel && channel.name, channel && channel.tvgShift, channel && channel.epgUrls]);
                     return lookup.lookup(key, guide, Number(nowSeconds), function () {
                         var id = matchedId(channel, guide), unshifted = id ? guide.byChannel[id] : [];
-                        return { metadata: matchMetadata(channel, guide), entries: id ? shiftedEntries(unshifted, channel.tvgShift) : unshifted, unshifted: unshifted };
+                        return { metadata: metadataById(id, guide), entries: id ? shiftedEntries(unshifted, channel.tvgShift) : unshifted, unshifted: unshifted };
                     });
                 }
             };

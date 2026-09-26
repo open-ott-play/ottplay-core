@@ -117,6 +117,21 @@ const cacheGuide = { byChannel: { cached: [
 ] }, byName: { station: ["cached"] }, byAlias: {}, byId: { cached: { id: "cached", logo: "https://images.test/a.png" } } };
 const lookup = epg.createLookup({ limit: 2 });
 const cachedChannel = { name: "Station", tvgShift: 0 };
+const guideCore = sandbox.window.OttPlayCore;
+const resolveGuideChannel = guideCore.matchedGuideChannel;
+let resolutions = 0;
+try {
+    guideCore.matchedGuideChannel = function (channel, guide) { resolutions++; return resolveGuideChannel(channel, guide); };
+    const once = epg.createLookup();
+    const first = once.lookup(cachedChannel, cacheGuide, 11);
+    assert.equal(first.current, cacheGuide.byChannel.cached[0]);
+    assert.equal(first.metadata, cacheGuide.byId.cached);
+    assert.equal(resolutions, 1, 'A cold lookup resolves one shared identity for both metadata and programmes');
+    assert.equal(once.lookup(cachedChannel, cacheGuide, 12).current, first.current);
+    assert.equal(resolutions, 1, 'A warm lookup reuses the matched station');
+} finally {
+    guideCore.matchedGuideChannel = resolveGuideChannel;
+}
 for (const time of [0, 10, 11, 29, 30, 39, 40, 44, 45, 99, 100, 119, 120, 150, 151, 35, 29, -100, Infinity, NaN]) {
     const expected = epg.currentNext(cacheGuide.byChannel.cached, time);
     const result = lookup.lookup(cachedChannel, cacheGuide, time);

@@ -41,4 +41,18 @@ class GuideTimelineTest {
         assertFailsWith<IllegalArgumentException> { ProgrammeId.of("s", "c", null, Double.NaN) }
         assertFailsWith<IllegalArgumentException> { ProgrammeId.of("", "c", "42", 0.0) }
     }
+
+    @Test fun currentOnlyAndSingleFollowingRetainTheFullTimelinePolicy() {
+        val starts = listOf(40.0, 20.0, 20.0, Double.NaN, 10.0, 15.0, 30.0)
+        val ends = listOf(50.0, 25.0, 35.0, 60.0, 9.0, Double.POSITIVE_INFINITY, 32.0)
+        for (now in listOf(-1.0, 20.0, 25.0, 32.0, 50.0)) {
+            val full = GuideTimeline.select(starts.size, { starts[it] }, { ends[it] }, now, 1000.0)
+            for (limit in listOf(0.0, 0.9, 1.0, 1.9)) {
+                val selected = GuideTimeline.select(starts.size, { starts[it] }, { ends[it] }, now, limit)
+                assertEquals(full.current, selected.current)
+                assertEquals(full.retryAt, selected.retryAt)
+                assertEquals(full.following.take(limit.toInt()), selected.following)
+            }
+        }
+    }
 }

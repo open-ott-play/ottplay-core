@@ -24,9 +24,13 @@ object GuideTimeline {
         if (!now.isFinite()) return GuideTimelineSelection(-1, emptyList(), 0.0)
         val window = GuideSchedule.select(count, start, end, now)
         val limit = if (nextCount.isNaN() || nextCount <= 0) 0 else kotlin.math.floor(nextCount).coerceAtMost(1000.0).toInt()
-        val following = (0 until count).filter {
-            start(it).isFinite() && end(it).isFinite() && end(it) > start(it) && start(it) > now
-        }.sortedWith(compareBy<Int> { start(it) }.thenBy { it }).take(limit)
+        val following = when {
+            limit == 0 || window.next < 0 -> emptyList()
+            limit == 1 -> listOf(window.next)
+            else -> (0 until count).filter {
+                start(it).isFinite() && end(it).isFinite() && end(it) > start(it) && start(it) > now
+            }.sortedWith(compareBy<Int> { start(it) }.thenBy { it }).take(limit)
+        }
         var retry = now + 3600
         if (window.current >= 0) retry = minOf(retry, end(window.current))
         if (window.next >= 0) retry = minOf(retry, start(window.next))
