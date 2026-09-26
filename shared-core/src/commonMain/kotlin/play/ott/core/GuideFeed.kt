@@ -81,8 +81,21 @@ data class GuideParsed(val catalog: GuideCatalog, val warnings: List<String>)
 object GuideFeeds {
     /** Preserve the public JS map order for numeric channel IDs on every target. */
     fun keyOrder(keys: Collection<String>): List<String> {
-        fun index(value: String): Long? = value.toLongOrNull()?.takeIf { it in 0..4294967294L && it.toString() == value }
-        return keys.filter { index(it) != null }.sortedBy { index(it) } + keys.filter { index(it) == null }
+        val indexed = mutableListOf<String>()
+        val named = mutableListOf<String>()
+        for (key in keys) {
+            val index = key == "0" || key.length in 1..10 && key[0] in '1'..'9' &&
+                key.all { it in '0'..'9' } && (key.length < 10 || key <= "4294967294")
+            if (index) indexed.add(key) else named.add(key)
+        }
+        // Canonical decimal indices sort numerically by length, then digits.
+        // This avoids reparsing Kotlin Longs for every sort comparison.
+        indexed.sortWith { left, right ->
+            val length = left.length.compareTo(right.length)
+            if (length != 0) length else left.compareTo(right)
+        }
+        indexed.addAll(named)
+        return indexed
     }
     private val chronological = compareBy<GuideRecord> { it.start }.thenBy { it.end ?: 0.0 }
 

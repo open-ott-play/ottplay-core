@@ -10,7 +10,10 @@ class ProviderValue(
     val isArray get() = kind == ProviderValueKind.ARRAY
     val isObject get() = kind == ProviderValueKind.OBJECT
     val present get() = kind != ProviderValueKind.MISSING && kind != ProviderValueKind.NULL
-    fun primitive(): String = if (kind in listOf(ProviderValueKind.TEXT, ProviderValueKind.NUMBER, ProviderValueKind.BOOLEAN)) scalar else ""
+    fun primitive(): String = when (kind) {
+        ProviderValueKind.TEXT, ProviderValueKind.NUMBER, ProviderValueKind.BOOLEAN -> scalar
+        else -> ""
+    }
     fun string(): String = when (kind) {
         ProviderValueKind.MISSING -> "undefined"
         ProviderValueKind.NULL -> "null"
@@ -67,21 +70,28 @@ internal object CoreNumber {
         }
         if (input == "Infinity" || input == "+Infinity") return Double.POSITIVE_INFINITY
         if (input == "-Infinity") return Double.NEGATIVE_INFINITY
-        var at = if (input.firstOrNull() in listOf('+', '-')) 1 else 0
+        return decimal(input, prefix = false)
+    }
+
+    /** Decimal grammar shared by strict Number coercion and parseFloat prefixes. */
+    fun decimal(input: String, prefix: Boolean): Double {
+        var at = if (input.isNotEmpty() && (input[0] == '+' || input[0] == '-')) 1 else 0
         var digits = 0
         while (at < input.length && input[at] in '0'..'9') { at++; digits++ }
-        if (input.getOrNull(at) == '.') {
+        if (at < input.length && input[at] == '.') {
             at++
             while (at < input.length && input[at] in '0'..'9') { at++; digits++ }
         }
         if (digits == 0) return Double.NaN
-        if (input.getOrNull(at) in listOf('e', 'E')) {
+        if (at < input.length && (input[at] == 'e' || input[at] == 'E')) {
+            val exponent = at
             at++
-            if (input.getOrNull(at) in listOf('+', '-')) at++
+            if (at < input.length && (input[at] == '+' || input[at] == '-')) at++
             val start = at
             while (at < input.length && input[at] in '0'..'9') at++
-            if (start == at) return Double.NaN
+            if (start == at) at = exponent
         }
-        return if (at == input.length) input.toDoubleOrNull() ?: Double.NaN else Double.NaN
+        if (at == input.length) return input.toDoubleOrNull() ?: Double.NaN
+        return if (prefix) input.substring(0, at).toDoubleOrNull() ?: Double.NaN else Double.NaN
     }
 }

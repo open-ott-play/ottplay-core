@@ -53,22 +53,7 @@ object ProviderPlaylist {
         val input = CoreText.trim(value)
         if (input.startsWith("Infinity") || input.startsWith("+Infinity")) return Double.POSITIVE_INFINITY
         if (input.startsWith("-Infinity")) return Double.NEGATIVE_INFINITY
-        var at = if (input.firstOrNull() in listOf('+', '-')) 1 else 0
-        var digits = 0
-        while (at < input.length && input[at] in '0'..'9') { at++; digits++ }
-        if (input.getOrNull(at) == '.') {
-            at++
-            while (at < input.length && input[at] in '0'..'9') { at++; digits++ }
-        }
-        if (digits == 0) return Double.NaN
-        if (input.getOrNull(at) in listOf('e', 'E')) {
-            var end = at + 1
-            if (input.getOrNull(end) in listOf('+', '-')) end++
-            val from = end
-            while (end < input.length && input[end] in '0'..'9') end++
-            if (end > from) at = end
-        }
-        return input.substring(0, at).toDoubleOrNull() ?: Double.NaN
+        return CoreNumber.decimal(input, prefix = true)
     }
     fun read(text: String, format: ProviderPlaylistFormat, hash: (String) -> Double, fallbackHours: Double = 0.0): ProviderPlaylistResult {
         val blocks = blocks(text)
