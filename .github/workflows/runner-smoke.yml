@@ -1,0 +1,58 @@
+name: k3s runner admission
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke-linux:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ottplay-k3s-linux-x64
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Check prepared Linux image
+        run: python3 scripts/ci-runner-preflight.py browser
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '22'
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e
+        with:
+          go-version: '1.26.8'
+          cache: false
+      - name: Check downloaded toolchains and workflow contracts
+        run: |
+          java -version
+          node --version
+          go version
+          python3 -m unittest discover -s scripts/tests -v
+      - name: Verify the provisioned image isolation and network access
+        run: /opt/ottplay/smoke.sh linux
+      - name: Install the pinned browser client dependencies
+        working-directory: ottplay-foss2
+        run: npm ci --ignore-scripts
+      - name: Install Chromium without modifying the host image
+        working-directory: ottplay-foss2
+        run: npx playwright install chromium
+      - name: Launch Chromium and render a page
+        working-directory: ottplay-foss2
+        run: |
+          node --input-type=module <<'JS'
+          import { chromium } from 'playwright';
+          const browser = await chromium.launch({ headless: true });
+          try {
+            const page = await browser.newPage();
+            await page.setContent('<title>k3s admission</title><p>Browser ready</p>');
+            if (await page.title() !== 'k3s admission') throw new Error('Chromium rendering failed');
+          } finally {
+            await browser.close();
+          }
+          JS

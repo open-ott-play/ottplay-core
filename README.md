@@ -136,3 +136,5 @@ installation/rollback behavior. Those require the corresponding devices and
 accounts. Product releases and deployments remain separate from source
 publication and core delivery. FOSS2 installation and upgrade instructions are in
 [the beta release notes](ottplay-foss2/docs/RELEASE-0.6.0-beta.2.md).
+
+Optional trusted-main k3s runner routing is documented in [CI runner selection](docs/CI-RUNNERS.md).

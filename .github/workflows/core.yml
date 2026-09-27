@@ -12,8 +12,9 @@ concurrency:
   cancel-in-progress: true
 jobs:
   scope:
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/change-scope.yml@dc291e8c6635d8a0c5d2cc33a4ffd83d1956625b
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/change-scope.yml@733de629b521477102822ccfcc855427de2f2b08
     with:
+      runner: ${{ vars.CI_RUNNER_MODE == 'k3s' && github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule') && 'ottplay-k3s-linux-x64' || 'ubuntu-latest' }}
       force-full: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' }}
       documentation-paths: >-
         ["CORE-DELIVERY.md", "contracts/README.md", "shared-core/README.md",
@@ -31,7 +32,7 @@ jobs:
   portable:
     needs: scope
     if: ${{ needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only' }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.CI_RUNNER_MODE == 'k3s' && github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule') && 'ottplay-k3s-linux-x64' || 'ubuntu-latest' }}
     timeout-minutes: 25
     outputs:
       artifact-id: ${{ steps.distribution.outputs.artifact-id }}
@@ -41,6 +42,12 @@ jobs:
         working-directory: shared-core
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Check self-hosted runner prerequisites
+        if: runner.environment == 'self-hosted'
+        working-directory: ${{ github.workspace }}
+        run: python3 scripts/ci-runner-preflight.py base
       - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6
         with:
           distribution: temurin
@@ -69,13 +76,19 @@ jobs:
   browser-client:
     needs: [scope, portable]
     if: ${{ needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only' }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.CI_RUNNER_MODE == 'k3s' && github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule') && 'ottplay-k3s-linux-x64' || 'ubuntu-latest' }}
     timeout-minutes: 15
     defaults:
       run:
         working-directory: ottplay-foss2
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Check self-hosted runner prerequisites
+        if: runner.environment == 'self-hosted'
+        working-directory: ${{ github.workspace }}
+        run: python3 scripts/ci-runner-preflight.py browser
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: '22'
@@ -95,10 +108,17 @@ jobs:
           node ../shared-core/scripts/distribute.cjs install-web "$PWD"
           node ../shared-core/scripts/distribute.cjs check-web "$PWD"
       - run: npm test
-      - run: npx playwright install --with-deps chromium
+      - name: Install Chromium on GitHub-hosted runners
+        if: runner.environment == 'github-hosted'
+        run: npx playwright install --with-deps chromium
+      - name: Install Chromium on the prepared self-hosted image
+        if: runner.environment == 'self-hosted'
+        run: npx playwright install chromium
+      - name: Install ffmpeg on GitHub-hosted runners
+        if: runner.environment == 'github-hosted'
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
       - name: Generate synthetic playback fixture
         run: |
-          sudo apt-get update && sudo apt-get install -y ffmpeg
           ffmpeg -nostdin -y -f lavfi -i testsrc2=size=320x180:rate=24 -f lavfi -i sine=frequency=440 -t 8 -c:v libx264 -pix_fmt yuv420p -c:a aac -movflags +faststart "$RUNNER_TEMP/ottplay-test.mp4"
       - run: npm run test:provider-browser
         env:
@@ -116,10 +136,16 @@ jobs:
   wire-contracts:
     needs: scope
     if: ${{ needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only' }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.CI_RUNNER_MODE == 'k3s' && github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule') && 'ottplay-k3s-linux-x64' || 'ubuntu-latest' }}
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Check self-hosted runner prerequisites
+        if: runner.environment == 'self-hosted'
+        working-directory: ${{ github.workspace }}
+        run: python3 scripts/ci-runner-preflight.py base
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e
         with:
           go-version: '1.26.8'
