@@ -1,0 +1,239 @@
+{
+  "schema": 1,
+  "observed_date": "2026-09-27",
+  "publication_gate": "not_qualified",
+  "source_commit_semantics": "All source receipt file digests match this core commit. Other commits with identical shared-core inputs may also match; this is not a producer-run attestation.",
+  "consumers": [
+    {
+      "id": "foss",
+      "repository": "open-ott-play/ottplay-foss",
+      "release": "v1.1.45-beta.36",
+      "commit": "033a1e88b72659c0b3a672e5a51ae7000e6b5704",
+      "manifest": "vendor/ottplay-core.manifest.json",
+      "core_version_label": "0.1.0-dev",
+      "core_source_commit": "a37fc5ca8388aabf4d59244081fa4f3691909e74",
+      "core_source_sha256": "ab7e601854dcc2dddc960f591942dba048e8592e2cd481bb63a4346f4dc79aa7",
+      "artifacts": {
+        "ottplay-core.js": "1341d7482fed74a6ec939dd076d13cb2460d0d477731ccf0f4b67c02d835325f",
+        "ottplay-core.jar": "9bfc2f07360acb2dc39308bf4bf7b6e7627cfb25ea3908539bc250220e61635d",
+        "ottplay-core.LICENSE.txt": "1e72da3623b91daad1013e577c3611ad6ed314da508b757abe9a1b27a88a14cc"
+      },
+      "status": "contract_tested_within_listed_scope",
+      "checks": [
+        {
+          "runtime": "ES5 player host",
+          "command": "npm run test:unified",
+          "status": "passed",
+          "evidence_log": "release-foss-contracts.log",
+          "evidence_sha256": "e20673c66e71b1d7dd26b25966fb8e2e2958b977df8c332f59812b698bfd260f",
+          "scope": "Actual shipped core with host fixtures; not full browser/UI playback"
+        },
+        {
+          "runtime": "Swift JavaScriptCore and Kotlin native XMLTV",
+          "command": "python3 tests/test_native_xmltv_records.py --platform all",
+          "status": "passed",
+          "evidence_log": "release-native-contracts.log",
+          "evidence_sha256": "ccc4fdb8bfcfe6d78c759fd2604894db2e5f15fec5b465049d941f68cdc82af3",
+          "scope": "23 captured fixtures per platform; platform API stubs, not physical devices"
+        },
+        {
+          "runtime": "Rust QuickJS server/native core",
+          "command": "cargo test -p ottplay-core --lib (cwd src-rs)",
+          "status": "passed",
+          "evidence_log": "release-rust-contracts.log",
+          "evidence_sha256": "598438b46d642cacb8af211e7d2ef77cfc4c8a1c4f480facfd072a9e99645410",
+          "scope": "33 library tests; not packaged server or desktop acceptance"
+        },
+        {
+          "runtime": "Tauri host adapter",
+          "command": "node tests/test_port_tauri_session.cjs && node tests/test_tauri_auto_playback.cjs",
+          "status": "passed",
+          "evidence_log": "release-tauri-contracts.log",
+          "evidence_sha256": "2df1e0544cadfad69d7eddf08c6433324889be8eae0002e8448d3fb9899fbc46",
+          "scope": "Host adapter fixtures; not installed Tauri application"
+        },
+        {
+          "runtime": "Production FOSS in Chromium",
+          "command": "npm run build && npm run test:devices:browser -- --workers=2",
+          "status": "passed",
+          "evidence_log": "release-foss-browser-tests.log",
+          "evidence_sha256": "dd793257b3a364f6a64a10f462d0c901fe28737022a53f3ad33339f4b025f816",
+          "build_log": "release-foss-browser-build.log",
+          "build_log_sha256": "f839083960cbeb7dfa5c704553ea1d0ab350145d967051938e983b7418efc9f3",
+          "scope": "106 browser tests on the exact release production build, including synthetic HLS playback, device detection and window controls; simulated legacy capabilities are not physical TVs"
+        }
+      ]
+    },
+    {
+      "id": "android",
+      "repository": "open-ott-play/ottplay-android",
+      "release": "v0.2.1-preview.3",
+      "commit": "88b7944f3028440cca64b49f46140a585656390c",
+      "manifest": "core/vendor/ottplay-core.manifest.json",
+      "core_version_label": "0.1.0-dev",
+      "core_source_commit": "03f8ff3c39147ff5cd617ec97d20dad95e361730",
+      "core_source_sha256": "1f6d25045ad80c3ee449f6ed2affbf051bfff73939c4db9833da7ee22e1da67f",
+      "artifacts": {
+        "ottplay-core.jar": "f77263c612a34bc526a427bd8ff98c9222caec369bd51d0684c0cc4a67d2f859",
+        "ottplay-core.LICENSE.txt": "1e72da3623b91daad1013e577c3611ad6ed314da508b757abe9a1b27a88a14cc"
+      },
+      "status": "contract_tested_within_listed_scope",
+      "checks": [
+        {
+          "runtime": "Standalone Android JVM core",
+          "command": "./gradlew --no-daemon :core:test --rerun-tasks",
+          "status": "passed",
+          "evidence_log": "release-android-contracts.log",
+          "evidence_sha256": "a8a4344ce51e93f0445251b94ae669bd681ad9a693142a414bbc59d47400d6e4",
+          "scope": "57 tests / 13 suites; not emulator/device UI playback"
+        }
+      ]
+    },
+    {
+      "id": "foss2",
+      "repository": "open-ott-play/ottplay-core",
+      "release": "foss2-v0.6.0-beta.2",
+      "commit": "421325abc2deffe9d3d0d9de70eb5c480623887d",
+      "manifest": "ottplay-foss2/vendor/ottplay-core.manifest.json",
+      "core_version_label": "0.1.0-dev",
+      "core_source_commit": "03f8ff3c39147ff5cd617ec97d20dad95e361730",
+      "core_source_sha256": "1f6d25045ad80c3ee449f6ed2affbf051bfff73939c4db9833da7ee22e1da67f",
+      "artifacts": {
+        "ottplay-core.js": "ec2b011bf6d327055b3790fdecbf288235b3812f3688c2b1f93ef68c1242c6a6",
+        "ottplay-core.LICENSE.txt": "1e72da3623b91daad1013e577c3611ad6ed314da508b757abe9a1b27a88a14cc"
+      },
+      "status": "contract_tested_within_listed_scope",
+      "checks": [
+        {
+          "runtime": "FOSS2 ES5 / Node companion",
+          "command": "npm test (cwd ottplay-foss2)",
+          "status": "passed",
+          "evidence_log": "release-foss2-contracts.log",
+          "evidence_sha256": "fe79dd25bc6a30f73a39d8fc00670695b0d39e8116c4b7652d7c37de43546210",
+          "scope": "Node contracts with provider fixtures and companion integration"
+        },
+        {
+          "runtime": "FOSS2 Chromium",
+          "command": "OTT2_TEST_MEDIA=/absolute/path/to/synthetic.mp4 npm run test:provider-browser (cwd ottplay-foss2)",
+          "status": "passed",
+          "evidence_log": "release-foss2-browser-contracts.log",
+          "evidence_sha256": "d0862333928b95e5b5645e3dadb51385a06106117a9b76a73e51a88ca4851cf5",
+          "scope": "12 end-to-end provider scenarios, real synthetic MP4 playback; not legacy TV"
+        }
+      ]
+    }
+  ],
+  "protocol_peers": [
+    {
+      "repository": "open-ott-play/ottplay-swop",
+      "release": "v0.1.0-beta.10",
+      "commit": "cb0194b9873cfec2472a93ccd7542edd9d4a9a91",
+      "peer": "ottplay-foss v1.1.45-beta.36",
+      "status": "sequential_http_contract_tested",
+      "evidence": "release-swop-e2e.json",
+      "limitations": "KV atomicity and live edge rate limits remain unqualified"
+    },
+    {
+      "repository": "open-ott-play/ottplay-control-server",
+      "release": "v0.1.0-beta.7",
+      "commit": "de561dcaa2ab2d42665aa3d279d0057b2b1f1e4e",
+      "status": "browser_protocol_e2e_passed",
+      "evidence": "release-command-server-e2e.json",
+      "limitations": "6 scenarios with actual client adapter, Chromium XHR/CORS and Go server. Platform dispatch/persistence callbacks substituted; installed application and physical command effect not qualified.",
+      "peer": "ottplay-foss v1.1.45-beta.36",
+      "evidence_sha256": "a37bba6056b4bfb10556ffb4109093382eeedfbe8f367cf4be7c646d1fb819ba",
+      "command": "node scripts/test-command-server-e2e.cjs FOSS_CHECKOUT CONTROL_SERVER_CHECKOUT REPORT.json"
+    },
+    {
+      "repository": "open-ott-play/ottplay-web-vitrine",
+      "commit": "3cd61ba8635ff5c26efabf3c424114458ec3af6e",
+      "release": null,
+      "status": "17_distribution_fixture_tests_passed",
+      "evidence": "vitrine-contracts.log",
+      "limitations": "Consumes distribution, not shared-core runtime; no live publication qualified"
+    },
+    {
+      "repository": "open-ott-play/ottplay-swop",
+      "release": "v0.1.0-beta.14",
+      "commit": "4293d8e6e79a4e2a6010e1d524fb4a941644db26",
+      "peer": "ottplay-foss commit 9059e070ea0595d7f67ff886ab9e3dc851aaf9c7 (installation-auth branch, not a release)",
+      "status": "installation_http_contract_tested",
+      "evidence": "swop-installation-foss-e2e.json",
+      "evidence_sha256": "335306a75021badd2c2a34bbd0be97e986fe6a5684dddc18566c64bacb686e22",
+      "limitations": "10 scenarios / 24 requests; actual FOSS adapter and Worker; UI, timers and same-origin relay are fixtures. Production relay/deployment not attested."
+    },
+    {
+      "repository": "open-ott-play/ottplay-swop",
+      "release": "v0.1.0-beta.14",
+      "commit": "4293d8e6e79a4e2a6010e1d524fb4a941644db26",
+      "peer": "ottplay-foss v1.1.45-beta.36",
+      "status": "legacy_compatibility_http_contract_tested",
+      "evidence": "swop-current-legacy-foss-e2e.json",
+      "evidence_sha256": "b200dd178c357874066eb75fbe05ef64ea22ff27348582bd09e7e76a6918f491",
+      "limitations": "7 sequential scenarios for explicitly retained legacy allowlist flow; does not describe the new server-authorized client flow."
+    }
+  ],
+  "unqualified": [
+    "Replacing any pinned core artifact with current core main without rerunning its consumer tests",
+    "Installed Android/iOS/Tauri applications and physical legacy TV playback",
+    "Cloudflare deployed auth, rate-limit and atomic storage policy",
+    "Hardware control-path deadline and fault-injection acceptance",
+    "Physical command execution and full installed-app control-server integration beyond the tested browser adapter boundary"
+  ],
+  "historical_candidates": [
+    {
+      "repository": "open-ott-play/ottplay-swop",
+      "release": null,
+      "base_commit": "da9a2244e27a2fd97d3a133c4caedb5df2e6848f",
+      "branch": "codex/swop-atomic-sessions-20260927",
+      "status": "historical_candidate_superseded_by_installation_authorization",
+      "peer": "ottplay-foss v1.1.45-beta.36",
+      "source_files_sha256": {
+        "src/index.ts": "fa66b530141304266ed16c4a1fd104e9178fd7ea42681d562581ab50a1f64c5e",
+        "src/wire-contracts.ts": "ebd2388d055fbf18ef3455be6e2b6613765446ca135b2cb05b18625291abc59d",
+        "src/session.ts": "1712467c86a9ce593bbd0c0936409ae747fedd0bcb69b410e5ae155ac6ec32b7"
+      },
+      "checks": [
+        {
+          "runtime": "workerd / SQLite Durable Object / rate-limit binding",
+          "status": "passed",
+          "scope": "21 tests, including 8 real workerd integration cases; 27 unchanged HTTP wire fixtures",
+          "evidence_log": "swop-hardening-tests.log",
+          "evidence_sha256": "bdb5f2122a660e2d77e7ba62e874924970d05be645f3be12724c943a0a705aff"
+        },
+        {
+          "runtime": "Actual FOSS SWOP adapter → workerd via loopback HTTP",
+          "status": "passed",
+          "scope": "7 sequential scenarios / 15 requests; UI and timers substituted",
+          "evidence": "swop-candidate-foss-e2e.json",
+          "evidence_sha256": "458416c424ba41dba4f00351862ec823d6b8033cb1ccfe913ff42fcbb09c4640"
+        }
+      ],
+      "limitations": "Archived test inputs only. This branch subsequently advanced to SWOP v0.1.0-beta.14; do not deploy the old client-only auth candidate."
+    }
+  ],
+  "local_candidates": [
+    {
+      "repository": "open-ott-play/ottplay-swop",
+      "base_commit": "4293d8e6e79a4e2a6010e1d524fb4a941644db26",
+      "commit": "ec853ad4bdfd80e3c1d9321ae475ad28aa66110a",
+      "branch": "codex/swop-atomic-sessions-20260927",
+      "status": "test_only_followup_to_installation_auth",
+      "production_source_changes": false,
+      "checks": [
+        {
+          "status": "passed",
+          "evidence_log": "swop-installation-reconciled-tests.log",
+          "evidence_sha256": "cdde497c99feed4a508bdcba66d42371a93d6998cfa538dd1d3d41f1d515f1f5",
+          "scope": "35 tests including installation ownership/capabilities across runtime restart; 27 immutable wire fixtures"
+        },
+        {
+          "status": "passed",
+          "evidence_log": "swop-installation-migration-tests.log",
+          "evidence_sha256": "33b58b240c2fd436e2d781b7d68155c68b0d122360934a25746bd5afe26841cd",
+          "scope": "4 Terraform migration contract cases with a mocked provider"
+        }
+      ]
+    }
+  ]
+}

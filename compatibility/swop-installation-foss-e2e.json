@@ -1,0 +1,162 @@
+{
+  "observed_at": "2026-09-27T22:04:34.553Z",
+  "status": "passed",
+  "authentication": "server installation credential + per-session capabilities",
+  "scenarios": [
+    "admin rejects missing/wrong bearer; provisions two clients with correct bearer",
+    "session rejects missing and unlisted client identities",
+    "real client creates session; form preserves escaped caption/draft; waiting poll continues",
+    "a different allowlisted client cannot read the session",
+    "installation sessions require distinct write/read capabilities and the matching owner",
+    "real client displays manual entry URL/code without its read capability",
+    "phone submission reaches real client unchanged; sequential duplicate rejected; polling stops",
+    "sequential re-read after delivery returns gone",
+    "manual TV code delivers text through the installation-authenticated polling path",
+    "real client renders authorization denial from Worker"
+  ],
+  "requests": [
+    {
+      "path": "/admin/clients",
+      "method": "POST",
+      "status": 401
+    },
+    {
+      "path": "/admin/clients",
+      "method": "POST",
+      "status": 401
+    },
+    {
+      "path": "/admin/clients",
+      "method": "POST",
+      "status": 201
+    },
+    {
+      "path": "/admin/clients",
+      "method": "POST",
+      "status": 201
+    },
+    {
+      "path": "/session",
+      "method": "POST",
+      "status": 401
+    },
+    {
+      "path": "/session",
+      "method": "POST",
+      "status": 403
+    },
+    {
+      "path": "/swop/session",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "path": "/",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "path": "/swop/val",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "path": "/val",
+      "method": "GET",
+      "status": 403
+    },
+    {
+      "path": "/",
+      "method": "GET",
+      "status": 403
+    },
+    {
+      "path": "/submit",
+      "method": "POST",
+      "status": 403
+    },
+    {
+      "path": "/submit",
+      "method": "POST",
+      "status": 403
+    },
+    {
+      "path": "/val",
+      "method": "POST",
+      "status": 403
+    },
+    {
+      "path": "/val",
+      "method": "POST",
+      "status": 403
+    },
+    {
+      "path": "/submit",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "path": "/submit",
+      "method": "POST",
+      "status": 409
+    },
+    {
+      "path": "/swop/val",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "path": "/val",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "path": "/swop/session",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "path": "/",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "path": "/submit",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "path": "/swop/val",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "path": "/swop/session",
+      "method": "POST",
+      "status": 401
+    }
+  ],
+  "player": {
+    "commit": "9059e070ea0595d7f67ff886ab9e3dc851aaf9c7",
+    "tracked_worktree_dirty": false,
+    "files": {
+      "src/swop/index.ts": "a8798fe4ac0713de5ea190471aed0b7d7ec9bda862b6253dc7034b70ba8991fd",
+      "src/shared/wire-contracts.ts": "ebd2388d055fbf18ef3455be6e2b6613765446ca135b2cb05b18625291abc59d"
+    }
+  },
+  "worker": {
+    "commit": "4293d8e6e79a4e2a6010e1d524fb4a941644db26",
+    "tracked_worktree_dirty": false,
+    "files": {
+      "src/index.ts": "abe19e320b9b48570389de146b41cbcb2cd0c85c6ca2b23bbf447a7ad6187ed9",
+      "src/wire-contracts.ts": "ebd2388d055fbf18ef3455be6e2b6613765446ca135b2cb05b18625291abc59d",
+      "src/session.ts": "e4421456eca0a47e621603e41620dc0f45161cf087c723646a77af9b81023ebf"
+    }
+  },
+  "runtime": "workerd with SQLite Durable Objects and rate-limit binding",
+  "limitations": [
+    "UI, timers and same-origin relay are fixtures; the actual FOSS adapter and Worker communicate over loopback HTTP. Production relay code/deployment is not qualified by this test.",
+    "Sequential cross-client test; concurrent storage scenarios run in the Worker integration suite.",
+    "No live Cloudflare traffic, rate-limit or deployed secret validation."
+  ]
+}

@@ -1,5 +1,9 @@
 # Delivering the shared core
 
+Exact consumer release combinations and their verification scope are recorded in
+[the compatibility snapshot](compatibility/README.md). Delivery success alone
+does not qualify a consumer release or its deployment.
+
 Changing `shared-core` and merging the change into `main` starts this chain:
 
 1. `portable` tests Kotlin/JVM and JS, builds the ES5 JavaScript and JAR, validates
