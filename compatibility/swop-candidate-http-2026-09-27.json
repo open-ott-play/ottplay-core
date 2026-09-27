@@ -1,0 +1,113 @@
+{
+  "observed_at": "2026-09-27T19:28:02.404Z",
+  "status": "passed",
+  "scenarios": [
+    "admin rejects missing/wrong bearer; provisions two clients with correct bearer",
+    "session rejects missing and unlisted client identities",
+    "real client creates session; form preserves escaped caption/draft; waiting poll continues",
+    "a different allowlisted client cannot read the session",
+    "phone submission reaches real client unchanged; sequential duplicate rejected; polling stops",
+    "sequential re-read after delivery returns gone",
+    "real client renders authorization denial from Worker"
+  ],
+  "requests": [
+    {
+      "path": "/admin/clients",
+      "method": "POST",
+      "status": 401
+    },
+    {
+      "path": "/admin/clients",
+      "method": "POST",
+      "status": 401
+    },
+    {
+      "path": "/admin/clients",
+      "method": "POST",
+      "status": 201
+    },
+    {
+      "path": "/admin/clients",
+      "method": "POST",
+      "status": 201
+    },
+    {
+      "path": "/session",
+      "method": "POST",
+      "status": 401
+    },
+    {
+      "path": "/session",
+      "method": "POST",
+      "status": 403
+    },
+    {
+      "path": "/session",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "path": "/",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "path": "/val",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "path": "/val",
+      "method": "GET",
+      "status": 403
+    },
+    {
+      "path": "/submit",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "path": "/submit",
+      "method": "POST",
+      "status": 409
+    },
+    {
+      "path": "/val",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "path": "/val",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "path": "/session",
+      "method": "POST",
+      "status": 403
+    }
+  ],
+  "player": {
+    "commit": "033a1e88b72659c0b3a672e5a51ae7000e6b5704",
+    "tracked_worktree_dirty": false,
+    "files": {
+      "src/swop/index.ts": "77ff535afa7b6492f7686947cd3a83f6b7c336eb2746fd33d2df338b1be82ead",
+      "src/shared/wire-contracts.ts": "ebd2388d055fbf18ef3455be6e2b6613765446ca135b2cb05b18625291abc59d"
+    }
+  },
+  "worker": {
+    "commit": "da9a2244e27a2fd97d3a133c4caedb5df2e6848f",
+    "tracked_worktree_dirty": true,
+    "files": {
+      "src/index.ts": "fa66b530141304266ed16c4a1fd104e9178fd7ea42681d562581ab50a1f64c5e",
+      "src/wire-contracts.ts": "ebd2388d055fbf18ef3455be6e2b6613765446ca135b2cb05b18625291abc59d",
+      "src/session.ts": "1712467c86a9ce593bbd0c0936409ae747fedd0bcb69b410e5ae155ac6ec32b7"
+    }
+  },
+  "runtime": "workerd with SQLite Durable Objects and rate-limit binding",
+  "limitations": [
+    "UI and timers substituted; real client adapter and Worker communicate over loopback HTTP.",
+    "Sequential cross-client test; concurrent storage scenarios run in the Worker integration suite.",
+    "No live Cloudflare traffic, rate-limit or deployed secret validation."
+  ]
+}

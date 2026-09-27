@@ -1,0 +1,78 @@
+{
+  "observed_at": "2026-09-27T19:27:31.355Z",
+  "status": "passed",
+  "scenarios": [
+    "device credential cannot enqueue administrator commands",
+    "real browser XHR polls and ACKs; lost ACK plus reconnect does not dispatch twice",
+    "other device denied; owner receives the unchanged Unicode command",
+    "unlisted browser origin is blocked by real CORS/preflight enforcement",
+    "expired queued commands are not dispatched after reconnect",
+    "unsupported platform dispatch is acknowledged as handled, not claimed executed"
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/api/webhook/commands"
+    },
+    {
+      "method": "POST",
+      "path": "/api/webhook/commands/ack"
+    },
+    {
+      "method": "GET",
+      "path": "/api/webhook/commands"
+    },
+    {
+      "method": "POST",
+      "path": "/api/webhook/commands/ack"
+    },
+    {
+      "method": "GET",
+      "path": "/api/webhook/commands"
+    },
+    {
+      "method": "GET",
+      "path": "/api/webhook/commands"
+    },
+    {
+      "method": "POST",
+      "path": "/api/webhook/commands/ack"
+    },
+    {
+      "method": "GET",
+      "path": "/api/webhook/commands"
+    },
+    {
+      "method": "GET",
+      "path": "/api/webhook/commands"
+    },
+    {
+      "method": "POST",
+      "path": "/api/webhook/commands/ack"
+    }
+  ],
+  "pageErrors": [],
+  "acknowledgements": [
+    200,
+    200,
+    200
+  ],
+  "chromium": "153.0.8010.12",
+  "player": {
+    "commit": "033a1e88b72659c0b3a672e5a51ae7000e6b5704",
+    "tracked_worktree_dirty": false,
+    "file": "src/plugins/command-server.ts",
+    "sha256": "9a6776b4753fb9af8c265a984f0081e3cb29a7f8c52eb900779d644d6fbf6364"
+  },
+  "server": {
+    "commit": "de561dcaa2ab2d42665aa3d279d0057b2b1f1e4e",
+    "tracked_worktree_dirty": false,
+    "file": "internal/control/server.go",
+    "sha256": "d534d36b8965338eed558c1b6b9d1e3148381af350f9baf11b0391f05d1de564"
+  },
+  "limitations": [
+    "Real Chromium XHR, Go server, CORS, authentication, queues and ACK delivery.",
+    "Platform command dispatch and settings persistence callbacks are substitutes; no picture/audio or hardware volume confirmation.",
+    "Loopback HTTP and synthetic credentials only; production deployment and TLS not qualified."
+  ]
+}

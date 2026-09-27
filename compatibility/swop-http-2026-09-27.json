@@ -1,0 +1,109 @@
+{
+  "observed_at": "2026-09-27T18:35:28.643Z",
+  "status": "passed",
+  "scenarios": [
+    "admin rejects missing/wrong bearer; provisions two clients with correct bearer",
+    "session rejects missing and unlisted client identities",
+    "real client creates session; form preserves escaped caption/draft; waiting poll continues",
+    "a different allowlisted client cannot read the session",
+    "phone submission reaches real client unchanged; sequential duplicate rejected; polling stops",
+    "sequential re-read after delivery returns gone",
+    "real client renders authorization denial from Worker"
+  ],
+  "requests": [
+    {
+      "path": "/admin/clients",
+      "method": "POST",
+      "status": 401
+    },
+    {
+      "path": "/admin/clients",
+      "method": "POST",
+      "status": 401
+    },
+    {
+      "path": "/admin/clients",
+      "method": "POST",
+      "status": 201
+    },
+    {
+      "path": "/admin/clients",
+      "method": "POST",
+      "status": 201
+    },
+    {
+      "path": "/session",
+      "method": "POST",
+      "status": 401
+    },
+    {
+      "path": "/session",
+      "method": "POST",
+      "status": 403
+    },
+    {
+      "path": "/session",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "path": "/",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "path": "/val",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "path": "/val",
+      "method": "GET",
+      "status": 403
+    },
+    {
+      "path": "/submit",
+      "method": "POST",
+      "status": 200
+    },
+    {
+      "path": "/submit",
+      "method": "POST",
+      "status": 409
+    },
+    {
+      "path": "/val",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "path": "/val",
+      "method": "GET",
+      "status": 200
+    },
+    {
+      "path": "/session",
+      "method": "POST",
+      "status": 403
+    }
+  ],
+  "player": {
+    "commit": "033a1e88b72659c0b3a672e5a51ae7000e6b5704",
+    "files": {
+      "src/swop/index.ts": "77ff535afa7b6492f7686947cd3a83f6b7c336eb2746fd33d2df338b1be82ead",
+      "src/shared/wire-contracts.ts": "ebd2388d055fbf18ef3455be6e2b6613765446ca135b2cb05b18625291abc59d"
+    }
+  },
+  "worker": {
+    "commit": "cb0194b9873cfec2472a93ccd7542edd9d4a9a91",
+    "files": {
+      "src/index.ts": "075c71eb1be976e5f5db775148328f58a9f2149bea8a709883fa597a20ceb2a8",
+      "src/wire-contracts.ts": "ebd2388d055fbf18ef3455be6e2b6613765446ca135b2cb05b18625291abc59d"
+    }
+  },
+  "limitations": [
+    "UI and timers substituted; real client adapter and Worker communicate over loopback HTTP.",
+    "Synthetic in-memory KV does not model eventual consistency or qualify atomic consumption.",
+    "No live Cloudflare traffic, rate-limit or deployed secret validation."
+  ]
+}
