@@ -295,6 +295,20 @@ function verify(context, profile) {
     assert.equal(playing.result().url, "https://cdn.test/live");
     assert.equal(stalker.browse({ ...channels[1], portalGeneration: "7" }).failure, "SESSION_FOLDER");
     assert.equal(stalker.verify("changed").failure, "SESSION_CATALOG");
+    const bulkClient = new core.StalkerClient({ ...portal, bulkCatalog: true, preferHls: true }, 8,
+        encodeURIComponent, value => value, value => /^https?:\/\//.test(value) ? value : "");
+    const bulkLoad = bulkClient.load();
+    for (const reply of [{ token: "t" }, { status: 0 }, [{ id: 1, title: "News" }]])
+        assert.equal(bulkLoad.accept({ js: reply }), null);
+    assert.match(bulkLoad.request().url, /action=get_all_channels/);
+    assert.equal(bulkLoad.reject(403), false);
+    assert.equal(bulkLoad.accept({ js: { data: [{ id: 42, name: "One", cmd: "https://cdn.test/live", tv_genre_id: 1,
+        unused_mag_metadata: { large: "not part of the catalog ABI" } }], total_items: 1 } }), null);
+    assert.equal(bulkLoad.result().channels[0].name, "One");
+    assert.equal(bulkLoad.result().channels[0].group, "News");
+    assert.equal(bulkLoad.reject(404), false);
+    assert.equal(bulkClient.streamUrl("https://p.test/play/live.php?mac=test&stream=42&extension=ts&play_token=x"),
+        "https://p.test/play/live.php?mac=test&stream=42&extension=m3u8&play_token=x");
     const rpc = new core.LegacyStalkerClient("https://p.test/", portal.mac);
     assert.equal(rpc.endpoint(), "https://p.test/stalker_portal/api/");
     assert.equal(rpc.accept({ result: 0 }), null);

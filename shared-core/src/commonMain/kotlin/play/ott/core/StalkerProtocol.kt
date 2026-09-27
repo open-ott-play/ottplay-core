@@ -18,6 +18,22 @@ internal fun firstTruthy(vararg values: ProviderValue) = values.firstOrNull { it
 
 /** Protocol choices only. URL parsing/encoding, HTTP, JSON and locking belong to the host. */
 object StalkerProtocol {
+    /** This MAG gateway exposes an explicit output selector. Leave opaque/signed media URLs alone. */
+    fun hlsGatewayUrl(url: String): String {
+        val scheme=when { url.startsWith("https://")->8;url.startsWith("http://")->7;else->return url }
+        val path=url.indexOf('/',scheme)
+        val query=url.indexOf('?')
+        if(path<0 || query<path || !url.substring(path,query).endsWith("/play/live.php"))return url
+        val end=url.indexOf('#').let { if(it<0)url.length else it }
+        if(end<query)return url
+        val fields=url.substring(query+1,end).split('&')
+        if(fields.any { it.substringBefore('=') !in listOf("mac","stream","extension","play_token") })return url
+        if(fields.count { it.substringBefore('=')=="extension" }!=1 ||
+            fields.count { it.startsWith("mac=") }!=1 || fields.count { it.startsWith("stream=") }!=1)return url
+        val index=fields.indexOf("extension=ts")
+        if(index<0)return url
+        return url.substring(0,query+1)+fields.mapIndexed { i,value->if(i==index)"extension=m3u8" else value }.joinToString("&")+url.substring(end)
+    }
     fun handshake()=StalkerRequest("stb","handshake",stalkerValues("token" to ""))
     fun browserLocation(url: String): StalkerLocation {
         val clean=url.substringBefore('?').substringBefore('#')
