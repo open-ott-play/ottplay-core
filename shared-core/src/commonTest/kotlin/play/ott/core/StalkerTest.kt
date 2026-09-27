@@ -13,6 +13,56 @@ class StalkerTest {
     private fun failure(code:String, block:()->Unit)=assertEquals(code,assertFailsWith<StalkerFailure>(block=block).code)
     private val mac="00:1a:79:01:02:03"
 
+    private fun bulkLoad(): StalkerBrowserOperation {
+        val session=StalkerBrowserSession("s",1,"f",{it},{it},{it},bulkCatalog=true)
+        val load=session.load(ProviderValue.missing)
+        load.accept(reply(row("token" to "token")));load.accept(reply(row("status" to "0")))
+        load.accept(reply(array(row("id" to "1","title" to "News"))))
+        assertEquals("get_all_channels",load.request!!.action)
+        return load
+    }
+    @Test fun bulkCatalogCompletesWithoutThousandsOfPages() {
+        val load=bulkLoad()
+        val channels=(1..45_194).map { row("id" to it.toString(),"cmd" to "https://media.test/$it","tv_genre_id" to "1") }
+        load.accept(reply(obj("data" to ProviderValue.array(channels),"total_items" to n(channels.size))))
+        assertNull(load.request);assertEquals(45_195,load.result!!.items.size)
+        assertEquals("News",load.result!!.items.first().group)
+        assertFalse(load.reject(404))
+    }
+    @Test fun unsupportedOrPartialBulkFallsBackOnceFromPageOne() {
+        for(data in listOf(ProviderValue.nil,array(),page(),obj("data" to array(row("id" to "99","cmd" to "/partial")),"total_items" to n(2)))) {
+            val load=bulkLoad();load.accept(reply(data))
+            assertEquals("get_ordered_list",load.request!!.action)
+            assertEquals("1",load.request!!.params["p"]!!.string())
+            assertFalse(load.reject(404))
+            load.accept(reply(obj("data" to array(row("id" to "42","cmd" to "/live")),"total_items" to n(1))))
+            assertEquals("42",load.result!!.items.first().providerId)
+        }
+        for(status in listOf(0,200,404,405,413,500,501,502,503,504)) {
+            val load=bulkLoad();assertTrue(load.reject(status));assertEquals("get_ordered_list",load.request!!.action);assertFalse(load.reject(status))
+        }
+    }
+    @Test fun bulkDoesNotTurnDenialsOrCountLimitsIntoFallback() {
+        for(status in listOf(401,403))assertFalse(bulkLoad().reject(status))
+        for(data in listOf(row("not_valid_token" to "1"),row("error" to "denied"))) {
+            failure("PORTAL_AUTH"){bulkLoad().accept(reply(data))}
+        }
+        failure("BROWSER_COUNT"){bulkLoad().accept(reply(obj("data" to array(),"total_items" to n(50_001))))}
+        failure("TOTAL_FORMAT"){bulkLoad().accept(reply(obj("data" to array(),"total_items" to t("bad"))))}
+        val load=bulkLoad();load.accept(reply(obj("data" to array(),"total_items" to n(0))))
+        assertNull(load.request);assertEquals(1,load.result!!.items.size)
+    }
+    @Test fun hlsPreferenceOnlyChangesExplicitMagGatewayOutput() {
+        val url="https://p.test/play/live.php?mac=00%3A11&stream=42&extension=ts&play_token=a%2Bb#fragment"
+        val expected="https://p.test/play/live.php?mac=00%3A11&stream=42&extension=m3u8&play_token=a%2Bb#fragment"
+        assertEquals(expected,StalkerProtocol.hlsGatewayUrl(url))
+        for(opaque in listOf("https://cdn.test/live.ts?token=x",url.substringBefore('#')+"&signature=x",
+            "https://p.test/other.php?mac=x&stream=42&extension=ts",url.substringBefore('#')+"&extension=ts",
+            "https://p.test/play/live.php?extension=ts&stream=42"))assertEquals(opaque,StalkerProtocol.hlsGatewayUrl(opaque))
+        assertEquals(url,StalkerBrowserSession("s",1,"f",{it},{it},{it}).streamUrl(url))
+        assertEquals(expected,StalkerBrowserSession("s",1,"f",{it},{it},{it},preferHls=true).streamUrl(url))
+    }
+
     @Test fun configurationRetainsUrlShapesAndErrorOrder() {
         assertTrue(StalkerProtocol.validMac(mac));assertFalse(StalkerProtocol.validMac(" $mac"));assertFalse(StalkerProtocol.validMac("00:1g:79:01:02:03"))
         assertEquals(StalkerLocation("https://p.test/server/load.php","https://p.test/c/"),StalkerProtocol.browserConfiguration("https://p.test/C/index.html/?x=1",mac,ProviderValue.missing))

@@ -2,6 +2,22 @@
 
 import play.ott.core.*
 
+// Bulk replies can contain tens of thousands of rows with large, unused MAG
+// settings. Convert only the catalog ABI fields, preserving their wire types.
+private fun stalkerReply(response: dynamic): ProviderValue {
+    if(response==null || response.js==null || !js("Array.isArray(response.js.data)").unsafeCast<Boolean>())return wire(response)
+    val data=response.js
+    val fields=listOf("id","cmd","name","title","tv_genre_id","logo","screenshot_uri","xmltv_id","description",
+        "censored","lock","is_season","is_episode","is_series","has_files","series_number")
+    val rows=(0 until data.data.length.unsafeCast<Int>()).map { index->
+        val row=data.data[index]
+        if(row==null || jsTypeOf(row)!="object" || js("Array.isArray(row)").unsafeCast<Boolean>())wire(row)
+        else ProviderValue.obj(fields.associateWith { wire(row[it]) }.filterValues { it.present })
+    }
+    return ProviderValue.obj(mapOf("js" to ProviderValue.obj(mapOf("data" to ProviderValue.array(rows),
+        "total_items" to wire(data.total_items),"error" to wire(data.error),"not_valid_token" to wire(data.not_valid_token)))))
+}
+
 @JsExport
 fun stalkerTextDenied(value: String)=StalkerProtocol.textDenied(value)
 
@@ -19,13 +35,16 @@ fun stalkerConfig(input: dynamic): dynamic=try {
 class StalkerClient(input: dynamic, generation: Int, private val component: (String)->String,
     relative: (String)->String, absolute: (String)->String) {
     private val config=wire(input)
-    private val session=StalkerBrowserSession(config["id"].string(),generation,config["fingerprint"].string(),component,relative,absolute)
+    private val session=StalkerBrowserSession(config["id"].string(),generation,config["fingerprint"].string(),component,relative,absolute,
+        config["bulkCatalog"].flag(),config["preferHls"].flag())
+    fun streamUrl(url: String)=session.streamUrl(url)
     fun verify(fingerprint: String): dynamic=try {session.verify(fingerprint);null}catch(error:StalkerFailure){failure(error.code)}
     fun load(): dynamic=operation(session.load(config["profile"]))
     fun browse(node: dynamic): dynamic=try {operation(session.browse(wire(node)))}catch(error:StalkerFailure){failure(error.code)}
     fun playback(node: dynamic): dynamic=try {operation(session.playback(wire(node)))}catch(error:StalkerFailure){failure(error.code)}
     private fun operation(value: StalkerBrowserOperation): dynamic {
         val result: dynamic=js("({})")
+        result.reject={ status: Int->value.reject(status) }
         result.request={
             value.request?.let { request->
                 val outgoing: dynamic=js("({})")
@@ -36,7 +55,7 @@ class StalkerClient(input: dynamic, generation: Int, private val component: (Str
                 outgoing
             }
         }
-        result.accept={ response: dynamic->try {value.accept(wire(response));null}catch(error:StalkerFailure){failure(error.code)} }
+        result.accept={ response: dynamic->try {value.accept(stalkerReply(response));null}catch(error:StalkerFailure){failure(error.code)} }
         result.result={
             val output: dynamic=js("({})")
             if(value.url!=null)output.url=value.url else {

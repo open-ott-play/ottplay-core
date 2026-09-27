@@ -224,6 +224,18 @@ and base-player request order, RPC catalogs, identities and short EPG records.
 `StalkerTokens` and `StalkerRetry` own bounded cache/retry policy; the Android host
 serializes access and performs cancellable HTTP.
 
+The JavaScript `StalkerClient` can opt into `bulkCatalog: true`: after profile
+authorization and genres it tries `get_all_channels`. A complete, bounded reply
+finishes loading; missing or partial support restarts ordinary paging at page
+one. Hosts pass transport failures to the operation's `reject(status)` and
+continue only when it returns true. HTTP 401/403 and portal auth errors never
+become bulk fallback. Existing consumers keep their paged behavior by default.
+`preferHls: true` selects `extension=m3u8` for recognized `/play/live.php` MAG
+gateway URLs with only MAC, stream, extension and playback-token parameters.
+Other URLs, unknown query fields and duplicate selectors remain unchanged.
+`streamUrl(url)` applies the same preference to direct channel commands;
+temporary links are adapted after `create_link`. Preferences default off.
+
 Tests cover browser, Android and base-player scenarios, including BEST LiST
 M3U fallback spellings. The shared classic Xtream factory supplies both providers.
 ES5 runtime simulations cover these APIs and the antifriz logo rewrite; source

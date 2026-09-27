@@ -1,14 +1,19 @@
 package play.ott.core
 
 class StalkerBrowserSession(val source: String, val generation: Int, val fingerprint: String,
-    private val component: (String)->String, private val resolve: (String)->String, private val absolute: (String)->String) {
+    private val component: (String)->String, private val resolve: (String)->String, private val absolute: (String)->String,
+    private val bulkCatalog: Boolean=false, private val preferHls: Boolean=false) {
     var token=""
         internal set
     private val references=mutableMapOf<String,StalkerItem>()
     internal val prefix get()=component(CoreText.trim(source))+":stalker:"
     private fun current(node: ProviderValue)=node["portalGeneration"].kind==ProviderValueKind.NUMBER && node["portalGeneration"].number()==generation.toDouble()
     fun verify(value: String) { if(value!=fingerprint)throw StalkerFailure("SESSION_CATALOG") }
-    fun load(profile: ProviderValue)=StalkerBrowserOperation(this,"load",profile)
+    fun load(profile: ProviderValue)=StalkerBrowserOperation(this,"load",profile,bulkCatalog=bulkCatalog)
+    fun streamUrl(value: String): String {
+        val url=absolute(value)
+        return if(preferHls)StalkerProtocol.hlsGatewayUrl(url) else url
+    }
     fun browse(node: ProviderValue): StalkerBrowserOperation {
         if(!current(node))throw StalkerFailure("SESSION_FOLDER")
         val folder=node["folderType"].string()
@@ -40,11 +45,11 @@ class StalkerBrowserSession(val source: String, val generation: Int, val fingerp
         }
         return StalkerResult(items)
     }
-    internal fun link(data: ProviderValue)=StalkerProtocol.link(data,StalkerFormat.BROWSER,absolute,{""})
+    internal fun link(data: ProviderValue)=StalkerProtocol.link(data,StalkerFormat.BROWSER,::streamUrl,{""})
 }
 
 class StalkerBrowserOperation internal constructor(private val session: StalkerBrowserSession, private val mode: String,
-    private val node: ProviderValue, private val link: StalkerRequest?=null) {
+    private val node: ProviderValue, private val link: StalkerRequest?=null, private var bulkCatalog: Boolean=false) {
     private var stage=0
     private var groups=emptyMap<String,String>()
     private val pages=StalkerPages(StalkerFormat.BROWSER) { it["id"].string() }
@@ -52,6 +57,13 @@ class StalkerBrowserOperation internal constructor(private val session: StalkerB
         private set
     var url: String?=null
         private set
+    private val bulkPending get()=mode=="load" && stage==3 && bulkCatalog && result==null
+    /** Only an optional bulk request can fall back; authentication failures stay terminal. */
+    fun reject(status: Int): Boolean {
+        if(!bulkPending || status !in listOf(0,200,404,405,413,500,501,502,503,504))return false
+        bulkCatalog=false
+        return true
+    }
     val request: StalkerRequest? get() {
         if(result!=null || url!=null)return null
         if(mode=="resolve")return link
@@ -60,7 +72,7 @@ class StalkerBrowserOperation internal constructor(private val session: StalkerB
             0->StalkerProtocol.handshake()
             1->StalkerProtocol.profileRequest(node,StalkerFormat.BROWSER)
             2->StalkerRequest("itv","get_genres")
-            else->pages.request("itv",stalkerValues("genre" to "*"))
+            else->if(bulkPending)StalkerRequest("itv","get_all_channels") else pages.request("itv",stalkerValues("genre" to "*"))
         }
         val filters=linkedMapOf("category" to firstTruthy(node["categoryId"],ProviderValue.text("*")),"genre" to ProviderValue.text("*"))
         val folder=node["folderType"].string()
@@ -71,7 +83,21 @@ class StalkerBrowserOperation internal constructor(private val session: StalkerB
     }
     fun accept(response: ProviderValue) {
         check(request!=null)
-        val data=StalkerProtocol.unwrap(response,StalkerFormat.BROWSER)
+        val data=try { StalkerProtocol.unwrap(response,StalkerFormat.BROWSER) } catch(error: StalkerFailure) {
+            if(error.code=="PORTAL_FORMAT" && reject(200))return
+            throw error
+        }
+        if(bulkPending) {
+            // Missing/partial bulk support must restart paging at page one.
+            if(!data["data"].isArray || !data["total_items"].present) { reject(200);return }
+            if(data["data"].elements.size>50_000)throw StalkerFailure("BROWSER_COUNT")
+            val bulk=StalkerPages(StalkerFormat.BROWSER) { it["id"].string() }
+            bulk.accept(data)
+            if(bulk.done && data["data"].elements.size.toDouble()==data["total_items"].number())
+                result=session.items(bulk.rows,"live",ProviderValue.missing,groups,true)
+            else reject(200)
+            return
+        }
         when(mode) {
             "resolve"->url=session.link(data)
             "categories"->result=session.categories(data)
