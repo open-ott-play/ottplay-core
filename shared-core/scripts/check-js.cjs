@@ -115,6 +115,12 @@ function verify(context, profile) {
     serverRefresh.advance(true, true); assert.equal(serverRefresh.action(), "WRITE_DATABASE");
     serverRefresh.advance(false); assert.equal(serverRefresh.action(), "REPLACE");
     assert.equal(core.nativeGuideRefreshInterval("rust-server"), 7200);
+    assert.deepEqual([1, 2, 3, 4, 5, 2147483647, 0].map(n => core.nativeGuideRefreshInterval("rust-server", n)),
+        [60, 120, 240, 480, 900, 900, 7200]);
+    const failedRefresh = new core.NativeGuideRefresh(2, "rust-server");
+    failedRefresh.advance(false); assert.equal(failedRefresh.action(), "FETCH");
+    failedRefresh.advance(false); assert.equal(failedRefresh.action(), "FAIL");
+    assert.equal(failedRefresh.index(), -1);
     assert.equal(new core.NativeGuideRefresh(0, "android").action(), "SKIP");
     const emptyRefresh = new core.NativeGuideRefresh(0, "rust-server");
     emptyRefresh.advance(false); assert.equal(emptyRefresh.action(), "FAIL");

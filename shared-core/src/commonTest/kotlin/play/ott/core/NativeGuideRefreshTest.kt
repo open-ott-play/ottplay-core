@@ -50,8 +50,8 @@ class NativeGuideRefreshTest {
         assertEquals(FAIL, refresh.action())
     }
 
-    @Test fun serverContinuesAfterEveryFeedFailureAndStillPersistsEmptyResult() {
-        for (outcomes in listOf(listOf(false, false), listOf(true, false), listOf(false, true))) {
+    @Test fun serverContinuesAfterFeedFailureAndPersistsPartialSuccess() {
+        for (outcomes in listOf(listOf(true, false), listOf(false, true), listOf(true, true))) {
             val refresh = NativeGuideRefresh(2, RUST_SERVER)
             outcomes.forEachIndexed { index, success ->
                 assertEquals(index, refresh.index())
@@ -63,6 +63,32 @@ class NativeGuideRefreshTest {
             refresh.advance(true)
             assertEquals(REPLACE, refresh.action())
         }
+    }
+
+    @Test fun serverTriesEveryFeedButNeverOpensDatabaseWhenAllFail() {
+        val refresh = NativeGuideRefresh(3, RUST_SERVER)
+        repeat(3) { index ->
+            assertEquals(FETCH, refresh.action())
+            assertEquals(index, refresh.index())
+            refresh.advance(false)
+        }
+        assertEquals(FAIL, refresh.action())
+        assertEquals(-1, refresh.index())
+        assertFailsWith<IllegalStateException> { refresh.advance(true) }
+    }
+
+    @Test fun serverAcceptsSuccessfulEmptyFeedAndResetsRetryAfterSuccess() {
+        val refresh = NativeGuideRefresh(1, RUST_SERVER)
+        assertEquals(emptyList(), refresh.unowned(emptyList()))
+        refresh.advance(true)
+        assertEquals(OPEN_DATABASE, refresh.action())
+        refresh.advance(true, false)
+        assertEquals(REPLACE, refresh.action())
+        assertEquals(listOf(7200, 60, 120, 240, 480, 900, 900, 7200),
+            listOf(0, 1, 2, 3, 4, 5, Int.MAX_VALUE, 0).map {
+                NativeGuideRefresh.intervalSeconds(RUST_SERVER, it)
+            })
+        assertFailsWith<IllegalArgumentException> { NativeGuideRefresh.intervalSeconds(RUST_SERVER, -1) }
     }
 
     @Test fun serverPropagatesPoolFailureButAcceptsPersistenceFailure() {

@@ -5,10 +5,11 @@ enum class NativeGuideRefreshAction { FETCH, VALIDATE_SOURCE, OPEN_DATABASE, WRI
 
 /** Refresh policy only. Hosts retain payloads/errors and execute effects under their existing locks.
  * Android validates the current source after all downloads, while holding its refresh lock.
- * The server returns a fresh result even if every feed failed, and ignores persistence errors.
+ * The server accepts partial success, preserves its cache if every feed failed, and ignores persistence errors.
  */
 class NativeGuideRefresh(private val count: Int, private val format: NativeGuideRefreshFormat) {
     private var cursor = 0
+    private var anyFetchSucceeded = false
     private val ownedChannels = mutableSetOf<String>()
     private var pending = if (count > 0) NativeGuideRefreshAction.FETCH else when (format) {
         NativeGuideRefreshFormat.ANDROID -> NativeGuideRefreshAction.SKIP
@@ -31,11 +32,13 @@ class NativeGuideRefresh(private val count: Int, private val format: NativeGuide
     fun advance(succeeded: Boolean, available: Boolean = true) {
         pending = when (pending) {
             NativeGuideRefreshAction.FETCH -> {
+                anyFetchSucceeded = anyFetchSucceeded || succeeded
                 if (!succeeded && format == NativeGuideRefreshFormat.ANDROID) NativeGuideRefreshAction.FAIL
                 else {
                     cursor++
                     if (cursor < count) NativeGuideRefreshAction.FETCH
                     else if (format == NativeGuideRefreshFormat.ANDROID) NativeGuideRefreshAction.VALIDATE_SOURCE
+                    else if (!anyFetchSucceeded) NativeGuideRefreshAction.FAIL
                     else NativeGuideRefreshAction.OPEN_DATABASE
                 }
             }
@@ -54,10 +57,12 @@ class NativeGuideRefresh(private val count: Int, private val format: NativeGuide
     }
 
     companion object {
-        /** The host's interval timer retains its immediate first tick. */
-        fun intervalSeconds(format: NativeGuideRefreshFormat): Int {
+        /** Hosts wait after each attempt; a successful refresh resets the failure count. */
+        fun intervalSeconds(format: NativeGuideRefreshFormat, consecutiveFailures: Int = 0): Int {
             require(format == NativeGuideRefreshFormat.RUST_SERVER)
-            return 7200
+            require(consecutiveFailures >= 0)
+            return if (consecutiveFailures == 0) 7200
+            else (60 shl (consecutiveFailures - 1).coerceAtMost(4)).coerceAtMost(900)
         }
     }
 }
