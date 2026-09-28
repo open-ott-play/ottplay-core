@@ -62,11 +62,13 @@ object GuideTime {
         val zone = CoreText.trim(input.substring(dateEnd), CoreText::unicodeSpace)
         var offset = 0
         if (zone.isNotEmpty() && (zone[0] == '+' || zone[0] == '-') &&
-            (if (format == NativeGuideFormat.RUST) zone.encodeToByteArray().size else zone.length) >= 5) {
+            (zone.length >= 5 || format == NativeGuideFormat.RUST && zone.encodeToByteArray().size >= 5)) {
             if (zone.length < 5) return 0.0
             if (format == NativeGuideFormat.RUST && zone.substring(1, 5).any { it !in '0'..'9' }) return 0.0
-            val hours = zone.substring(1, 3).toIntOrNull() ?: 0
-            val minutes = zone.substring(3, 5).toIntOrNull() ?: 0
+            val hours = if (format == NativeGuideFormat.RUST)
+                (zone[1].code - 48) * 10 + zone[2].code - 48 else zone.substring(1, 3).toIntOrNull() ?: 0
+            val minutes = if (format == NativeGuideFormat.RUST)
+                (zone[3].code - 48) * 10 + zone[4].code - 48 else zone.substring(3, 5).toIntOrNull() ?: 0
             offset = (hours * 3600 + minutes * 60) * if (zone[0] == '-') -1 else 1
         }
         return millis / 1000 - offset
