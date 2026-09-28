@@ -58,7 +58,7 @@ object GuideTime {
         }
         if (date.any { it !in '0'..'9' }) return 0.0
         if (format == NativeGuideFormat.RUST && date.endsWith("60")) date = date.dropLast(2) + "59"
-        val millis = milliseconds(date) ?: return 0.0
+        val millis = dateMilliseconds(date, 14) ?: return 0.0
         val zone = CoreText.trim(input.substring(dateEnd), CoreText::unicodeSpace)
         var offset = 0
         if (zone.isNotEmpty() && (zone[0] == '+' || zone[0] == '-') &&
@@ -83,18 +83,7 @@ object GuideTime {
         while (length < input.length && input[length] in '0'..'9') length++
         if (length != 8 && length != 10 && length != 12 && length != 14) return null
         if (format == GuideTimeFormat.BROWSER && length < 12) return null
-        val digits = input.substring(0, length)
-        fun field(from: Int, fallback: Int = 0): Int =
-            if (digits.length >= from + 2) digits.substring(from, from + 2).toInt() else fallback
-        val year = digits.substring(0, 4).toInt()
-        val month = field(4)
-        val day = field(6)
-        val hour = field(8)
-        val minute = field(10)
-        val second = field(12)
-        if (month !in 1..12 || hour > 23 || minute > 59 || second > 59) return null
-        val leap = year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)
-        if (day !in 1..(monthDays[month - 1] + if (month == 2 && leap) 1 else 0)) return null
+        val date = dateMilliseconds(input, length) ?: return null
 
         var zoneStart = length
         while (zoneStart < input.length && if (format == GuideTimeFormat.ANDROID)
@@ -118,6 +107,25 @@ object GuideTime {
             if (format == GuideTimeFormat.ANDROID && (hours > 18 || hours == 18 && minutes != 0)) return null
             offset = (hours * 60 + minutes) * if (zone[0] == '+') 1 else -1
         }
+        return date - offset * 60_000.0
+    }
+
+    /** The caller has already validated the ASCII digits and supported field count.
+     * Avoid temporary strings and general Unicode/overflow-aware integer parsing for
+     * millions of fixed-width XMLTV fields. Both native and web paths use this calendar.
+     */
+    private fun dateMilliseconds(input: String, length: Int): Double? {
+        fun pair(from: Int): Int = if (length >= from + 2)
+            (input[from].code - 48) * 10 + input[from + 1].code - 48 else 0
+        val year = pair(0) * 100 + pair(2)
+        val month = pair(4)
+        val day = pair(6)
+        val hour = pair(8)
+        val minute = pair(10)
+        val second = pair(12)
+        if (month !in 1..12 || hour > 23 || minute > 59 || second > 59) return null
+        val leap = year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)
+        if (day !in 1..(monthDays[month - 1] + if (month == 2 && leap) 1 else 0)) return null
         val previous = (year - 1).toDouble()
         // Floor division also covers the leap year 0000 supported by both clients.
         fun floorDiv(divisor: Int): Double = kotlin.math.floor(previous / divisor)
@@ -126,6 +134,6 @@ object GuideTime {
         if (month > 2 && leap) days++
         // Gregorian days before 1970-01-01: 1969*365 + 492 - 19 + 4.
         days += day - 1 - 719162
-        return ((days * 24 + hour) * 60 + minute - offset) * 60_000 + second * 1_000
+        return ((days * 24 + hour) * 60 + minute) * 60_000 + second * 1_000
     }
 }

@@ -9,6 +9,32 @@ class XmltvRecordsTest {
         field("title", title); end("programme")
     }
 
+    @Test fun timestampEncodingPreservesSignedIntBoundariesAndDistantDates() {
+        val dates = listOf(
+            "19011213204551 +0000" to "-2147483649",
+            "19011213204552 +0000" to "-2147483648",
+            "19691231235959 +0000" to "-1",
+            "19700101000000 +0000" to "0",
+            "19700101000001 +0000" to "1",
+            "20380119031407 +0000" to "2147483647",
+            "20380119031408 +0000" to "2147483648",
+            "99991231235959 +0000" to "253402300799",
+        )
+        for (format in listOf(XmltvRecordFormat.RUST, XmltvRecordFormat.RUST_NATIVE, XmltvRecordFormat.SWIFT)) {
+            val records = XmltvRecords(format)
+            // Repeat in one reducer to cover both initial conversion and memoized strings.
+            repeat(2) {
+                for ((date, expected) in dates) {
+                    records.start("programme", mapOf("channel" to "a", "start" to date, "stop" to date))
+                    records.field("title", "Boundary"); records.end("programme")
+                    val row = records.drain().single()
+                    assertEquals(expected, row[2], "$format: $date")
+                    assertEquals(expected, row[3], "$format: $date")
+                }
+            }
+        }
+    }
+
     @Test fun firstNativeChannelNameAndAccumulatedAliasesSurviveDrains() {
         val records = XmltvRecords(XmltvRecordFormat.SWIFT)
         records.start("channel", mapOf("id" to "a")); records.field("display-name", " First ")
