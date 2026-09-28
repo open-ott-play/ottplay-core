@@ -77,14 +77,20 @@ class XmltvRecords(
 
     private fun time(value: String): Time {
         encodedTimes[value]?.let { return it }
-        val epoch = if (android) GuideTime.parse(value, GuideTimeFormat.ANDROID)
-            else clock.seconds(value).let { if (format == XmltvRecordFormat.ARCHIVED_ANDROID) it.toInt().toLong() else it.toLong() }
-        // Current guide epochs fit in a signed Int. Kotlin/JS Long.toString()
-        // performs emulated 64-bit division on every cache miss; keep the exact
-        // Long fallback for dates outside this fast path and invalid Android dates.
-        val encoded = if (epoch != null && epoch >= Int.MIN_VALUE && epoch <= Int.MAX_VALUE)
-            epoch.toInt().toString() else epoch.toString()
-        val result = Time(epoch, encoded)
+        val result = if (rust) {
+            val seconds = clock.seconds(value)
+            // Rust record admission never reads epoch. Avoid constructing an emulated
+            // JS Long for current dates; retain exact encoding beyond the Int range.
+            val encoded = if (seconds >= Int.MIN_VALUE && seconds <= Int.MAX_VALUE)
+                seconds.toInt().toString() else seconds.toLong().toString()
+            Time(null, encoded)
+        } else {
+            val epoch = if (android) GuideTime.parse(value, GuideTimeFormat.ANDROID)
+                else clock.seconds(value).let { if (format == XmltvRecordFormat.ARCHIVED_ANDROID) it.toInt().toLong() else it.toLong() }
+            val encoded = if (epoch != null && epoch >= Int.MIN_VALUE && epoch <= Int.MAX_VALUE)
+                epoch.toInt().toString() else epoch.toString()
+            Time(epoch, encoded)
+        }
         if (value.length <= 64) {
             encodedKeys[encodedCursor]?.let { encodedTimes.remove(it) }
             encodedKeys[encodedCursor] = value

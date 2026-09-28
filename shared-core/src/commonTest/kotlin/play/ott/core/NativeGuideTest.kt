@@ -75,6 +75,19 @@ class NativeGuideTest {
         assertEquals(0, GuideTime.parseNative("20260101", rust))
     }
 
+    @Test fun rustZoneByteThresholdAndValidatedAsciiOffsets() {
+        val date = "20260101000000 "
+        val utc = 1767225600L
+        for ((zone, expected) in listOf(
+            "+0300ignored" to utc - 10800, "-1234" to utc + 45240,
+            "+9999" to utc - 362340, "+000" to utc, "+é" to utc,
+            "+💥" to 0L, "+0💥" to 0L, "+éé" to 0L,
+            "+ab00" to 0L, "+٠٣٠٠" to 0L,
+        )) assertEquals(expected, GuideTime.parseNative(date + zone, NativeGuideFormat.RUST), zone)
+        assertEquals(utc, GuideTime.parseNative(date + "+💥", NativeGuideFormat.SWIFT))
+        assertEquals(utc - 10800, GuideTime.parseNative(date + "+٠٣٠٠", NativeGuideFormat.SWIFT))
+    }
+
     @Test fun sliceBoundsArchiveDepthAndShift() {
         val window = NativeGuideWindow(0.0, 0.0, 2.0)
         assertEquals(7200.0, window.shift)
