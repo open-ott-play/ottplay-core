@@ -89,6 +89,19 @@ for (const [file, required, forbidden] of [
     const source = fs.readFileSync(path.join(main, file), "utf8");
     assert(source.includes(required) && !forbidden.test(source), "Native XMLTV record rules must use the common core: " + file);
 }
+// Explicit server-only compatibility backend (see shared-core/README.md).
+// Old pinned consumers have no backend; newer consumers must keep the actual
+// shared reducer as their differential oracle, and native custom feeds shared.
+const serverRecords = path.join(main, "src-rs/core/src/xmltv/server_records.rs");
+if (fs.existsSync(serverRecords)) {
+    const xmltv = fs.readFileSync(path.join(main, "src-rs/core/src/xmltv.rs"), "utf8");
+    const oracle = fs.readFileSync(path.join(main, "src-rs/core/src/xmltv_differential_tests.rs"), "utf8");
+    assert(/if native\s*\{\s*Records::Shared\(RecordTokens::new\(true\)\?\)\s*\}\s*else\s*\{\s*Records::Server/.test(xmltv), "Only server records may bypass the shared reducer");
+    assert(/#\[cfg\(test\)\]\s*fn parse_xmltv_shared_reference/.test(xmltv) && xmltv.includes("Records::Shared(RecordTokens::new(false)?)"), "Server parity must use the actual shared rust profile");
+    assert(xmltv.includes('xmltv_differential_tests.rs') && oracle.includes("server_records_match_shared") && oracle.includes("parse_xmltv_shared_reference("), "Server kernel requires executable shared differential tests");
+    assert(!/Reader::|read_event|GuideIndex|sort_by_key|normalize_native_name|best_score/.test(fs.readFileSync(serverRecords, "utf8")), "Server exception cannot own another tokenizer, ordering or matching");
+    assert(fs.readFileSync(path.join(main, ".github/workflows/ci.yml"), "utf8").includes("cargo test --locked -p ottplay-core -p ottplay-server"), "Server differential tests must run in required Rust CI");
+}
 for (const [file, required] of [
     ["mobile-xmltv-epg/src/ios/MobileXmltvEpg.swift", ["nativeGuideSources", "nativeGuideUnowned", "nativeGuideLookup", "nativeGuideDisk", "nativeGuideLoadStart", "nativeGuideLoadNext", "NativeGuideSourceBatch"]],
     ["mobile-xmltv-epg/src/android/play/ott/foss/plugin/MobileXmltvEpgPlugin.kt", ["NativeGuideSources.urls", "NativeGuideSources.unowned", "NativeGuideSources.lookupAndroid", "NativeGuideSources.diskAndroid", "NativeSourceLoad.start", "NativeSourceLoad.next", "NativeSourceBatch("]],

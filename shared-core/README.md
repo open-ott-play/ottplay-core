@@ -320,6 +320,30 @@ with additional native batch/error boundaries. The actual shipping adapters run
 these fixtures in their existing CI suites. Native XMLTV field limits, root/DTD
 guards, decompress limits and programme caps remain platform protections.
 
+The Rust server has one explicit implementation exception: its `rust` record
+profile may execute in `src-rs/core/src/xmltv/server_records.rs` without the
+QuickJS token bridge. On a frozen 565,973-programme feed that bridge increased
+process-cold readiness from 10.28 seconds in v1.1.43 to 152.62 seconds in
+v1.1.47-beta.1 on the same Linux host. A native accumulator avoids that cost
+without another runtime, dependency or XML tokenizer. `XmltvRecords` remains the
+semantic reference; this is a duplicate implementation with a compatibility
+obligation, not a transfer of policy ownership to each client.
+The boundary is the profile: Tauri's default-feed cache also uses it; custom
+native feeds continue to select `rust-native` and the shared reducer.
+
+The exception covers only server record fields, admission and Rust timestamp
+conversion. Native custom-feed parsing, aliases, ordering, matching, source/cache
+ownership and refresh transitions continue to use the common implementation.
+FOSS core tests compare the fast path with the actual shipped QuickJS `rust`
+profile using the same tokenizer, including malformed input, error precedence,
+Unicode, field scope, repeated fields and calendar boundaries. A full-feed
+differential check and paired release Linux measurements qualify parser changes;
+default CI also bounds complete loading of 600,000 synthetic programmes on both
+container architectures. Changes to common `rust` record semantics must update
+the native implementation and pass those differential tests in the same delivery.
+`check-unification.cjs` recognizes this named exception and requires its oracle;
+moving another policy implementation outside the checked file is not permitted.
+
 `BrowserGuideRefresh` owns source normalization/order, per-URL stale-feed
 retention, progressive merge selection, callback generations, status, retry
 backoff and automatic-refresh notification decisions. Browser code keeps parsed
