@@ -18,5 +18,5 @@ class NativeGuideRefresh(count: Int, format: String) {
 }
 
 @JsExport
-fun nativeGuideRefreshInterval(format: String = "rust-server"): Int =
-    play.ott.core.NativeGuideRefresh.intervalSeconds(refreshFormat(format))
+fun nativeGuideRefreshInterval(format: String = "rust-server", consecutiveFailures: Int = 0): Int =
+    play.ott.core.NativeGuideRefresh.intervalSeconds(refreshFormat(format), consecutiveFailures)

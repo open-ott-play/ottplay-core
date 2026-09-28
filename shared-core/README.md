@@ -355,9 +355,12 @@ removed/reordered sources, empty success, cancellation and foreground refresh.
 Android and the Rust server. Android stops at the first failed feed, preserves
 data when there are no URLs, and validates the full current source under the
 host's refresh lock before committing. Rust continues after feed errors and
-returns a fresh empty result even when all feeds fail; a database-open error
-propagates, while a persistence error still returns fresh memory. Rust metadata
-uses shared first-feed ownership and its timer consumes the shared interval.
+preserves its current cache without opening the database when all configured
+feeds fail. Partial success, a successful empty feed and zero configured feeds
+retain their existing behavior. A database-open error propagates, while a
+persistence error still returns fresh memory. Rust metadata uses shared first-feed
+ownership. After each failed attempt the shared retry interval grows from one
+minute to a fifteen-minute cap; success restores the two-hour interval.
 Hosts retain original errors, payloads, clocks, mutexes and atomic SQLite writes.
 Public-API tests cover Android and Rust outcomes. Additional Android tests retain cancellation, completion-order commits
 and full rollback on a later insert failure. SQL conflict behavior is unchanged.
