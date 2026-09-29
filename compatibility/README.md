@@ -1,4 +1,16 @@
-# Tested release combinations — 2026-09-27
+# Reviewed compatibility combinations
+
+The latest recorded combinations are in
+[`reviewed-combinations-2026-09-29.json`](reviewed-combinations-2026-09-29.json):
+FOSS beta.9 with core45, separate published and merged-source Android/FOSS2 pairs,
+and the SWOP PR36 source contract. Each row separates host/browser/emulator PASS
+from physical `NOT_EXECUTED`. Android has no SWOP implementation.
+
+This evidence snapshot includes source-only and installed-artifact records; it is
+not an input to `check-release-compatibility.py`. That release-only verifier and
+the dated files below retain their original September 27 inputs and claims.
+
+## Historical tested release combinations — 2026-09-27
 
 `releases-2026-09-27.json` records exact consumer tags, commit IDs, shipped artifact
 digests, matching core source receipts and the scope of the tests actually run.
