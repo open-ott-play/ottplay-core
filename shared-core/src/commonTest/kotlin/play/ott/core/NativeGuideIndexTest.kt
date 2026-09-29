@@ -89,7 +89,14 @@ class NativeGuideIndexTest {
         assertEquals("b", index.resolve("", listOf("abc", "uvwxyz")))
     }
 
-    @Test fun indexedMatchesEqualLinearOracleAcrossProfilesAndAdversarialNames() {
+    @Test fun rustMatchesLinearOracleAcrossAdversarialNames() = checkProfile(NativeGuideFormat.RUST)
+    @Test fun swiftMatchesLinearOracleAcrossAdversarialNames() = checkProfile(NativeGuideFormat.SWIFT)
+    @Test fun archivedAndroidMatchesLinearOracleAcrossAdversarialNames() = checkProfile(NativeGuideFormat.ARCHIVED_ANDROID)
+    @Test fun webMatchesLinearOracleAcrossAdversarialNames() = checkProfile(NativeGuideFormat.WEB)
+
+    // Give each profile its own test budget while retaining the same deterministic
+    // datasets, measures, precision modes and match/resolve assertions.
+    private fun checkProfile(format: NativeGuideFormat) {
         val random = Random(91827)
         val tokens = listOf("a", "b", "ab", "abc", "xyz", "news", "tv", "east", "west", "sport",
             "РЕН", "ТВ", "яa", "ѐ", "é", "e\u0301", "💥", "𝟜", "١", "123", "__proto__", "constructor")
@@ -110,7 +117,7 @@ class NativeGuideIndexTest {
                     else -> phrase()
                 }
             }
-            for (format in NativeGuideFormat.entries) for (measure in measures) for (precision in precisions) {
+            for (measure in measures) for (precision in precisions) {
                 val oracle = LinearGuideOracle(rows, format, measure, precision)
                 val indexed = NativeGuideIndex(rows, format, measure, precision)
                 for ((i, query) in queries.withIndex()) {
