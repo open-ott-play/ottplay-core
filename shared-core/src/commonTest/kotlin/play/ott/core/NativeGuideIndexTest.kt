@@ -56,6 +56,37 @@ private class LinearGuideOracle(
 }
 
 class NativeGuideIndexTest {
+    @Test fun repeatedTerminalAliasesDoNotHideLongerContainedNames() {
+        val rows = List(2048) { NativeGuideEntry("short$it", "a") } + listOf(
+            NativeGuideEntry("first", "a".repeat(256)), NativeGuideEntry("second", "a".repeat(256)))
+        val oracle = LinearGuideOracle(rows, NativeGuideFormat.WEB, { it.length }, { it })
+        val indexed = NativeGuideIndex(rows, NativeGuideFormat.WEB)
+        for (query in listOf("a".repeat(512), "a".repeat(511) + "b", "ba".repeat(256)))
+            assertEquals(oracle.match(query), indexed.match(query))
+        assertEquals(NativeGuideMatch("first", 0.5), indexed.match("a".repeat(512)))
+        assertEquals("short0", indexed.resolve("", listOf("a".repeat(512), "a")))
+    }
+
+    @Test fun reverseSubstringTrieRetainsTerminalsAndUtf16Boundaries() {
+        val rows = listOf("abc", "ab", "abcd", "bc", "c", "abc HD", "\ud83d", "\udca5", "💥",
+            "💥ab", "x💥", "a b", "b a", "qualification", "qualifier", "__proto__")
+            .mapIndexed { i, name -> NativeGuideEntry("id$i", name) }
+        val queries = listOf("xabcdy", "xabcx", "xabx", "xcx", "abcabc", "x💥aby", "💥ab💥",
+            "x\ud83dy", "x\udca5y", "x a b y", "prefix__proto__suffix",
+            "ZZZ_OTTPLAY_QUALIFICATION_UNMATCHED_9E703D_2047_ALIAS")
+        val measures: List<(String) -> Int> = listOf({ it.length }, { it.encodeToByteArray().size },
+            { text -> text.count { !it.isLowSurrogate() } })
+        for (format in NativeGuideFormat.entries) for (measure in measures)
+            for (precision in listOf<(Double) -> Double>({ it }, { it.toFloat().toDouble() })) {
+                val oracle = LinearGuideOracle(rows, format, measure, precision)
+                val indexed = NativeGuideIndex(rows, format, measure, precision)
+                for (query in queries) {
+                    assertEquals(oracle.match(query), indexed.match(query), "$format/$query")
+                    assertEquals(oracle.resolve("", listOf(query, "c")), indexed.resolve("", listOf(query, "c")))
+                }
+            }
+    }
+
     @Test fun repeatedQueryPrefixesRetainOrderedScoring() {
         val rows = List(1024) { NativeGuideEntry("miss$it", "aaa$it") } + listOf(
             NativeGuideEntry("first", "a".repeat(256)), NativeGuideEntry("second", "a".repeat(256)))
@@ -89,7 +120,14 @@ class NativeGuideIndexTest {
         assertEquals("b", index.resolve("", listOf("abc", "uvwxyz")))
     }
 
-    @Test fun indexedMatchesEqualLinearOracleAcrossProfilesAndAdversarialNames() {
+    @Test fun rustMatchesLinearOracleAcrossAdversarialNames() = checkProfile(NativeGuideFormat.RUST)
+    @Test fun swiftMatchesLinearOracleAcrossAdversarialNames() = checkProfile(NativeGuideFormat.SWIFT)
+    @Test fun archivedAndroidMatchesLinearOracleAcrossAdversarialNames() = checkProfile(NativeGuideFormat.ARCHIVED_ANDROID)
+    @Test fun webMatchesLinearOracleAcrossAdversarialNames() = checkProfile(NativeGuideFormat.WEB)
+
+    // Give each profile its own test budget while retaining the same deterministic
+    // datasets, measures, precision modes and match/resolve assertions.
+    private fun checkProfile(format: NativeGuideFormat) {
         val random = Random(91827)
         val tokens = listOf("a", "b", "ab", "abc", "xyz", "news", "tv", "east", "west", "sport",
             "РЕН", "ТВ", "яa", "ѐ", "é", "e\u0301", "💥", "𝟜", "١", "123", "__proto__", "constructor")
@@ -110,7 +148,7 @@ class NativeGuideIndexTest {
                     else -> phrase()
                 }
             }
-            for (format in NativeGuideFormat.entries) for (measure in measures) for (precision in precisions) {
+            for (measure in measures) for (precision in precisions) {
                 val oracle = LinearGuideOracle(rows, format, measure, precision)
                 val indexed = NativeGuideIndex(rows, format, measure, precision)
                 for ((i, query) in queries.withIndex()) {
