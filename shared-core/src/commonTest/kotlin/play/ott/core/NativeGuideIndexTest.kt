@@ -56,6 +56,17 @@ private class LinearGuideOracle(
 }
 
 class NativeGuideIndexTest {
+    @Test fun repeatedTerminalAliasesDoNotHideLongerContainedNames() {
+        val rows = List(2048) { NativeGuideEntry("short$it", "a") } + listOf(
+            NativeGuideEntry("first", "a".repeat(256)), NativeGuideEntry("second", "a".repeat(256)))
+        val oracle = LinearGuideOracle(rows, NativeGuideFormat.WEB, { it.length }, { it })
+        val indexed = NativeGuideIndex(rows, NativeGuideFormat.WEB)
+        for (query in listOf("a".repeat(512), "a".repeat(511) + "b", "ba".repeat(256)))
+            assertEquals(oracle.match(query), indexed.match(query))
+        assertEquals(NativeGuideMatch("first", 0.5), indexed.match("a".repeat(512)))
+        assertEquals("short0", indexed.resolve("", listOf("a".repeat(512), "a")))
+    }
+
     @Test fun reverseSubstringTrieRetainsTerminalsAndUtf16Boundaries() {
         val rows = listOf("abc", "ab", "abcd", "bc", "c", "abc HD", "\ud83d", "\udca5", "💥",
             "💥ab", "x💥", "a b", "b a", "qualification", "qualifier", "__proto__")

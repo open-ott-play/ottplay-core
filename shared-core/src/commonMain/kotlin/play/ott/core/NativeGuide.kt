@@ -144,6 +144,7 @@ class NativeGuideIndex(
         }
 
         fun addMatches(candidate: String, selected: MutableSet<Int>) {
+            val visitedTerminals = mutableSetOf<Int>()
             // Traverse UTF-16 units, including isolated surrogates, just like
             // String.contains. Continue past terminals to find longer aliases.
             for (start in candidate.indices) {
@@ -163,7 +164,12 @@ class NativeGuideIndex(
                     }
                     if (target < 0) break
                     node = target
-                    for (row in rowStarts[node] until rowStarts[node + 1]) selected.add(rows[row])
+                    val first = rowStarts[node]
+                    val limit = rowStarts[node + 1]
+                    // Repeated occurrences cannot add new aliases. Expand each
+                    // terminal once, but keep traversing toward longer names.
+                    if (first < limit && visitedTerminals.add(node))
+                        for (row in first until limit) selected.add(rows[row])
                 }
             }
         }
