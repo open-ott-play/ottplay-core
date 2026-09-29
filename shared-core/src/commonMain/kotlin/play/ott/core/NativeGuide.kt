@@ -92,13 +92,57 @@ class NativeGuideIndex(
     private val exact = mutableMapOf<String, String>().also { map ->
         for (name in names) if (name.text !in map) map[name.text] = name.id
     }
+    // UTF-16 trigrams only exclude impossible substrings; scoring still uses the
+    // caller's length/precision primitives. Prefixes also cover one/two-unit names.
+    private val grams = mutableMapOf<String, MutableList<Int>>()
+    private val prefixes = mutableMapOf<String, MutableList<Int>>()
+    private val wordNames = mutableMapOf<String, MutableList<Int>>()
+
+    init {
+        fun add(index: MutableMap<String, MutableList<Int>>, key: String, row: Int) {
+            val posting = index.getOrPut(key) { mutableListOf() }
+            if (posting.lastOrNull() != row) posting.add(row)
+        }
+        for ((row, name) in names.withIndex()) {
+            add(prefixes, name.text.take(3), row)
+            for (start in 0..name.text.length - 3)
+                add(grams, name.text.substring(start, start + 3), row)
+            if (name.words.size >= 2)
+                for (word in name.words) add(wordNames, word, row)
+        }
+    }
+
+    private fun candidates(candidate: String, words: Set<String>): List<Int> {
+        // A short query has no trigram. Keep its exact historical scan, including
+        // inside-word and supplementary-character matches, without a larger index.
+        if (candidate.length < 3) return names.indices.toList()
+        val selected = mutableSetOf<Int>()
+        var containing: List<Int>? = null
+        for (start in 0..candidate.length - 3) {
+            val posting = grams[candidate.substring(start, start + 3)]
+            if (posting == null) { containing = emptyList(); break }
+            if (containing == null || posting.size < containing.size) containing = posting
+        }
+        if (containing != null) selected.addAll(containing)
+        val visitedPrefixes = mutableSetOf<String>()
+        for (start in candidate.indices)
+            for (size in 1..minOf(3, candidate.length - start)) {
+                val prefix = candidate.substring(start, start + size)
+                if (visitedPrefixes.add(prefix)) prefixes[prefix]?.let { selected.addAll(it) }
+            }
+        if (words.size >= 2)
+            for (word in words) wordNames[word]?.let { selected.addAll(it) }
+        // Index lookup order must not replace first-alias precedence on score ties.
+        return selected.sorted()
+    }
 
     private fun fuzzy(candidate: String): NativeGuideMatch? {
         if (candidate.isEmpty()) return null
         val length = measure(candidate)
         val words = candidate.split(' ').toSet()
         var best: NativeGuideMatch? = null
-        for (name in names) {
+        for (row in candidates(candidate, words)) {
+            val name = names[row]
             val score = if (candidate.contains(name.text) || name.text.contains(candidate)) {
                 precision(precision(minOf(length, name.length).toDouble()) / precision(maxOf(length, name.length).toDouble()))
             } else {

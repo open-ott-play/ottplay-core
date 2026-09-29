@@ -166,6 +166,32 @@ parser's invalid-date rollover and Swift's historical Julian cutover are not
 part of this contract. Those affect invalid/pre-broadcast dates; contemporary
 XMLTV fixtures retain their results. Existing cache/storage/wire shapes remain.
 
+`NativeGuideIndex` builds immutable trigram, short-prefix and word postings once
+per feed. They select a superset of possible fuzzy matches; the original scorer
+still runs in alias order. Exact IDs and all exact candidate names keep priority,
+substring scoring precedes word overlap even below the threshold, and ties keep
+the first alias/candidate. UTF-16 index keys do not replace the host's scoring
+length or precision. Queries shorter than three UTF-16 units retain a full scan.
+Repeated query prefixes visit each posting only once. A query never mutates the
+index, so an interrupted host evaluation cannot leave partial lookup state.
+
+`NativeGuideIndexTest` compares the retained linear algorithm across all four
+profiles, three length primitives and both double/float precision, including
+randomized Unicode, threshold, duplicate and tie-order cases. An optional offline
+benchmark uses the generated distribution (no network or consumer changes):
+
+```sh
+node scripts/benchmark-native-guide.cjs
+node scripts/benchmark-native-guide.cjs /path/to/alias-pairs.json /path/to/previous-core.js
+```
+
+The alias fixture is an ordered JSON array of `[id, displayName]` pairs including
+channel `18` / `РЕН ТВ HD`. The benchmark validates a 2,048-channel catalogue with
+32 known channels and 2,016 misses, plus maximum-length repeated-prefix queries.
+An optional old bundle checks IDs and public scores on a bounded input sample;
+it does not repeat the pathological 2,048-channel linear scan. Timings are reported
+without a machine-dependent CI threshold and do not certify physical devices.
+
 `NativeGuideClock` caches at most 4,096 inputs of at most 64 UTF-16 code units per
 parser/VM. Eviction uses a ring, so unique-date feeds do not require a scan per
 eviction. Date arithmetic uses exact integers in double precision for XMLTV's

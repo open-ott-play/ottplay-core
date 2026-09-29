@@ -1,0 +1,128 @@
+package play.ott.core
+
+import kotlin.random.Random
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertNull
+
+/** Retained pre-index algorithm (51e60c5), independent of candidate selection. */
+private class LinearGuideOracle(
+    entries: List<NativeGuideEntry>,
+    private val format: NativeGuideFormat,
+    private val measure: (String) -> Int,
+    private val precision: (Double) -> Double
+) {
+    private data class Name(val id: String, val text: String, val length: Int, val words: Set<String>)
+    private val ids = entries.map { it.id }.toSet()
+    private val names = entries.map {
+        val text = NativeGuideNames.normalized(it.name, format)
+        Name(it.id, text, measure(text), text.split(' ').toSet())
+    }.filter { it.text.isNotEmpty() }
+    private val exact = mutableMapOf<String, String>().also { map ->
+        for (name in names) if (name.text !in map) map[name.text] = name.id
+    }
+    private fun fuzzy(candidate: String): NativeGuideMatch? {
+        if (candidate.isEmpty()) return null
+        val length = measure(candidate)
+        val words = candidate.split(' ').toSet()
+        var best: NativeGuideMatch? = null
+        for (name in names) {
+            val score = if (candidate.contains(name.text) || name.text.contains(candidate)) {
+                precision(precision(minOf(length, name.length).toDouble()) / precision(maxOf(length, name.length).toDouble()))
+            } else {
+                val common = words.count { it in name.words }
+                if (common < maxOf(2, minOf(words.size, name.words.size) / 2)) continue
+                precision(precision(common.toDouble()) / precision(maxOf(words.size, name.words.size).toDouble()))
+            }
+            if (score >= precision(0.4) && score > (best?.score ?: 0.0)) best = NativeGuideMatch(name.id, score)
+        }
+        return best
+    }
+    fun match(value: String): NativeGuideMatch? {
+        val name = NativeGuideNames.normalized(value, format)
+        return exact[name]?.let { NativeGuideMatch(it, 1.0) } ?: fuzzy(name)
+    }
+    fun resolve(id: String, candidates: List<String>): String? {
+        if (id.isNotEmpty() && id in ids) return id
+        val normalized = candidates.map { NativeGuideNames.normalized(it, format) }
+        for (name in normalized) exact[name]?.let { return it }
+        var best: NativeGuideMatch? = null
+        for (name in normalized) {
+            val next = fuzzy(name) ?: continue
+            if (next.score > (best?.score ?: 0.0)) best = next
+        }
+        return best?.id
+    }
+}
+
+class NativeGuideIndexTest {
+    @Test fun repeatedQueryPrefixesRetainOrderedScoring() {
+        val rows = List(1024) { NativeGuideEntry("miss$it", "aaa$it") } + listOf(
+            NativeGuideEntry("first", "a".repeat(256)), NativeGuideEntry("second", "a".repeat(256)))
+        val oracle = LinearGuideOracle(rows, NativeGuideFormat.WEB, { it.length }, { it })
+        val indexed = NativeGuideIndex(rows, NativeGuideFormat.WEB)
+        for (query in listOf("a".repeat(512), "a".repeat(511) + "b", "xyz".repeat(170)))
+            assertEquals(oracle.match(query), indexed.match(query))
+        assertEquals(NativeGuideMatch("first", 0.5), indexed.match("a".repeat(512)))
+    }
+
+    @Test fun containmentPrecedesWordScoreAndThresholdIsInclusive() {
+        assertNull(NativeGuideIndex(listOf(NativeGuideEntry("one", "a b x x x"))).match("a b"))
+        assertEquals(NativeGuideMatch("one", 0.4), NativeGuideIndex(listOf(NativeGuideEntry("one", "abcde"))).match("ab"))
+        assertEquals(NativeGuideMatch("one", 0.4), NativeGuideIndex(listOf(NativeGuideEntry("one", "ab"))).match("abcde"))
+        assertEquals(NativeGuideMatch("one", 0.4), NativeGuideIndex(listOf(NativeGuideEntry("one", "a b c d e"))).match("a b f g h"))
+        assertEquals(NativeGuideMatch("one", 2.0 / 3), NativeGuideIndex(listOf(NativeGuideEntry("one", "east news tv"))).match("west west news tv"))
+    }
+
+    @Test fun postingsCannotChangeAliasOrCandidateTieOrder() {
+        for (rows in listOf(
+            listOf(NativeGuideEntry("first", "abcx"), NativeGuideEntry("second", "xabc")),
+            listOf(NativeGuideEntry("second", "xabc"), NativeGuideEntry("first", "abcx"))
+        )) assertEquals(rows.first().id, NativeGuideIndex(rows).match("abc")?.id)
+        val index = NativeGuideIndex(listOf(
+            NativeGuideEntry(" raw ", ""), NativeGuideEntry("a", "abcdef"),
+            NativeGuideEntry("b", "uvwxyz"), NativeGuideEntry("duplicate", "abcdef HD")))
+        assertEquals(" raw ", index.resolve(" raw ", listOf("uvwxyz")))
+        assertEquals("a", index.match("abcdef")?.id)
+        assertEquals("a", index.resolve("", listOf("abc", "uvw")))
+        assertEquals("b", index.resolve("", listOf("uvw", "abc")))
+        assertEquals("b", index.resolve("", listOf("abc", "uvwxyz")))
+    }
+
+    @Test fun indexedMatchesEqualLinearOracleAcrossProfilesAndAdversarialNames() {
+        val random = Random(91827)
+        val tokens = listOf("a", "b", "ab", "abc", "xyz", "news", "tv", "east", "west", "sport",
+            "РЕН", "ТВ", "яa", "ѐ", "é", "e\u0301", "💥", "𝟜", "١", "123", "__proto__", "constructor")
+        val separators = listOf(" ", "  ", "\u00a0", "\u0085", "\ufeff")
+        fun phrase(): String = List(random.nextInt(1, 6)) { tokens[random.nextInt(tokens.size)] }
+            .joinToString(separators[random.nextInt(separators.size)])
+        val measures: List<(String) -> Int> = listOf({ it.length }, { it.encodeToByteArray().size }, { text -> text.count { !it.isLowSurrogate() } })
+        val precisions: List<(Double) -> Double> = listOf({ it }, { it.toFloat().toDouble() })
+        val fixed = listOf("", "a", "ab", "abc", "abcd", "aaaaaa", "xyzabcxyz", "💥", "x💥y", "\ud800", "\udc00",
+            "a b", "a b x x x", "west west news tv", " HD РЕН ТВ +3 (Москва)", "__proto__", "constructor")
+        repeat(4) { generation ->
+            val rows = (fixed + List(55) { phrase() }).mapIndexed { i, text -> NativeGuideEntry("id${i % 37}", text) }
+            val queries = fixed + rows.map { it.name } + List(100) {
+                when (random.nextInt(4)) {
+                    0 -> "prefix " + rows[random.nextInt(rows.size)].name + " suffix"
+                    1 -> rows[random.nextInt(rows.size)].name.take(random.nextInt(1, 7))
+                    2 -> phrase() + " HD +7"
+                    else -> phrase()
+                }
+            }
+            for (format in NativeGuideFormat.entries) for (measure in measures) for (precision in precisions) {
+                val oracle = LinearGuideOracle(rows, format, measure, precision)
+                val indexed = NativeGuideIndex(rows, format, measure, precision)
+                for ((i, query) in queries.withIndex()) {
+                    val context = "$generation/$format/$i/$query"
+                    assertEquals(oracle.match(query), indexed.match(query), context)
+                    val candidates = listOf(query, queries[(i + 1) % queries.size], query)
+                    for (id in listOf("", "missing", rows[i % rows.size].id))
+                        assertEquals(oracle.resolve(id, candidates), indexed.resolve(id, candidates), context + "/" + id)
+                }
+            }
+        }
+        // A new index must not retain aliases/postings from the previous feed.
+        assertNull(NativeGuideIndex(listOf(NativeGuideEntry("new", "different"))).match("abcdef"))
+    }
+}
