@@ -56,6 +56,26 @@ private class LinearGuideOracle(
 }
 
 class NativeGuideIndexTest {
+    @Test fun reverseSubstringTrieRetainsTerminalsAndUtf16Boundaries() {
+        val rows = listOf("abc", "ab", "abcd", "bc", "c", "abc HD", "\ud83d", "\udca5", "💥",
+            "💥ab", "x💥", "a b", "b a", "qualification", "qualifier", "__proto__")
+            .mapIndexed { i, name -> NativeGuideEntry("id$i", name) }
+        val queries = listOf("xabcdy", "xabcx", "xabx", "xcx", "abcabc", "x💥aby", "💥ab💥",
+            "x\ud83dy", "x\udca5y", "x a b y", "prefix__proto__suffix",
+            "ZZZ_OTTPLAY_QUALIFICATION_UNMATCHED_9E703D_2047_ALIAS")
+        val measures: List<(String) -> Int> = listOf({ it.length }, { it.encodeToByteArray().size },
+            { text -> text.count { !it.isLowSurrogate() } })
+        for (format in NativeGuideFormat.entries) for (measure in measures)
+            for (precision in listOf<(Double) -> Double>({ it }, { it.toFloat().toDouble() })) {
+                val oracle = LinearGuideOracle(rows, format, measure, precision)
+                val indexed = NativeGuideIndex(rows, format, measure, precision)
+                for (query in queries) {
+                    assertEquals(oracle.match(query), indexed.match(query), "$format/$query")
+                    assertEquals(oracle.resolve("", listOf(query, "c")), indexed.resolve("", listOf(query, "c")))
+                }
+            }
+    }
+
     @Test fun repeatedQueryPrefixesRetainOrderedScoring() {
         val rows = List(1024) { NativeGuideEntry("miss$it", "aaa$it") } + listOf(
             NativeGuideEntry("first", "a".repeat(256)), NativeGuideEntry("second", "a".repeat(256)))

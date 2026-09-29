@@ -92,11 +92,82 @@ class NativeGuideIndex(
     private val exact = mutableMapOf<String, String>().also { map ->
         for (name in names) if (name.text !in map) map[name.text] = name.id
     }
-    // UTF-16 trigrams only exclude impossible substrings; scoring still uses the
-    // caller's length/precision primitives. Prefixes also cover one/two-unit names.
+    // UTF-16 indexes only exclude impossible substrings; scoring still uses the
+    // caller's length/precision primitives. The trie includes one/two-unit names.
     private val grams = mutableMapOf<String, MutableList<Int>>()
-    private val prefixes = mutableMapOf<String, MutableList<Int>>()
+    private val containedNames = ContainedNames(names)
     private val wordNames = mutableMapOf<String, MutableList<Int>>()
+
+    /** Compact immutable edges avoid allocating/hashing every query substring. */
+    private class ContainedNames(names: List<Name>) {
+        private class Node {
+            val children = mutableMapOf<Char, Int>()
+            val rows = mutableListOf<Int>()
+        }
+        private val edgeStarts: IntArray
+        private val edgeUnits: IntArray
+        private val edgeTargets: IntArray
+        private val rowStarts: IntArray
+        private val rows: IntArray
+
+        init {
+            val nodes = mutableListOf(Node())
+            for ((row, name) in names.withIndex()) {
+                var node = 0
+                for (unit in name.text) {
+                    val children = nodes[node].children
+                    node = children[unit] ?: nodes.size.also { next ->
+                        children[unit] = next
+                        nodes.add(Node())
+                    }
+                }
+                nodes[node].rows.add(row)
+            }
+            edgeStarts = IntArray(nodes.size + 1)
+            edgeUnits = IntArray(nodes.size - 1)
+            edgeTargets = IntArray(nodes.size - 1)
+            rowStarts = IntArray(nodes.size + 1)
+            rows = IntArray(names.size)
+            var edge = 0
+            var row = 0
+            for ((index, node) in nodes.withIndex()) {
+                edgeStarts[index] = edge
+                for (unit in node.children.keys.sorted()) {
+                    edgeUnits[edge] = unit.code
+                    edgeTargets[edge++] = node.children.getValue(unit)
+                }
+                rowStarts[index] = row
+                for (name in node.rows) rows[row++] = name
+            }
+            edgeStarts[nodes.size] = edge
+            rowStarts[nodes.size] = row
+        }
+
+        fun addMatches(candidate: String, selected: MutableSet<Int>) {
+            // Traverse UTF-16 units, including isolated surrogates, just like
+            // String.contains. Continue past terminals to find longer aliases.
+            for (start in candidate.indices) {
+                var node = 0
+                var end = start
+                while (end < candidate.length) {
+                    val unit = candidate[end++].code
+                    var low = edgeStarts[node]
+                    var high = edgeStarts[node + 1] - 1
+                    var target = -1
+                    while (low <= high) {
+                        val middle = (low + high).ushr(1)
+                        val next = edgeUnits[middle]
+                        if (next < unit) low = middle + 1
+                        else if (next > unit) high = middle - 1
+                        else { target = edgeTargets[middle]; break }
+                    }
+                    if (target < 0) break
+                    node = target
+                    for (row in rowStarts[node] until rowStarts[node + 1]) selected.add(rows[row])
+                }
+            }
+        }
+    }
 
     init {
         fun add(index: MutableMap<String, MutableList<Int>>, key: String, row: Int) {
@@ -104,7 +175,6 @@ class NativeGuideIndex(
             if (posting.lastOrNull() != row) posting.add(row)
         }
         for ((row, name) in names.withIndex()) {
-            add(prefixes, name.text.take(3), row)
             for (start in 0..name.text.length - 3)
                 add(grams, name.text.substring(start, start + 3), row)
             if (name.words.size >= 2)
@@ -124,12 +194,7 @@ class NativeGuideIndex(
             if (containing == null || posting.size < containing.size) containing = posting
         }
         if (containing != null) selected.addAll(containing)
-        val visitedPrefixes = mutableSetOf<String>()
-        for (start in candidate.indices)
-            for (size in 1..minOf(3, candidate.length - start)) {
-                val prefix = candidate.substring(start, start + size)
-                if (visitedPrefixes.add(prefix)) prefixes[prefix]?.let { selected.addAll(it) }
-            }
+        containedNames.addMatches(candidate, selected)
         if (words.size >= 2)
             for (word in words) wordNames[word]?.let { selected.addAll(it) }
         // Index lookup order must not replace first-alias precedence on score ties.
