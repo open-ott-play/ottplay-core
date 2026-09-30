@@ -45,6 +45,15 @@ object NativeGuideNames {
         return CoreText.trim(result.toString()) { space(it, format) }
     }
 
+    internal fun hasShift(value: String, format: NativeGuideFormat): Boolean =
+        stripShift(value, format) != CoreText.trim(value) { space(it, format) }
+
+    internal fun intact(value: String, format: NativeGuideFormat): String {
+        val collapsed = CoreText.normalizedSpaces(value.lowercase()) { space(it, format) }
+        return if (format == NativeGuideFormat.ARCHIVED_ANDROID)
+            CoreText.trim(collapsed, CoreText::androidSpace) else collapsed
+    }
+
     fun regionalShift(value: String, format: NativeGuideFormat = NativeGuideFormat.RUST): Int {
         for (index in value.indices) {
             val shift = shiftAt(value, index, format) ?: continue
@@ -92,6 +101,25 @@ class NativeGuideIndex(
     private val exact = mutableMapOf<String, String>().also { map ->
         for (name in names) if (name.text !in map) map[name.text] = name.id
     }
+    private class IntactNames(entries: List<NativeGuideEntry>, format: NativeGuideFormat) {
+        val exact = unique(entries) { NativeGuideNames.intact(it, format) }
+        val quality = unique(entries) { GuideNames.stripQuality(NativeGuideNames.intact(it, format)) }
+
+        private fun unique(entries: List<NativeGuideEntry>, key: (String) -> String): Map<String, String?> {
+            val result = mutableMapOf<String, String?>()
+            for (entry in entries) {
+                val name = key(entry.name)
+                if (name !in result) result[name] = entry.id
+                else if (result[name] != entry.id) result[name] = null
+            }
+            return result
+        }
+    }
+    // Only collisions can change the legacy first-ID answer. Keep their intact
+    // aliases so an unshifted name cannot lose to a stripped regional suffix.
+    private val intact = entries.groupBy { NativeGuideNames.normalized(it.name, format) }
+        .filterValues { rows -> rows.any { it.id != rows[0].id } }
+        .mapValues { (_, rows) -> IntactNames(rows, format) }
     // UTF-16 indexes only exclude impossible substrings; scoring still uses the
     // caller's length/precision primitives. The trie includes one/two-unit names.
     private val grams = mutableMapOf<String, MutableList<Int>>()
@@ -235,7 +263,20 @@ class NativeGuideIndex(
     fun resolve(id: String, candidates: List<String>): String? {
         if (id.isNotEmpty() && id in ids) return id
         val normalized = candidates.map { NativeGuideNames.normalized(it, format) }
-        for (name in normalized) exact[name]?.let { return it }
+        for ((index, name) in normalized.withIndex()) {
+            val first = exact[name] ?: continue
+            val candidate = candidates[index]
+            val identity = intact[name]
+            // This refines one existing candidate bucket, not candidate priority
+            // or regional timing. Shifted requests and ambiguous aliases retain
+            // the legacy answer; callers continue to apply their existing shift.
+            if (identity != null && !NativeGuideNames.hasShift(candidate, format)) {
+                val key = NativeGuideNames.intact(candidate, format)
+                identity.exact[key]?.let { return it }
+                identity.quality[GuideNames.stripQuality(key)]?.let { return it }
+            }
+            return first
+        }
         var best: NativeGuideMatch? = null
         for (name in normalized) {
             val next = fuzzy(name) ?: continue

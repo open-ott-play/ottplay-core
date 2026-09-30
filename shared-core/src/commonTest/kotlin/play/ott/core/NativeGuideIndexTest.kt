@@ -5,9 +5,10 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
-/** Retained pre-index algorithm (51e60c5), independent of candidate selection. */
+/** Retained pre-index scorer (51e60c5), with the intentional intact resolve rule
+ * checked by scanning source rows rather than the production identity maps. */
 private class LinearGuideOracle(
-    entries: List<NativeGuideEntry>,
+    private val entries: List<NativeGuideEntry>,
     private val format: NativeGuideFormat,
     private val measure: (String) -> Int,
     private val precision: (Double) -> Double
@@ -45,7 +46,22 @@ private class LinearGuideOracle(
     fun resolve(id: String, candidates: List<String>): String? {
         if (id.isNotEmpty() && id in ids) return id
         val normalized = candidates.map { NativeGuideNames.normalized(it, format) }
-        for (name in normalized) exact[name]?.let { return it }
+        for ((index, name) in normalized.withIndex()) {
+            val first = exact[name] ?: continue
+            val candidate = candidates[index]
+            if (!NativeGuideNames.hasShift(candidate, format)) {
+                val bucket = entries.filter { NativeGuideNames.normalized(it.name, format) == name }
+                val identities: List<(String) -> String> = listOf(
+                    { NativeGuideNames.intact(it, format) },
+                    { GuideNames.stripQuality(NativeGuideNames.intact(it, format)) })
+                for (identity in identities) {
+                    val query = identity(candidate)
+                    bucket.filter { identity(it.name) == query }.map { it.id }.distinct()
+                        .singleOrNull()?.let { return it }
+                }
+            }
+            return first
+        }
         var best: NativeGuideMatch? = null
         for (name in normalized) {
             val next = fuzzy(name) ?: continue
