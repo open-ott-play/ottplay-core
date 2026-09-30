@@ -34,6 +34,34 @@ class NativeGuideTest {
         assertEquals("first +٤", NativeGuideNames.normalized("First +٤ HD", NativeGuideFormat.ARCHIVED_ANDROID))
     }
 
+    @Test fun negativeRegionalMarkersRequireAnExplicitBoundary() {
+        for (format in NativeGuideFormat.entries) {
+            for (brand in listOf("Россия-1", "Россия-24", "ТВ-3", "News-7", "News)-7", "\ud800-7")) {
+                assertEquals(0, NativeGuideNames.regionalShift(brand, format), "$format/$brand")
+                assertEquals(brand, NativeGuideNames.stripShift(brand, format))
+                assertEquals(brand.lowercase(), NativeGuideNames.normalized(brand, format))
+            }
+            for (value in listOf("News -7", "News(-7)", "News ( -7h)", "News\t- 7ч")) {
+                assertEquals(-7, NativeGuideNames.regionalShift(value, format), "$format/$value")
+                assertEquals("news", NativeGuideNames.normalized(value, format))
+            }
+            assertEquals(-7, NativeGuideNames.regionalShift("-7 News", format))
+            assertEquals("news", NativeGuideNames.normalized("-7 News", format))
+            for (value in listOf("News+7", "News +7", "News(+7)")) {
+                assertEquals(7, NativeGuideNames.regionalShift(value, format))
+                assertEquals("news", NativeGuideNames.normalized(value, format))
+            }
+            assertEquals(7, NativeGuideNames.regionalShift("ТВ-3 +7", format))
+            assertEquals("тв-3", NativeGuideNames.normalized("ТВ-3 +7", format))
+            // Marker boundaries use the same whitespace profile as their contents.
+            for ((separator, allowed) in listOf(
+                '\u0085' to (format == NativeGuideFormat.RUST || format == NativeGuideFormat.SWIFT),
+                '\ufeff' to (format == NativeGuideFormat.WEB),
+                '\u00a0' to (format != NativeGuideFormat.ARCHIVED_ANDROID),
+            )) assertEquals(if (allowed) -7 else 0, NativeGuideNames.regionalShift("News$separator-7", format))
+        }
+    }
+
     @Test fun markerFastPathsPreserveLiteralNormalizationRules() {
         val cases = listOf(
             Triple(" HD First TV ", "HD First TV", "first tv"),

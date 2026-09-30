@@ -196,6 +196,23 @@ function verify(context, profile) {
     assert.equal(native.match("unrelated"), null);
     assert.equal(JSON.stringify(core.nativeGuideSlice([[0, 3600], [172800, 180000]], 0, 48, 0)), "[[0,0,3600]]");
     for (const format of ["rust", "swift", "archived-android", "web"]) {
+        const brands = [["r24", "Россия-24"], ["r1", "Россия-1"]];
+        for (const rows of [brands, brands.slice().reverse()]) {
+            const guide = new core.NativeGuide(rows, format, value => value.length, value => value);
+            for (const [id, name] of brands) {
+                assert.equal(guide.resolve("missing", [name]), id);
+                assert.equal(guide.resolve(id, [name]), id);
+                assert.equal(core.nativeGuideShift(name, format), 0);
+                assert.equal(JSON.stringify(core.nativeGuideSlice([[1799999400, 1800001800]], 1800000000, 24,
+                    core.nativeGuideShift(name, format))), "[[0,1799999400,1800001800]]");
+            }
+        }
+        for (const [name, hours] of [["Россия-1+7", 7], ["Россия-1 -7", -7], ["Россия-1(-7)", -7]]) {
+            assert.equal(core.nativeGuideShift(name, format), hours);
+            assert.equal(core.nativeGuideName(name, format), "россия-1");
+            assert.equal(JSON.stringify(core.nativeGuideSlice([[1799999400, 1800001800]], 1800000000, 24, hours)),
+                JSON.stringify([[0, 1799999400 + hours * 3600, 1800001800 + hours * 3600]]));
+        }
         const regional = [["1109", "СТС LOVE (+7)"], ["1109", "СТС Love +7"]];
         const base = [["1322", "СТС Love"], ["1322", "СТС Love orig"]];
         for (const rows of [regional.concat(base), base.concat(regional)]) {

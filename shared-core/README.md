@@ -158,7 +158,11 @@ Alpine/musl. Engine contexts have no application I/O callbacks. Only trusted
 compiler output is evaluated; channel data crosses typed function arguments.
 
 Native compatibility profiles keep ID/alias ordering, quality/shift stripping,
-UTF-8 vs grapheme vs UTF-16 length and Rust's float precision explicit. Rust
+UTF-8 vs grapheme vs UTF-16 length and Rust's float precision explicit. Negative
+regional markers are recognized only at the start or after profile whitespace
+or `(`. Attached negative numbers, such as `Россия-1` and `Россия-24`, remain part
+of the name and imply no time shift in every profile; use `News -7` or `News(-7)`
+for a negative offset. The existing attached positive form `News+7` is unchanged. Rust
 keeps its fourteen-digit date and permissive suffix contract, including the
 zero-second malformed-input sentinel. Swift accepts Unicode decimal date digits.
 Native dates now share the proleptic Gregorian calendar: the archived Java

@@ -15,6 +15,8 @@ object NativeGuideNames {
 
     private fun shiftAt(value: String, start: Int, format: NativeGuideFormat): Shift? {
         if (value[start] != '+' && value[start] != '-') return null
+        // An attached negative number can be a brand, such as Россия-1.
+        if (value[start] == '-' && start > 0 && value[start - 1] != '(' && !space(value[start - 1], format)) return null
         var end = start + 1
         while (end < value.length && space(value[end], format)) end++
         val digits = end
