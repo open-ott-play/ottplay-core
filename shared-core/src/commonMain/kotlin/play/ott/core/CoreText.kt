@@ -40,6 +40,13 @@ internal object CoreText {
     }
 
     inline fun normalizedSpaces(value: String, whitespace: (Char) -> Boolean = ::space): String {
+        var index = 0
+        while (index < value.length) {
+            val character = value[index]
+            if (whitespace(character) && (character != ' ' || index == 0 || index == value.lastIndex || value[index - 1] == ' ')) break
+            index++
+        }
+        if (index == value.length) return value
         val result = StringBuilder()
         var pendingSpace = false
         for (character in value) {

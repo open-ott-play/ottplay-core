@@ -36,6 +36,7 @@ object NativeGuideNames {
     }
 
     fun stripShift(value: String, format: NativeGuideFormat = NativeGuideFormat.RUST): String {
+        if ('+' !in value && '-' !in value) return CoreText.trim(value) { space(it, format) }
         val result = StringBuilder()
         var index = 0
         while (index < value.length) {
@@ -68,13 +69,16 @@ object NativeGuideNames {
 
     fun normalized(value: String, format: NativeGuideFormat = NativeGuideFormat.RUST): String {
         val shifted = stripShift(value.lowercase(), format)
-        val result = StringBuilder()
-        var index = 0
-        while (index < shifted.length) {
-            val end = if (shifted[index] == '(') shifted.indexOf(')', index + 1) else -1
-            if (end < 0) result.append(shifted[index++]) else index = end + 1
+        val unparenthesized = if ('(' !in shifted) shifted else {
+            val result = StringBuilder()
+            var index = 0
+            while (index < shifted.length) {
+                val end = if (shifted[index] == '(') shifted.indexOf(')', index + 1) else -1
+                if (end < 0) result.append(shifted[index++]) else index = end + 1
+            }
+            result.toString()
         }
-        val collapsed = CoreText.normalizedSpaces(result.toString()) { space(it, format) }
+        val collapsed = CoreText.normalizedSpaces(unparenthesized) { space(it, format) }
         return GuideNames.stripQuality(if (format == NativeGuideFormat.ARCHIVED_ANDROID)
             CoreText.trim(collapsed, CoreText::androidSpace) else collapsed)
     }
