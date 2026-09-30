@@ -1,0 +1,334 @@
+{
+  "schema": "reviewed-release-and-source-combinations-v1",
+  "observed_date": "2026-09-30",
+  "scope": "Exact recorded combinations. Source/host/browser PASS and physical acceptance are separate. No current-main substitution or full client cross-product is qualified.",
+  "evidence_semantics": "Evidence paths are relative to the retained local acceptance archive root; receipts are identified by SHA-256 and are not shipped in this repository. This snapshot is not input to the historical release-only verifier.",
+  "physical_status_semantics": "NOT_EXECUTED means no physical acceptance execution for this exact combination is established by these receipts; it does not report current device/UI/installation state.",
+  "core_packages": {
+    "core45": {
+      "source_commit": "45c25563cd2b833d23fd46dbe61cb9374b716d72",
+      "source_sha256": "d41bfc2864af2e7b425ac62ee9fd8f294070ad3fea60a967f5ca6d045093f4dc",
+      "manifest_sha256": "95ee14aa1b2bcd4b515d546e5c8591f5b9c5527a5cad9d17f7613309da155bbf",
+      "artifacts": {
+        "ottplay-core.js": "2b023f379336793fd44a31bde894070784ab33d6bc196bb0f596f9c363be4ea6",
+        "ottplay-core.jar": "d600debf5eb0c5a0b6589366263a33e05a3ce01c0fd586effa64b963b485e58c"
+      }
+    },
+    "core03": {
+      "source_commit": "03f8ff3c39147ff5cd617ec97d20dad95e361730",
+      "source_sha256": "1f6d25045ad80c3ee449f6ed2affbf051bfff73939c4db9833da7ee22e1da67f",
+      "artifacts": {
+        "ottplay-core.js": "ec2b011bf6d327055b3790fdecbf288235b3812f3688c2b1f93ef68c1242c6a6",
+        "ottplay-core.jar": "f77263c612a34bc526a427bd8ff98c9222caec369bd51d0684c0cc4a67d2f859"
+      }
+    },
+    "core-f4cbc7e": {
+      "source_commit": "f4cbc7e153404814b98fb95037884169e25d8728",
+      "source_sha256": "e608567e67411129887c28e20d1709afafc7cd554f440f5a737e9105597513e1",
+      "source_files_matched": 121,
+      "manifest_sha256": "7c798011c6c9da39c9a4bb7d9bfcf56f150842ce25c4076ead939bbbc22f1157",
+      "artifacts": {
+        "ottplay-core.js": "7a02ff0624f20086a01ecab5184133cbcee726ef6d44053680bb8de480c5114b"
+      },
+      "runtime": {
+        "kotlin": "2.4.20",
+        "jvm": 17,
+        "javascript": "ES5 with core-js 3.50.0 on legacy hosts"
+      }
+    }
+  },
+  "combinations": [
+    {
+      "id": "foss-beta9",
+      "repository": "open-ott-play/ottplay-foss",
+      "release": "v1.1.51-beta.9",
+      "source_commit": "948284c93bfa5619e2553fc46fb40b4fe2575e0a",
+      "core_package": "core45",
+      "release_manifest_sha256": "8a282c1815baf1cf86477d3c0f9be62c52ed45b01599ffd8779024914c4418ff",
+      "contract_status": "PASS_WITH_RECORDED_SCOPE",
+      "physical_acceptance": "NOT_EXECUTED",
+      "platform_evidence": {
+        "hosted": {
+          "status": "PUBLISHED_BROWSER_ACCEPTED",
+          "files_matched": 230,
+          "swop": "Encrypted here.now Site Data browser text-entry roundtrip; separate from installation relay/Worker authentication.",
+          "physical_lg": "NOT_EXECUTED"
+        },
+        "modea": {
+          "status": "INSTALLED_BYTES_AND_LISTENERS_VERIFIED",
+          "server_binary_sha256": "54961b9f131d42560ef8a0086c3db2b5baeca1d3dae8e885630f08328121a9e5",
+          "fresh_worker_roundtrip": "NOT_EXECUTED"
+        },
+        "tauri_macos_arm64": {
+          "status": "INSTALLED_BYTES_VERIFIED_APP_NOT_LAUNCHED_IN_INSTALL_RECEIPT",
+          "binary_sha256": "6a1369b1d584b9577fd262c5c3ec6416a057f2be720752dc383c1e312fefa64d",
+          "physical_acceptance": "NOT_EXECUTED"
+        },
+        "ios_arm64": {
+          "status": "PUBLISHED_UNSIGNED_IPA_INSPECTED",
+          "bundle_version": "1.1.51",
+          "bundle_build": "2.2.66",
+          "ipa_sha256": "89fe9945b25f6de8af9e305ac551978f396198e07fd5d1178f2800a84f1c624e",
+          "physical_acceptance": "NOT_EXECUTED",
+          "installation_acceptance": "No accepted installed-beta9 receipt in this evidence set."
+        }
+      },
+      "evidence": [
+        "beta9_release",
+        "beta9_hosted",
+        "beta9_local_install",
+        "beta9_ipa",
+        "swop_pr36_source"
+      ]
+    },
+    {
+      "id": "android-published-preview3",
+      "repository": "open-ott-play/ottplay-android",
+      "release": "v0.2.1-preview.3",
+      "source_commit": "88b7944f3028440cca64b49f46140a585656390c",
+      "core_package": "core03",
+      "contract_status": "PASS",
+      "host_cases": 147,
+      "physical_acceptance": "NOT_EXECUTED",
+      "swop": "NOT_IMPLEMENTED",
+      "evidence": [
+        "android_pairs"
+      ]
+    },
+    {
+      "id": "android-merged-core45",
+      "repository": "open-ott-play/ottplay-android",
+      "release": null,
+      "source_commit": "249a187886249ae316eee00fd3361f6335526146",
+      "tested_head": "3ca054da086673793f902beb073c350ac4a4af2a",
+      "core_package": "core45",
+      "distribution_status": "MERGED_SOURCE_NOT_A_NEW_APK_RELEASE",
+      "contract_status": "PASS",
+      "host_cases": 147,
+      "observed_emulator_workflow": {
+        "run_id": 36528447825,
+        "result": "PASS",
+        "platforms": [
+          "phone-api35",
+          "androidtv-api36"
+        ]
+      },
+      "physical_acceptance": "NOT_EXECUTED",
+      "swop": "NOT_IMPLEMENTED",
+      "evidence": [
+        "android_pairs",
+        "android_postmerge",
+        "swop_pr36_source"
+      ]
+    },
+    {
+      "id": "foss2-published-beta2",
+      "repository": "open-ott-play/ottplay-core",
+      "release": "foss2-v0.6.0-beta.2",
+      "source_commit": "421325abc2deffe9d3d0d9de70eb5c480623887d",
+      "core_package": "core03",
+      "contract_status": "PASS",
+      "node_cases": 402,
+      "browser_scenarios": 12,
+      "physical_acceptance": "NOT_EXECUTED",
+      "evidence": [
+        "foss2_pairs"
+      ]
+    },
+    {
+      "id": "foss2-merged-core45",
+      "repository": "open-ott-play/ottplay-core",
+      "release": null,
+      "source_commit": "25fb158ca7b59bfb74fc98f0a9b49148592ca37a",
+      "tested_head": "0348c86efba98b8d11ec27e99aaa61a30caee54c",
+      "core_package": "core45",
+      "distribution_status": "MERGED_SOURCE_NOT_A_NEW_FOSS2_RELEASE",
+      "contract_status": "PASS",
+      "node_cases": 405,
+      "browser_scenarios": 27,
+      "wire_harness_fixture_cases": 30,
+      "physical_acceptance": "NOT_EXECUTED",
+      "evidence": [
+        "foss2_source",
+        "foss2_merge"
+      ]
+    },
+    {
+      "id": "foss-beta18-ios-wire",
+      "repository": "open-ott-play/ottplay-foss",
+      "release": "v1.1.51-beta.18",
+      "source_commit": "0ec793ecc981d2f3777a3ba079abe047d3f76fb3",
+      "core_package": "core-f4cbc7e",
+      "release_manifest_sha256": "2ea64130faf0fe749be7628cbd9e8599b910639ad800977fd32ad35fcfd76092",
+      "contract_status": "SOURCE_HOST_AND_EMBEDDED_WIRE_PASS",
+      "physical_acceptance": "NOT_EXECUTED",
+      "platform_evidence": {
+        "ios_arm64": {
+          "status": "PUBLISHED_UNSIGNED_IPA_WIRE_POLICY_INSPECTED",
+          "bundle_version": "1.1.51",
+          "bundle_build": "2.2.75",
+          "ipa_sha256": "2c053677efca0be5580183c8460801ead98a402355bb682021c2d64d314ae44f",
+          "ipa_bytes": 4643902,
+          "embedded_player_sha256": "e22c746f49920b7c037c880f8d7d399b6a6c9f68838596f4ebc656479f8c7590",
+          "embedded_core_matches_exact_client_vendor": true,
+          "native_runtime_manifest_sha256": "515d2af520e0007f8dfba115032996dc01f89b20c59d0ec8f49728571dd8b5d7",
+          "physical_acceptance": "NOT_EXECUTED",
+          "native_bridge_runtime_acceptance": "NOT_EXECUTED",
+          "installation_acceptance": "This receipt inspects the published unsigned IPA; it does not re-read installed/signed device bytes."
+        }
+      },
+      "source_provenance": {
+        "canonical_wire_schema_sha256": "23a19dae2cb07334edadb2cb938749303dd44f0e81ad205352aa2a049c5b6ca4",
+        "canonical_wire_generator_sha256": "988e698728f3170beeba059b3feacea78100c306d197ed998285ec05a19c60ae",
+        "generated_implementation": "BYTE_IDENTICAL_TO_CANONICAL_OUTPUT",
+        "release_provenance_verifier": "PASS; supplemental exact-beta18 release-only input, not this snapshot schema"
+      },
+      "fresh_host_and_artifact_checks": {
+        "immutable_command_handler_cases": 81,
+        "embedded_policy_declarations": 13,
+        "embedded_schema_constants": 23,
+        "embedded_policy_parity_checks": 136,
+        "embedded_full_bundle_executed": false
+      },
+      "evidence": [
+        "beta18_wire_closure",
+        "beta18_release"
+      ]
+    }
+  ],
+  "protocol_combinations": [
+    {
+      "peer": "open-ott-play/ottplay-swop",
+      "source_commit": "7e611faa8b4014574e88fa08d25a561ffcde4d79",
+      "release": null,
+      "client": "foss-beta9",
+      "contract_status": "SOURCE_CONTRACT_PASS",
+      "checks": {
+        "immutable_http_wire": 27,
+        "admission": 13,
+        "native_transport_groups": 38
+      },
+      "auth": "Installation bearer remains on the relay server; clientId and separate session capabilities scope the exchange.",
+      "transport_scope": "External browser text input; no VPortal provider API is required. Tauri and iOS use explicit native relay adapters. Capacitor Kotlin is an archived fixture, not standalone Android support.",
+      "physical_acceptance": "NOT_EXECUTED",
+      "live_client_worker_roundtrip": "NOT_EXECUTED_FOR_THIS_EXACT_PAIR",
+      "deployment_observation": {
+        "recorded_at_utc": "2026-09-29T17:50:56.724357+00:00",
+        "status": "HCP_APPLIED_STATE_HASH_VERIFIED",
+        "worker_sha256": "38ac6c06db4f9947a37f305f22fe5b89f91f1147287f46f36460b152617afbc8",
+        "single_public_health_http_status": 403,
+        "health_source_identity_proof": false
+      },
+      "evidence": [
+        "swop_pr36_source",
+        "swop_pr36_deployment",
+        "swop_health_cloudflare_event"
+      ],
+      "superseding_health_probe_evidence": {
+        "ray_id": "a42ced0c6d56ad01",
+        "date_utc": "2026-09-29T18:07:10Z",
+        "service": "Browser integrity check",
+        "action": "Block",
+        "user_agent": "Python-urllib/3.14",
+        "method": "GET",
+        "path": "/health",
+        "recorded_at_utc": "2026-09-29T18:27:15.684858+00:00",
+        "security_settings_changed": false,
+        "interpretation": "The later exact-Ray health probe was blocked by Browser Integrity Check. This is not evidence of failed installation authentication or native-client behavior, and does not attribute every earlier 403 to the same cause."
+      }
+    },
+    {
+      "peer": "open-ott-play/ottplay-swop",
+      "source_commit": "7e611faa8b4014574e88fa08d25a561ffcde4d79",
+      "release": null,
+      "client": "foss-beta18-ios-wire",
+      "contract_status": "HOST_LOOPBACK_ADAPTER_AND_WORKER_PASS",
+      "checks": {
+        "installation_auth_scenarios": 10,
+        "legacy_allowlist_scenarios": 7
+      },
+      "auth": "Synthetic server installation bearer stays in the loopback relay; client identity and separate read/write capabilities scope the exchange.",
+      "transport_scope": "Exact beta18 TypeScript adapter and Worker source in Node VM/workerd. UI, timers and relay are fixtures; native bridge and physical device paths are not executed.",
+      "harness_compatibility": "Real here.now UI/helper modules are loaded when present; their DOM, cryptography and hosted transport are not exercised. Older beta36 without these helpers separately retains seven legacy scenarios.",
+      "physical_acceptance": "NOT_EXECUTED",
+      "live_client_worker_roundtrip": "NOT_EXECUTED_FOR_THIS_EXACT_NATIVE_PAIR",
+      "existing_public_server_contract": {
+        "checks_passed": 12,
+        "native_client_pair_qualified": false,
+        "new_public_sessions_for_this_review": 0
+      },
+      "evidence": [
+        "beta18_wire_closure",
+        "swop_origin_repair_public_contract"
+      ]
+    }
+  ],
+  "not_implied": [
+    "Installed or physical acceptance from host/browser/emulator tests.",
+    "Compatibility after replacing pinned core bytes with current main.",
+    "All repository workflows passed or main is protected.",
+    "Full live rate saturation, deployed client roundtrip or broader publication approval."
+  ],
+  "evidence": {
+    "beta9_release": {
+      "path": "analysis/ottplay-unicode-release-20260929/inputs/published/release-manifest.json",
+      "sha256": "8a282c1815baf1cf86477d3c0f9be62c52ed45b01599ffd8779024914c4418ff"
+    },
+    "beta9_hosted": {
+      "path": "analysis/ottplay-herenow-delivery-20260928/followup-614-20260929/delivery-complete.json",
+      "sha256": "cd0e1ffadc640c2e6715de4187eb51f2d4f97bc900256885191acf783e545256"
+    },
+    "beta9_local_install": {
+      "path": "analysis/ott-control-unicode-local-install-20260929/local-delivery-complete.json",
+      "sha256": "236a933aab9a9452f9808e378cda9eef284b952e8ae4b911aaf94cdb337a8eec"
+    },
+    "beta9_ipa": {
+      "path": "analysis/ottplay-ios-access-20260928/review-11/ipa-inspection.json",
+      "sha256": "df4de039c2b18f0c0cd7c544d20a10f19502b5617c5d591c86f7a7dbcaa01cc3"
+    },
+    "android_pairs": {
+      "path": "analysis/acceptance-20260929/android-core45-contracts-v1/qualification.json",
+      "sha256": "1422d531835f51d317c5730f242e9f289d200300c01e06fa16ff5a473ddf7c72"
+    },
+    "android_postmerge": {
+      "path": "analysis/acceptance-20260929/android-core45-contracts-v1/postmerge-ci-receipt.json",
+      "sha256": "74c3e6d341b936b15e298ad7f8604094ad4f14c936ebbb56fdbc2d04e085588c"
+    },
+    "foss2_pairs": {
+      "path": "analysis/acceptance-20260929/compatibility-qualified-source-pairs.json",
+      "sha256": "e29b2a6fa95ff345a55b4f4533721c3c5a77f15fe7906cd474c611cb7b9efe51"
+    },
+    "foss2_source": {
+      "path": "analysis/acceptance-20260929/foss2-pr28-exact-head/candidate-review-receipt.json",
+      "sha256": "13e4ab6b80c1cf30cc21b818432630182706acd2798c7105ee94e183a111ea84"
+    },
+    "foss2_merge": {
+      "path": "analysis/acceptance-20260929/foss2-pr28-exact-head/merge-receipt.json",
+      "sha256": "1dceb473e31f107eca0e5c73c5c5194247466bbd0bd1cf7a547315b2f936e857"
+    },
+    "swop_pr36_source": {
+      "path": "analysis/acceptance-20260929/swop-pr36-independent-root-v1/review.json",
+      "sha256": "c95d2b86cf30c29d091187909cabc902327c0917013acb2a8b5260b4a7e435d9"
+    },
+    "swop_pr36_deployment": {
+      "path": "analysis/acceptance-20260929/swop-rate-independent-root-v1/deployment-completion.json",
+      "sha256": "0395d600e63a940ff0e0f15ebd55630a19bbc2858e7257574b6d24d9cdf4a5a1"
+    },
+    "swop_health_cloudflare_event": {
+      "path": "analysis/acceptance-20260929/swop-rate-independent-root-v1/health-403-cloudflare-event-confirmed.json",
+      "sha256": "94e91c4ac3624a8fa7e08c45f066e5ffb0881e4f0e4022eee8138ff26c57632d"
+    },
+    "beta18_wire_closure": {
+      "path": "analysis/ottplay-beta18-wire-closure-20260929/beta18-wire-evidence.json",
+      "sha256": "70e62419e1d9489e414872d42d6346a542436d18ddccbf3e6b479cb7670a29e7"
+    },
+    "beta18_release": {
+      "path": "analysis/ottplay-ios-channel-swipe-release-20260929/published-release-manifest-beta18.json",
+      "sha256": "2ea64130faf0fe749be7628cbd9e8599b910639ad800977fd32ad35fcfd76092"
+    },
+    "swop_origin_repair_public_contract": {
+      "path": "analysis/acceptance-20260929/swop-origin-repair-validation/public-contract-result.json",
+      "sha256": "27094776436abc583733ac6fb3b35fa336a60b75fcd24d9e1ea4efd53ddea2ca"
+    }
+  }
+}
