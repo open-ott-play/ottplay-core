@@ -195,6 +195,41 @@ function verify(context, profile) {
     assert.equal(native.match("News Extra").id, "news");
     assert.equal(native.match("unrelated"), null);
     assert.equal(JSON.stringify(core.nativeGuideSlice([[0, 3600], [172800, 180000]], 0, 48, 0)), "[[0,0,3600]]");
+    for (const format of ["rust", "swift", "archived-android", "web"]) {
+        const regional = [["1109", "СТС LOVE (+7)"], ["1109", "СТС Love +7"]];
+        const base = [["1322", "СТС Love"], ["1322", "СТС Love orig"]];
+        for (const rows of [regional.concat(base), base.concat(regional)]) {
+            const guide = new core.NativeGuide(rows, format, value => value.length, value => value);
+            assert.equal(guide.resolve("hlsproxy-409", ["", "СТС Love"]), "1322", profile + "/" + format + ": base identity");
+            assert.equal(guide.resolve("hlsproxy-409", ["СТС Love HD"]), "1322");
+            assert.equal(guide.resolve("1109", ["СТС Love"]), "1109");
+            assert.equal(guide.resolve("", ["СТС Love +7"]), rows[0][0]);
+            assert.equal(guide.resolve("", ["СТС Love +0"]), rows[0][0]);
+            assert.equal(core.nativeGuideShift("СТС Love", format), 0);
+            assert.equal(JSON.stringify(core.nativeGuideSlice([[1790744580, 1790744880]], 1790744900, 24, 0)),
+                "[[0,1790744580,1790744880]]");
+        }
+        const ordered = new core.NativeGuide(regional.concat(base, [["cinema", "Cinema"]]), format, value => value.length, value => value);
+        assert.equal(ordered.resolve("", ["СТС Love +7", "Cinema"]), "1109");
+        assert.equal(ordered.resolve("", ["СТС Love Extra", "Cinema"]), "cinema");
+        const ambiguous = new core.NativeGuide(regional.concat(base, [["duplicate", "СТС Love"]]), format, value => value.length, value => value);
+        assert.equal(ambiguous.resolve("", ["СТС Love"]), "1109");
+        const markers = ["+7", "-7", "+0", "+48", "+9223372036854775808"];
+        if (format === "rust" || format === "swift") markers.push("+٤", "+𝟜");
+        for (const marker of markers) {
+            const query = "СТС Love " + marker;
+            const marked = new core.NativeGuide([["legacy", "СТС Love +3"], ["literal", query], ["base", "СТС Love"]],
+                format, value => value.length, value => value);
+            assert.equal(marked.resolve("", [query]), "legacy", profile + "/" + format + ": preserve marked " + marker);
+        }
+        const whitespaceExpected = format === "rust" || format === "swift" ? "base" : "regional";
+        const whitespace = new core.NativeGuide([["regional", "News +7"], ["base", "News"]], format, value => value.length, value => value);
+        assert.equal(whitespace.resolve("", ["\u0085News"]), whitespaceExpected);
+        assert.equal(whitespace.resolve("", ["News\u0085HD"]), whitespaceExpected);
+        const whitespaceAliases = new core.NativeGuide([["regional", "News +7"], ["base", "\u0085News"], ["base", "News\u0085HD"]],
+            format, value => value.length, value => value);
+        assert.equal(whitespaceAliases.resolve("", ["News"]), whitespaceExpected);
+    }
     const playlist = core.parseBrowserPlaylist('#EXTM3U\n#EXTINF:-1 tvg-id="__proto__" catchup-days="3",News\nhttps://video.test/live',
         "source", "source", value => value, value => value, value => value);
     assert.equal(playlist.channels[0].id, "source:m3u:tvg:__proto__");
