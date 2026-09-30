@@ -5,7 +5,13 @@ The latest recorded combinations are in
 FOSS beta.9 with core45, separate published and merged-source Android/FOSS2 pairs,
 the SWOP PR36 source contract, and beta18 iOS artifact/source wire evidence with
 core-f4cbc7e. The September 29 snapshot is preserved unchanged. Each row separates host/browser/emulator PASS
-from physical `NOT_EXECUTED`. Android has no SWOP implementation.
+from physical `NOT_EXECUTED` as established by that snapshot. Android has no SWOP implementation.
+
+The later [physical iPhone addendum](physical-acceptance-2026-09-30.json) records
+beta18 installed-version verification and actual native SWOP, channel-swipe and
+EPG checks passing. Actions showed an overlap/search issue; video playback was
+not confirmed. This is partial acceptance with findings, not full device approval.
+It supplements the earlier snapshot without changing its historical claims.
 
 This evidence snapshot includes source-only and installed-artifact records; it is
 not an input to `check-release-compatibility.py`. That release-only verifier and
@@ -162,3 +168,20 @@ These results do not execute the full emitted player or native bridge, re-read
 the installed/signed app, or establish physical iPhone acceptance. The separately
 recorded twelve-check public server contract after the origin repair is not a
 beta18 native-client roundtrip; no new public session was created for this row.
+
+## Later beta18 physical iPhone checks
+
+The September 30 04:02 UTC addendum records the physical iPhone observed through
+Mirroring after the beta18 installation. Native SWOP delivered the exact harmless
+text from an external browser; the editor was cancelled and its original setting
+verified. Channel swipes crossed pages in both directions without unintended
+playback changes, and channel 251 displayed programme/archive information.
+
+The Actions menu overlapped programme text, and selecting Search did not visibly
+open the editor. Channels 251 and 36 remained black/buffering during the check;
+advancing frames and the cause were not established. The original channel was
+restored and Mirroring closed. The published unsigned IPA digest identifies the
+input artifact; the receipt does not re-read installed signed bytes. It supplies
+no latency measurement, native HTTP status, cellular qualification or independent
+deployed Worker source identity, and does not retroactively qualify the exact
+Worker source pair in the earlier loopback row.
