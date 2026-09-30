@@ -21,10 +21,13 @@ internal object CoreText {
         return null
     }
 
-    fun space(value: Char): Boolean = value in '\u0009'..'\u000d' || value in '\u2000'..'\u200a' ||
-        value == ' ' || value == '\u00a0' || value == '\u1680' ||
-        value == '\u2028' || value == '\u2029' || value == '\u202f' || value == '\u205f' ||
-        value == '\u3000' || value == '\ufeff'
+    fun space(value: Char): Boolean = when {
+        value.code <= ' '.code -> value == ' ' || value in '\u0009'..'\u000d'
+        value.code < '\u1680'.code -> value == '\u00a0'
+        else -> value in '\u2000'..'\u200a' || value == '\u1680' ||
+            value == '\u2028' || value == '\u2029' || value == '\u202f' || value == '\u205f' ||
+            value == '\u3000' || value == '\ufeff'
+    }
 
     fun androidSpace(value: Char): Boolean = (space(value) && value != '\ufeff') || value in '\u001c'..'\u001f'
 
