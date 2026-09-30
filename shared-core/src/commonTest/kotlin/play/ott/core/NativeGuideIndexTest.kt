@@ -72,6 +72,82 @@ private class LinearGuideOracle(
 }
 
 class NativeGuideIndexTest {
+    @Test fun packedTrieBuffersCrossGrowthBoundariesWithoutLosingEdges() {
+        // One root + one shared 'a' node + count distinct UTF-16 leaf nodes.
+        for (count in listOf(13, 14, 15, 29, 30, 31, 61, 62, 63)) {
+            val rows = (0 until count).map {
+                NativeGuideEntry("leaf$it", "a${(0xe000 + it).toChar()}")
+            }
+            for (format in NativeGuideFormat.entries)
+                for (ordered in listOf(rows, rows.reversed(), rows.drop(3) + rows.take(3))) {
+                    val index = NativeGuideIndex(ordered, format)
+                    for (entry in listOf(ordered.first(), ordered[count / 2], ordered.last())) {
+                        val query = "z${entry.name}"
+                        assertEquals(NativeGuideMatch(entry.id, 2.0 / 3.0), index.match(query), "$count/$format/$query")
+                        assertEquals(entry.id, index.resolve("", listOf(query)), "$count/$format/$query/resolve")
+                    }
+                }
+        }
+    }
+
+    @Test fun packedTrieBuffersRetainSparseLongPrefixesAndDuplicateTerminals() {
+        // Distinct private-use units keep the long query linear in trie traversal,
+        // while duplicates exercise allocation by actual nodes rather than summed lengths.
+        val prefix = buildString { repeat(4096) { append((0xe000 + it).toChar()) } }
+        val rows = listOf(
+            NativeGuideEntry("long-first", prefix + "a"), NativeGuideEntry("long-second", prefix + "a"),
+            NativeGuideEntry("branch", prefix + "b"), NativeGuideEntry("short", prefix.take(17)),
+            NativeGuideEntry("middle", prefix.take(65) + "c"), NativeGuideEntry("tiny", "ab"),
+            NativeGuideEntry("other", "unrelated")) +
+            List(32) { NativeGuideEntry("duplicate$it", prefix + "a") }
+        for (format in NativeGuideFormat.entries)
+            for (ordered in listOf(rows, rows.reversed(), rows.drop(5) + rows.take(5))) {
+                val index = NativeGuideIndex(ordered, format)
+                val firstDuplicate = ordered.first { it.name == prefix + "a" }.id
+                assertEquals(NativeGuideMatch(firstDuplicate, 4097.0 / 4098.0), index.match("z" + prefix + "a"))
+                assertEquals(NativeGuideMatch("branch", 4097.0 / 4098.0), index.match("z" + prefix + "b"))
+                assertEquals(NativeGuideMatch("middle", 66.0 / 67.0), index.match("z" + prefix.take(65) + "c"))
+                assertEquals(firstDuplicate, index.resolve("", listOf("z" + prefix + "a")))
+            }
+    }
+
+    @Test fun lexicalTriePackingRetainsUnsortedPrefixesAndUtf16Edges() {
+        val values = listOf("zeta", "aba", "ab", "a", "a💥", "a\ud83d", "a\udca5", "\uffff", "a\ue000", "a",
+            "\u0000", "a\u0000", "a\u0001")
+        val rows = values.mapIndexed { index, text -> NativeGuideEntry("id$index", text) }
+        for (format in NativeGuideFormat.entries)
+            for (ordered in listOf(emptyList(), rows, rows.reversed(), rows.drop(4) + rows.take(4))) {
+                val oracle = LinearGuideOracle(ordered, format, { it.length }, { it })
+                val indexed = NativeGuideIndex(ordered, format)
+                for (query in values + values.map { "x${it}x" } + listOf("abaaba", "x a💥 ab zeta y", "missing")) {
+                    assertEquals(oracle.match(query), indexed.match(query), "$format/$query")
+                    assertEquals(oracle.resolve("", listOf(query)), indexed.resolve("", listOf(query)), "$format/$query")
+                }
+            }
+    }
+
+    @Test fun reusedNormalizedBucketsRetainEmptyIdsAliasesAndTieOrder() {
+        val rows = listOf(
+            NativeGuideEntry("empty", ""), NativeGuideEntry("blank", " \t"),
+            NativeGuideEntry("paren", "(UTC)"), NativeGuideEntry("shift-only", "+2"),
+            NativeGuideEntry("shifted", "News +4"), NativeGuideEntry("base", "News HD"),
+            NativeGuideEntry("base", "NEWS"), NativeGuideEntry("other", "News UHD"))
+        for (format in NativeGuideFormat.entries) for (ordered in listOf(rows, rows.reversed())) {
+            val oracle = LinearGuideOracle(ordered, format, { it.length }, { it })
+            val indexed = NativeGuideIndex(ordered, format)
+            for (id in listOf("empty", "blank", "paren", "shift-only"))
+                assertEquals(id, indexed.resolve(id, listOf("News")))
+            for (query in listOf("", " \t", "(UTC)", "+2", "News", "NEWS HD", "News UHD", "News +4", "x News y")) {
+                assertEquals(oracle.match(query), indexed.match(query), "$format/$query")
+                assertEquals(oracle.resolve("", listOf(query)), indexed.resolve("", listOf(query)), "$format/$query")
+                assertEquals(oracle.resolve("", listOf(query, "News UHD")),
+                    indexed.resolve("", listOf(query, "News UHD")), "$format/$query/fallback")
+            }
+            assertNull(indexed.match(""))
+            assertNull(indexed.resolve("", listOf("")))
+        }
+    }
+
     @Test fun repeatedTerminalAliasesDoNotHideLongerContainedNames() {
         val rows = List(2048) { NativeGuideEntry("short$it", "a") } + listOf(
             NativeGuideEntry("first", "a".repeat(256)), NativeGuideEntry("second", "a".repeat(256)))

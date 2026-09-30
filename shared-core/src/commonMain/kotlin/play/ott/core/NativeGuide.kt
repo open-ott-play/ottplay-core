@@ -36,6 +36,7 @@ object NativeGuideNames {
     }
 
     fun stripShift(value: String, format: NativeGuideFormat = NativeGuideFormat.RUST): String {
+        if ('+' !in value && '-' !in value) return CoreText.trim(value) { space(it, format) }
         val result = StringBuilder()
         var index = 0
         while (index < value.length) {
@@ -68,13 +69,16 @@ object NativeGuideNames {
 
     fun normalized(value: String, format: NativeGuideFormat = NativeGuideFormat.RUST): String {
         val shifted = stripShift(value.lowercase(), format)
-        val result = StringBuilder()
-        var index = 0
-        while (index < shifted.length) {
-            val end = if (shifted[index] == '(') shifted.indexOf(')', index + 1) else -1
-            if (end < 0) result.append(shifted[index++]) else index = end + 1
+        val unparenthesized = if ('(' !in shifted) shifted else {
+            val result = StringBuilder()
+            var index = 0
+            while (index < shifted.length) {
+                val end = if (shifted[index] == '(') shifted.indexOf(')', index + 1) else -1
+                if (end < 0) result.append(shifted[index++]) else index = end + 1
+            }
+            result.toString()
         }
-        val collapsed = CoreText.normalizedSpaces(result.toString()) { space(it, format) }
+        val collapsed = CoreText.normalizedSpaces(unparenthesized) { space(it, format) }
         return GuideNames.stripQuality(if (format == NativeGuideFormat.ARCHIVED_ANDROID)
             CoreText.trim(collapsed, CoreText::androidSpace) else collapsed)
     }
@@ -92,46 +96,46 @@ class NativeGuideIndex(
     private val measure: (String) -> Int = { it.length },
     private val precision: (Double) -> Double = { it }
 ) {
-    private data class Name(val id: String, val text: String, val length: Int, val words: Set<String>)
+    private data class Name(val id: String, val original: String, val text: String, val length: Int, val words: Set<String>)
     private val ids = entries.map { it.id }.toSet()
     private val names = entries.map { entry ->
         val name = NativeGuideNames.normalized(entry.name, format)
-        Name(entry.id, name, measure(name), name.split(' ').toSet())
+        Name(entry.id, entry.name, name, measure(name), name.split(' ').toSet())
     }.filter { it.text.isNotEmpty() }
-    private val exact = mutableMapOf<String, String>().also { map ->
+    private val exact = LinkedHashMap<String, String>(names.size).also { map ->
         for (name in names) if (name.text !in map) map[name.text] = name.id
     }
-    private class IntactNames(entries: List<NativeGuideEntry>, format: NativeGuideFormat) {
-        val exact = unique(entries) { NativeGuideNames.intact(it, format) }
-        val quality = unique(entries) { GuideNames.stripQuality(NativeGuideNames.intact(it, format)) }
+    private class IntactNames(entries: List<Name>, format: NativeGuideFormat) {
+        val exact = LinkedHashMap<String, String?>(entries.size)
+        val quality = LinkedHashMap<String, String?>(entries.size)
 
-        private fun unique(entries: List<NativeGuideEntry>, key: (String) -> String): Map<String, String?> {
-            val result = mutableMapOf<String, String?>()
+        init {
             for (entry in entries) {
-                val name = key(entry.name)
-                if (name !in result) result[name] = entry.id
-                else if (result[name] != entry.id) result[name] = null
+                val name = NativeGuideNames.intact(entry.original, format)
+                add(exact, name, entry.id)
+                add(quality, GuideNames.stripQuality(name), entry.id)
             }
-            return result
+        }
+
+        private fun add(index: MutableMap<String, String?>, name: String, id: String) {
+            if (name !in index) index[name] = id
+            else if (index[name] != id) index[name] = null
         }
     }
     // Only collisions can change the legacy first-ID answer. Keep their intact
     // aliases so an unshifted name cannot lose to a stripped regional suffix.
-    private val intact = entries.groupBy { NativeGuideNames.normalized(it.name, format) }
+    // Empty normalized names cannot reach this map: they have no exact entry.
+    private val intact = names.groupBy { it.text }
         .filterValues { rows -> rows.any { it.id != rows[0].id } }
         .mapValues { (_, rows) -> IntactNames(rows, format) }
     // UTF-16 indexes only exclude impossible substrings; scoring still uses the
     // caller's length/precision primitives. The trie includes one/two-unit names.
-    private val grams = mutableMapOf<String, MutableList<Int>>()
+    private val grams = LinkedHashMap<String, MutableList<Int>>(names.size)
     private val containedNames = ContainedNames(names)
-    private val wordNames = mutableMapOf<String, MutableList<Int>>()
+    private val wordNames = LinkedHashMap<String, MutableList<Int>>(names.size)
 
     /** Compact immutable edges avoid allocating/hashing every query substring. */
     private class ContainedNames(names: List<Name>) {
-        private class Node {
-            val children = mutableMapOf<Char, Int>()
-            val rows = mutableListOf<Int>()
-        }
         private val edgeStarts: IntArray
         private val edgeUnits: IntArray
         private val edgeTargets: IntArray
@@ -139,36 +143,58 @@ class NativeGuideIndex(
         private val rows: IntArray
 
         init {
-            val nodes = mutableListOf(Node())
-            for ((row, name) in names.withIndex()) {
-                var node = 0
-                for (unit in name.text) {
-                    val children = nodes[node].children
-                    node = children[unit] ?: nodes.size.also { next ->
-                        children[unit] = next
-                        nodes.add(Node())
+            var parents = IntArray(16)
+            var units = IntArray(16)
+            parents[0] = -1
+            var nodeCount = 1
+            val maxLength = names.maxOfOrNull { it.text.length } ?: 0
+            check(maxLength < Int.MAX_VALUE) { "Guide path exceeds array index range" }
+            val path = IntArray(maxLength + 1)
+            val terminals = IntArray(names.size)
+            var previous = ""
+            // UTF-16 lexical order creates each parent's edges in code-unit order.
+            // Reuse the common prefix rather than allocate a map/list per node.
+            for (row in names.indices.sortedBy { names[it].text }) {
+                val text = names[row].text
+                var common = 0
+                while (common < previous.length && common < text.length && previous[common] == text[common]) common++
+                for (index in common until text.length) {
+                    if (nodeCount == parents.size) {
+                        // Reserve the extra CSR sentinel without overflowing capacity.
+                        check(nodeCount < Int.MAX_VALUE - 1) { "Guide trie exceeds array index range" }
+                        val capacity = if (nodeCount > (Int.MAX_VALUE - 1) / 2)
+                            Int.MAX_VALUE - 1 else nodeCount * 2
+                        parents = parents.copyOf(capacity)
+                        units = units.copyOf(capacity)
                     }
+                    val node = nodeCount++
+                    parents[node] = path[index]
+                    units[node] = text[index].code
+                    path[index + 1] = node
                 }
-                nodes[node].rows.add(row)
+                terminals[row] = path[text.length]
+                previous = text
             }
-            edgeStarts = IntArray(nodes.size + 1)
-            edgeUnits = IntArray(nodes.size - 1)
-            edgeTargets = IntArray(nodes.size - 1)
-            rowStarts = IntArray(nodes.size + 1)
+            edgeStarts = IntArray(nodeCount + 1)
+            rowStarts = IntArray(nodeCount + 1)
+            for (node in 1 until nodeCount) edgeStarts[parents[node] + 1]++
+            for (node in terminals) rowStarts[node + 1]++
+            for (node in 1..nodeCount) {
+                edgeStarts[node] += edgeStarts[node - 1]
+                rowStarts[node] += rowStarts[node - 1]
+            }
+            edgeUnits = IntArray(nodeCount - 1)
+            edgeTargets = IntArray(nodeCount - 1)
             rows = IntArray(names.size)
-            var edge = 0
-            var row = 0
-            for ((index, node) in nodes.withIndex()) {
-                edgeStarts[index] = edge
-                for (unit in node.children.keys.sorted()) {
-                    edgeUnits[edge] = unit.code
-                    edgeTargets[edge++] = node.children.getValue(unit)
-                }
-                rowStarts[index] = row
-                for (name in node.rows) rows[row++] = name
+            val edgeCursor = edgeStarts.copyOf()
+            for (node in 1 until nodeCount) {
+                val edge = edgeCursor[parents[node]]++
+                edgeUnits[edge] = units[node]
+                edgeTargets[edge] = node
             }
-            edgeStarts[nodes.size] = edge
-            rowStarts[nodes.size] = row
+            val rowCursor = rowStarts.copyOf()
+            // Terminal postings retain original row order, including duplicates.
+            for (row in names.indices) rows[rowCursor[terminals[row]]++] = row
         }
 
         fun addMatches(candidate: String, selected: MutableSet<Int>) {

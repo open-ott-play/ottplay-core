@@ -34,6 +34,59 @@ class NativeGuideTest {
         assertEquals("first +٤", NativeGuideNames.normalized("First +٤ HD", NativeGuideFormat.ARCHIVED_ANDROID))
     }
 
+    @Test fun markerFastPathsPreserveLiteralNormalizationRules() {
+        val cases = listOf(
+            Triple(" HD First TV ", "HD First TV", "first tv"),
+            Triple("First (Open", "First (Open", "first (open"),
+            Triple("First ) Tail", "First ) Tail", "first ) tail"),
+            Triple("A (x(y) z) B", "A (x(y) z) B", "a z) b"),
+            Triple("A (+2h X) B -3ч HD", "A ( X) B  HD", "a b"),
+            Triple("A (Open +2H", "A (Open H", "a (open"),
+            Triple("A +x - HD", "A +x - HD", "a +x -"),
+            Triple(" \t A \nB \r ", "A \nB", "a b"),
+            Triple("\ud800X\udc00 NUL\u0000\uffff", "\ud800X\udc00 NUL\u0000\uffff", "\ud800x\udc00 nul\u0000\uffff"),
+            Triple("", "", ""),
+        )
+        for (format in NativeGuideFormat.entries) for ((value, stripped, normalized) in cases) {
+            assertEquals(stripped, NativeGuideNames.stripShift(value, format), "$format strip $value")
+            assertEquals(normalized, NativeGuideNames.normalized(value, format), "$format normalize $value")
+        }
+    }
+
+    @Test fun markerFastPathsKeepProfileWhitespaceAndDigits() {
+        for (format in NativeGuideFormat.entries) {
+            val unicode = format == NativeGuideFormat.RUST || format == NativeGuideFormat.SWIFT
+            val web = format == NativeGuideFormat.WEB
+            val android = format == NativeGuideFormat.ARCHIVED_ANDROID
+            assertEquals(if (web) "First" else "\ufeffFirst\ufeff",
+                NativeGuideNames.stripShift("\ufeffFirst\ufeff", format))
+            assertEquals(if (web) "first" else "\ufefffirst\ufeff",
+                NativeGuideNames.normalized("\ufeffFirst\ufeff", format))
+            assertEquals(if (unicode) "first tv" else "first\u0085tv",
+                NativeGuideNames.normalized("First\u0085TV", format))
+            assertEquals(if (android) "first\u00a0tv" else "first tv",
+                NativeGuideNames.normalized("First\u00a0TV", format))
+            assertEquals(if (android) "\u00a0First\u00a0" else "First",
+                NativeGuideNames.stripShift("\u00a0First\u00a0", format))
+            assertEquals("first", NativeGuideNames.normalized("\u00a0First\u00a0", format))
+            // A shift consumes the first lowercased 'h', even at the start of HD.
+            assertEquals(if (unicode) "first d" else "first +٤",
+                NativeGuideNames.normalized("First +٤ HD", format))
+        }
+    }
+
+    @Test fun normalizedSpacesReturnsCanonicalTextWithoutChangingWhitespaceRules() {
+        val cases = listOf("" to "", "A" to "A", "A B" to "A B", " A " to "A",
+            "A  B" to "A B", "A \tB" to "A B", "A\n B" to "A B", "\t\n" to "",
+            "\ud800\u0000\udc00 \uffff" to "\ud800\u0000\udc00 \uffff")
+        for ((value, expected) in cases) assertEquals(expected, CoreText.normalizedSpaces(value))
+        assertEquals("A B", CoreText.normalizedSpaces("\u00a0A\u202f\u2003B\ufeff"))
+        assertEquals("A\u0085B", CoreText.normalizedSpaces("A\u0085B"))
+        assertEquals("A B", CoreText.normalizedSpaces("A\u0085B", CoreText::unicodeSpace))
+        assertEquals("\ufeffA\ufeff", CoreText.normalizedSpaces("\ufeffA\ufeff", CoreText::unicodeSpace))
+        assertEquals("\u00a0A\u00a0", CoreText.normalizedSpaces("\u00a0A\u00a0", CoreText::asciiSpace))
+    }
+
     @Test fun identityThenAllExactAliasesBeforeFuzzyWithStableTies() {
         val index = NativeGuideIndex(listOf(
             NativeGuideEntry("news", "News"), NativeGuideEntry("cinema", "Cinema"),
