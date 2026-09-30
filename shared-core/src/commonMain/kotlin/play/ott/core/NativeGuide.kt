@@ -102,21 +102,24 @@ class NativeGuideIndex(
         val name = NativeGuideNames.normalized(entry.name, format)
         Name(entry.id, entry.name, name, measure(name), name.split(' ').toSet())
     }.filter { it.text.isNotEmpty() }
-    private val exact = mutableMapOf<String, String>().also { map ->
+    private val exact = LinkedHashMap<String, String>(names.size).also { map ->
         for (name in names) if (name.text !in map) map[name.text] = name.id
     }
     private class IntactNames(entries: List<Name>, format: NativeGuideFormat) {
-        val exact = unique(entries) { NativeGuideNames.intact(it, format) }
-        val quality = unique(entries) { GuideNames.stripQuality(NativeGuideNames.intact(it, format)) }
+        val exact = LinkedHashMap<String, String?>(entries.size)
+        val quality = LinkedHashMap<String, String?>(entries.size)
 
-        private fun unique(entries: List<Name>, key: (String) -> String): Map<String, String?> {
-            val result = mutableMapOf<String, String?>()
+        init {
             for (entry in entries) {
-                val name = key(entry.original)
-                if (name !in result) result[name] = entry.id
-                else if (result[name] != entry.id) result[name] = null
+                val name = NativeGuideNames.intact(entry.original, format)
+                add(exact, name, entry.id)
+                add(quality, GuideNames.stripQuality(name), entry.id)
             }
-            return result
+        }
+
+        private fun add(index: MutableMap<String, String?>, name: String, id: String) {
+            if (name !in index) index[name] = id
+            else if (index[name] != id) index[name] = null
         }
     }
     // Only collisions can change the legacy first-ID answer. Keep their intact
@@ -127,9 +130,9 @@ class NativeGuideIndex(
         .mapValues { (_, rows) -> IntactNames(rows, format) }
     // UTF-16 indexes only exclude impossible substrings; scoring still uses the
     // caller's length/precision primitives. The trie includes one/two-unit names.
-    private val grams = mutableMapOf<String, MutableList<Int>>()
+    private val grams = LinkedHashMap<String, MutableList<Int>>(names.size)
     private val containedNames = ContainedNames(names)
-    private val wordNames = mutableMapOf<String, MutableList<Int>>()
+    private val wordNames = LinkedHashMap<String, MutableList<Int>>(names.size)
 
     /** Compact immutable edges avoid allocating/hashing every query substring. */
     private class ContainedNames(names: List<Name>) {
