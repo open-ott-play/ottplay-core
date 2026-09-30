@@ -1,0 +1,76 @@
+{
+  "schema": "reviewed-physical-acceptance-addendum-v1",
+  "observed_at_utc": "2026-09-30T04:02:37.002484+00:00",
+  "supplements": "reviewed-combinations-2026-09-30.json",
+  "combination_id": "foss-beta18-ios-wire",
+  "repository": "open-ott-play/ottplay-foss",
+  "release": "v1.1.51-beta.18",
+  "source_commit": "0ec793ecc981d2f3777a3ba079abe047d3f76fb3",
+  "core_package": "core-f4cbc7e",
+  "platform": "ios_arm64",
+  "physical_acceptance": "PARTIAL_WITH_FINDINGS",
+  "installation": {
+    "status": "INSTALLED_VERSION_AND_SAME_BUNDLE_UPDATE_VERIFIED",
+    "bundle_version": "1.1.51",
+    "bundle_build": "2.2.75",
+    "splash_release": "1.1.51-beta.18",
+    "published_unsigned_ipa_sha256": "2c053677efca0be5580183c8460801ead98a402355bb682021c2d64d314ae44f",
+    "installed_signed_bytes_re_read": false,
+    "provenance_scope": "Published IPA digest and observed installed version/build; signing changes the package, and this receipt does not hash installed signed bytes."
+  },
+  "checks": {
+    "swop": {
+      "status": "PASS",
+      "scope": "Actual native session creation and exact harmless text delivery from an external browser on the current network.",
+      "synthetic_value_saved": false,
+      "original_setting_restored_and_verified": true,
+      "native_http_status_captured": false,
+      "cellular_qualified": false,
+      "deployed_worker_source_identity_proven_by_this_receipt": false
+    },
+    "channel_swipes": {
+      "status": "PASS",
+      "method": "CUA drag through iPhone Mirroring on physical device",
+      "selection_sequence": [
+        251,
+        267,
+        283,
+        267,
+        251
+      ],
+      "cross_page_forward_and_back": true,
+      "no_unintended_playback_change": true
+    },
+    "epg": {
+      "status": "PASS",
+      "scope": "Programme and archive list populated on channel 251; no full-feed or archive-playback qualification."
+    },
+    "actions": {
+      "status": "ISSUE_OBSERVED",
+      "observation": "Actions text overlapped the left programme description. Clicking Search closed the list rather than visibly opening an editor. Not qualified as passing."
+    },
+    "playback": {
+      "status": "NOT_CONFIRMED",
+      "channels": [
+        251,
+        36
+      ],
+      "observation": "Black video area with buffering; frames advancing were not verified. Cause not established."
+    }
+  },
+  "restoration": {
+    "original_channel_restored": 251,
+    "gui_lease_released": true
+  },
+  "not_implied": [
+    "Full installed-app acceptance or permission to broaden publication.",
+    "A native HTTP status, latency measurement, cellular behavior, deployed Worker source identity, or rate-limit saturation result.",
+    "Playback or Actions success from successful SWOP, swipe and EPG checks.",
+    "Physical acceptance of any other release, client or core combination."
+  ],
+  "evidence": {
+    "path": "analysis/ottplay-ios-channel-swipe-release-20260929/physical-qa-20260930.json",
+    "sha256": "cb18d878b8187e87677c024b976d9dba021f209f79f7273a5af6881c5a307c8e",
+    "semantics": "Path is relative to the retained local acceptance archive root; the receipt is not shipped in this repository."
+  }
+}
