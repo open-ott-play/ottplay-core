@@ -87,6 +87,17 @@ object NativeGuideNames {
 data class NativeGuideEntry(val id: String, val name: String)
 data class NativeGuideMatch(val id: String, val score: Double)
 
+private fun nativeGuideWords(value: String): Set<String> {
+    val words = mutableSetOf<String>()
+    var start = 0
+    while (true) {
+        val end = value.indexOf(' ', start)
+        if (end < 0) { words.add(value.substring(start)); return words }
+        words.add(value.substring(start, end))
+        start = end + 1
+    }
+}
+
 /** Caller supplies row order, Unicode length and numeric precision of its public contract.
  * Those primitives do not choose channels. Indexing and every matching decision live here.
  */
@@ -100,7 +111,7 @@ class NativeGuideIndex(
     private val ids = entries.map { it.id }.toSet()
     private val names = entries.map { entry ->
         val name = NativeGuideNames.normalized(entry.name, format)
-        Name(entry.id, entry.name, name, measure(name), name.split(' ').toSet())
+        Name(entry.id, entry.name, name, measure(name), nativeGuideWords(name))
     }.filter { it.text.isNotEmpty() }
     private val exact = LinkedHashMap<String, String>(names.size).also { map ->
         for (name in names) if (name.text !in map) map[name.text] = name.id
@@ -125,9 +136,11 @@ class NativeGuideIndex(
     // Only collisions can change the legacy first-ID answer. Keep their intact
     // aliases so an unshifted name cannot lose to a stripped regional suffix.
     // Empty normalized names cannot reach this map: they have no exact entry.
-    private val intact = names.groupBy { it.text }
-        .filterValues { rows -> rows.any { it.id != rows[0].id } }
-        .mapValues { (_, rows) -> IntactNames(rows, format) }
+    private val intact = run {
+        val collisions = names.filter { exact[it.text] != it.id }.map { it.text }.toSet()
+        names.filter { it.text in collisions }.groupBy { it.text }
+            .mapValues { (_, rows) -> IntactNames(rows, format) }
+    }
     // UTF-16 indexes only exclude impossible substrings; scoring still uses the
     // caller's length/precision primitives. The trie includes one/two-unit names.
     private val grams = LinkedHashMap<String, MutableList<Int>>(names.size)
@@ -229,16 +242,18 @@ class NativeGuideIndex(
         }
     }
 
+    @Suppress("NOTHING_TO_INLINE") // Avoid a helper call for every indexed trigram.
+    private inline fun addPosting(index: MutableMap<String, MutableList<Int>>, key: String, row: Int) {
+        val posting = index.getOrPut(key) { mutableListOf() }
+        if (posting.lastOrNull() != row) posting.add(row)
+    }
+
     init {
-        fun add(index: MutableMap<String, MutableList<Int>>, key: String, row: Int) {
-            val posting = index.getOrPut(key) { mutableListOf() }
-            if (posting.lastOrNull() != row) posting.add(row)
-        }
         for ((row, name) in names.withIndex()) {
             for (start in 0..name.text.length - 3)
-                add(grams, name.text.substring(start, start + 3), row)
+                addPosting(grams, name.text.substring(start, start + 3), row)
             if (name.words.size >= 2)
-                for (word in name.words) add(wordNames, word, row)
+                for (word in name.words) addPosting(wordNames, word, row)
         }
     }
 
@@ -264,7 +279,7 @@ class NativeGuideIndex(
     private fun fuzzy(candidate: String): NativeGuideMatch? {
         if (candidate.isEmpty()) return null
         val length = measure(candidate)
-        val words = candidate.split(' ').toSet()
+        val words = nativeGuideWords(candidate)
         var best: NativeGuideMatch? = null
         for (row in candidates(candidate, words)) {
             val name = names[row]

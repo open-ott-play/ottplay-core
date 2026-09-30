@@ -72,6 +72,56 @@ private class LinearGuideOracle(
 }
 
 class NativeGuideIndexTest {
+    @Test fun sparseCollisionGroupsKeepEveryAliasAndSameIdDuplicates() {
+        val rows = List(128) { NativeGuideEntry("unique$it", "Unique$it") } + listOf(
+            NativeGuideEntry("same", "Solo HD"), NativeGuideEntry("same", "Solo UHD"),
+            NativeGuideEntry("shifted", "News +4"), NativeGuideEntry("base", "News HD"),
+            NativeGuideEntry("base", "NEWS"), NativeGuideEntry("other", "News UHD"),
+            NativeGuideEntry("ambiguous-first", "Duplicate HD"), NativeGuideEntry("ambiguous-second", "Duplicate HD"))
+        for (format in NativeGuideFormat.entries)
+            for (ordered in listOf(rows, rows.reversed(), rows.drop(131) + rows.take(131))) {
+                val indexed = NativeGuideIndex(ordered, format)
+                val oracle = LinearGuideOracle(ordered, format, { it.length }, { it })
+                assertEquals("base", indexed.resolve("", listOf("News")))
+                assertEquals("base", indexed.resolve("", listOf("News HD")))
+                assertEquals("other", indexed.resolve("", listOf("News UHD")))
+                assertEquals("same", indexed.resolve("", listOf("Solo")))
+                assertEquals("shifted", indexed.resolve("shifted", listOf("News")))
+                for (query in rows.map { it.name } + listOf("News", "News +7", "Duplicate", "Solo", "missing")) {
+                    assertEquals(oracle.match(query), indexed.match(query), "$format/$query")
+                    assertEquals(oracle.resolve("", listOf(query)), indexed.resolve("", listOf(query)))
+                }
+            }
+    }
+
+    @Test fun directWordSetsRetainDistinctWordsScoresAndTies() {
+        val rows = listOf(NativeGuideEntry("first", "alpha alpha beta"),
+            NativeGuideEntry("second", "beta alpha alpha"), NativeGuideEntry("other", "omega theta"))
+        for (format in NativeGuideFormat.entries) for (ordered in listOf(rows, rows.reversed())) {
+            val indexed = NativeGuideIndex(ordered, format)
+            val expected = ordered.first { it.id != "other" }.id
+            assertEquals(NativeGuideMatch(expected, 2.0 / 3.0), indexed.match("beta alpha delta"))
+            assertEquals(NativeGuideMatch(expected, 1.0), indexed.match("alpha beta alpha beta"))
+            assertEquals(expected, indexed.resolve("", listOf("beta alpha delta")))
+            assertNull(indexed.match("gamma delta"))
+        }
+    }
+
+    @Test fun directWordSetsMatchSplitOracleAcrossWhitespaceAndUtf16() {
+        val values = listOf("", " ", "alpha", " alpha ", "alpha  beta", "alpha beta alpha",
+            "alpha\tbeta", "alpha\u00a0beta", "alpha\u0085beta", "alpha\ufeffbeta", "\ud800 beta", "alpha \udc00", "💥 beta")
+        val rows = values.mapIndexed { i, value -> NativeGuideEntry("word$i", value) }
+        for (format in NativeGuideFormat.entries) for (ordered in listOf(rows, rows.reversed())) {
+            val indexed = NativeGuideIndex(ordered, format)
+            val oracle = LinearGuideOracle(ordered, format, { it.length }, { it })
+            for (a in values) for (b in values) {
+                val query = "$a $b delta"
+                assertEquals(oracle.match(query), indexed.match(query), "$format/$query")
+                assertEquals(oracle.resolve("", listOf(query)), indexed.resolve("", listOf(query)))
+            }
+        }
+    }
+
     @Test fun packedTrieBuffersCrossGrowthBoundariesWithoutLosingEdges() {
         // One root + one shared 'a' node + count distinct UTF-16 leaf nodes.
         for (count in listOf(13, 14, 15, 29, 30, 31, 61, 62, 63)) {
