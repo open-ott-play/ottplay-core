@@ -4,6 +4,28 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class NativeGuideIdentityTest {
+    @Test fun attachedNumericBrandsKeepIdentityWithoutInferredTimeShift() {
+        for (format in NativeGuideFormat.entries) for (ids in listOf("z" to "a", "one" to "twenty-four")) {
+            val rows = listOf(NativeGuideEntry(ids.second, "Россия-24"), NativeGuideEntry(ids.first, "Россия-1"))
+            for (ordered in listOf(rows, rows.reversed(), rows + rows.last())) {
+                val index = NativeGuideIndex(ordered, format)
+                for ((id, name) in listOf(ids.first to "Россия-1", ids.second to "Россия-24")) {
+                    assertEquals(id, index.resolve("missing", listOf(name)), "$format/$name")
+                    assertEquals(id, index.resolve(id, listOf(name)))
+                    assertEquals(id, index.match(name)?.id)
+                    val window = NativeGuideWindow(1800000000.0, 24.0, NativeGuideNames.regionalShift(name, format).toDouble())
+                    assertEquals(0.0, window.shift)
+                }
+                assertEquals(ids.second, index.resolve(ids.second, listOf("Россия-1")))
+                assertEquals(ids.first, index.resolve("missing", listOf("Россия-1 -7")))
+                assertEquals(ids.first, index.resolve("missing", listOf("Россия-1+7")))
+            }
+            val ambiguous = rows + NativeGuideEntry("duplicate", "Россия-1")
+            assertEquals(ids.first, NativeGuideIndex(ambiguous, format).resolve("", listOf("Россия-1")))
+            assertEquals("duplicate", NativeGuideIndex(ambiguous.reversed(), format).resolve("", listOf("Россия-1")))
+        }
+    }
+
     private val regional = listOf(
         NativeGuideEntry("1109", "СТС LOVE (+7)"),
         NativeGuideEntry("1109", "СТС Love +7"))
