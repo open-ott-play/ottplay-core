@@ -143,9 +143,13 @@ class NativeGuideIndex(
         private val rows: IntArray
 
         init {
-            val parents = mutableListOf(-1)
-            val units = mutableListOf(0)
-            val path = mutableListOf(0)
+            var parents = IntArray(16)
+            var units = IntArray(16)
+            parents[0] = -1
+            var nodeCount = 1
+            val maxLength = names.maxOfOrNull { it.text.length } ?: 0
+            check(maxLength < Int.MAX_VALUE) { "Guide path exceeds array index range" }
+            val path = IntArray(maxLength + 1)
             val terminals = IntArray(names.size)
             var previous = ""
             // UTF-16 lexical order creates each parent's edges in code-unit order.
@@ -154,29 +158,36 @@ class NativeGuideIndex(
                 val text = names[row].text
                 var common = 0
                 while (common < previous.length && common < text.length && previous[common] == text[common]) common++
-                while (path.size > common + 1) path.removeAt(path.lastIndex)
                 for (index in common until text.length) {
-                    val node = parents.size
-                    parents.add(path.last())
-                    units.add(text[index].code)
-                    path.add(node)
+                    if (nodeCount == parents.size) {
+                        // Reserve the extra CSR sentinel without overflowing capacity.
+                        check(nodeCount < Int.MAX_VALUE - 1) { "Guide trie exceeds array index range" }
+                        val capacity = if (nodeCount > (Int.MAX_VALUE - 1) / 2)
+                            Int.MAX_VALUE - 1 else nodeCount * 2
+                        parents = parents.copyOf(capacity)
+                        units = units.copyOf(capacity)
+                    }
+                    val node = nodeCount++
+                    parents[node] = path[index]
+                    units[node] = text[index].code
+                    path[index + 1] = node
                 }
-                terminals[row] = path.last()
+                terminals[row] = path[text.length]
                 previous = text
             }
-            edgeStarts = IntArray(parents.size + 1)
-            rowStarts = IntArray(parents.size + 1)
-            for (node in 1 until parents.size) edgeStarts[parents[node] + 1]++
+            edgeStarts = IntArray(nodeCount + 1)
+            rowStarts = IntArray(nodeCount + 1)
+            for (node in 1 until nodeCount) edgeStarts[parents[node] + 1]++
             for (node in terminals) rowStarts[node + 1]++
-            for (node in 1..parents.size) {
+            for (node in 1..nodeCount) {
                 edgeStarts[node] += edgeStarts[node - 1]
                 rowStarts[node] += rowStarts[node - 1]
             }
-            edgeUnits = IntArray(parents.size - 1)
-            edgeTargets = IntArray(parents.size - 1)
+            edgeUnits = IntArray(nodeCount - 1)
+            edgeTargets = IntArray(nodeCount - 1)
             rows = IntArray(names.size)
             val edgeCursor = edgeStarts.copyOf()
-            for (node in 1 until parents.size) {
+            for (node in 1 until nodeCount) {
                 val edge = edgeCursor[parents[node]]++
                 edgeUnits[edge] = units[node]
                 edgeTargets[edge] = node
