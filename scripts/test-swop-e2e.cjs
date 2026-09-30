@@ -182,6 +182,21 @@ async function main() {
             timers.delete(timer[0]); timer[1].fn(); await drain();
         }
         const settings = { deviceUuid: clientId, swopBaseUrl: env.PUBLIC_BASE_URL + (installation ? '/swop' : '') };
+        const hasHereNowUi = fs.existsSync(path.join(player, 'src/swop/herenow-ui.ts'));
+        const adapterImports = {
+            '../localization': { translate: value => value },
+            '../settings': { settings, saveSettings() {} },
+            '../shared/wire-contracts': playerWire,
+            '../utils/qr-code': { makeQrSvg: () => '' },
+        };
+        // Recent clients import this separate UI route even when the fixture
+        // selects the installation/legacy relay. Load its real dependencies;
+        // older released clients have neither module and need no import entry.
+        if (hasHereNowUi) {
+            adapterImports['./herenow-ui'] = load(path.join(player, 'src/swop/herenow-ui.ts'), {}, {
+                './herenow': load(path.join(player, 'src/swop/herenow.ts')).exports,
+            }).exports;
+        }
         const context = load(path.join(player, 'src/swop/index.ts'), {
             $, document: { getElementById: () => null },
             localStorage: { getItem: () => null, setItem() {} },
@@ -190,12 +205,7 @@ async function main() {
             alert(message) { throw new Error(message); },
             setTimeout(fn, delay) { timers.set(++timerSequence, { fn, delay }); return timerSequence; },
             clearTimeout(id) { timers.delete(id); },
-        }, {
-            '../localization': { translate: value => value },
-            '../settings': { settings, saveSettings() {} },
-            '../shared/wire-contracts': playerWire,
-            '../utils/qr-code': { makeQrSvg: () => '' },
-        });
+        }, adapterImports);
         context.exports.swopLoadValue();
         await drain();
         assert(session?.code && session.url);
@@ -253,11 +263,13 @@ async function main() {
         scenarios.push('real client renders authorization denial from Worker');
         const report = {
             observed_at: new Date().toISOString(), status: 'passed', authentication: installation ? 'server installation credential + per-session capabilities' : 'legacy client allowlist', scenarios, requests,
-            player: receipt(player, ['src/swop/index.ts', 'src/shared/wire-contracts.ts']),
+            player: receipt(player, ['src/swop/index.ts', 'src/shared/wire-contracts.ts',
+                ...(hasHereNowUi ? ['src/swop/herenow-ui.ts', 'src/swop/herenow.ts'] : [])]),
             worker: receipt(workerRoot, ['src/index.ts', 'src/wire-contracts.ts', ...(usesDurableSessions ? ['src/session.ts'] : [])]),
             runtime: usesDurableSessions ? 'workerd with SQLite Durable Objects and rate-limit binding' : 'Node VM with synthetic KV',
             limitations: [installation ? 'UI, timers and same-origin relay are fixtures; the actual FOSS adapter and Worker communicate over loopback HTTP. Production relay code/deployment is not qualified by this test.' : 'UI and timers substituted; real client adapter and Worker communicate over loopback HTTP.',
                 usesDurableSessions ? 'Sequential cross-client test; concurrent storage scenarios run in the Worker integration suite.' : 'Synthetic in-memory KV does not model eventual consistency or qualify atomic consumption.',
+                ...(hasHereNowUi ? ['here.now modules are loaded from this client checkout; their DOM, cryptography and hosted transport paths are not exercised by these relay scenarios.'] : []),
                 'No live Cloudflare traffic, rate-limit or deployed secret validation.'],
         };
         if (output) fs.writeFileSync(output, JSON.stringify(report, null, 2) + '\n');

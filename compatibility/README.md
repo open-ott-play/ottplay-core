@@ -1,9 +1,10 @@
 # Reviewed compatibility combinations
 
 The latest recorded combinations are in
-[`reviewed-combinations-2026-09-29.json`](reviewed-combinations-2026-09-29.json):
+[`reviewed-combinations-2026-09-30.json`](reviewed-combinations-2026-09-30.json):
 FOSS beta.9 with core45, separate published and merged-source Android/FOSS2 pairs,
-and the SWOP PR36 source contract. Each row separates host/browser/emulator PASS
+the SWOP PR36 source contract, and beta18 iOS artifact/source wire evidence with
+core-f4cbc7e. The September 29 snapshot is preserved unchanged. Each row separates host/browser/emulator PASS
 from physical `NOT_EXECUTED`. Android has no SWOP implementation.
 
 This evidence snapshot includes source-only and installed-artifact records; it is
@@ -138,3 +139,26 @@ command execution, deployed edge controls and hardware fault/latency acceptance
 unqualified. Test success must not advance
 publication while those required gates remain open. Branch protection and the
 other repositories' CI are not inferred from these results.
+
+## Beta18 iOS artifact and source wire checks
+
+The `foss-beta18-ios-wire` row appends the exact published `v1.1.51-beta.18`
+source and unsigned IPA (build `2.2.75`). Its embedded core is identified as
+`core-f4cbc7e`, with all 121 source-receipt files matched; it is not the earlier
+`core45` package. Canonical wire generation and the existing release provenance
+verifier pass, using a separate exact-beta18 release-only input for the latter.
+The historical September 27 verifier input, September 29 snapshot, and all prior
+rows carried into the September 30 successor remain unchanged.
+
+Fresh checks cover 81 immutable source command-handler cases, 136 comparisons of
+pure policy declarations extracted from the shipped ES5 player, and the actual
+beta18 SWOP adapter against Worker `7e611faa` in loopback workerd: ten installation
+authentication and seven legacy scenarios. The harness loads the real optional
+here.now UI/helper modules and retains seven legacy scenarios for beta36, which
+has neither module. The here.now DOM, cryptography and hosted paths are outside
+these relay tests.
+
+These results do not execute the full emitted player or native bridge, re-read
+the installed/signed app, or establish physical iPhone acceptance. The separately
+recorded twelve-check public server contract after the origin repair is not a
+beta18 native-client roundtrip; no new public session was created for this row.
