@@ -1,6 +1,34 @@
 # Reviewed compatibility combinations
 
-The latest recorded combinations are in
+The [September 30 combined successor](reviewed-combinations-2026-09-30-combined.json)
+adds core `7cb7b28`, the merged FOSS2 PR37 / Android PR38 source pairs, and the
+published FOSS `v1.1.52-beta.5` artifacts from source `44cfb168`. It preserves
+every earlier row and evidence entry.
+
+FOSS beta.5 passed full qualification of all 26 release assets and exact-tag
+provenance for the 122 core source files. Its actual unsigned IPA passed the
+static native-runtime audit and 136 embedded pure-policy parity checks; both
+bundled core copies match the recorded vendor bytes. The audit uses the exact
+official version projection, and retains its first unprojected-lockfile failure.
+The IPA has no embedded build-info; its source identity comes from the external
+release proof. Mac arm64 static checks passed with the literal
+`linker-signed-unsealed` result: the executable verifies, while strict bundle
+signature verification does not. No Developer ID or notarization acceptance is
+claimed. Neither artifact check establishes installation or physical acceptance.
+The separate SWOP row reuses the historical 10 installation and 7 legacy loopback
+cases only after exact client-source and explicit Worker identity comparison.
+It records no new loopback, deployed Worker identity or native/public roundtrip.
+
+The FOSS2 and Android additions identify merged source pairs, not new releases.
+FOSS2 passed 405 Node cases and three Chromium suites using the same core bytes.
+Its separate post-merge CI passed 405 Node cases and 27 Chromium scenarios; the
+44 captured guide contracts remain a distinct fixture count from the PR review.
+Android passed 147 host cases; its PR skipped phone/TV instrumentation and
+retained 12 lint warnings per variant. A separate exact-tree post-merge run
+passed 26 instrumented tests each on phone API35 and Android TV API36 emulators.
+Those results do not establish physical-device acceptance.
+
+The preceding recorded combinations are in
 [`reviewed-combinations-2026-09-30.json`](reviewed-combinations-2026-09-30.json):
 FOSS beta.9 with core45, separate published and merged-source Android/FOSS2 pairs,
 the SWOP PR36 source contract, and beta18 iOS artifact/source wire evidence with
