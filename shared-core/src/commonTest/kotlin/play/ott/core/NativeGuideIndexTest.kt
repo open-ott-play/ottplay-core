@@ -72,6 +72,43 @@ private class LinearGuideOracle(
 }
 
 class NativeGuideIndexTest {
+    @Test fun lexicalTriePackingRetainsUnsortedPrefixesAndUtf16Edges() {
+        val values = listOf("zeta", "aba", "ab", "a", "a💥", "a\ud83d", "a\udca5", "\uffff", "a\ue000", "a",
+            "\u0000", "a\u0000", "a\u0001")
+        val rows = values.mapIndexed { index, text -> NativeGuideEntry("id$index", text) }
+        for (format in NativeGuideFormat.entries)
+            for (ordered in listOf(emptyList(), rows, rows.reversed(), rows.drop(4) + rows.take(4))) {
+                val oracle = LinearGuideOracle(ordered, format, { it.length }, { it })
+                val indexed = NativeGuideIndex(ordered, format)
+                for (query in values + values.map { "x${it}x" } + listOf("abaaba", "x a💥 ab zeta y", "missing")) {
+                    assertEquals(oracle.match(query), indexed.match(query), "$format/$query")
+                    assertEquals(oracle.resolve("", listOf(query)), indexed.resolve("", listOf(query)), "$format/$query")
+                }
+            }
+    }
+
+    @Test fun reusedNormalizedBucketsRetainEmptyIdsAliasesAndTieOrder() {
+        val rows = listOf(
+            NativeGuideEntry("empty", ""), NativeGuideEntry("blank", " \t"),
+            NativeGuideEntry("paren", "(UTC)"), NativeGuideEntry("shift-only", "+2"),
+            NativeGuideEntry("shifted", "News +4"), NativeGuideEntry("base", "News HD"),
+            NativeGuideEntry("base", "NEWS"), NativeGuideEntry("other", "News UHD"))
+        for (format in NativeGuideFormat.entries) for (ordered in listOf(rows, rows.reversed())) {
+            val oracle = LinearGuideOracle(ordered, format, { it.length }, { it })
+            val indexed = NativeGuideIndex(ordered, format)
+            for (id in listOf("empty", "blank", "paren", "shift-only"))
+                assertEquals(id, indexed.resolve(id, listOf("News")))
+            for (query in listOf("", " \t", "(UTC)", "+2", "News", "NEWS HD", "News UHD", "News +4", "x News y")) {
+                assertEquals(oracle.match(query), indexed.match(query), "$format/$query")
+                assertEquals(oracle.resolve("", listOf(query)), indexed.resolve("", listOf(query)), "$format/$query")
+                assertEquals(oracle.resolve("", listOf(query, "News UHD")),
+                    indexed.resolve("", listOf(query, "News UHD")), "$format/$query/fallback")
+            }
+            assertNull(indexed.match(""))
+            assertNull(indexed.resolve("", listOf("")))
+        }
+    }
+
     @Test fun repeatedTerminalAliasesDoNotHideLongerContainedNames() {
         val rows = List(2048) { NativeGuideEntry("short$it", "a") } + listOf(
             NativeGuideEntry("first", "a".repeat(256)), NativeGuideEntry("second", "a".repeat(256)))

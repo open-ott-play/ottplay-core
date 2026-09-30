@@ -92,23 +92,23 @@ class NativeGuideIndex(
     private val measure: (String) -> Int = { it.length },
     private val precision: (Double) -> Double = { it }
 ) {
-    private data class Name(val id: String, val text: String, val length: Int, val words: Set<String>)
+    private data class Name(val id: String, val original: String, val text: String, val length: Int, val words: Set<String>)
     private val ids = entries.map { it.id }.toSet()
     private val names = entries.map { entry ->
         val name = NativeGuideNames.normalized(entry.name, format)
-        Name(entry.id, name, measure(name), name.split(' ').toSet())
+        Name(entry.id, entry.name, name, measure(name), name.split(' ').toSet())
     }.filter { it.text.isNotEmpty() }
     private val exact = mutableMapOf<String, String>().also { map ->
         for (name in names) if (name.text !in map) map[name.text] = name.id
     }
-    private class IntactNames(entries: List<NativeGuideEntry>, format: NativeGuideFormat) {
+    private class IntactNames(entries: List<Name>, format: NativeGuideFormat) {
         val exact = unique(entries) { NativeGuideNames.intact(it, format) }
         val quality = unique(entries) { GuideNames.stripQuality(NativeGuideNames.intact(it, format)) }
 
-        private fun unique(entries: List<NativeGuideEntry>, key: (String) -> String): Map<String, String?> {
+        private fun unique(entries: List<Name>, key: (String) -> String): Map<String, String?> {
             val result = mutableMapOf<String, String?>()
             for (entry in entries) {
-                val name = key(entry.name)
+                val name = key(entry.original)
                 if (name !in result) result[name] = entry.id
                 else if (result[name] != entry.id) result[name] = null
             }
@@ -117,7 +117,8 @@ class NativeGuideIndex(
     }
     // Only collisions can change the legacy first-ID answer. Keep their intact
     // aliases so an unshifted name cannot lose to a stripped regional suffix.
-    private val intact = entries.groupBy { NativeGuideNames.normalized(it.name, format) }
+    // Empty normalized names cannot reach this map: they have no exact entry.
+    private val intact = names.groupBy { it.text }
         .filterValues { rows -> rows.any { it.id != rows[0].id } }
         .mapValues { (_, rows) -> IntactNames(rows, format) }
     // UTF-16 indexes only exclude impossible substrings; scoring still uses the
@@ -128,10 +129,6 @@ class NativeGuideIndex(
 
     /** Compact immutable edges avoid allocating/hashing every query substring. */
     private class ContainedNames(names: List<Name>) {
-        private class Node {
-            val children = mutableMapOf<Char, Int>()
-            val rows = mutableListOf<Int>()
-        }
         private val edgeStarts: IntArray
         private val edgeUnits: IntArray
         private val edgeTargets: IntArray
@@ -139,36 +136,47 @@ class NativeGuideIndex(
         private val rows: IntArray
 
         init {
-            val nodes = mutableListOf(Node())
-            for ((row, name) in names.withIndex()) {
-                var node = 0
-                for (unit in name.text) {
-                    val children = nodes[node].children
-                    node = children[unit] ?: nodes.size.also { next ->
-                        children[unit] = next
-                        nodes.add(Node())
-                    }
+            val parents = mutableListOf(-1)
+            val units = mutableListOf(0)
+            val path = mutableListOf(0)
+            val terminals = IntArray(names.size)
+            var previous = ""
+            // UTF-16 lexical order creates each parent's edges in code-unit order.
+            // Reuse the common prefix rather than allocate a map/list per node.
+            for (row in names.indices.sortedBy { names[it].text }) {
+                val text = names[row].text
+                var common = 0
+                while (common < previous.length && common < text.length && previous[common] == text[common]) common++
+                while (path.size > common + 1) path.removeAt(path.lastIndex)
+                for (index in common until text.length) {
+                    val node = parents.size
+                    parents.add(path.last())
+                    units.add(text[index].code)
+                    path.add(node)
                 }
-                nodes[node].rows.add(row)
+                terminals[row] = path.last()
+                previous = text
             }
-            edgeStarts = IntArray(nodes.size + 1)
-            edgeUnits = IntArray(nodes.size - 1)
-            edgeTargets = IntArray(nodes.size - 1)
-            rowStarts = IntArray(nodes.size + 1)
+            edgeStarts = IntArray(parents.size + 1)
+            rowStarts = IntArray(parents.size + 1)
+            for (node in 1 until parents.size) edgeStarts[parents[node] + 1]++
+            for (node in terminals) rowStarts[node + 1]++
+            for (node in 1..parents.size) {
+                edgeStarts[node] += edgeStarts[node - 1]
+                rowStarts[node] += rowStarts[node - 1]
+            }
+            edgeUnits = IntArray(parents.size - 1)
+            edgeTargets = IntArray(parents.size - 1)
             rows = IntArray(names.size)
-            var edge = 0
-            var row = 0
-            for ((index, node) in nodes.withIndex()) {
-                edgeStarts[index] = edge
-                for (unit in node.children.keys.sorted()) {
-                    edgeUnits[edge] = unit.code
-                    edgeTargets[edge++] = node.children.getValue(unit)
-                }
-                rowStarts[index] = row
-                for (name in node.rows) rows[row++] = name
+            val edgeCursor = edgeStarts.copyOf()
+            for (node in 1 until parents.size) {
+                val edge = edgeCursor[parents[node]]++
+                edgeUnits[edge] = units[node]
+                edgeTargets[edge] = node
             }
-            edgeStarts[nodes.size] = edge
-            rowStarts[nodes.size] = row
+            val rowCursor = rowStarts.copyOf()
+            // Terminal postings retain original row order, including duplicates.
+            for (row in names.indices) rows[rowCursor[terminals[row]]++] = row
         }
 
         fun addMatches(candidate: String, selected: MutableSet<Int>) {

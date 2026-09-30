@@ -31,7 +31,7 @@ internal object CoreText {
     fun unicodeSpace(value: Char): Boolean = (space(value) && value != '\ufeff') || value == '\u0085'
     fun asciiSpace(value: Char): Boolean = value == ' ' || value in '\u0009'..'\u000d'
 
-    fun trim(value: String, whitespace: (Char) -> Boolean = ::space): String {
+    inline fun trim(value: String, whitespace: (Char) -> Boolean = ::space): String {
         var start = 0
         var end = value.length
         while (start < end && whitespace(value[start])) start++
@@ -39,7 +39,7 @@ internal object CoreText {
         return value.substring(start, end)
     }
 
-    fun normalizedSpaces(value: String, whitespace: (Char) -> Boolean = ::space): String {
+    inline fun normalizedSpaces(value: String, whitespace: (Char) -> Boolean = ::space): String {
         val result = StringBuilder()
         var pendingSpace = false
         for (character in value) {
