@@ -138,3 +138,19 @@ publication and core delivery. FOSS2 installation and upgrade instructions are i
 [the beta release notes](ottplay-foss2/docs/RELEASE-0.6.0-beta.2.md).
 
 Optional trusted-main k3s runner routing is documented in [CI runner selection](docs/CI-RUNNERS.md).
+
+## Project directory
+
+The public consumers and services have separate release and deployment lifecycles:
+
+- [ottplay-foss](https://github.com/open-ott-play/ottplay-foss) — browser/STB player,
+  native wrappers and Rust/Node companions consuming the shared ES5 distribution.
+- [ottplay-android](https://github.com/open-ott-play/ottplay-android) — native
+  Android/Android TV app consuming the JVM distribution.
+- [ottplay-control-server](https://github.com/open-ott-play/ottplay-control-server)
+  and [ottplay-swop](https://github.com/open-ott-play/ottplay-swop) — command delivery
+  and optional text-entry services consuming generated wire policies.
+- [ottplay-web-vitrine](https://github.com/open-ott-play/ottplay-web-vitrine) —
+  hosted publication of reviewed FOSS artifacts, not a separate compiler build.
+
+For the client developed inside this repository, see [FOSS2](ottplay-foss2/README.md).
