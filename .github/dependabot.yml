@@ -1,0 +1,21 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: gradle
+    directory: /shared-core
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: npm
+    directory: /ottplay-foss2
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: npm
+    directory: /shared-core
+    schedule:
+      interval: weekly

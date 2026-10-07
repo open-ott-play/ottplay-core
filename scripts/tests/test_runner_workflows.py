@@ -81,7 +81,10 @@ class WorkflowRoutingTests(unittest.TestCase):
             self.assertIn("runs-on: " + routed(GENERIC, "ubuntu-latest"), job)
             self.assertRegex(job, r"needs: (?:scope|\[scope, portable\])")
             self.assertIn("needs.scope.outputs.reason != 'documentation-only'", job)
-            sequence = steps(job)
+            hardened = steps(job)
+            self.assertIn("uses: step-security/harden-runner@351661ca32ac09a36dc5ee2d536e3128f2a3c8ed", hardened[0])
+            self.assertIn("egress-policy: audit", hardened[0])
+            sequence = hardened[1:]
             self.assertTrue(sequence[0].startswith("uses: actions/checkout@"))
             self.assertIn("ci-runner-preflight.py", sequence[1])
             self.assertIn("if: runner.environment == 'self-hosted'", sequence[1])
