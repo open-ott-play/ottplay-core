@@ -397,6 +397,16 @@ function verify(context, profile) {
     const record = { tvgId: "__proto__", name: "News", epgUrls: [guide.sourceUrl] };
     const matched = core.matchedGuideChannel(record, joined);
     assert.equal(matched, JSON.stringify([guide.sourceUrl, "__proto__"]));
+    const lookupReads = { names: 0, aliases: 0 };
+    const lazyGuide = { byChannel: { id: [] } };
+    Object.defineProperties(lazyGuide, {
+        byName: { get() { lookupReads.names++; return { news: ["id"] }; } },
+        byAlias: { get() { lookupReads.aliases++; return { news: ["id"] }; } }
+    });
+    assert.equal(core.matchedGuideChannel({ tvgId: "id", tvgName: "News HD", name: "News" }, lazyGuide), "id");
+    assert.deepEqual(lookupReads, { names: 0, aliases: 0 });
+    assert.equal(core.matchedGuideChannel({ tvgName: "News" }, lazyGuide), "id");
+    assert.deepEqual(lookupReads, { names: 1, aliases: 0 });
     assert.equal(joined.byChannel[matched], joined.byChannel.__proto__);
     assert.equal(joined.programmes[0], guide.programmes[0]);
     assert.equal(joined.coverage.limited, true);
