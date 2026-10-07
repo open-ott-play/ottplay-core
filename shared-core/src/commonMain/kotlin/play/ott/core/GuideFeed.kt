@@ -211,16 +211,19 @@ object GuideFeeds {
         return match(-1, affinity.isNotEmpty())
     }
 
+    /** Lookup callbacks are pure feed-index reads; stop once the ordered policy has a unique match. */
     fun choose(id: String, names: List<String>, namesOnly: Boolean, ids: (String) -> List<String>,
         candidates: (Boolean, String) -> List<String>, exists: (String) -> Boolean): String? {
+        val key = CoreText.trim(id)
+        if (!namesOnly && key.isNotEmpty()) ids(key).singleOrNull()?.let { return it }
         val normalized = names.map(GuideNames::normalized)
         fun matches(alias: Boolean, name: String): List<String> {
             if (name.isEmpty()) return emptyList()
             val values = candidates(alias, name)
             return if (values.size == 1 && !exists(values[0])) emptyList() else values
         }
-        val key = CoreText.trim(id)
-        return GuideNames.chooseOrdered(if (namesOnly || key.isEmpty()) emptyList() else ids(key),
-            normalized.map { matches(false, it) }, normalized.map { matches(true, GuideNames.canonical(it)) })
+        for (name in normalized) matches(false, name).singleOrNull()?.let { return it }
+        for (name in normalized) matches(true, GuideNames.canonical(name)).singleOrNull()?.let { return it }
+        return null
     }
 }

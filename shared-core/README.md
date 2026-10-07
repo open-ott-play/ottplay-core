@@ -22,6 +22,9 @@ inputs, Z and colon offsets, with the existing 18:00 offset limit. Both preserve
 year 0000 and reject impossible dates. One calendar implementation serves both.
 Names retain regional and time-shift labels. Exact IDs precede ordered exact
 names, then unique quality aliases; ambiguity does not pick an arbitrary ID.
+Browser matching stops at the first unique result in that order. The common
+`GuideFeeds.choose` callbacks are pure feed-index lookups, not notifications;
+later lookups are skipped once a result is known.
 Schedules use half-open intervals, the latest starting overlap and stable ties.
 
 The generic and M3U provider readers use the shared quote-aware EXTINF delimiter
