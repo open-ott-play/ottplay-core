@@ -30,7 +30,7 @@
     "hls.js": "1.7.3",
     "jsdom": "29.1.1",
     "mpegts.js": "1.8.2",
-    "parse5": "7.3.0",
+    "parse5": "8.0.1",
     "playwright": "1.63.0",
     "shaka-player": "5.2.10"
   },
