@@ -51,14 +51,26 @@ function validLocalOrigin(req) {
 }
 
 function createRelay(configuration = {}) {
-    const allowed = new Set();
+    const allowed = new Map();
     for (const value of configuration.allowOrigins || []) {
         const url = targetURL(value);
         if (url.pathname !== "/" || url.search) throw new Error("Relay allowlist entries must be exact HTTP(S) origins");
-        allowed.add(url.origin);
+        allowed.set(url.origin, url);
     }
     const lookup = configuration.lookup || dns.lookup;
-    const request = configuration.request || ((url, options, callback) => (url.protocol === "https:" ? https : http).request(url, options, callback));
+    const request = configuration.request || ((url, options, callback) => {
+        // Only the request path comes from the client. The transport destination
+        // comes from the operator's exact origin allowlist on every redirect.
+        const origin = allowed.get(url.origin);
+        if (!origin) throw new Error("UPSTREAM_ORIGIN_NOT_ALLOWED");
+        return (origin.protocol === "https:" ? https : http).request({
+            ...options,
+            protocol: origin.protocol,
+            hostname: hostName(origin.hostname),
+            port: origin.port,
+            path: url.pathname + url.search,
+        }, callback);
+    });
     const responseLimit = Math.min(configuration.responseLimit || 16 * 1024 * 1024, 16 * 1024 * 1024);
     const bodyLimit = Math.min(configuration.bodyLimit || 64 * 1024, 64 * 1024);
     const timeout = Math.min(configuration.timeout || 20000, 20000);
