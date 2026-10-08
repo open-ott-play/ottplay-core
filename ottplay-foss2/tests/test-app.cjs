@@ -36,6 +36,7 @@ function fixture(options = {}) {
     nodes["player-stage"].requestFullscreen = function () { document.fullscreenElement = this; };
     const environment = {
         document, innerWidth: 1280, innerHeight: 720,
+        crypto: require("node:crypto").webcrypto, Uint8Array,
         localStorage: { getItem() { return stored; }, setItem(key, value) { stored = value; } },
         setTimeout(callback, delay) { const id = ++timerId; timers.set(id, { callback, delay }); return id; },
         clearTimeout(id) { timers.delete(id); },
@@ -386,6 +387,15 @@ test("first PIN setup can protect the channel that opened the setup flow", () =>
     assert.equal(f.resolveCalls.length, 0);
     f.action("unlock", "", {"access-pin":"5678"});
     assert.equal(f.resolveCalls.length, 1);
+    f.controller.destroy();
+});
+
+test("PIN setup reports unavailable secure randomness without enabling protection", () => {
+    const f = fixture({ environment: { crypto: undefined, msCrypto: undefined } });
+    f.action("protectChannel", f.live.id);
+    f.action("configurePIN", "", {"pin-new":"5678", "pin-repeat":"5678", "pin-channel":f.live.id});
+    assert.equal(f.saved.security.enabled, false);
+    assert.equal(f.toasts.at(-1), "This browser cannot safely create a PIN. Use a browser with Web Crypto.");
     f.controller.destroy();
 });
 

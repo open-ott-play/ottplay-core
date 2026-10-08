@@ -104,7 +104,8 @@ async function main() {
             res.writeHead(response.status, Object.fromEntries(response.headers));
             res.end(Buffer.from(await response.arrayBuffer()));
         } catch (error) {
-            res.writeHead(500); res.end(String(error));
+            console.error("SWOP fixture request failed", error);
+            res.writeHead(500); res.end("FIXTURE_REQUEST_FAILED");
         }
     });
     server.listen(0, '127.0.0.1');
