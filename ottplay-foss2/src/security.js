@@ -1,11 +1,11 @@
 /* Local parental controls, independent from any provider or remote authentication.
  * ES5 SHA-256 with 2048 iterations is a bounded deterrent suitable for old TVs.
  * A short PIN and browser storage do not resist an owner with developer tools.
- * The salt is public; the clock/counter fallback is NOT a random credential.
+ * Creating or changing a PIN requires a cryptographically secure random source.
  */
 OTT2.define("security", function () {
     "use strict";
-    var has = Object.prototype.hasOwnProperty, serial = 0, iterations = 2048;
+    var has = Object.prototype.hasOwnProperty, iterations = 2048;
     var constants = [1116352408, 1899447441, 3049323471, 3921009573, 961987163, 1508970993, 2453635748, 2870763221,
         3624381080, 310598401, 607225278, 1426881987, 1925078388, 2162078206, 2614888103, 3248222580,
         3835390401, 4022224774, 264347078, 604807628, 770255983, 1249150122, 1555081692, 1996064986,
@@ -128,25 +128,28 @@ OTT2.define("security", function () {
             try {
                 if (options.randomBytes) bytes = options.randomBytes(16);
                 else if (crypto && crypto.getRandomValues && host.Uint8Array) { bytes = new host.Uint8Array(16); crypto.getRandomValues(bytes); }
-                if (bytes && bytes.length >= 16) {
+                if (bytes && bytes.length === 16) {
                     for (i = 0; i < 16; i++) {
-                        if (typeof bytes[i] !== "number" || bytes[i] < 0 || bytes[i] > 255 || bytes[i] % 1) throw new Error("Invalid salt byte");
+                        if (typeof bytes[i] !== "number" || !isFinite(bytes[i]) || bytes[i] < 0 || bytes[i] > 255 || bytes[i] % 1) throw new Error("Invalid salt byte");
                         text += ("0" + bytes[i].toString(16)).slice(-2);
                     }
                     return text;
                 }
-            } catch (ignore) { /* A salt is public and need not be unpredictable. */ }
-            serial++;
-            return "clock-" + clock().toString(36) + "-" + serial.toString(36) + "-public-salt";
+            } catch (ignore) { /* Do not fall back to a predictable salt. */ }
+            return null;
         }
         function configure(currentPin, newPin, callback) {
-            var config = read(), result;
+            var config = read(), result, newSalt;
             if (!validPin(newPin)) result = { ok: false, code: "PIN_FORMAT" };
             else if (config.enabled && !(result = verify(currentPin)).ok) { /* Keep existing configuration. */ }
             else {
-                config.enabled = true; config.salt = salt(); config.iterations = iterations;
-                config.hash = hashPin(newPin, config.salt, config.iterations); config.failures = 0; config.blockedUntil = 0;
-                save(config); lock(); result = { ok: true, code: "CONFIGURED" };
+                newSalt = salt();
+                if (!newSalt) { lock(); result = { ok: false, code: "RANDOM_UNAVAILABLE" }; }
+                else {
+                    config.enabled = true; config.salt = newSalt; config.iterations = iterations;
+                    config.hash = hashPin(newPin, config.salt, config.iterations); config.failures = 0; config.blockedUntil = 0;
+                    save(config); lock(); result = { ok: true, code: "CONFIGURED" };
+                }
             }
             if (callback) callback(result);
             return result;

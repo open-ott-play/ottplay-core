@@ -4,6 +4,10 @@
 
 ### Security
 
+- Refuse to create or change a parental PIN when secure randomness is missing,
+  fails or returns invalid bytes. Existing PIN verification remains available;
+  older browsers need Web Crypto before setting a new PIN. Remove the predictable
+  clock/counter salt fallback and explain the requirement in the interface.
 - Build FOSS2 relay transport destinations from operator-approved origins;
   only the path/query comes from the validated request. Existing exact-origin,
   redirect, DNS pinning and private-address checks remain required.
