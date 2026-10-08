@@ -2,6 +2,7 @@
 // The public default guide is streamed on the server; TV browsers receive only
 // requested channel metadata, one future day and up to seven archive days.
 const https = require("node:https");
+const { upstreamCiphers } = require("./tls-policy.cjs");
 const zlib = require("node:zlib");
 const crypto = require("node:crypto");
 const { StringDecoder } = require("node:string_decoder");
@@ -164,7 +165,7 @@ function createEPG(configuration = {}) {
         }
         function follow(url, redirects) {
             try {
-                const attempt = request(url, { method: "GET", agent: false, rejectUnauthorized: true, headers: { Accept: "application/xml, application/gzip, */*", "Accept-Encoding": "identity", "User-Agent": "OTT-play-FOSS2/0.3" } }, response => {
+                const attempt = request(url, { method: "GET", agent: false, rejectUnauthorized: true, ciphers: upstreamCiphers(), headers: { Accept: "application/xml, application/gzip, */*", "Accept-Encoding": "identity", "User-Agent": "OTT-play-FOSS2/0.3" } }, response => {
                     if (done) { response.destroy(); return; }
                     incoming = response;
                     if ([301, 302, 303, 307, 308].includes(response.statusCode)) {

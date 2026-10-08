@@ -2,6 +2,7 @@
 // Optional playlist / EPG / portal relay. It never streams video or exposes remote control.
 const http = require("node:http");
 const https = require("node:https");
+const { upstreamCiphers } = require("./tls-policy.cjs");
 const dns = require("node:dns");
 const net = require("node:net");
 const zlib = require("node:zlib");
@@ -137,7 +138,7 @@ function createRelay(configuration = {}) {
                 // LAN access requires an explicitly configured literal IP origin.
                 if (!literal && records.some(record => localName ? !["127.0.0.1", "::1"].includes(address(record.address)) : isPrivate(record.address))) { finish(403, "UPSTREAM_ADDRESS_NOT_ALLOWED"); return; }
                 const chosen = records[0], family = net.isIP(chosen.address);
-                const options = { method: "GET", agent: false, rejectUnauthorized: true,
+                const options = { method: "GET", agent: false, rejectUnauthorized: true, ciphers: upstreamCiphers(),
                     headers: { ...suppliedHeaders, "accept-encoding": "identity" },
                     lookup(name, settings, callback) {
                         if (typeof settings === "function") { callback = settings; settings = {}; }
