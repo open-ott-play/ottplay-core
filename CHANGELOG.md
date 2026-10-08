@@ -4,6 +4,12 @@
 
 ### Security
 
+- Require OpenSSL security level 2 or an explicitly stronger configured policy
+  in the FOSS2 Node relay and EPG downloader. Weak upstream certificates and CA
+  chains now fail before HTTP or authentication data is sent. Keep isolated TLS
+  handshakes for every request; operators must renew weak upstream certificates
+  rather than disabling verification. This changes no shared-core wire schema.
+
 - Refuse to create or change a parental PIN when secure randomness is missing,
   fails or returns invalid bytes. Existing PIN verification remains available;
   older browsers need Web Crypto before setting a new PIN. Remove the predictable
