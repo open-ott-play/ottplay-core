@@ -181,11 +181,12 @@ test("shared global programme budget counts exact identities once when reserving
     assert.equal((result.body.match(/<programme /g) || []).length, 4);
 });
 
-test("EPG text bounds are independent of upstream chunk boundaries", async () => {
+test("EPG code-unit bounds are independent of encoding and upstream chunk boundaries", async () => {
     const prefix = Buffer.from("<tv><ignored>");
     const suffix = Buffer.from("</ignored></tv>");
-    for (const size of [1024 * 1024, 1024 * 1024 + 1]) {
-        const field = Buffer.from("x".repeat(size));
+    for (const glyph of ["x", "界", "😀"]) for (const size of [1024 * 1024, 1024 * 1024 + 1]) {
+        const text = glyph.repeat(Math.floor(size / glyph.length)) + "x".repeat(size % glyph.length);
+        const field = Buffer.from(text);
         for (const chunks of [
             [Buffer.concat([prefix, field, suffix])],
             [prefix, field.subarray(0, 512 * 1024), Buffer.concat([field.subarray(512 * 1024), suffix])],

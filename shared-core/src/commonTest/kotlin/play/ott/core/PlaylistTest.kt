@@ -80,6 +80,15 @@ class PlaylistTest {
             read("#EXTINF:-1\ntvg-name=$oversized,Title\nhttps://t/a", PlaylistFormat.ANDROID)
         }.code)
     }
+    @Test fun androidLineLimitAcceptsTheExactNormalizedBoundary() {
+        val propertyPrefix = "#KODIPROP:header="
+        val property = propertyPrefix + "a".repeat(1_048_576 - propertyPrefix.length)
+        assertTrue(read("#EXT-X-TARGETDURATION:10\n  $property  ", PlaylistFormat.ANDROID).hls)
+        val metadataPrefix = "tvg-name="
+        val title = ",Title"
+        val metadata = metadataPrefix + "a".repeat(1_048_576 - metadataPrefix.length - title.length) + title
+        assertEquals("Title", read("#EXTINF:-1\n  $metadata  \nhttps://t/a", PlaylistFormat.ANDROID).entries.single().name)
+    }
     @Test fun providerLegacyAttributeRules() {
         assertEquals("News", ProviderPlaylist.attribute("tvg-name=\"News\"", "tvg-name"))
         assertEquals("", ProviderPlaylist.attribute("TVG-NAME=\"News\"", "tvg-name"))

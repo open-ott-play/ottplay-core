@@ -41,7 +41,10 @@ Limits are explicit:
 
 - Request: 4 MiB, at most 16,384 channel identities, 512 characters per field.
 - Upstream: 80 MiB compressed/wire data, 512 MiB decoded data, 120-second timeout.
-- XML: bounded nesting and field lengths; custom entity declarations are rejected.
+- XML: bounded nesting and field lengths; text between XML delimiters is limited
+  to 1,048,576 UTF-16 code units, with tighter bounds on retained metadata fields.
+  This text-length limit is separate from the upstream and result byte limits.
+  Custom entity declarations are rejected.
 - Result: at most 384 programmes per channel, 50,000 total, 16 MiB serialized XML;
   the per-channel allowance shrinks as needed to share the total budget across
   requested identities and candidate XMLTV channels. The limit of 384 is a

@@ -12,6 +12,7 @@ const core = require("../vendor/ottplay-core.js");
 
 const DEFAULT_EPG_URL = "https://cdn.epg.one/epg2.xml.gz";
 const MB = 1024 * 1024;
+const MAX_XML_GAP_CODE_UNITS = 1024 * 1024;
 const canonicalName = value => core.canonicalChannelName(String(value || ""));
 const escape = value => String(value || "").replace(/[&<>"']/g, character => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;" }[character]));
 function identities(dto) {
@@ -138,11 +139,11 @@ function createEPG(configuration = {}) {
             decoded += chunk.length;
             if (decoded > limits.decoded) { finish(502, "EPG_DECODED_TOO_LARGE"); return; }
             const text = utf8.write(chunk);
-            if (gap + text.length > MB) {
+            if (gap + text.length > MAX_XML_GAP_CODE_UNITS) {
                 const boundaries = /[<>]/g;
                 let boundary, offset = 0;
                 while ((boundary = boundaries.exec(text))) {
-                    if (gap + boundary.index - offset > MB) { finish(502, "EPG_FIELD_TOO_LARGE"); return; }
+                    if (gap + boundary.index - offset > MAX_XML_GAP_CODE_UNITS) { finish(502, "EPG_FIELD_TOO_LARGE"); return; }
                     gap = 0;
                     offset = boundary.index + 1;
                 }
@@ -151,7 +152,7 @@ function createEPG(configuration = {}) {
                 const lastBoundary = Math.max(text.lastIndexOf("<"), text.lastIndexOf(">"));
                 gap = lastBoundary < 0 ? gap + text.length : text.length - lastBoundary - 1;
             }
-            if (gap > MB) { finish(502, "EPG_FIELD_TOO_LARGE"); return; }
+            if (gap > MAX_XML_GAP_CODE_UNITS) { finish(502, "EPG_FIELD_TOO_LARGE"); return; }
             try { parser.write(text); } catch (error) { finish(502, /^EPG_/.test(error.code || "") ? error.code : "EPG_XML"); }
         }
         function complete() {
