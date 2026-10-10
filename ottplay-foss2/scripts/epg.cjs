@@ -12,9 +12,57 @@ const core = require("../vendor/ottplay-core.js");
 
 const DEFAULT_EPG_URL = "https://cdn.epg.one/epg2.xml.gz";
 const MB = 1024 * 1024;
-const MAX_XML_GAP_CODE_UNITS = 1024 * 1024;
+const MAX_XML_TOKEN_CODE_UNITS = 1024 * 1024;
 const canonicalName = value => core.canonicalChannelName(String(value || ""));
 const escape = value => String(value || "").replace(/[&<>"']/g, character => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;" }[character]));
+// Bound lexical tokens before saxes buffers them. Keep only delimiter state;
+// saxes remains responsible for XML validity and entity decoding.
+function xmlTokenGuard() {
+    let mode = "text", length = 0, prefix = "", quote = "", subset = 0, tail = "";
+    function count() {
+        if (++length > MAX_XML_TOKEN_CODE_UNITS) throw Object.assign(new Error("EPG_FIELD_TOO_LARGE"), { code: "EPG_FIELD_TOO_LARGE" });
+    }
+    function tag(character) {
+        if (quote) {
+            count();
+            if (character === quote) quote = "";
+        } else if (character === '"' || character === "'") {
+            count(); quote = character;
+        } else if (character === ">" && subset === 0) {
+            mode = "text"; length = 0;
+        } else {
+            count();
+            if (character === "[") subset++;
+            else if (character === "]" && subset > 0) subset--;
+        }
+    }
+    return text => {
+        for (let index = 0; index < text.length; index++) {
+            const character = text[index];
+            if (mode === "text") {
+                if (character === "<") { mode = "opening"; prefix = ""; length = 0; }
+                else count();
+            } else if (mode === "opening") {
+                prefix += character;
+                if (prefix === "!--" || prefix === "![CDATA[" || prefix === "?") {
+                    mode = prefix === "!--" ? "-->" : prefix === "![CDATA[" ? "]]>" : "?>";
+                    tail = "";
+                } else if (!"!--".startsWith(prefix) && !"![CDATA[".startsWith(prefix)) {
+                    mode = "tag"; subset = 0;
+                    for (const value of prefix) tag(value);
+                }
+            } else if (mode === "tag") {
+                tag(character);
+            } else {
+                // Delay at most two characters so a split closing delimiter
+                // does not count towards the token's exact accepted limit.
+                tail += character;
+                if (tail === mode) { mode = "text"; length = 0; tail = ""; }
+                else while (!mode.startsWith(tail)) { count(); tail = tail.slice(1); }
+            }
+        }
+    };
+}
 function identities(dto) {
     if (!dto || typeof dto !== "object" || Array.isArray(dto) || Object.keys(dto).some(key => key !== "channels") || !Array.isArray(dto.channels) || !dto.channels.length || dto.channels.length > 16384) throw new Error("EPG_REQUEST");
     for (const row of dto.channels) {
@@ -95,9 +143,9 @@ function createEPG(configuration = {}) {
     function createJob(key, requested) {
         const job = { key, listeners: new Set(), started: false, start, cancel: () => finish(499, "EPG_CANCELLED") };
         const guide = new core.StreamingGuideFilter(requested, now() / 1000, limits.programmes, limits.perChannel);
-        const parser = new SaxesParser(), utf8 = new StringDecoder("utf8");
+        const parser = new SaxesParser(), utf8 = new StringDecoder("utf8"), checkXmlTokens = xmlTokenGuard();
         let done = false, outgoing = null, incoming = null, decoder = null, timer;
-        let wire = 0, decoded = 0, depth = 0, sawRoot = false, gap = 0;
+        let wire = 0, decoded = 0, depth = 0, sawRoot = false;
         const records = new core.WebXmltvRecords("node-streaming", (id, begin, end) => guide.accepts(id, begin, end), value => {
             try {
                 const url = new URL(value, DEFAULT_EPG_URL);
@@ -139,26 +187,14 @@ function createEPG(configuration = {}) {
             decoded += chunk.length;
             if (decoded > limits.decoded) { finish(502, "EPG_DECODED_TOO_LARGE"); return; }
             const text = utf8.write(chunk);
-            if (gap + text.length > MAX_XML_GAP_CODE_UNITS) {
-                const boundaries = /[<>]/g;
-                let boundary, offset = 0;
-                while ((boundary = boundaries.exec(text))) {
-                    if (gap + boundary.index - offset > MAX_XML_GAP_CODE_UNITS) { finish(502, "EPG_FIELD_TOO_LARGE"); return; }
-                    gap = 0;
-                    offset = boundary.index + 1;
-                }
-                gap += text.length - offset;
-            } else {
-                const lastBoundary = Math.max(text.lastIndexOf("<"), text.lastIndexOf(">"));
-                gap = lastBoundary < 0 ? gap + text.length : text.length - lastBoundary - 1;
-            }
-            if (gap > MAX_XML_GAP_CODE_UNITS) { finish(502, "EPG_FIELD_TOO_LARGE"); return; }
-            try { parser.write(text); } catch (error) { finish(502, /^EPG_/.test(error.code || "") ? error.code : "EPG_XML"); }
+            try { checkXmlTokens(text); parser.write(text); } catch (error) { finish(502, /^EPG_/.test(error.code || "") ? error.code : "EPG_XML"); }
         }
         function complete() {
             if (done) return;
             try {
-                parser.write(utf8.end()).close();
+                const finalText = utf8.end();
+                checkXmlTokens(finalText);
+                parser.write(finalText).close();
                 if (!sawRoot) invalid("EPG_XML");
                 let xml = "";
                 const coverage = guide.output(limits.output,

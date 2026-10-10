@@ -41,8 +41,10 @@ Limits are explicit:
 
 - Request: 4 MiB, at most 16,384 channel identities, 512 characters per field.
 - Upstream: 80 MiB compressed/wire data, 512 MiB decoded data, 120-second timeout.
-- XML: bounded nesting and field lengths; text between XML delimiters is limited
-  to 1,048,576 UTF-16 code units, with tighter bounds on retained metadata fields.
+- XML: bounded nesting and field lengths; each lexical token (text, tag contents,
+  comment, CDATA or processing instruction) is limited to 1,048,576 UTF-16 code
+  units, with tighter bounds on retained metadata fields. Literal angle brackets
+  inside a token do not reset the limit.
   This text-length limit is separate from the upstream and result byte limits.
   Custom entity declarations are rejected.
 - Result: at most 384 programmes per channel, 50,000 total, 16 MiB serialized XML;
