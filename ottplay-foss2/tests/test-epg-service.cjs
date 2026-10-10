@@ -180,3 +180,35 @@ test("shared global programme budget counts exact identities once when reserving
     for (const title of ['a current', 'a next', 'b current', 'b next']) assert(result.body.includes(title), title);
     assert.equal((result.body.match(/<programme /g) || []).length, 4);
 });
+
+test("EPG text bounds are independent of upstream chunk boundaries", async () => {
+    const prefix = Buffer.from("<tv><ignored>");
+    const suffix = Buffer.from("</ignored></tv>");
+    for (const size of [1024 * 1024, 1024 * 1024 + 1]) {
+        const field = Buffer.from("x".repeat(size));
+        for (const chunks of [
+            [Buffer.concat([prefix, field, suffix])],
+            [prefix, field.subarray(0, 512 * 1024), Buffer.concat([field.subarray(512 * 1024), suffix])],
+            [prefix, field, suffix]
+        ]) {
+            const f = fixture({}, { chunks });
+            const result = await invoke(f.epg).result;
+            assert.equal(result.status, size > 1024 * 1024 ? 502 : 200);
+            if (result.status === 502) assert.equal(result.body, "EPG_FIELD_TOO_LARGE");
+            assert.equal(f.calls[0].req.destroyed, true);
+        }
+    }
+});
+
+test("EPG output limit includes the XML envelope even for an empty guide", async () => {
+    const route = { body: Buffer.from("<tv/>") };
+    const full = await invoke(fixture({}, route).epg).result;
+    assert.equal(full.status, 200);
+    const bytes = Buffer.byteLength(full.body);
+    const exact = await invoke(fixture({ outputLimit: bytes }, route).epg).result;
+    assert.equal(exact.status, 200);
+    assert.equal(exact.body, full.body);
+    const short = await invoke(fixture({ outputLimit: bytes - 1 }, route).epg).result;
+    assert.equal(short.status, 502);
+    assert.equal(short.body, "EPG_TOO_LARGE");
+});

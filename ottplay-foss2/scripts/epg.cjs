@@ -138,8 +138,19 @@ function createEPG(configuration = {}) {
             decoded += chunk.length;
             if (decoded > limits.decoded) { finish(502, "EPG_DECODED_TOO_LARGE"); return; }
             const text = utf8.write(chunk);
-            const lastBoundary = Math.max(text.lastIndexOf("<"), text.lastIndexOf(">"));
-            gap = lastBoundary < 0 ? gap + text.length : text.length - lastBoundary;
+            if (gap + text.length > MB) {
+                const boundaries = /[<>]/g;
+                let boundary, offset = 0;
+                while ((boundary = boundaries.exec(text))) {
+                    if (gap + boundary.index - offset > MB) { finish(502, "EPG_FIELD_TOO_LARGE"); return; }
+                    gap = 0;
+                    offset = boundary.index + 1;
+                }
+                gap += text.length - offset;
+            } else {
+                const lastBoundary = Math.max(text.lastIndexOf("<"), text.lastIndexOf(">"));
+                gap = lastBoundary < 0 ? gap + text.length : text.length - lastBoundary - 1;
+            }
             if (gap > MB) { finish(502, "EPG_FIELD_TOO_LARGE"); return; }
             try { parser.write(text); } catch (error) { finish(502, /^EPG_/.test(error.code || "") ? error.code : "EPG_XML"); }
         }
@@ -155,6 +166,7 @@ function createEPG(configuration = {}) {
                     value => Buffer.byteLength(value), value => { xml += value; });
                 if (!coverage) invalid("EPG_TOO_LARGE");
                 const header = '<?xml version="1.0" encoding="UTF-8"?><tv generator-info-name="OTT-play 2 filtered guide" data-window-start="' + coverage.start + '" data-window-end="' + coverage.end + '" data-programme-limit="' + coverage.programmeLimit + '" data-truncated-channels="' + coverage.truncatedChannels + '" data-truncated="' + (coverage.truncatedChannels ? 'true' : 'false') + '">';
+                if (Buffer.byteLength(header) + Buffer.byteLength(xml) + 5 > limits.output) invalid("EPG_TOO_LARGE");
                 finish(200, header + xml + '</tv>');
             } catch (error) { finish(502, /^EPG_/.test(error.code || "") ? error.code : "EPG_XML"); }
         }

@@ -68,6 +68,18 @@ class PlaylistTest {
         assertNull(result.entries[1].archive)
         assertEquals("LINE_SIZE", assertFailsWith<PlaylistFailure> { read("#EXTM3U\n#" + "a".repeat(1_048_576)) }.code)
     }
+    @Test fun androidLineLimitAlsoAppliesToHls() {
+        val oversized = "a".repeat(1_048_576)
+        assertEquals("LINE_SIZE", assertFailsWith<PlaylistFailure> {
+            read("#EXT-X-TARGETDURATION:10\n#KODIPROP:header=$oversized", PlaylistFormat.ANDROID)
+        }.code)
+    }
+    @Test fun androidLineLimitAlsoAppliesToFoldedMetadata() {
+        val oversized = "a".repeat(1_048_576)
+        assertEquals("LINE_SIZE", assertFailsWith<PlaylistFailure> {
+            read("#EXTINF:-1\ntvg-name=$oversized,Title\nhttps://t/a", PlaylistFormat.ANDROID)
+        }.code)
+    }
     @Test fun providerLegacyAttributeRules() {
         assertEquals("News", ProviderPlaylist.attribute("tvg-name=\"News\"", "tvg-name"))
         assertEquals("", ProviderPlaylist.attribute("TVG-NAME=\"News\"", "tvg-name"))
