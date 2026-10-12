@@ -180,3 +180,76 @@ test("shared global programme budget counts exact identities once when reserving
     for (const title of ['a current', 'a next', 'b current', 'b next']) assert(result.body.includes(title), title);
     assert.equal((result.body.match(/<programme /g) || []).length, 4);
 });
+
+test("EPG code-unit bounds are independent of encoding and upstream chunk boundaries", async () => {
+    const prefix = Buffer.from("<tv><ignored>");
+    const suffix = Buffer.from("</ignored></tv>");
+    for (const glyph of ["x", "界", "😀"]) for (const size of [1024 * 1024, 1024 * 1024 + 1]) {
+        const text = glyph.repeat(Math.floor(size / glyph.length)) + "x".repeat(size % glyph.length);
+        const field = Buffer.from(text);
+        for (const chunks of [
+            [Buffer.concat([prefix, field, suffix])],
+            [prefix, field.subarray(0, 512 * 1024), Buffer.concat([field.subarray(512 * 1024), suffix])],
+            [prefix, field, suffix]
+        ]) {
+            const f = fixture({}, { chunks });
+            const result = await invoke(f.epg).result;
+            assert.equal(result.status, size > 1024 * 1024 ? 502 : 200);
+            if (result.status === 502) assert.equal(result.body, "EPG_FIELD_TOO_LARGE");
+            assert.equal(f.calls[0].req.destroyed, true);
+        }
+    }
+});
+
+test("EPG output limit includes the XML envelope even for an empty guide", async () => {
+    const route = { body: Buffer.from("<tv/>") };
+    const full = await invoke(fixture({}, route).epg).result;
+    assert.equal(full.status, 200);
+    const bytes = Buffer.byteLength(full.body);
+    const exact = await invoke(fixture({ outputLimit: bytes }, route).epg).result;
+    assert.equal(exact.status, 200);
+    assert.equal(exact.body, full.body);
+    const short = await invoke(fixture({ outputLimit: bytes - 1 }, route).epg).result;
+    assert.equal(short.status, 502);
+    assert.equal(short.body, "EPG_TOO_LARGE");
+});
+
+test("EPG token bounds distinguish XML delimiters from literal angle brackets", async () => {
+    const limit = 1024 * 1024;
+    for (const [name, prefix, suffix, unit, overhead] of [
+        ["text", "<tv><ignored>", "</ignored></tv>", ">", 0],
+        ["entity text", "<tv><ignored>", "</ignored></tv>", "&gt;", 0],
+        ["attribute", '<tv ignored="', '"></tv>', ">", 'tv ignored=""'.length],
+        ["comment", "<tv><!--", "--></tv>", "<>'\"", 0],
+        ["CDATA", "<tv><![CDATA[", "]]></tv>", "<>'\"", 0],
+        ["processing instruction", "<tv><?ignored ", "?></tv>", "<>'\"", "ignored ".length]
+    ]) for (const size of [limit, limit + 1]) {
+        const count = size - overhead;
+        const field = unit.repeat(Math.floor(count / unit.length)) + "x".repeat(count % unit.length);
+        for (const chunks of [
+            [Buffer.from(prefix + field + suffix)],
+            [...prefix].map(value => Buffer.from(value)).concat(
+                [Buffer.from(field.slice(0, limit / 2)), Buffer.from(field.slice(limit / 2))],
+                [...suffix].map(value => Buffer.from(value)))
+        ]) {
+            const f = fixture({}, { chunks });
+            const result = await invoke(f.epg).result;
+            assert.equal(result.status, size > limit ? 502 : 200, name + ": " + result.body);
+            if (size > limit) assert.equal(result.body, "EPG_FIELD_TOO_LARGE", name);
+            assert.equal(f.calls[0].req.destroyed, true, name);
+        }
+    }
+});
+
+test("EPG token bounds allow many small tags and split mixed XML syntax", async () => {
+    const many = await invoke(fixture({}, { body: Buffer.from("<tv>" + "<ignored/>".repeat(110000) + "</tv>") }).epg).result;
+    assert.equal(many.status, 200, many.body);
+    const xml = '<!DOCTYPE tv SYSTEM "https://example.test/a>b"><tv ignored="a>b"><!-- <\" > --><![CDATA[<\" >]]><?ignored <\" > ?><ignored>&gt; > text</ignored></tv>';
+    const split = await invoke(fixture({}, { chunks: [...xml].map(value => Buffer.from(value)) }).epg).result;
+    // The existing doctype policy excludes angle brackets in external IDs.
+    assert.equal(split.status, 502);
+    assert.equal(split.body, "EPG_XML");
+    const valid = xml.replace("a>b", "ab");
+    const accepted = await invoke(fixture({}, { chunks: [...valid].map(value => Buffer.from(value)) }).epg).result;
+    assert.equal(accepted.status, 200, accepted.body);
+});
