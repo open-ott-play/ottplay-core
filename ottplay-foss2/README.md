@@ -1,6 +1,6 @@
 # OTT-play FOSS 2
 
-**Beta 0.6.0-beta.2** — [release notes and upgrade instructions](docs/RELEASE-0.6.0-beta.2.md).
+**Beta 0.6.0-beta.3** — [release notes and upgrade instructions](docs/RELEASE-0.6.0-beta.3.md).
 
 An IPTV player with an ES5 application runtime and a compact interface for LG televisions and remote controls. Bundled fonts and media libraries are distributed with their notices.
 
@@ -9,7 +9,7 @@ An IPTV player with an ES5 application runtime and a compact interface for LG te
 ## Run
 
 ```sh
-cd ottplay-foss2-0.6.0-beta.2
+cd ottplay-foss2-0.6.0-beta.3
 npm ci --omit=dev
 npm start
 ```

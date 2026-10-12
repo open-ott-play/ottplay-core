@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "builderSha256": "d506c7c35964ac9e8a4a138a7d01bd28bf9f70194a7b7a7c44e1c3e2514961a5",
-  "lockfileSha256": "e09ef5a3b1f15b06b813349070a6cd7b1e4e7ca6ec1be6cda2986e7b659faf86",
+  "lockfileSha256": "f343edf2e4fd21efc0008603e1fbd2b015f8393dec309d75fd683980596a8178",
   "packages": {
     "core-js-bundle": {
       "version": "3.50.0",
