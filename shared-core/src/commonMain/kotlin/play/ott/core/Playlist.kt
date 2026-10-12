@@ -116,7 +116,9 @@ object Playlist {
     ): PlaylistResult {
         if (text.length > 32 * 1024 * 1024) throw PlaylistFailure("SIZE")
         val browser = format == PlaylistFormat.BROWSER
-        val lines = text.removePrefix("\uFEFF").lines().map { trim(it, format) }
+        val lines = text.removePrefix("\uFEFF").lines().map {
+            trim(it, format).also { line -> if (line.length > 1_048_576) throw PlaylistFailure("LINE_SIZE") }
+        }
         if (!browser && lines.any { it.startsWith("#EXT-X-STREAM-INF:") || it.startsWith("#EXT-X-TARGETDURATION:") }) {
             return PlaylistResult(emptyList(), emptyList(), emptyList(), true,
                 lines.filter { it.startsWith("#KODIPROP:", true) }.map {
@@ -159,7 +161,6 @@ object Playlist {
         while (at < lines.size) {
             val line = lines[at++]
             if (line.isEmpty()) continue
-            if (line.length > 1_048_576) throw PlaylistFailure("LINE_SIZE")
             if (browser && !header) {
                 if (!line.startsWith("#EXTM3U", true) || line.length > 7 && !CoreText.space(line[7])) throw PlaylistFailure("FORMAT")
                 defaults = attributes(line, format)

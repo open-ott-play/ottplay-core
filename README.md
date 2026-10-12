@@ -154,3 +154,9 @@ The public consumers and services have separate release and deployment lifecycle
   hosted publication of reviewed FOSS artifacts, not a separate compiler build.
 
 For the client developed inside this repository, see [FOSS2](ottplay-foss2/README.md).
+
+## Project maintenance
+
+See [contribution and test requirements](CONTRIBUTING.md), the
+[security reporting policy](SECURITY.md), [security design](docs/security-design.md),
+and the [OpenSSF evidence and remaining criteria](docs/openssf-evidence.md).
