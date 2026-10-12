@@ -8,7 +8,7 @@
     "check:core": "node scripts/distribute.cjs check"
   },
   "devDependencies": {
-    "acorn": "8.16.0",
+    "acorn": "8.18.0",
     "core-js-bundle": "3.50.0",
     "terser": "5.51.2"
   }
