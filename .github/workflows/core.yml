@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   scope:
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/change-scope.yml@733de629b521477102822ccfcc855427de2f2b08
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/change-scope.yml@774ce8c74d6f82fe09c5c33ac9fb3158c2bb908a
     with:
       runner: ${{ vars.CI_RUNNER_MODE == 'k3s' && github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule') && 'ottplay-k3s-linux-x64' || 'ubuntu-latest' }}
       force-full: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' }}
@@ -101,7 +101,7 @@ jobs:
         run: python3 scripts/ci-runner-preflight.py browser
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: '22'
+          node-version: '^22.22.2'
           cache: npm
           cache-dependency-path: ottplay-foss2/package-lock.json
       - run: npm ci --ignore-scripts
@@ -193,9 +193,9 @@ jobs:
           - repository: open-ott-play/ottplay-core
             destination: ottplay-foss2/vendor
             files: '["ottplay-core.js","ottplay-core.manifest.json","ottplay-core.LICENSE.txt"]'
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/vendor-update.yml@25f56bb98f1cbdb388735c7c2c53e8028993caeb
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/vendor-update.yml@774ce8c74d6f82fe09c5c33ac9fb3158c2bb908a
     with:
-      toolkit-revision: '25f56bb98f1cbdb388735c7c2c53e8028993caeb'
+      toolkit-revision: '774ce8c74d6f82fe09c5c33ac9fb3158c2bb908a'
       source-workflow: .github/workflows/core.yml
       source-tree: shared-core
       artifact-id: ${{ needs.portable.outputs.artifact-id }}

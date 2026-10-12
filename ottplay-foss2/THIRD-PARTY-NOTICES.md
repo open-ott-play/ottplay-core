@@ -35,7 +35,7 @@ It runs after native capability capture and before all application/media scripts
 
 Both payloads are checked with an ES5 grammar. The full bundle also needs newer runtime APIs. The compatibility bootstrap runs before evaluation in each realm, and the application checks real native media capabilities before loading the library. The same-origin worker wrapper is application code; the vendor worker remains unchanged. Missing or failing workers fall back to main-thread transmuxing.
 
-## Shaka Player 5.2.10
+## Shaka Player 5.2.12
 
 `vendor/shaka.min.js` is the unmodified ES5-syntax `dist/shaka-player.compiled.js` from the official `shaka-player` npm package. The [Apache-2.0 license](vendor/shaka.LICENSE.txt), registry integrity and file SHA-256 are supplied in [its provenance](vendor/shaka.provenance.json). [Upstream project](https://github.com/shaka-project/shaka-player).
 

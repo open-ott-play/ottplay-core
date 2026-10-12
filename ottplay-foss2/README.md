@@ -1,6 +1,6 @@
 # OTT-play FOSS 2
 
-**Beta 0.6.0-beta.2** — [release notes and upgrade instructions](docs/RELEASE-0.6.0-beta.2.md).
+**Beta 0.6.0-beta.3** — [release notes and upgrade instructions](docs/RELEASE-0.6.0-beta.3.md).
 
 An IPTV player with an ES5 application runtime and a compact interface for LG televisions and remote controls. Bundled fonts and media libraries are distributed with their notices.
 
@@ -9,7 +9,7 @@ An IPTV player with an ES5 application runtime and a compact interface for LG te
 ## Run
 
 ```sh
-cd ottplay-foss2-0.6.0-beta.2
+cd ottplay-foss2-0.6.0-beta.3
 npm ci --omit=dev
 npm start
 ```
@@ -123,7 +123,7 @@ The relay accepts only same-origin JSON POST requests to `/api/relay`, performs 
 
 The application scripts are ES5 and use callback-based XHR. The interface and native HTML5 path do not require Promise, fetch, Map, Set, URL, Object.assign or Array.from. Layout does not require CSS Grid, Flexbox or CSS custom properties. The Node server uses `saxes` for streaming XMLTV parsing; this server dependency is not sent to the TV and is outside the browser's ES5 runtime.
 
-The 24 legacy device profiles and 192 URL routes are retained as **input/detection contracts**. They are not a claim that 24 firmware-specific media engines have been implemented or tested. Playback uses the device's HTML5 element, native HLS where available, and locally bundled Hls.js 1.7.3, Shaka Player 5.2.10 and mpegts.js 1.8.2 where runtime capabilities allow them. All three vendor bundles parse as ES5 but need additional APIs; unsupported environments keep the native path. LG webOS 1/2 lack MSE, while later firmware capabilities still need checking on the actual television.
+The 24 legacy device profiles and 192 URL routes are retained as **input/detection contracts**. They are not a claim that 24 firmware-specific media engines have been implemented or tested. Playback uses the device's HTML5 element, native HLS where available, and locally bundled Hls.js 1.7.3, Shaka Player 5.2.12 and mpegts.js 1.8.2 where runtime capabilities allow them. All three vendor bundles parse as ES5 but need additional APIs; unsupported environments keep the native path. LG webOS 1/2 lack MSE, while later firmware capabilities still need checking on the actual television.
 
 Eleven bundled font resources provide the selectable font families. `LiberationSans-Regular.ttf` is a Roboto alias, not a distinct Liberation face; asset metadata records the actual family.
 
@@ -161,7 +161,7 @@ Update it through the shared-core distribution script; do not edit the generated
 bundle or restore an application-local copy of these rules. The existing ES5
 bootstrap supplies its required standard APIs on older hosts.
 
-Development tools were verified with Node.js 26.3.1. Install the pinned server and development dependencies when needed:
+Development and test tools require Node.js 22.22.2 or later in the 22.x series, 24.15.0 or later in the 24.x series, or 26.0.0 and later. CI uses the supported Node 22 series; local checks also passed with Node.js 26.3.1. Install the pinned server and development dependencies when needed:
 
 ```sh
 npm ci
