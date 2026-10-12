@@ -34,14 +34,19 @@ def named_step(job, name):
 
 
 def delivery_revision(job):
-    """Read one pinned toolkit call, excluding comments and mutable references."""
+    """Read a matching pinned call and input, excluding comments and duplicates."""
     matches = re.findall(
         r"^    uses: victron-venus/venus-os-ci-toolkit/\.github/workflows/"
         r"vendor-update\.yml@([0-9a-f]{40})[ \t]*(?:#[^\n]*)?$",
         job,
         re.M,
     )
-    return matches[0] if len(matches) == 1 else None
+    inputs = re.findall(
+        r"^      toolkit-revision: '([0-9a-f]{40})'[ \t]*(?:#[^\n]*)?$",
+        job,
+        re.M,
+    )
+    return matches[0] if len(matches) == 1 and inputs == matches else None
 
 
 class WorkflowRoutingTests(unittest.TestCase):
@@ -80,7 +85,6 @@ class WorkflowRoutingTests(unittest.TestCase):
         self.assertIn("needs: [portable, browser-client, wire-contracts]", delivery)
         updater = delivery_revision(delivery)
         self.assertIsNotNone(updater)
-        self.assertIn("toolkit-revision: '" + updater + "'", delivery)
         self.assertIn("artifact-digest: ${{ needs.portable.outputs.artifact-digest }}", delivery)
         self.assertNotIn("CI_RUNNER_MODE", delivery)
         self.assertNotIn("ottplay-k3s", delivery)
@@ -89,11 +93,15 @@ class WorkflowRoutingTests(unittest.TestCase):
         """An obsolete SHA in a comment must not qualify an unpinned call."""
         sha = "a" * 40
         prefix = "    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/vendor-update.yml@"
-        pinned = prefix + sha + "\n"
+        call = prefix + sha + "\n"
+        revision = "      toolkit-revision: '" + sha + "'\n"
+        pinned = call + revision
         self.assertEqual(delivery_revision(pinned), sha)
         self.assertIsNone(delivery_revision("    # " + pinned.strip() + "\n"))
         self.assertIsNone(delivery_revision(prefix + "main\n    # " + pinned.strip() + "\n"))
         self.assertIsNone(delivery_revision(pinned + pinned))
+        mismatched = "      toolkit-revision: '" + "b" * 40 + "'\n"
+        self.assertIsNone(delivery_revision(call + mismatched + "      # " + revision.strip() + "\n"))
 
     def test_scope_and_all_linux_jobs_route_directly_without_hosted_bootstrap(self):
         workflow = jobs("core.yml")
