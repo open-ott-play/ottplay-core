@@ -41,6 +41,12 @@ The transparent area between the native buttons can drag the window. Channel lis
 - **Programme guide:** loads automatically from the playlist or the built-in source; up to ten custom XMLTV URLs can override it. Channel rows show EPG logos and current programmes; the adjacent details show the selected channel’s description and next programme. Filter channels/groups, browse pages, play supported catch-up archives, and set reminders for future programmes. Reminders run while the player is open.
 - **Playback options:** choose available audio/subtitle tracks, picture size, zoom, volume and picture in picture. Options reflect the actual media backend. Audio, subtitles (including Off), aspect and zoom are remembered per channel. Live seeking requires a DVR window.
 - **Settings:** choose the font and scale, accent color, startup restore, sleep timer, history, hidden channels, local relay and parental PIN.
+
+Creating or changing a parental PIN requires Web Crypto secure randomness
+(`crypto.getRandomValues`, or the legacy `msCrypto` equivalent). If unavailable,
+the player leaves protection settings unchanged and explains the requirement.
+Existing PIN verification still works on those browsers. This local control is
+a deterrent against casual access, not protection against the device owner.
 - **Import/export:** review an OTT-play 2 backup or a supported original-player JSON/XML export before replacing settings. Source URLs and credentials are excluded from ordinary exports; including them requires the explicit checkbox.
 
 The TV channel browser uses a compact single heading and dense rows, normally showing 26 channels at standard 720p/1080p text size and 25 when desktop window controls reserve space. Larger text and shorter windows reduce page capacity. Channels, filters and the optional EPG status share the heading; the redundant column heading is omitted. The page counter stays in that heading, and TV pages have no separate Previous/Next row. Use the remote page keys or mouse wheel to page through channels. Long programme details on the right start scrolling after 3 seconds, move at 14 pixels per second, pause for 4 seconds at the bottom and then return to the start. Moving to another channel starts its description at the top, while ordinary EPG refreshes preserve the reading position. Scrolling pauses for dialogs and inactive views; using a mouse temporarily pauses automatic movement. Remote focus stays on the selected channel.
