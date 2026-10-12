@@ -33,6 +33,17 @@ def named_step(job, name):
     return next(step for step in steps(job) if step.startswith("name: " + name + "\n"))
 
 
+def delivery_revision(job):
+    """Read one pinned toolkit call, excluding comments and mutable references."""
+    matches = re.findall(
+        r"^    uses: victron-venus/venus-os-ci-toolkit/\.github/workflows/"
+        r"vendor-update\.yml@([0-9a-f]{40})[ \t]*(?:#[^\n]*)?$",
+        job,
+        re.M,
+    )
+    return matches[0] if len(matches) == 1 else None
+
+
 class WorkflowRoutingTests(unittest.TestCase):
     def test_public_prs_and_nonmain_runs_stay_hosted_even_in_k3s_mode(self):
         for name in ['core.yml']:
@@ -57,6 +68,7 @@ class WorkflowRoutingTests(unittest.TestCase):
                                 self.assertEqual(result, label if trusted else hosted)
 
     def test_current_artifact_qualification_and_signed_delivery_are_preserved(self):
+        """Delivery must use the exact toolkit revision that qualified its payload."""
         workflow = jobs("core.yml")
         self.assertIn("artifact-id: ${{ steps.distribution.outputs.artifact-id }}", workflow["portable"])
         self.assertIn("artifact-digest: ${{ steps.distribution.outputs.artifact-digest }}", workflow["portable"])
@@ -66,12 +78,22 @@ class WorkflowRoutingTests(unittest.TestCase):
         self.assertIn("distribute.cjs install-web", workflow["browser-client"])
         delivery = workflow["deliver"]
         self.assertIn("needs: [portable, browser-client, wire-contracts]", delivery)
-        updater = re.search(r"vendor-update\.yml@([0-9a-f]{40})\n", delivery)
+        updater = delivery_revision(delivery)
         self.assertIsNotNone(updater)
-        self.assertIn("toolkit-revision: '" + updater[1] + "'", delivery)
+        self.assertIn("toolkit-revision: '" + updater + "'", delivery)
         self.assertIn("artifact-digest: ${{ needs.portable.outputs.artifact-digest }}", delivery)
         self.assertNotIn("CI_RUNNER_MODE", delivery)
         self.assertNotIn("ottplay-k3s", delivery)
+
+    def test_comments_cannot_supply_a_delivery_revision(self):
+        """An obsolete SHA in a comment must not qualify an unpinned call."""
+        sha = "a" * 40
+        prefix = "    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/vendor-update.yml@"
+        pinned = prefix + sha + "\n"
+        self.assertEqual(delivery_revision(pinned), sha)
+        self.assertIsNone(delivery_revision("    # " + pinned.strip() + "\n"))
+        self.assertIsNone(delivery_revision(prefix + "main\n    # " + pinned.strip() + "\n"))
+        self.assertIsNone(delivery_revision(pinned + pinned))
 
     def test_scope_and_all_linux_jobs_route_directly_without_hosted_bootstrap(self):
         workflow = jobs("core.yml")

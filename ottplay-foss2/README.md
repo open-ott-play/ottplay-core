@@ -161,7 +161,7 @@ Update it through the shared-core distribution script; do not edit the generated
 bundle or restore an application-local copy of these rules. The existing ES5
 bootstrap supplies its required standard APIs on older hosts.
 
-Development tools were verified with Node.js 26.3.1. Install the pinned server and development dependencies when needed:
+Development and test tools require Node.js 22.22.2 or later in the 22.x series, 24.15.0 or later in the 24.x series, or 26.0.0 and later. CI uses the supported Node 22 series; local checks also passed with Node.js 26.3.1. Install the pinned server and development dependencies when needed:
 
 ```sh
 npm ci
