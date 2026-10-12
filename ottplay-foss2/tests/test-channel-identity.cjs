@@ -39,7 +39,7 @@ test('unique to variants preserves favorites, hidden rename, PIN and all depende
     const before=playlist([{name:'News HD',path:'hd'}]), after=playlist([{name:'News SD',path:'sd'},{name:'News HD',path:'hd'}]);
     const saved=stored(before), report=identity.reconcile(saved,after,source.id);
     assert.equal(report.changed,true);assert.equal(report.unresolved,0);assertTransferred(state.validate(saved),after[1],before[0].id);
-    const gate=modules.security.create({getState:()=>saved,persist:value=>saved.security=value});gate.configure('','1234');gate.lock();
+    const gate=modules.security.create({getState:()=>saved,persist:value=>saved.security=value,randomBytes:count=>require('node:crypto').randomBytes(count)});assert.equal(gate.configure('','1234').ok,true);gate.lock();
     assert.equal(gate.authorize('playback',identity.permission(report,after[1].id,saved.security.protectedIds)).ok,false);
 });
 

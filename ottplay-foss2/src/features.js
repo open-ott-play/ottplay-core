@@ -64,7 +64,9 @@ OTT2.define("features", function (require) {
             } else if (action === "configurePIN") {
                 if (values["pin-new"] !== values["pin-repeat"]) { view.toast(t("PIN не совпадают.", "PINs do not match.")); return true; }
                 result = context.gate.configure(values["pin-old"] || "", values["pin-new"] || "");
-                if (result.ok) { if (values["pin-channel"] && context.find(values["pin-channel"])) { context.gate.verify(values["pin-new"]); context.gate.setProtected(values["pin-channel"], true); context.gate.lock(); } done(); view.toast(t("PIN сохранён.", "PIN saved.")); } else view.toast(t("PIN не принят. Используйте 4–12 цифр или повторите позже.", "PIN not accepted. Use 4–12 digits or try again later."));
+                if (result.ok) { if (values["pin-channel"] && context.find(values["pin-channel"])) { context.gate.verify(values["pin-new"]); context.gate.setProtected(values["pin-channel"], true); context.gate.lock(); } done(); view.toast(t("PIN сохранён.", "PIN saved.")); }
+                else if (result.code === "RANDOM_UNAVAILABLE") view.toast(t("Браузер не поддерживает безопасное создание PIN. Используйте браузер с Web Crypto.", "This browser cannot safely create a PIN. Use a browser with Web Crypto."));
+                else view.toast(t("PIN не принят. Используйте 4–12 цифр или повторите позже.", "PIN not accepted. Use 4–12 digits or try again later."));
             } else if (action === "disablePIN") {
                 result = context.gate.disable(values["pin-old"] || "");
                 if (result.ok) done(); else view.toast(t("PIN не принят.", "PIN not accepted."));
