@@ -12,6 +12,9 @@ updates:
 
   - package-ecosystem: npm
     directory: /ottplay-foss2
+    groups:
+      browser-dependencies:
+        patterns: ["*"]
     schedule:
       interval: weekly
 
