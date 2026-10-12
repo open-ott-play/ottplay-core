@@ -66,7 +66,9 @@ class WorkflowRoutingTests(unittest.TestCase):
         self.assertIn("distribute.cjs install-web", workflow["browser-client"])
         delivery = workflow["deliver"]
         self.assertIn("needs: [portable, browser-client, wire-contracts]", delivery)
-        self.assertIn("vendor-update.yml@25f56bb98f1cbdb388735c7c2c53e8028993caeb", delivery)
+        updater = re.search(r"vendor-update\.yml@([0-9a-f]{40})\n", delivery)
+        self.assertIsNotNone(updater)
+        self.assertIn("toolkit-revision: '" + updater[1] + "'", delivery)
         self.assertIn("artifact-digest: ${{ needs.portable.outputs.artifact-digest }}", delivery)
         self.assertNotIn("CI_RUNNER_MODE", delivery)
         self.assertNotIn("ottplay-k3s", delivery)
