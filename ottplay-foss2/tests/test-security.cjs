@@ -17,7 +17,7 @@ function fixture(initialTime = 1000000) {
     let time = initialTime;
     const state = { security: security.defaults(), activeSourceId: "a" };
     const writes = [];
-    const options = { getState: () => state, persist(config) { state.security = plain(config); writes.push(JSON.stringify(config)); }, now: () => time };
+    const options = { getState: () => state, persist(config) { state.security = plain(config); writes.push(JSON.stringify(config)); }, now: () => time, randomBytes: count => Array.from(crypto.randomBytes(count)) };
     const gate = security.create(options);
     return { gate, state, writes, options, tick(ms) { time += ms; } };
 }
@@ -41,7 +41,7 @@ test("PIN configuration is salted, versioned, detached and never stores plaintex
     assert.equal(f.gate.configure("wrong", "654321").ok, false);
     assert.equal(f.state.security.salt, firstSalt);
     assert.equal(f.gate.configure("876543", "654321").ok, true);
-    assert.notEqual(f.state.security.salt, firstSalt, "The deterministic public salt fallback must distinguish configurations");
+    assert.notEqual(f.state.security.salt, firstSalt, "Each configuration gets a new random salt");
     assert.equal(f.gate.verify("876543").ok, false);
     assert.equal(f.gate.verify("654321").ok, true);
     assert(!f.writes.some(text => text.includes("654321")));
@@ -123,4 +123,30 @@ test("injected random bytes produce a public salt without requiring modern brows
     const gate = security.create({ ...f.options, randomBytes: count => Array.from({ length: count }, (_, i) => i) });
     assert.equal(gate.configure("", "1234").ok, true);
     assert.equal(f.state.security.salt, "000102030405060708090a0b0c0d0e0f");
+});
+test("missing, failing or malformed entropy never creates a PIN or changes an existing PIN", () => {
+    for (const randomBytes of [undefined, () => { throw new Error("RNG failed"); }, () => [], () => Array(15).fill(0), () => Array(17).fill(0), () => Array(16).fill(NaN), () => Array(16).fill(256), () => Array(16).fill(0.5)]) {
+        const f = fixture();
+        const gate = security.create({ ...f.options, randomBytes });
+        let callback;
+        assert.equal(gate.configure("", "1234", value => { callback = value; }).code, "RANDOM_UNAVAILABLE");
+        assert.equal(callback.ok, false);
+        assert.equal(f.state.security.enabled, false);
+        assert.equal(f.writes.length, 0);
+        f.gate.configure("", "1234");
+        const previous = plain(f.state.security);
+        assert.equal(gate.configure("1234", "5678").code, "RANDOM_UNAVAILABLE");
+        assert.deepEqual(f.state.security, previous);
+        assert.equal(gate.status().unlocked, false);
+        assert.equal(gate.verify("1234").ok, true, "Existing PIN remains usable without entropy");
+    }
+});
+test("default browser Web Crypto provides a fresh 128-bit salt", () => {
+    const f = fixture();
+    context.window = { crypto: crypto.webcrypto, Uint8Array };
+    try {
+        const gate = security.create({ ...f.options, randomBytes: undefined });
+        assert.equal(gate.configure("", "1234").ok, true);
+        assert.match(f.state.security.salt, /^[0-9a-f]{32}$/);
+    } finally { delete context.window; }
 });
