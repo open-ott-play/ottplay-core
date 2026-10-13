@@ -114,7 +114,7 @@ class WorkflowRoutingTests(unittest.TestCase):
             self.assertRegex(job, r"needs: (?:scope|\[scope, portable\])")
             self.assertIn("needs.scope.outputs.reason != 'documentation-only'", job)
             hardened = steps(job)
-            self.assertIn("uses: step-security/harden-runner@351661ca32ac09a36dc5ee2d536e3128f2a3c8ed", hardened[0])
+            self.assertRegex(hardened[0], r"(?m)^        uses: step-security/harden-runner@[0-9a-f]{40}(?:[ \t]+#[^\n]*)?$")
             self.assertIn("egress-policy: audit", hardened[0])
             sequence = hardened[1:]
             self.assertTrue(sequence[0].startswith("uses: actions/checkout@"))
