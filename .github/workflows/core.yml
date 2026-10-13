@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   scope:
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/change-scope.yml@774ce8c74d6f82fe09c5c33ac9fb3158c2bb908a
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/change-scope.yml@de4013a2d48879ac9d77afbbf9267a0486c09272
     with:
       runner: ${{ vars.CI_RUNNER_MODE == 'k3s' && github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule') && 'ottplay-k3s-linux-x64' || 'ubuntu-latest' }}
       force-full: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' }}
@@ -42,7 +42,7 @@ jobs:
         working-directory: shared-core
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@351661ca32ac09a36dc5ee2d536e3128f2a3c8ed # v2.22.0
+        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
         with:
           egress-policy: audit
 
@@ -58,7 +58,7 @@ jobs:
           distribution: temurin
           java-version: '17'
           cache: gradle
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version: '22'
           cache: npm
@@ -71,7 +71,7 @@ jobs:
       - run: npm run check:js
       - run: npm run check:core
       - id: distribution
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: ottplay-shared-core
           path: shared-core/dist/
@@ -88,7 +88,7 @@ jobs:
         working-directory: ottplay-foss2
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@351661ca32ac09a36dc5ee2d536e3128f2a3c8ed # v2.22.0
+        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
         with:
           egress-policy: audit
 
@@ -99,7 +99,7 @@ jobs:
         if: runner.environment == 'self-hosted'
         working-directory: ${{ github.workspace }}
         run: python3 scripts/ci-runner-preflight.py browser
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version: '^22.22.2'
           cache: npm
@@ -108,7 +108,7 @@ jobs:
       - name: Verify the committed client pin before staging the candidate
         run: node scripts/check-core.cjs
       - name: Download the exact compiler output qualified by this run
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
         with:
           artifact-ids: ${{ needs.portable.outputs.artifact-id }}
           path: shared-core/dist
@@ -135,7 +135,7 @@ jobs:
           OTT2_TEST_MEDIA: ${{ runner.temp }}/ottplay-test.mp4
       - run: npm run test:epg-browser
       - run: npm run test:compat-browser
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         if: always()
         with:
           name: foss2-browser-reports
@@ -150,7 +150,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@351661ca32ac09a36dc5ee2d536e3128f2a3c8ed # v2.22.0
+        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
         with:
           egress-policy: audit
 
@@ -193,9 +193,9 @@ jobs:
           - repository: open-ott-play/ottplay-core
             destination: ottplay-foss2/vendor
             files: '["ottplay-core.js","ottplay-core.manifest.json","ottplay-core.LICENSE.txt"]'
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/vendor-update.yml@774ce8c74d6f82fe09c5c33ac9fb3158c2bb908a
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/vendor-update.yml@de4013a2d48879ac9d77afbbf9267a0486c09272
     with:
-      toolkit-revision: '774ce8c74d6f82fe09c5c33ac9fb3158c2bb908a'
+      toolkit-revision: 'de4013a2d48879ac9d77afbbf9267a0486c09272'
       source-workflow: .github/workflows/core.yml
       source-tree: shared-core
       artifact-id: ${{ needs.portable.outputs.artifact-id }}
