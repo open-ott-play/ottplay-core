@@ -13,6 +13,25 @@
 - Qualify release candidates with the existing portable, browser-consumer and
   wire checks without invoking consumer delivery.
 
+### Upgrade
+
+This is the first `v0.1.0-*` release line for the compiled shared-core package;
+FOSS2 retains its independent `foss2-*` version and release process. No consumer
+repository or running application is updated by publishing these files.
+Select a candidate explicitly and keep its JVM/ES5 files, declarations,
+license notices and manifest together. Review the consuming application's
+compatibility checks before integrating it. For a local reproduction, use the
+exact source commit and synchronize its frozen version plan as described in
+`docs/CORE-RELEASING.md` in that source checkout.
+
+### Security
+
+The new offline RC campaigns exercise malformed playlist data and guide timing
+boundaries in the actual compiled core. The equal-time ordering correction is
+a consistency fix; it does not change authentication, network access or provider
+URL policy. Keep the consuming application's input and access controls enabled;
+this package does not perform a device deployment or establish device acceptance.
+
 ## Unreleased
 
 ### Security
