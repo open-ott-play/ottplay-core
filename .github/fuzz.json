@@ -34,5 +34,11 @@
       "corpus": "fuzz/corpus/guide-timeline",
       "seconds": 60
     }
+  ],
+  "preflight": [
+    [
+      "node",
+      "fuzz/replay.mjs"
+    ]
   ]
 }
