@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.1.0]
+
+- Publish the existing compiled JVM17 JAR, ES5 JavaScript, declarations, source
+  manifest and original license notices through the shared beta/RC pipeline.
+- Add bounded offline RC fuzzing of the actual Kotlin playlist parser and guide
+  timeline exports, with retained corpus, mutation logs and release evidence.
+- Preserve input order when programme start times compare equal, including
+  negative and positive zero, so requesting one or several future programmes
+  returns a consistent prefix. Add the discovered input as a regression seed
+  and test the common fix on both JVM and JavaScript.
+- Qualify release candidates with the existing portable, browser-consumer and
+  wire checks without invoking consumer delivery.
+
 ## Unreleased
 
 ### Security

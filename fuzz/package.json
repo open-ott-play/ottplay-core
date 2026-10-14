@@ -1,0 +1,8 @@
+{
+  "name": "ottplay-core-fuzz",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Bounded RC-only fuzzing of compiled Kotlin production exports",
+  "devDependencies": {"@jazzer.js/core": "4.0.0"}
+}

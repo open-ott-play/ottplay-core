@@ -5,7 +5,7 @@ import org.jetbrains.kotlin.gradle.targets.js.npm.NpmExtension
 plugins { kotlin("multiplatform") version "2.4.20" }
 
 group = "play.ott"
-version = "0.1.0-dev"
+version = (groovy.json.JsonSlurper().parse(file("package.json")) as Map<*, *>)["version"].toString()
 
 rootProject.plugins.withType<NodeJsRootPlugin> {
     // Mocha's transitive range still selects a vulnerable serializer.
