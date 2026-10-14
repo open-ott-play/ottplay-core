@@ -41,7 +41,22 @@ An RC additionally requires the two offline campaigns documented in
 receipts before considering a stable release. This onboarding publishes beta
 and RC candidates only; real device acceptance is a separate release decision.
 
-For local packaging, run `npm ci --prefix shared-core`, then
+To reproduce an allocated candidate locally, restore its `version_plan` from
+`release-manifest.json` as `.release-plan.json` in a disposable checkout of that
+exact source commit. Apply its version overlay before packaging:
+
+```sh
+python3 scripts/version_plan.py sync --root . --plan .release-plan.json
+python3 scripts/release.py package --version 0.1.0 --channel rc
+```
+
+Use the matching `--channel beta` for a beta plan. The explicit sync also
+updates the beta suffix in all owned npm/Kotlin lock entries. The adapter validates the plan,
+source, channel and every owned version field before invoking the compiler,
+then stages the same allowlisted artifacts. It never allocates a release or
+publishes files.
+
+For an unallocated local development build, run `npm ci --prefix shared-core`, then
 `npm --prefix shared-core run pack:core`, `npm --prefix shared-core run check:core`,
 `npm --prefix shared-core run check:js`, and `python3 scripts/package_core_release.py`.
 Use a fresh output directory; never hand-edit compiler artifacts or their

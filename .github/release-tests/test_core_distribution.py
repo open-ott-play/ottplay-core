@@ -4,6 +4,9 @@ import copy
 import hashlib
 import importlib.util
 import json
+import os
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -90,6 +93,104 @@ class CoreReleaseTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     PACKAGE.stage(root, output)
                 self.assertFalse(output.exists())
+
+    def test_local_package_command_checks_plan_before_building_or_staging(self):
+        for mode in ("valid", "valid-beta", "missing", "wrong-source", "wrong-channel"):
+            with self.subTest(mode=mode), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                dist = self.fixture(root)
+                policy = json.loads((ROOT / ".release-policy.json").read_text())
+                inputs = {item["path"] for item in policy["versioning"]["files"]}
+                inputs.update(
+                    {
+                        ".release-policy.json",
+                        "scripts/release.py",
+                        "scripts/version_plan.py",
+                        "scripts/release_version_adapter.py",
+                        "scripts/release_control.py",
+                        "scripts/package-release.sh",
+                        "scripts/package_core_release.py",
+                    }
+                )
+                for relative in inputs:
+                    target = root / relative
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    target.write_bytes((ROOT / relative).read_bytes())
+                manifest_path = dist / PACKAGE.MANIFEST
+                manifest = json.loads(manifest_path.read_text())
+                manifest["version"] = "0.1.0"
+                manifest_path.write_text(json.dumps(manifest))
+                subprocess.run(["git", "init", "-q", str(root)], check=True)
+                subprocess.run(["git", "add", "."], cwd=root, check=True)
+                subprocess.run(
+                    [
+                        "git",
+                        "-c",
+                        "user.name=Fixture",
+                        "-c",
+                        "user.email=fixture@example.invalid",
+                        "-c",
+                        "commit.gpgsign=false",
+                        "commit",
+                        "-qm",
+                        "fixture",
+                    ],
+                    cwd=root,
+                    check=True,
+                )
+                source = subprocess.check_output(
+                    ["git", "rev-parse", "HEAD"], cwd=root, text=True
+                ).strip()
+                channel = "beta" if mode == "valid-beta" else "rc"
+                plan = version_plan.create_plan("0.1.0", channel, 1, source, policy)
+                if mode == "valid-beta":
+                    version_plan.sync_versions(root, policy, plan)
+                    manifest["version"] = version_plan.projections(plan)["package"]
+                    manifest_path.write_text(json.dumps(manifest))
+                if mode == "wrong-source":
+                    plan["source_sha"] = "a" * 40
+                if mode == "wrong-channel":
+                    plan = version_plan.create_plan("0.1.0", "beta", 1, source, policy)
+                if mode != "missing":
+                    (root / ".release-plan.json").write_text(json.dumps(plan))
+                tools = root / "fixture-tools"
+                tools.mkdir()
+                (tools / "python3").symlink_to(sys.executable)
+                npm = tools / "npm"
+                npm.write_text('#!/bin/sh\nprintf "%s\n" "$*" >> npm-invocations.txt\n')
+                npm.chmod(0o755)
+                environment = os.environ.copy()
+                environment.pop("RELEASE_VERSION_PLAN", None)
+                environment["PATH"] = str(tools) + os.pathsep + environment["PATH"]
+                result = subprocess.run(
+                    [
+                        sys.executable,
+                        "scripts/release.py",
+                        "package",
+                        "--version",
+                        "0.1.0",
+                        "--channel",
+                        channel,
+                    ],
+                    cwd=root,
+                    env=environment,
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                if mode in {"valid", "valid-beta"}:
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    self.assertEqual(
+                        len((root / "npm-invocations.txt").read_text().splitlines()), 4
+                    )
+                    self.assertEqual(
+                        (root / "release-dist/ottplay-core.jar").read_bytes(),
+                        b"compiled JVM",
+                    )
+                else:
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertFalse((root / "npm-invocations.txt").exists())
+                    self.assertFalse((root / "release-dist").exists())
 
     def test_rc_version_sync_preserves_locked_kotlin_dependencies(self):
         policy = json.loads((ROOT / ".release-policy.json").read_text())
