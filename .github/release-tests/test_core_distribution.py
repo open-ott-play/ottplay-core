@@ -10,6 +10,8 @@ from pathlib import Path
 
 import yaml
 
+from scripts import version_plan
+
 ROOT = Path(__file__).resolve().parents[2]
 SPEC = importlib.util.spec_from_file_location(
     "package_core_release", ROOT / "scripts/package_core_release.py"
@@ -88,6 +90,31 @@ class CoreReleaseTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     PACKAGE.stage(root, output)
                 self.assertFalse(output.exists())
+
+    def test_rc_version_sync_preserves_locked_kotlin_dependencies(self):
+        policy = json.loads((ROOT / ".release-policy.json").read_text())
+        lock_path = Path("shared-core/kotlin-js-store/package-lock.json")
+        original = json.loads((ROOT / lock_path).read_text())
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            paths = {item["path"] for item in policy["versioning"]["files"]}
+            paths.add(str(lock_path))
+            for relative in paths:
+                destination = root / relative
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes((ROOT / relative).read_bytes())
+            plan = version_plan.create_plan("0.1.1", "rc", 1, "a" * 40, policy)
+            version_plan.sync_versions(root, policy, plan)
+            actual = json.loads((root / lock_path).read_text())
+            self.assertEqual(actual["version"], "0.1.1")
+            for workspace in ("", "packages/OttPlayCore", "packages/OttPlayCore-test"):
+                self.assertEqual(actual["packages"][workspace]["version"], "0.1.1")
+            expected = copy.deepcopy(original)
+            expected["version"] = "0.1.1"
+            for workspace in ("", "packages/OttPlayCore", "packages/OttPlayCore-test"):
+                expected["packages"][workspace]["version"] = "0.1.1"
+            self.assertEqual(actual, expected)
+            version_plan.sync_versions(root, policy, plan, check=True)
 
     def test_release_qualification_matches_existing_checks_and_has_no_delivery(self):
         original = yaml.safe_load((ROOT / ".github/workflows/core.yml").read_text())

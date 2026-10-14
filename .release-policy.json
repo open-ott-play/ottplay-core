@@ -39,6 +39,34 @@
         "format": "npm-lock",
         "package": "ottplay-shared-core-validation",
         "value": "package"
+      },
+      {
+        "path": "shared-core/kotlin-js-store/package-lock.json",
+        "format": "npm-lock",
+        "package": "ottplay-shared-core",
+        "value": "package"
+      },
+      {
+        "path": "shared-core/kotlin-js-store/package-lock.json",
+        "format": "json",
+        "package": "ottplay-shared-core",
+        "field": [
+          "packages",
+          "packages/OttPlayCore",
+          "version"
+        ],
+        "value": "package"
+      },
+      {
+        "path": "shared-core/kotlin-js-store/package-lock.json",
+        "format": "json",
+        "package": "ottplay-shared-core",
+        "field": [
+          "packages",
+          "packages/OttPlayCore-test",
+          "version"
+        ],
+        "value": "package"
       }
     ],
     "artifacts": [

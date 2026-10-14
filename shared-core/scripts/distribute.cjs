@@ -20,7 +20,7 @@ function inputs(directory = "src") {
 }
 function sourceReceipt() {
     const files = [...inputs(), "build.gradle.kts", "settings.gradle.kts", "gradle.properties",
-        "gradle/wrapper/gradle-wrapper.properties", "gradle/wrapper/gradle-wrapper.jar", "package.json", "package-lock.json",
+        "gradle/wrapper/gradle-wrapper.properties", "gradle/wrapper/gradle-wrapper.jar", "package.json", "package-lock.json", "kotlin-js-store/package-lock.json",
         "scripts/distribute.cjs", "scripts/canonical-js.cjs", "scripts/minify-js.cjs", "LICENSE", "licenses/kotlin-LICENSE.txt", "licenses/kotlin-NOTICE.txt"].sort();
     const hashes = Object.fromEntries(files.map(file => [file, sha256(read(file))]));
     return { sha256: sha256(JSON.stringify(hashes)), files: hashes };
