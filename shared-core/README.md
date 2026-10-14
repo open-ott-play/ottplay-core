@@ -1,6 +1,6 @@
 # OttPlay shared core
 
-[![Fuzzing: RC only](https://img.shields.io/badge/Fuzzing-RC%20only-blue)](../docs/FUZZING.md)
+[![Fuzzing: RC only](https://img.shields.io/badge/Fuzzing-RC%20only-blue)](../docs/fuzzing.md)
 
 
 One maintained implementation of guide, archive, provider/catalog, durable-state

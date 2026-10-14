@@ -37,9 +37,11 @@ python3 scripts/release.py rc --version 0.1.0
 ```
 
 An RC additionally requires the two offline campaigns documented in
-[FUZZING.md](FUZZING.md). Review its exact-source mutation report and publication
-receipts before considering a stable release. This onboarding publishes beta
-and RC candidates only; real device acceptance is a separate release decision.
+[fuzzing.md](fuzzing.md). Review its exact-source mutation report and publication
+receipts before considering a stable release. This rollout publishes beta and
+RC candidates. With `RELEASE_CHANNELS_ENABLED=true`, the shared workflow also
+supports scheduled nightlies and approval-gated promotion of an RC to stable.
+Real device acceptance remains a separate release decision.
 
 To reproduce an allocated candidate locally, restore its `version_plan` from
 `release-manifest.json` as `.release-plan.json` in a disposable checkout of that

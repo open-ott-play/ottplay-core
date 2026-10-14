@@ -1,6 +1,6 @@
 # OttPlay core and FOSS2
 
-[![Fuzzing: RC only](https://img.shields.io/badge/Fuzzing-RC%20only-blue)](docs/FUZZING.md)
+[![Fuzzing: RC only](https://img.shields.io/badge/Fuzzing-RC%20only-blue)](docs/fuzzing.md)
 
 
 This repository maintains the shared OttPlay business logic, its compiled
