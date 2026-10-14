@@ -69,3 +69,28 @@ Passing these two targets does not establish exhaustive parser coverage,
 Android or Apple device acceptance, codec compatibility, or hosted OSS-Fuzz
 coverage. Existing common JVM/JS, ES5, synthetic browser playback, and wire
 contract checks remain required. See [core releases](CORE-RELEASING.md).
+
+## Deterministic target-contract checks
+
+Ordinary CI now replays the real fuzz target exports using the checked-in
+synthetic corpus, fixed malformed inputs and a bounded deterministic byte matrix.
+It awaits asynchronous targets and propagates assertion failures. This catches
+harness/production API drift without starting Jazzer or a mutation campaign.
+The RC preflight repeats this check after its locked setup.
+
+Run locally from the repository root:
+
+```sh
+bash scripts/prepare_core_fuzz.sh
+node fuzz/replay.mjs
+```
+
+Ordinary CI reuses its already compiled and verified `shared-core/dist` output,
+so this check adds no second Gradle build.
+
+The replay preserves the same offline boundaries as the targets above; it does
+not qualify a release or substitute for the RC's isolated campaign.
+
+The existing portable build also runs `scripts/workflow_contracts.py --actions-only`
+with hash-locked PyYAML. This validates action pins and the fuzz policy/runtime
+agreement while preserving this repository's custom core qualification graph.

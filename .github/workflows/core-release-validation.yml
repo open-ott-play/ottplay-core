@@ -48,6 +48,18 @@ jobs:
         if: runner.environment == 'self-hosted'
         working-directory: ${{ github.workspace }}
         run: python3 scripts/ci-runner-preflight.py base
+      - name: Set up Python for workflow contract checks
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: .github/requirements-workflow-contracts.txt
+      - name: Validate pinned actions and RC fuzz runtime consistency
+        working-directory: ${{ github.workspace }}
+        run: |
+          python3 -m venv .venv-workflow
+          .venv-workflow/bin/python -m pip install --require-hashes --only-binary=:all: -r .github/requirements-workflow-contracts.txt
+          .venv-workflow/bin/python scripts/workflow_contracts.py --actions-only
       - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6
         with:
           distribution: temurin
@@ -65,6 +77,8 @@ jobs:
       - run: npm run pack:core
       - run: npm run check:js
       - run: npm run check:core
+      - name: Replay fuzz contracts against this run's compiler output
+        run: node ../fuzz/replay.mjs
       - id: distribution
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:

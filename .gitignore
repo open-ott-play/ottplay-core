@@ -16,3 +16,5 @@
 /release-dist/
 /release-assets/
 /.release-plan.json
+
+/.venv-workflow/
