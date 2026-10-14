@@ -1,0 +1,6 @@
+#EXTM3U
+#EXTINF:-1 tvg-name="unclosed, title
+#EXTGRP:ignored
+#EXTINF:12 catchup-days=".5" catchup-source="offline://{utc}",Archive
+#EXT-X-PLAYLIST-TYPE:VOD
+https://example.invalid/archive

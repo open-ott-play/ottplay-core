@@ -12,3 +12,7 @@
 *.pem
 *.keystore
 *.jks
+
+/release-dist/
+/release-assets/
+/.release-plan.json

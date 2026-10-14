@@ -1,5 +1,8 @@
 # OttPlay core and FOSS2
 
+[![Fuzzing: RC only](https://img.shields.io/badge/Fuzzing-RC%20only-blue)](docs/FUZZING.md)
+
+
 This repository maintains the shared OttPlay business logic, its compiled
 JVM/ES5 distributions, service wire contracts and the FOSS2 browser client.
 The five independent consumer repositories live beside it, normally under

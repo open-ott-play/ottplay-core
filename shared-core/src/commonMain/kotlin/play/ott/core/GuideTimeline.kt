@@ -29,7 +29,13 @@ object GuideTimeline {
             limit == 1 -> listOf(window.next)
             else -> (0 until count).filter {
                 start(it).isFinite() && end(it).isFinite() && end(it) > start(it) && start(it) > now
-            }.sortedWith(compareBy<Int> { start(it) }.thenBy { it }).take(limit)
+            }.sortedWith { left, right ->
+                // Numeric equality includes signed zero, as in the single-row
+                // GuideSchedule path; equal starts retain source order.
+                val a = start(left)
+                val b = start(right)
+                if (a == b) left.compareTo(right) else a.compareTo(b)
+            }.take(limit)
         }
         var retry = now + 3600
         if (window.current >= 0) retry = minOf(retry, end(window.current))

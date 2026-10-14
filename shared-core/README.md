@@ -1,5 +1,8 @@
 # OttPlay shared core
 
+[![Fuzzing: RC only](https://img.shields.io/badge/Fuzzing-RC%20only-blue)](../docs/FUZZING.md)
+
+
 One maintained implementation of guide, archive, provider/catalog, durable-state
 and playback decisions for the OttPlay family. The browser and Node filter in FOSS2 consume the same generated
 ES5 bundle. Main-player iOS uses JavaScriptCore, Rust uses QuickJS-NG, and the

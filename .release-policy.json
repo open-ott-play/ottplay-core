@@ -1,0 +1,55 @@
+{
+  "repository": "open-ott-play/ottplay-core",
+  "mode": "release",
+  "default_branch": "main",
+  "visibility": "public",
+  "version_file": "shared-core/package.json",
+  "validation_workflows": [
+    "core-release-validation.yml"
+  ],
+  "artifact_pattern": "release-assets*",
+  "local_checks": [
+    "python3 -m unittest discover -s .github/release-tests -p test_core_distribution.py",
+    "npm ci --ignore-scripts --prefix shared-core",
+    "npm --prefix shared-core run pack:core",
+    "npm --prefix shared-core run check:js",
+    "npm --prefix shared-core run check:core"
+  ],
+  "notes": [
+    "Releases package the actual JVM17 and ES5 shared-core compiler output, type declarations and original license notices. FOSS2 remains independently versioned under its existing foss2-* tags.",
+    "Qualification uses the existing portable, browser-consumer and wire-contract checks without the vendor delivery job. Candidate publication does not update consumers or establish device acceptance."
+  ],
+  "release_notes": "CHANGELOG.md",
+  "single_entry_ci": false,
+  "fuzzing": {
+    "toolkit_ref": "5e413f80a4353d328b4529eae57992ac3987e2dd"
+  },
+  "versioning": {
+    "schema": 1,
+    "promotion": "promote-bytes",
+    "files": [
+      {
+        "path": "shared-core/package.json",
+        "format": "json",
+        "field": "version",
+        "value": "package"
+      },
+      {
+        "path": "shared-core/package-lock.json",
+        "format": "npm-lock",
+        "package": "ottplay-shared-core-validation",
+        "value": "package"
+      }
+    ],
+    "artifacts": [
+      {
+        "path": "ottplay-core.manifest.json",
+        "format": "json",
+        "field": "version",
+        "value": "package"
+      }
+    ],
+    "toolkit_revision": "5e413f80a4353d328b4529eae57992ac3987e2dd"
+  },
+  "toolkit_revision": "5e413f80a4353d328b4529eae57992ac3987e2dd"
+}

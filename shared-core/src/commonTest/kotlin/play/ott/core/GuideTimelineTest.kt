@@ -42,6 +42,14 @@ class GuideTimelineTest {
         assertFailsWith<IllegalArgumentException> { ProgrammeId.of("", "c", "42", 0.0) }
     }
 
+    @Test fun signedZeroStartsRetainInputOrderForEveryVisibleCount() {
+        val starts = listOf(0.0, -0.0, 0.0, -0.0)
+        for (limit in 1..4) {
+            val selection = GuideTimeline.select(starts.size, { starts[it] }, { 1.0 }, -1.0, limit.toDouble())
+            assertEquals((0 until limit).toList(), selection.following)
+        }
+    }
+
     @Test fun currentOnlyAndSingleFollowingRetainTheFullTimelinePolicy() {
         val starts = listOf(40.0, 20.0, 20.0, Double.NaN, 10.0, 15.0, 30.0)
         val ends = listOf(50.0, 25.0, 35.0, 60.0, 9.0, Double.POSITIVE_INFINITY, 32.0)
