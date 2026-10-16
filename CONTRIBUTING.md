@@ -44,6 +44,7 @@ merging; do not use an administrator bypass.
 Contribute original material under the root MIT license only when you have the right to do so. Preserve third-party attribution and license terms; record imported code and assets in THIRD_PARTY_NOTICES.md or the linked component notices. A public download URL alone is not a redistribution license.
 
 See [governance](GOVERNANCE.md), [conduct](CODE_OF_CONDUCT.md) and the
-[roadmap](ROADMAP.md). All major functionality changes require meaningful
-automated regression coverage and relevant negative cases, with test invocation
-and limitations documented in the pull request.
+[roadmap](ROADMAP.md). Major functionality changes require meaningful automated
+regression coverage and relevant negative cases, with test invocation documented
+in the pull request. The same automation exception above applies: explain why automation is infeasible and document a reproducible
+manual procedure and its limitations in the pull request.
