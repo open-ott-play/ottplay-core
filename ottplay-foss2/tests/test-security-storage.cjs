@@ -29,7 +29,12 @@ function gate(m, repo) {
 const verify = (g, pin) => new Promise(resolve => g.verify(pin, resolve));
 function oldReader(context, store) {
     let reader;
-    const legacy = {defaults: () => context.OttPlayCore.parentalDefaults(), validate: value => context.OttPlayCore.parentalValidate(value)};
+    const legacy = {defaults: () => context.OttPlayCore.parentalDefaults(), validate(value) {
+        // Candidate-core CI replaces the compiled vendor with the new core.
+        // Retain the old core's schema1-only boundary for this old-reader probe.
+        if (value && value.schema !== 1) throw new Error('Unsupported parental-control format');
+        return context.OttPlayCore.parentalValidate(value);
+    }};
     context.OTT2 = {define(name, factory) {reader = factory(() => legacy);}};
     // Exact frozen pre-migration storage implementation, not a new approximation.
     vm.runInContext(fs.readFileSync(path.join(__dirname, 'fixtures/legacy-state-reader.js'), 'utf8'), context);
