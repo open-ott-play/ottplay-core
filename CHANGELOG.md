@@ -2,7 +2,8 @@
 
 ## Unreleased
 
-- Publish the owner-authorized MIT license for original root code, contracts and documentation; preserve existing component terms and identify unresolved font provenance.
+- Publish the owner-authorized MIT license for original root code, contracts and documentation; preserve existing component terms.
+- Remove unused Fontello icon resources with incomplete glyph provenance and their unused CSS declaration; retain the licensed text fonts and text-based controls.
 
 
 ## [0.1.1] - Development line

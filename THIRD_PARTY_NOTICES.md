@@ -7,6 +7,6 @@ The root [MIT license](LICENSE) covers original project code, contracts, scripts
 - Vendored release/control helpers originating in [venus-os-ci-toolkit](https://github.com/victron-venus/venus-os-ci-toolkit) retain that project's [MIT notice](LICENSES/venus-os-ci-toolkit-MIT.txt).
 - Repositories referenced by `checkouts.json`, downloaded dependencies and operator-supplied media are separately maintained material. Their licenses, ownership and redistribution requirements do not change here.
 
-## Unresolved distribution provenance
+## Removed resources
 
-The existing FOSS2 resource notice records incomplete provenance for every Fontello glyph. Those legacy assets are not relicensed by this change. Their distribution needs a supported grant or removal/replacement after checking actual use. This open question and the remaining security assessment prevent treating the new root license alone as a completed OpenSSF assessment.
+Unused FOSS2 Fontello icon resources and their CSS declaration were removed because complete glyph provenance was not established. The interface uses text commands; the six licensed text-font filenames remain. Historical copies in Git are not relicensed by the root MIT grant. The remaining security assessment is independent of this licensing cleanup.
