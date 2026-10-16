@@ -28,7 +28,7 @@ analyzed.
 
 ## Unresolved criteria and applicability
 
-The owner confirmed MIT licensing for original root tooling, contracts and documentation on 2026-10-16. The root LICENSE and THIRD_PARTY_NOTICES.md record the scope; component licenses remain unchanged. Fontello glyph provenance remains a separate distribution review item. Project-owned parental PIN cryptography prevents blindly asserting crypto_call/crypto_password_storage. Complete the criteria review before claiming a badge.
+The owner confirmed MIT licensing for original root tooling, contracts and documentation on 2026-10-16. The root LICENSE and THIRD_PARTY_NOTICES.md record the scope; component licenses remain unchanged. Unused Fontello resources with incomplete glyph provenance have been removed. Project-owned parental PIN cryptography prevents blindly asserting crypto_call/crypto_password_storage. Complete the criteria review before claiming a badge.
 
 The project maintainer must confirm secure-design/common-error knowledge for
 this project and supply the history of bug, enhancement and vulnerability
