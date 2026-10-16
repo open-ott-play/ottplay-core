@@ -275,8 +275,13 @@ class CoreReleaseTests(unittest.TestCase):
         # Delivery still waits for successful local browser jobs on push/manual runs.
         # No new skipped=>success exception is introduced for publication.
         delivery = original["jobs"]["deliver"]
-        self.assertIn("browser-compatibility", delivery["needs"])
-        self.assertIn("browser-compatibility", json.loads(delivery["with"]["qualifying-jobs"]))
+        self.assertIn("browser-qualification", delivery["needs"])
+        self.assertIn("browser-qualification", json.loads(delivery["with"]["qualifying-jobs"]))
+        aggregate = original["jobs"]["browser-qualification"]
+        self.assertIn("browser-compatibility", aggregate["needs"])
+        self.assertEqual(aggregate["steps"][0]["env"]["BROWSER_RESULT"],
+                         "${{ needs.browser-compatibility.result }}")
+        self.assertEqual(aggregate["steps"][0]["run"], 'test "$BROWSER_RESULT" = success')
         self.assertNotIn("always()", delivery["if"])
         self.assertIn("github.event_name == 'push' || github.event_name == 'workflow_dispatch'", delivery["if"])
 
