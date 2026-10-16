@@ -35,11 +35,11 @@ function assertTransferred(saved, hd, old) {
     if(old!==hd.id) { assert.equal(saved.channelOverrides[old],undefined);assert.equal(saved.bookmarks[old],undefined); }
 }
 
-test('unique to variants preserves favorites, hidden rename, PIN and all dependent selections together',()=>{
+test('unique to variants preserves favorites, hidden rename, PIN and all dependent selections together',async()=>{
     const before=playlist([{name:'News HD',path:'hd'}]), after=playlist([{name:'News SD',path:'sd'},{name:'News HD',path:'hd'}]);
     const saved=stored(before), report=identity.reconcile(saved,after,source.id);
     assert.equal(report.changed,true);assert.equal(report.unresolved,0);assertTransferred(state.validate(saved),after[1],before[0].id);
-    const gate=modules.security.create({getState:()=>saved,persist:value=>saved.security=value,randomBytes:count=>require('node:crypto').randomBytes(count)});assert.equal(gate.configure('','1234').ok,true);gate.lock();
+    const gate=modules.security.create({crypto:require('node:crypto').webcrypto,Uint8Array,getState:()=>saved,persist(value){saved.security=value;return true;}});assert.equal((await new Promise(resolve=>gate.configure('','1234',resolve))).ok,true);gate.lock();
     assert.equal(gate.authorize('playback',identity.permission(report,after[1].id,saved.security.protectedIds)).ok,false);
 });
 
@@ -108,7 +108,7 @@ test('VOD URL rotation retains bookmark and favorite descriptor while folders re
 test('removed sources purge only their selections and ordinary exports exclude durable descriptors',()=>{
     const before=playlist([{name:'News HD',path:'hd'}]), saved=stored(before), other={...source,id:'other'};saved.sources.push(other);
     saved.favorites.default.push('other:keep');saved.channelOverrides['other:keep']={name:'Keep'};saved.security.protectedIds.push('other:keep');
-    let disk=JSON.stringify(saved);const repo=state.create({getItem(){return disk;},setItem(key,value){disk=value;}});
+    const disk={[state.key]:JSON.stringify(saved)};const repo=state.create({getItem(key){return disk[key]||null;},setItem(key,value){disk[key]=value;}});
     assert.deepEqual(JSON.parse(repo.exportJSON(false)).channelReferences,[]);assert.equal(JSON.parse(repo.exportJSON(true)).channelReferences.length,1);
     repo.update(value=>{value.sources=value.sources.filter(row=>row.id!==source.id);});const checked=repo.snapshot();
     assert.equal(checked.channelReferences.length,0);assert.deepEqual(plain(checked.favorites.default),['other:keep']);assert.deepEqual(plain(checked.security.protectedIds),['other:keep']);

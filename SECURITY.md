@@ -28,6 +28,13 @@ a claim that no vulnerabilities exist or that past reports met a response SLA.
 
 This project provides the shared Kotlin domain core, FOSS2 browser client and cross-repository wire contracts.
 
-Platform adapters own networking, parsing, storage and cryptography; the shared core owns domain decisions. Preserve the explicit boundary when importing source data or generating consumer artifacts. The FOSS2 relay accepts exact operator-approved origins, revalidates redirects/DNS, bounds bodies and pins resolved addresses. Its transport destination comes from the allowlist. Local parental PINs use a project-owned legacy SHA-256 implementation and 2048 iterations; this is a deterrent for old TVs, not a password vault or protection against a device owner.
+Platform adapters own networking, parsing, storage and cryptography; the shared core owns domain decisions. Preserve the explicit boundary when importing source data or generating consumer artifacts. The FOSS2 relay accepts exact operator-approved origins, revalidates redirects/DNS, bounds bodies and pins resolved addresses. Its transport destination comes from the allowlist.
+
+FOSS2 parental PINs use native Web Crypto PBKDF2-HMAC-SHA-256 with 600,000
+iterations and a fresh 128-bit salt. Legacy verifiers migrate only after correct
+authentication and confirmed storage. Unsupported Web Crypto environments stay
+locked. This is local access control, not encrypted storage or a defense against
+the device owner. Read the [upgrade and recovery guide](ottplay-foss2/docs/PARENTAL-CONTROLS.md)
+before changing browser versions or restoring data.
 
 See [security design and validation boundaries](docs/security-design.md).

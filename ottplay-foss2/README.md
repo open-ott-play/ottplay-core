@@ -42,11 +42,22 @@ The transparent area between the native buttons can drag the window. Channel lis
 - **Playback options:** choose available audio/subtitle tracks, picture size, zoom, volume and picture in picture. Options reflect the actual media backend. Audio, subtitles (including Off), aspect and zoom are remembered per channel. Live seeking requires a DVR window.
 - **Settings:** choose the font and scale, accent color, startup restore, sleep timer, history, hidden channels, local relay and parental PIN.
 
-Creating or changing a parental PIN requires Web Crypto secure randomness
-(`crypto.getRandomValues`, or the legacy `msCrypto` equivalent). If unavailable,
-the player leaves protection settings unchanged and explains the requirement.
-Existing PIN verification still works on those browsers. This local control is
-a deterrent against casual access, not protection against the device owner.
+Creating, checking or changing a parental PIN requires the standard Web Crypto
+API (`crypto.subtle` and `crypto.getRandomValues`) in a secure context: HTTPS, or
+the browser's trusted loopback context. Plain HTTP at a LAN IP and old TV engines
+may not provide it. Protected operations then stay locked; there is no legacy
+`msCrypto` or JavaScript hashing fallback. Unprotected playback remains available.
+Use a compatible HTTPS browser on the same origin/profile to retain access to
+stored settings. A change of origin has separate browser storage.
+
+New PINs use PBKDF2-HMAC-SHA-256 with 600,000 iterations and a fresh 128-bit salt.
+An existing PIN migrates only after a successful check and confirmed storage
+write. The upgraded storage retains a locked placeholder for older player
+versions; downgrading does not restore access. Keep a private backup before
+upgrading and read the [migration and recovery details](docs/PARENTAL-CONTROLS.md).
+This local control deters casual access; it does not encrypt settings or defend
+against the device owner. No latency or compatibility claim is made for untested
+TV hardware.
 - **Import/export:** review an OTT-play 2 backup or a supported original-player JSON/XML export before replacing settings. Source URLs and credentials are excluded from ordinary exports; including them requires the explicit checkbox.
 
 The TV channel browser uses a compact single heading and dense rows, normally showing 26 channels at standard 720p/1080p text size and 25 when desktop window controls reserve space. Larger text and shorter windows reduce page capacity. Channels, filters and the optional EPG status share the heading; the redundant column heading is omitted. The page counter stays in that heading, and TV pages have no separate Previous/Next row. Use the remote page keys or mouse wheel to page through channels. Long programme details on the right start scrolling after 3 seconds, move at 14 pixels per second, pause for 4 seconds at the bottom and then return to the start. Moving to another channel starts its description at the top, while ordinary EPG refreshes preserve the reading position. Scrolling pauses for dialogs and inactive views; using a mouse temporarily pauses automatic movement. Remote focus stays on the selected channel.

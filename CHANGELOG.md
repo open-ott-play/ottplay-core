@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- Replace the FOSS2 parental PIN's custom repeated SHA-256 hash with native Web
+  Crypto PBKDF2-HMAC-SHA-256, 600,000 iterations and a fresh 128-bit salt. Correct
+  legacy PINs migrate after durable storage confirmation; failed checks do not.
+  Protected operations fail closed when Web Crypto is unavailable. No CVE has
+  been assigned to this project-owned weakness.
+- Add versioned parental metadata to the shared Kotlin core, a downgrade lock
+  for older browser clients, storage failure/read-back checks and cancellation
+  of stale asynchronous PIN operations. See the FOSS2 migration guide before
+  updating or rolling back; old HTTP-only TV engines may need a compatible
+  HTTPS client. Target hardware performance has not been measured.
 - Publish the owner-authorized MIT license for original root code, contracts and documentation; preserve existing component terms.
 - Remove unused Fontello icon resources with incomplete glyph provenance and their unused CSS declaration; retain the licensed text fonts and text-based controls.
 
