@@ -1,5 +1,9 @@
 # Shared-core RC fuzzing
 
+See the [illustrated RC fuzzing process and verified rollout results](https://github.com/victron-venus/venus-os-ci-toolkit/blob/main/docs/rc-fuzzing-results.md)
+for the shared release flow, evidence requirements and a dated cross-project
+snapshot. The project-specific scope and reproduction guidance below still apply.
+
 The public repository runs Jazzer.js 4.0.0 against the actual ES5 JavaScript
 compiled from `shared-core/src/commonMain` and its exported Kotlin/JS adapter.
 This is a GitHub-hosted bounded campaign, not registration with Google's hosted
