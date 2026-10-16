@@ -65,13 +65,14 @@ jobs:
 
   browser-release:
     needs: package
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@d1bab20ac35bf75398a6a89ff59db113a2c82301
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@5b72b09e8a6bf17b482124891f17fd9662182bf6
     with:
       node-version: '22'
       run-node-ci: false
       working-directory: ottplay-foss2
       browser-matrix-file: ottplay-foss2/.github/browser-compatibility.json
-      browser-extended: true
+      browser-release-channel: ${{ inputs.channel }}
+      browser-extended: ${{ inputs.channel == 'rc' || inputs.channel == 'stable' }}
       browser-evidence-prefix: browser-release
       browser-artifact-id: ${{ needs.package.outputs.browser-artifact-id }}
       browser-artifact-path: browser-candidate

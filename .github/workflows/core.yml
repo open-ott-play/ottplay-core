@@ -159,14 +159,15 @@ jobs:
 
   browser-compatibility:
     needs: [scope, portable]
-    if: ${{ needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only' }}
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@d1bab20ac35bf75398a6a89ff59db113a2c82301
+    # PRs and merge queues use the identical required Quality gate route once.
+    if: ${{ github.event_name != 'pull_request' && github.event_name != 'merge_group' && (needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only') }}
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@5b72b09e8a6bf17b482124891f17fd9662182bf6
     with:
       node-version: '22'
       run-node-ci: false
       working-directory: ottplay-foss2
       browser-matrix-file: ottplay-foss2/.github/browser-compatibility.json
-      browser-extended: false
+      browser-extended: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' }}
       browser-artifact-id: ${{ needs.portable.outputs.artifact-id }}
       browser-artifact-path: shared-core/dist
       browser-prepare-command: >-

@@ -229,9 +229,15 @@ The MIT application license does not replace third-party resource licenses.
 
 The required CI gate runs the existing provider and EPG journeys against current
 Chromium, Firefox and WebKit on Linux, Chromium on Windows and WebKit on macOS.
-Scheduled and manual release qualification expands the same assertions to three
-locked browser generations and current Chrome/Edge Stable and Beta channels
-(35 targets). Each target installs its own locked Playwright toolchain, records
+Pull requests and merge queues run that matrix once through the required
+Quality gate. The standalone Shared core workflow retains the five targets on
+push and selects all 35 targets for an explicit manual run.
+Nightly and beta package qualification use five targets. RC qualification and
+manual source audits expand the same assertions to three locked browser
+generations and current Chrome/Edge Stable and Beta channels (35 targets).
+Stable promotion reuses the accepted RC bytes. The shared release verdict checks
+the exact target set, channel, source, run/attempt and candidate artifact ID.
+Each target installs its own locked Playwright toolchain, records
 its actual browser/version/platform and rejects missing or mismatched evidence.
 
 Source CI downloads the exact compiler artifact from its own run and stages it
