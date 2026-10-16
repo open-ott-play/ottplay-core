@@ -95,7 +95,7 @@ class CoreReleaseTests(unittest.TestCase):
                 self.assertFalse(output.exists())
 
     def test_local_package_command_checks_plan_before_building_or_staging(self):
-        for mode in ("valid", "valid-beta", "missing", "wrong-source", "wrong-channel"):
+        for mode in ("valid", "valid-beta", "missing", "wrong-source", "wrong-channel", "wrong-version"):
             with self.subTest(mode=mode), tempfile.TemporaryDirectory() as tmp:
                 root = Path(tmp)
                 dist = self.fixture(root)
@@ -143,14 +143,20 @@ class CoreReleaseTests(unittest.TestCase):
                 ).strip()
                 channel = "beta" if mode == "valid-beta" else "rc"
                 plan = version_plan.create_plan("0.1.0", channel, 1, source, policy)
-                if mode == "valid-beta":
-                    version_plan.sync_versions(root, policy, plan)
-                    manifest["version"] = version_plan.projections(plan)["package"]
-                    manifest_path.write_text(json.dumps(manifest))
+                # Fixture versions must follow their own plan, independently of
+                # whichever release base is currently committed in the project.
+                version_plan.sync_versions(root, policy, plan)
+                manifest["version"] = version_plan.projections(plan)["package"]
+                manifest_path.write_text(json.dumps(manifest))
                 if mode == "wrong-source":
                     plan["source_sha"] = "a" * 40
                 if mode == "wrong-channel":
                     plan = version_plan.create_plan("0.1.0", "beta", 1, source, policy)
+                if mode == "wrong-version":
+                    package_path = root / "shared-core/package.json"
+                    package = json.loads(package_path.read_text())
+                    package["version"] = "0.0.0"
+                    package_path.write_text(json.dumps(package))
                 if mode != "missing":
                     (root / ".release-plan.json").write_text(json.dumps(plan))
                 tools = root / "fixture-tools"
