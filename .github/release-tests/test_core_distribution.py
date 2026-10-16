@@ -223,6 +223,20 @@ class CoreReleaseTests(unittest.TestCase):
             self.assertEqual(actual, expected)
             version_plan.sync_versions(root, policy, plan, check=True)
 
+    def test_final_packaged_javascript_receives_full_browser_qualification(self):
+        jobs = yaml.safe_load((ROOT / ".github/workflows/release-build.yml").read_text())["jobs"]
+        browser = jobs["browser-release"]
+        self.assertEqual(browser["needs"], "package")
+        self.assertEqual(jobs["package"]["outputs"]["browser-artifact-id"],
+                         "${{ steps.assets.outputs.artifact-id }}")
+        self.assertEqual(browser["with"]["browser-artifact-id"],
+                         "${{ needs.package.outputs.browser-artifact-id }}")
+        self.assertEqual(browser["with"]["browser-extended"], "${{ inputs.channel == 'rc' || inputs.channel == 'stable' }}")
+        self.assertEqual(browser["with"]["browser-release-channel"], "${{ inputs.channel }}")
+        self.assertEqual(browser["with"]["browser-evidence-prefix"], "browser-release")
+        self.assertIn("prepare-browser-candidate.cjs", browser["with"]["browser-prepare-command"])
+        self.assertNotIn("pack:core", browser["with"]["browser-prepare-command"])
+
     def test_release_qualification_matches_existing_checks_and_has_no_delivery(self):
         original = yaml.safe_load((ROOT / ".github/workflows/core.yml").read_text())
         qualification = yaml.safe_load(
@@ -230,15 +244,58 @@ class CoreReleaseTests(unittest.TestCase):
         )
         expected = {
             name: copy.deepcopy(original["jobs"][name])
-            for name in ("scope", "portable", "browser-client", "wire-contracts")
+            for name in ("scope", "portable", "browser-client", "browser-compatibility", "wire-contracts")
         }
         expected["scope"]["with"]["force-full"] = True
+        # The required PR/release route does not inherit the standalone deduplication.
+        expected["browser-compatibility"]["if"] = (
+            "${{ needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only' }}"
+        )
+        expected["browser-compatibility"]["with"]["browser-extended"] = False
         self.assertEqual(qualification["jobs"], expected)
         self.assertEqual(qualification["permissions"], {"contents": "read"})
         self.assertEqual(
             set(qualification.get("on", qualification.get(True))), {"workflow_call"}
         )
         self.assertNotIn("deliver", qualification["jobs"])
+
+    def test_browser_deduplication_preserves_required_pr_and_delivery_routes(self):
+        original = yaml.safe_load((ROOT / ".github/workflows/core.yml").read_text())
+        required = yaml.safe_load((ROOT / ".github/workflows/quality-gate.yml").read_text())
+        browser = original["jobs"]["browser-compatibility"]
+        self.assertEqual(browser["if"],
+            "${{ github.event_name != 'pull_request' && github.event_name != 'merge_group' && "
+            "(needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only') }}")
+        self.assertEqual(browser["with"]["browser-extended"],
+            "${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' }}")
+        self.assertTrue({"pull_request", "merge_group"}.issubset(required.get("on", required.get(True))))
+        self.assertEqual(required["jobs"]["check-0"]["uses"],
+                         "./.github/workflows/core-release-validation.yml")
+        self.assertIn("check-0", required["jobs"]["gate"]["needs"])
+        # Delivery still waits for successful local browser jobs on push/manual runs.
+        # No new skipped=>success exception is introduced for publication.
+        delivery = original["jobs"]["deliver"]
+        self.assertIn("browser-compatibility", delivery["needs"])
+        self.assertIn("browser-compatibility", json.loads(delivery["with"]["qualifying-jobs"]))
+        self.assertNotIn("always()", delivery["if"])
+        self.assertIn("github.event_name == 'push' || github.event_name == 'workflow_dispatch'", delivery["if"])
+
+    def test_required_gate_rejects_missing_failed_or_skipped_browser_route(self):
+        required = yaml.safe_load((ROOT / ".github/workflows/quality-gate.yml").read_text())
+        gate = required["jobs"]["gate"]
+        source = next(step["run"] for step in gate["steps"] if "RESULTS" in step.get("env", {}))
+        script = source.split("python3 - <<'PY'\n", 1)[1].rsplit("\nPY", 1)[0]
+        for result in ("success", "failure", "cancelled", "skipped", None):
+            with self.subTest(browser_route=result):
+                results = {name: {"result": "success"} for name in gate["needs"]}
+                results["scope"]["outputs"] = {"run": "true", "reason": "required-path"}
+                if result is None:
+                    results.pop("check-0")
+                else:
+                    results["check-0"]["result"] = result
+                executed = subprocess.run([sys.executable, "-c", script],
+                    env={**os.environ, "RESULTS": json.dumps(results)}, capture_output=True, text=True)
+                self.assertEqual(executed.returncode == 0, result == "success", executed.stderr)
 
 
 if __name__ == "__main__":

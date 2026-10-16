@@ -15,6 +15,8 @@ permissions:
   contents: read
 jobs:
   package:
+    outputs:
+      browser-artifact-id: ${{ steps.assets.outputs.artifact-id }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -53,9 +55,28 @@ jobs:
         run: |
           python3 scripts/package_core_release.py
           python3 scripts/stage_release_assets.py --target shared-core --pattern 'release-dist/*'
-      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+      - id: assets
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: release-assets-shared-core
           path: release-assets/shared-core/*
           if-no-files-found: error
           retention-days: 30
+
+  browser-release:
+    needs: package
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@5b72b09e8a6bf17b482124891f17fd9662182bf6
+    with:
+      node-version: '22'
+      run-node-ci: false
+      working-directory: ottplay-foss2
+      browser-matrix-file: ottplay-foss2/.github/browser-compatibility.json
+      browser-release-channel: ${{ inputs.channel }}
+      browser-extended: ${{ inputs.channel == 'rc' || inputs.channel == 'stable' }}
+      browser-evidence-prefix: browser-release
+      browser-artifact-id: ${{ needs.package.outputs.browser-artifact-id }}
+      browser-artifact-path: browser-candidate
+      browser-prepare-command: >-
+        npm ci --ignore-scripts && node scripts/check-core.cjs &&
+        node scripts/prepare-browser-candidate.cjs ../browser-candidate
+      browser-test-command: node scripts/browser-acceptance.cjs

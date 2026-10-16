@@ -152,6 +152,25 @@ jobs:
           if-no-files-found: warn
           retention-days: ${{ job.status == 'success' && 1 || 3 }}
 
+  browser-compatibility:
+    needs: [scope, portable]
+    if: ${{ needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only' }}
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@5b72b09e8a6bf17b482124891f17fd9662182bf6
+    with:
+      node-version: '22'
+      run-node-ci: false
+      working-directory: ottplay-foss2
+      browser-matrix-file: ottplay-foss2/.github/browser-compatibility.json
+      browser-extended: false
+      browser-artifact-id: ${{ needs.portable.outputs.artifact-id }}
+      browser-artifact-path: shared-core/dist
+      browser-prepare-command: >-
+        npm ci --ignore-scripts && node scripts/check-core.cjs &&
+        npm ci --ignore-scripts --prefix ../shared-core &&
+        node ../shared-core/scripts/distribute.cjs install-web "$PWD" &&
+        node ../shared-core/scripts/distribute.cjs check-web "$PWD"
+      browser-test-command: node scripts/browser-acceptance.cjs
+
   wire-contracts:
     needs: scope
     if: ${{ needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only' }}

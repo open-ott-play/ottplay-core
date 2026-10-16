@@ -223,3 +223,33 @@ npm run check:vendors
 Runtime modules have explicit dependencies through the small `OTT2` registry. State, transport, provider parsing, EPG, security, migration, collection operations, view, keyboard and playback are separate modules. The application controller owns cancellations, session generations and teardown. Data from playlists is rendered as escaped text, not executable HTML.
 
 The MIT application license does not replace third-party resource licenses.
+
+
+### Browser and operating-system qualification
+
+The required CI gate runs the existing provider and EPG journeys against current
+Chromium, Firefox and WebKit on Linux, Chromium on Windows and WebKit on macOS.
+Pull requests and merge queues run that matrix once through the required
+Quality gate. The standalone Shared core workflow retains the five targets on
+push and selects all 35 targets for an explicit manual run.
+Nightly and beta package qualification use five targets. RC qualification and
+manual source audits expand the same assertions to three locked browser
+generations and current Chrome/Edge Stable and Beta channels (35 targets).
+Stable promotion reuses the accepted RC bytes. The shared release verdict checks
+the exact target set, channel, source, run/attempt and candidate artifact ID.
+Each target installs its own locked Playwright toolchain, records
+its actual browser/version/platform and rejects missing or mismatched evidence.
+
+Source CI downloads the exact compiler artifact from its own run and stages it
+through `distribute.cjs`. Release qualification waits for the final package,
+verifies its source-bound receipt and all compiler-file hashes, then tests that
+exact packaged JavaScript with the same synthetic provider and guide fixtures. The existing Chromium/ffmpeg gate remains responsible for actual media
+decode and legacy MSE/worker fallback checks. The broader matrix qualifies UI,
+provider navigation, persistence, EPG behavior and the bundled H.264/AAC probe;
+it does not claim every codec,
+TV webview, native Safari or mobile device has been tested.
+
+Browser reports and screenshots are retained per target. Playwright WebKit is
+not Safari, and Playwright Firefox is its patched engine build. Update the three
+historical toolchains together through the shared toolkit generator rather than
+collapsing them to a single dependency version.
