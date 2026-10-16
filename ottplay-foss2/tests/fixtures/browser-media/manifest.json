@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "fixtures": [
+    {
+      "id": "h264-aac",
+      "file": "probe.mp4",
+      "sha256": "48faf7213cdfcc76f3ba4946033e5daa5c777a8ec5aa90fbe573b1dc51dbeac9",
+      "streams": [
+        {
+          "codec": "h264",
+          "width": 160,
+          "height": 90
+        },
+        {
+          "codec": "aac",
+          "sampleRate": 44100,
+          "channels": 1
+        }
+      ]
+    },
+    {
+      "id": "h264-video-only",
+      "file": "probe-video-only.mp4",
+      "sha256": "813fd7e6d41a085860c720fc28ff026654dca05b3a90739c30d37710f493c5ba",
+      "streams": [
+        {
+          "codec": "h264",
+          "width": 160,
+          "height": 90
+        }
+      ]
+    }
+  ]
+}
