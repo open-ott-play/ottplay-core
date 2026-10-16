@@ -198,16 +198,23 @@ fs.mkdirSync(output, { recursive: true });
         await section(page, "tv"); await page.locator('#channel-0').focus(); await page.click('#channel-details'); await page.click('#channel-protect');
         assert.ok(await page.locator('#pin-channel').inputValue());
         await page.fill('#pin-new', '1234'); await page.fill('#pin-repeat', '1234'); await page.click('#pin-configure');
+        await page.locator('#pin-configure').waitFor({state:'hidden'});
         await section(page, "settings");
         await page.locator('#access-pin').waitFor(); await page.fill('#access-pin', '1234'); await page.click('#unlock');
+        await page.locator('#access-pin').waitFor({state:'hidden'});
         await section(page, "settings"); await page.click('#security'); await page.click('#pin-lock');
         await section(page, "tv"); await page.click('#channel-0');
         await page.locator('#access-pin').waitFor(); await page.fill('#access-pin', '0000'); await page.click('#unlock');
+        await page.waitForFunction(() => JSON.parse(localStorage.getItem('ottplay2:state:secure-v2')).state.security.failures === 1);
         assert.equal(await page.locator('#access-pin').count(), 1);
         await page.fill('#access-pin', '1234'); await page.click('#unlock');
         await page.waitForFunction(() => document.getElementById('foss2-home').style.display === 'none');
-        const security = await page.evaluate(() => JSON.parse(localStorage.getItem('ottplay2:state:v1')).security);
+        const security = await page.evaluate(() => JSON.parse(localStorage.getItem('ottplay2:state:secure-v2')).state.security);
         assert.equal(security.enabled, true); assert.equal(security.protectedIds.length, 1); assert.match(security.hash, /^[a-f0-9]{64}$/); assert.equal('pin' in security, false);
+        assert.equal(security.schema, 2); assert.equal(security.algorithm, 'PBKDF2-HMAC-SHA256'); assert.equal(security.iterations, 600000);
+        const oldReader = await page.evaluate(() => JSON.parse(localStorage.getItem('ottplay2:state:v1')));
+        assert.equal(oldReader.sources.length, 0); assert.equal(oldReader.security.enabled, true);
+        assert.ok(Object.values(oldReader.security.scopes).every(Boolean));
         // A full series season exercises the additional breadcrumb row at both
         // normal and enlarged TV type. This provider is isolated from the main journey.
         const vodPage = await browser.newPage({ viewport: { width:1280, height:720 } });

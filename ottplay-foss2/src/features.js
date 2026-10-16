@@ -1,11 +1,11 @@
 OTT2.define("features", function (require) {
     "use strict";
     function create(context) {
-        var view = context.view, t = context.t, library = require("library");
+        var view = context.view, t = context.t, library = require("library"), generation = 0;
         function done() { view.closeDialog(); context.render(); }
         function checked(id, label, value) { return '<label class="f2-check"><input id="' + id + '" type="checkbox"' + (value ? ' checked="checked"' : '') + '> ' + view.escape(label) + '</label>'; }
         function handle(action, value, values) {
-            var state = context.state(), html = "", channel, i, result;
+            var state = context.state(), html = "", channel, i, result, operation = ++generation;
             if (action === "history") {
                 state.history.forEach(function (entry, index) {
                     html += '<div class="f2-source"><strong>' + view.escape(entry.name) + '</strong><p>' + view.escape(new Date(entry.time).toLocaleString()) + '</p>' +
@@ -63,13 +63,26 @@ OTT2.define("features", function (require) {
                 view.dialog(t("Родительский контроль", "Parental control"), html);
             } else if (action === "configurePIN") {
                 if (values["pin-new"] !== values["pin-repeat"]) { view.toast(t("PIN не совпадают.", "PINs do not match.")); return true; }
-                result = context.gate.configure(values["pin-old"] || "", values["pin-new"] || "");
-                if (result.ok) { if (values["pin-channel"] && context.find(values["pin-channel"])) { context.gate.verify(values["pin-new"]); context.gate.setProtected(values["pin-channel"], true); context.gate.lock(); } done(); view.toast(t("PIN сохранён.", "PIN saved.")); }
-                else if (result.code === "RANDOM_UNAVAILABLE") view.toast(t("Браузер не поддерживает безопасное создание PIN. Используйте браузер с Web Crypto.", "This browser cannot safely create a PIN. Use a browser with Web Crypto."));
-                else view.toast(t("PIN не принят. Используйте 4–12 цифр или повторите позже.", "PIN not accepted. Use 4–12 digits or try again later."));
+                context.gate.configure(values["pin-old"] || "", values["pin-new"] || "", function (configured) {
+                    if (operation !== generation || !view.hasDialog()) { context.gate.lock(); return; }
+                    if (!configured.ok) {
+                        view.toast(configured.code === "CRYPTO_UNAVAILABLE" || configured.code === "RANDOM_UNAVAILABLE" ? t("Нужен браузер с Web Crypto через HTTPS. Защита сохранена.", "Use an HTTPS browser with Web Crypto. Existing protection is preserved.") : t("PIN или запись не подтверждены. Проверьте 4–12 цифр и доступ к хранилищу.", "PIN or storage was not accepted. Check 4–12 digits and available storage."));
+                        return;
+                    }
+                    function completed() { context.gate.lock(); done(); view.toast(t("PIN сохранён.", "PIN saved.")); }
+                    if (values["pin-channel"] && context.find(values["pin-channel"])) {
+                        context.gate.verify(values["pin-new"], function (verified) {
+                            if (operation !== generation || !view.hasDialog()) { context.gate.lock(); return; }
+                            if (verified.ok && context.gate.setProtected(values["pin-channel"], true).ok) completed();
+                            else { context.gate.lock(); view.toast(t("Защита канала не сохранена.", "Channel protection was not saved.")); }
+                        });
+                    } else completed();
+                });
             } else if (action === "disablePIN") {
-                result = context.gate.disable(values["pin-old"] || "");
-                if (result.ok) done(); else view.toast(t("PIN не принят.", "PIN not accepted."));
+                context.gate.disable(values["pin-old"] || "", function (disabled) {
+                    if (operation !== generation || !view.hasDialog()) { context.gate.lock(); return; }
+                    if (disabled.ok) done(); else view.toast(t("PIN или запись не подтверждены.", "PIN or storage was not accepted."));
+                });
             } else if (action === "lockPIN") { context.gate.lock(); if (context.onLock) context.onLock(); done(); }
             else if (action === "protectChannel") {
                 result = context.gate.setProtected(value, !context.gate.isProtected(value, "playback"));

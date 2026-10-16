@@ -22,16 +22,23 @@ object ParentalState {
     fun validate(value: ProviderValue): ProviderValue {
         val result = LinkedHashMap(defaults().properties)
         if (!value.present) return ProviderValue.obj(result)
-        if (!value.isObject || !number(value["schema"]) || value["schema"].number() != 1.0 || value["enabled"].kind != ProviderValueKind.BOOLEAN) fail("Unsupported parental-control format")
+        val schema = value["schema"].number()
+        if (!value.isObject || !number(value["schema"]) || schema !in listOf(1.0, 2.0) || value["enabled"].kind != ProviderValueKind.BOOLEAN) fail("Unsupported parental-control format")
+        if (schema == 2.0 && !value["enabled"].truthy()) fail("Invalid parental-control KDF")
+        result["schema"] = n(schema)
         result["enabled"] = value["enabled"]
         if (value["enabled"].truthy()) {
-            val salt = value["salt"]; val hash = value["hash"]
-            if (!text(salt) || salt.scalar.length !in 16..160 || !salt.scalar.all { it in 'a'..'z' || it in 'A'..'Z' || it in '0'..'9' || it in ":.-" } ||
+            val salt = value["salt"]; val hash = value["hash"]; val work = value["iterations"]
+            val lower = if (schema == 2.0) 600000.0 else 1024.0
+            val upper = if (schema == 2.0) 2000000.0 else 8192.0
+            if (!finite(work) || work.number() % 1 != 0.0 || work.number() !in lower..upper) fail("Invalid parental-control work factor")
+            if (schema == 2.0) {
+                if (value["algorithm"].scalar != "PBKDF2-HMAC-SHA256" || !text(value["algorithm"]) ||
+                    !text(salt) || salt.scalar.length != 32 || !salt.scalar.all { it in 'a'..'f' || it in '0'..'9' } ||
+                    !text(hash) || hash.scalar.length != 64 || !hash.scalar.all { it in 'a'..'f' || it in '0'..'9' }) fail("Invalid parental-control KDF")
+                result["algorithm"] = value["algorithm"]
+            } else if (!text(salt) || salt.scalar.length !in 16..160 || !salt.scalar.all { it in 'a'..'z' || it in 'A'..'Z' || it in '0'..'9' || it in ":.-" } ||
                 !text(hash) || hash.scalar.length != 64 || !hash.scalar.all { it in 'a'..'f' || it in 'A'..'F' || it in '0'..'9' }) fail("Invalid parental-control hash")
-            val work = value["iterations"]
-            val remainder = work.number() % 1
-            // The browser API historically treats a NaN remainder as falsy.
-            if (!number(work) || !remainder.isNaN() && remainder != 0.0 || work.number() < 1024 || work.number() > 8192) fail("Invalid parental-control work factor")
             result["salt"] = salt; result["hash"] = t(hash.scalar.lowercase()); result["iterations"] = work
         }
         val ids = value["protectedIds"]
