@@ -1,11 +1,11 @@
-/* Actual Chromium controller journeys; all provider responses are synthetic. */
+/* Actual browser controller journeys; all provider responses are synthetic. */
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const http = require('node:http');
-const { chromium } = require('playwright');
+const { browserType, launchOptions, identity } = require('./browser-runtime.cjs');
 const { handler } = require('../scripts/serve.cjs');
-const output = path.resolve(__dirname, '../test-results');
+const output = path.resolve(process.env.OTT2_BROWSER_OUTPUT || path.join(__dirname, '../test-results'));
 fs.mkdirSync(output, { recursive: true });
 
 
@@ -26,8 +26,9 @@ async function navigate(page, selector) {
     fs.writeFileSync(path.join(output, 'browser-providers-report.json'), JSON.stringify({passed:false,status:'running'}));
     let browser;
     try {
-        browser = await chromium.launch({ headless: true });
+        browser = await browserType.launch(launchOptions);
         const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
+        if (process.env.CI_BROWSER_DIAGNOSTICS) await page.context().tracing.start({ screenshots: true, snapshots: true, sources: true });
         page.setDefaultTimeout(12000);
         page.on('pageerror', error => errors.push(error.message));
         await page.route('**/*', async route => {
@@ -164,11 +165,16 @@ async function navigate(page, selector) {
         assert.equal(await page.locator('#browse-back').count(), 0);
         assert.deepEqual(errors, []);
         assert.deepEqual(unexpected, [], 'No test data may contact a real provider');
-        const report = { passed: true, browser: 'Chromium', realSyntheticPlayback: !!media, pageErrors: errors, requests: requests.map(req => req.action || req.pathname), scenarios: ['Xtream form and authentication', 'separate live and video catalogs', 'series to seasons to episodes', 'folder Back navigation', 'episode favorites within the active source', 'persisted episode favorite resolves after reload through fresh folders', 'episode URL resolution and playback intent', 'Stalker form, relay handshake and paginated live catalog', 'Stalker VOD folder browse, create_link and actual playback', 'Stalker session token excluded from persistence', 'source deletion clears discovered episodes and breadcrumbs', 'empty library after reload'] };
+        const report = { passed: true, ...identity(browser), realSyntheticPlayback: !!media, pageErrors: errors, requests: requests.map(req => req.action || req.pathname), scenarios: ['Xtream form and authentication', 'separate live and video catalogs', 'series to seasons to episodes', 'folder Back navigation', 'episode favorites within the active source', 'persisted episode favorite resolves after reload through fresh folders', 'episode URL resolution and playback intent', 'Stalker form, relay handshake and paginated live catalog', media ? 'Stalker VOD folder browse, create_link and decoded playback' : 'Stalker VOD folder browse, create_link and playback intent', 'Stalker session token excluded from persistence', 'source deletion clears discovered episodes and breadcrumbs', 'empty library after reload'] };
         fs.writeFileSync(path.join(output, 'browser-providers-report.json'), JSON.stringify(report, null, 2));
         console.log(JSON.stringify(report));
     } finally {
-        if (browser) await browser.close();
+        if (browser) {
+            if (process.env.CI_BROWSER_DIAGNOSTICS) {
+                for (const context of browser.contexts()) await context.tracing.stop({ path: path.join(output, "providers-trace.zip") }).catch(() => {});
+            }
+            await browser.close();
+        }
         await new Promise(resolve => server.close(resolve));
     }
 })().catch(error => { console.error(error); process.exitCode = 1; });

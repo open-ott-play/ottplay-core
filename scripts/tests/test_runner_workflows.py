@@ -81,8 +81,15 @@ class WorkflowRoutingTests(unittest.TestCase):
         self.assertIn("needs: [scope, portable]", workflow["browser-client"])
         self.assertIn("artifact-ids: ${{ needs.portable.outputs.artifact-id }}", workflow["browser-client"])
         self.assertIn("distribute.cjs install-web", workflow["browser-client"])
+        matrix = workflow["browser-compatibility"]
+        self.assertIn("needs: [scope, portable]", matrix)
+        self.assertIn("browser-artifact-id: ${{ needs.portable.outputs.artifact-id }}", matrix)
+        self.assertIn("browser-artifact-path: shared-core/dist", matrix)
+        self.assertIn("distribute.cjs install-web", matrix)
+        self.assertIn("distribute.cjs check-web", matrix)
+        self.assertIn("browser-test-command: node scripts/browser-acceptance.cjs", matrix)
         delivery = workflow["deliver"]
-        self.assertIn("needs: [portable, browser-client, wire-contracts]", delivery)
+        self.assertIn("needs: [portable, browser-client, browser-compatibility, wire-contracts]", delivery)
         updater = delivery_revision(delivery)
         self.assertIsNotNone(updater)
         self.assertIn("artifact-digest: ${{ needs.portable.outputs.artifact-digest }}", delivery)
@@ -105,7 +112,7 @@ class WorkflowRoutingTests(unittest.TestCase):
 
     def test_scope_and_all_linux_jobs_route_directly_without_hosted_bootstrap(self):
         workflow = jobs("core.yml")
-        self.assertEqual(set(workflow), {"scope", "portable", "browser-client", "wire-contracts", "deliver"})
+        self.assertEqual(set(workflow), {"scope", "portable", "browser-client", "browser-compatibility", "wire-contracts", "deliver"})
         self.assertIn("runner: " + routed(GENERIC, "ubuntu-latest"), workflow["scope"])
         self.assertRegex(workflow["scope"], r"change-scope.yml@[0-9a-f]{40}\n")
         for name in ("portable", "browser-client", "wire-contracts"):

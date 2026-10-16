@@ -217,6 +217,19 @@ class CoreReleaseTests(unittest.TestCase):
             self.assertEqual(actual, expected)
             version_plan.sync_versions(root, policy, plan, check=True)
 
+    def test_final_packaged_javascript_receives_full_browser_qualification(self):
+        jobs = yaml.safe_load((ROOT / ".github/workflows/release-build.yml").read_text())["jobs"]
+        browser = jobs["browser-release"]
+        self.assertEqual(browser["needs"], "package")
+        self.assertEqual(jobs["package"]["outputs"]["browser-artifact-id"],
+                         "${{ steps.assets.outputs.artifact-id }}")
+        self.assertEqual(browser["with"]["browser-artifact-id"],
+                         "${{ needs.package.outputs.browser-artifact-id }}")
+        self.assertTrue(browser["with"]["browser-extended"])
+        self.assertEqual(browser["with"]["browser-evidence-prefix"], "browser-release")
+        self.assertIn("prepare-browser-candidate.cjs", browser["with"]["browser-prepare-command"])
+        self.assertNotIn("pack:core", browser["with"]["browser-prepare-command"])
+
     def test_release_qualification_matches_existing_checks_and_has_no_delivery(self):
         original = yaml.safe_load((ROOT / ".github/workflows/core.yml").read_text())
         qualification = yaml.safe_load(
@@ -224,7 +237,7 @@ class CoreReleaseTests(unittest.TestCase):
         )
         expected = {
             name: copy.deepcopy(original["jobs"][name])
-            for name in ("scope", "portable", "browser-client", "wire-contracts")
+            for name in ("scope", "portable", "browser-client", "browser-compatibility", "wire-contracts")
         }
         expected["scope"]["with"]["force-full"] = True
         self.assertEqual(qualification["jobs"], expected)
