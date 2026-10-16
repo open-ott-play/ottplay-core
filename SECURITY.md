@@ -22,7 +22,8 @@ disable the affected supported path rather than claiming it is clean.
 
 Security fixes target the current default branch and latest published release,
 where one exists. Older snapshots are not maintained security branches. Release
-notes must identify security fixes, affected versions and upgrade actions without
+notes must identify security fixes, affected versions, available CVE/GHSA
+identifiers and upgrade actions without
 disclosing credentials. Credit reporters of fixed vulnerabilities unless they
 request anonymity, and coordinate disclosure before publishing private details.
 This policy is a commitment for handling reports, not
