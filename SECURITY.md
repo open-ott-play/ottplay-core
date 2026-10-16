@@ -3,8 +3,7 @@
 ## Reporting a vulnerability
 
 Use [GitHub private vulnerability reporting](https://github.com/open-ott-play/ottplay-core/security/advisories/new).
-If the form is unavailable, contact a maintainer through the repository's GitHub
-profile to arrange a private channel before sharing sensitive details. Public
+If the form is unavailable, email **alvit.work@gmail.com** privately. Public
 issues are for non-sensitive defects and feature requests.
 
 Include the affected commit/release, prerequisites, a minimal synthetic
@@ -16,12 +15,18 @@ credentials, personal data or access to devices you do not own.
 Maintainers aim to acknowledge a private report within 14 days, investigate its
 scope, and agree on remediation and disclosure with the reporter. If no reply
 arrives within 14 days, follow up privately. Confirmed security defects are
-prioritized by impact; critical defects take precedence over feature work.
+prioritized by impact; critical defects are handled immediately. Known medium-or-higher
+vulnerabilities in supported project results are fixed within 60 days of public
+disclosure. If an upstream fix is unavailable, document a reviewed mitigation or
+disable the affected supported path rather than claiming it is clean.
 
 Security fixes target the current default branch and latest published release,
 where one exists. Older snapshots are not maintained security branches. Release
-notes must identify security fixes, affected versions and upgrade actions without
-disclosing credentials. This policy is a commitment for handling reports, not
+notes must identify security fixes, affected versions, available CVE/GHSA
+identifiers and upgrade actions without
+disclosing credentials. Credit reporters of fixed vulnerabilities unless they
+request anonymity, and coordinate disclosure before publishing private details.
+This policy is a commitment for handling reports, not
 a claim that no vulnerabilities exist or that past reports met a response SLA.
 
 ## Project boundary
