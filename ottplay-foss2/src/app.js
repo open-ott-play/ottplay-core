@@ -23,6 +23,7 @@ OTT2.define("app", function (require) {
         var downloadTimers = [], downloadUrls = [], previousKeydown = environment.onkeydown, previousKeyup = environment.onkeyup, previousBlur = environment.onblur;
         var root = d.getElementById("foss2-home"), video = d.getElementById("player-video"), guideRows = [], nowById = {}, nextById = {}, logosById = {};
         var view = require("view").create({ root: root, document: d, environment: environment, onAction: action, onDialogClose: function () {
+            if (gate && gate.status().busy) gate.lock();
             pinChallenge = null;
             if (quitRequested) { quitRequested = false; if (playbackInfo) playbackInfo.setEnabled(!destroyed && !homeVisible && !!current); }
             if (fileReader) { fileReader.onload = null; fileReader.onerror = null; try { fileReader.abort(); } catch (ignore) {} fileReader = null; }
@@ -32,7 +33,7 @@ OTT2.define("app", function (require) {
         var playbackPreferences = require("playback-preferences").create({ media: media, persist: persist, state: function () { return saved; } });
         var playbackView = require("playback-view").create({ view: view, media: media, preferences: playbackPreferences, t: t, persist: persist, state: function () { return saved; }, changeEngine: changeEngine, changeFormat: changeFormat });
         var stopDevices = devices.init(environment, profile);
-        var gate = require("security").create({ getState: function () { return saved; }, persist: function (dto) { persist(function (s) { s.security = dto; }); } });
+        var gate = require("security").create({ getState: function () { return saved; }, persist: function (dto) { repository.updateSecurity(dto); saved = repository.snapshot(); return true; } });
         var features = require("features").create({ view: view, t: t, persist: persist, state: function () { return saved; }, channels: catalog, find: getChannel, render: render, gate: gate, onLock: function () { if (current && gate.isProtected(permissionId(current), "playback")) { stopPlayback(); showHome(); } } });
         function catalog(includeHidden) {
             if (decoratedSource !== channels || decoratedSignature !== overrideSignature || !decoratedCatalog) {
@@ -43,6 +44,7 @@ OTT2.define("app", function (require) {
         }
         function challenge(scope, id, proceed) {
             if (gate.authorize(scope, id).ok) { proceed(); return; }
+            gate.lock();
             view.dialog(t("Требуется PIN", "PIN required"), view.field("access-pin", "PIN", "", "password") + view.btn("unlock", "unlock", t("Разблокировать", "Unlock")));
             pinChallenge = { scope: scope, id: id, proceed: proceed };
             view.focus("access-pin");
@@ -358,7 +360,7 @@ OTT2.define("app", function (require) {
                 persist(function (s) { s.bookmarks[current.id] = snapshot.position; });
             }
         }
-        function flushBookmark() { if (!destroyed) saveBookmark(); }
+        function flushBookmark() { if (gate.status().busy) gate.lock(); if (!destroyed) saveBookmark(); }
         function visibilityChanged() {
             if (destroyed) return;
             if (d.hidden || d.webkitHidden) {
@@ -645,15 +647,22 @@ OTT2.define("app", function (require) {
         function action(name, value, values) {
             if (destroyed) return;
             startupRestore = null;
+            if (name !== "unlock" && gate.status().busy) gate.lock();
             values = values || {};
             if (name === "confirmQuit") { confirmQuit(); return; }
             if (name === "cancelQuit") { if (quitRequested) { view.closeDialog(); showOSD(); } return; }
             if (name === "unlock") {
                 var pending = pinChallenge;
                 if (!pending) return;
-                var access = gate.authorize(pending.scope, pending.id, values["access-pin"] || "");
-                if (!access.ok) { view.toast(t("PIN не принят. Повторите позже при блокировке.", "PIN not accepted. If locked out, try again later.")); return; }
-                pinChallenge = null; view.closeDialog(); pending.proceed(); return;
+                gate.authorize(pending.scope, pending.id, values["access-pin"] || "", function (access) {
+                    if (destroyed || pinChallenge !== pending || !view.hasDialog()) { gate.lock(); return; }
+                    if (!access.ok) {
+                        view.toast(access.code === "CRYPTO_UNAVAILABLE" ? t("Нужен браузер с Web Crypto через HTTPS. Защита сохранена.", "Use an HTTPS browser with Web Crypto. Protection remains enabled.") : t("PIN не принят или запись не подтверждена. Повторите позже.", "PIN or durable storage was not accepted. Try again later."));
+                        return;
+                    }
+                    pinChallenge = null; view.closeDialog(); pending.proceed();
+                });
+                return;
             }
             var scope = actionScope(name, value);
             if (scope && !gate.authorize(scope).ok) { challenge(scope, "", function () { action(name, value, values); }); return; }

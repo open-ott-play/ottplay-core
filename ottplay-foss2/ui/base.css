@@ -4,7 +4,6 @@
 @font-face { font-family: Liberation; src: url('/fonts/LiberationSans-Regular.ttf') format('truetype'); }
 @font-face { font-family: Gabriela; src: url('/fonts/Gabriela-Regular.ttf') format('truetype'); }
 @font-face { font-family: PTSansNarrow; src: url('/fonts/PTSansNarrow-Regular.ttf') format('truetype'); }
-@font-face { font-family: fontello; src: url('/fonts/fontello.eot'); src: url('/fonts/fontello.eot?#iefix') format('embedded-opentype'), url('/fonts/fontello.woff2') format('woff2'), url('/fonts/fontello.woff') format('woff'), url('/fonts/fontello.ttf') format('truetype'), url('/fonts/fontello.svg#fontello') format('svg'); }
 html, body { width: 100%; height: 100%; margin: 0; background: #111519; color: #f1f2f3; font-family: RobotoCondensed, Arial, Helvetica, sans-serif; }
 button, input, textarea, select { font: inherit; }
 button { cursor: pointer; }

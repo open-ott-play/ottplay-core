@@ -63,11 +63,24 @@ class DurableStateTest {
     @Test fun scopeAndCredentialValidationFailClosed() {
         val enabled = obj(*(ParentalState.defaults().properties + mapOf("enabled" to b(true), "salt" to t("public-test-salt-1234"), "hash" to t("A".repeat(64)), "protectedIds" to array(t("adult"), t("adult")), "scopes" to obj("settings" to b(false)))).toList().toTypedArray())
         val result = ParentalState.validate(enabled)
-        assertTrue(ParentalState.validate(obj(*(enabled.properties + ("iterations" to n(Double.NaN))).toList().toTypedArray()))["iterations"].number().isNaN())
+        assertFailsWith<DurableStateFailure> { ParentalState.validate(obj(*(enabled.properties + ("iterations" to n(Double.NaN))).toList().toTypedArray())) }
         assertEquals("a".repeat(64), result["hash"].scalar); assertEquals(1, result["protectedIds"].elements.size)
         assertTrue(ParentalState.protected(result, t("adult"), t("play"))); assertFalse(ParentalState.protected(result, t("adult"), t("settings")))
         assertTrue(ParentalState.protected(result, t("free"), t("unknown")))
         assertFailsWith<DurableStateFailure> { ParentalState.validate(obj(*(enabled.properties + ("iterations" to n(1e9))).toList().toTypedArray())) }
+    }
+    @Test fun modernParentalKdfHasExplicitBoundedParameters() {
+        val modern = obj(*(ParentalState.defaults().properties + mapOf("schema" to n(2), "enabled" to b(true),
+            "algorithm" to t("PBKDF2-HMAC-SHA256"), "salt" to t("0123456789abcdef0123456789abcdef"),
+            "hash" to t("a".repeat(64)), "iterations" to n(600000))).toList().toTypedArray())
+        assertEquals("PBKDF2-HMAC-SHA256", ParentalState.validate(modern)["algorithm"].scalar)
+        for (invalid in listOf(599999.0, 2000001.0, 600000.5, Double.NaN, Double.POSITIVE_INFINITY)) {
+            assertFailsWith<DurableStateFailure> { ParentalState.validate(obj(*(modern.properties + ("iterations" to n(invalid))).toList().toTypedArray())) }
+        }
+        for (replacement in listOf("algorithm" to t("SHA-1"), "schema" to n(3), "enabled" to b(false),
+            "salt" to t("A".repeat(32)), "hash" to t("0".repeat(63)))) {
+            assertFailsWith<DurableStateFailure> { ParentalState.validate(obj(*(modern.properties + replacement).toList().toTypedArray())) }
+        }
     }
     @Test fun nativeImporterPreservesPortalDialectAndTypedMessages() {
         val root = obj("M3Us" to array(obj("www" to t("https://a"), "rechours" to t("24"))), "stalker_data" to obj("portal" to t("https://p/"), "mac" to t("00:1A:79:01:02:03")))

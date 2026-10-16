@@ -17,10 +17,9 @@ vm.runInContext(code, sandbox);
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
 function memory(initial) {
-    let stored = initial || "";
-    const writes = [];
-    return { writes, getItem(key) { assert.equal(key, state.key); return stored; },
-        setItem(key, value) { assert.equal(key, state.key); stored = value; writes.push(value); } };
+    const stored = {[state.key]: initial || ""}, writes = [];
+    return {writes, getItem(key) {assert([state.key, state.secureKey].includes(key)); return stored[key] || null;},
+        setItem(key, value) {assert([state.key, state.secureKey].includes(key)); stored[key] = value; writes.push(value);}};
 }
 function populated() {
     const value = plain(state.defaults());

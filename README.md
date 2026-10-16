@@ -1,5 +1,7 @@
 # OttPlay core and FOSS2
 
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/15596/badge)](https://www.bestpractices.dev/en/projects/15596)
+
 [![Fuzzing: RC only](https://img.shields.io/badge/Fuzzing-RC%20only-blue)](docs/fuzzing.md)
 
 
@@ -138,7 +140,7 @@ Automated tests do not certify physical TV/STB codecs, DRM, provider accounts or
 installation/rollback behavior. Those require the corresponding devices and
 accounts. Product releases and deployments remain separate from source
 publication and core delivery. FOSS2 installation and upgrade instructions are in
-[the beta release notes](ottplay-foss2/docs/RELEASE-0.6.0-beta.2.md).
+[the beta release notes](ottplay-foss2/docs/RELEASE-0.6.0-beta.4.md).
 
 Optional trusted-main k3s runner routing is documented in [CI runner selection](docs/CI-RUNNERS.md).
 
@@ -163,3 +165,10 @@ For the client developed inside this repository, see [FOSS2](ottplay-foss2/READM
 See [contribution and test requirements](CONTRIBUTING.md), the
 [security reporting policy](SECURITY.md), [security design](docs/security-design.md),
 and the [OpenSSF evidence and remaining criteria](docs/openssf-evidence.md).
+
+## Licensing
+
+Original project code, contracts, tooling and documentation are released under the [MIT license](LICENSE). Existing component copyright notices remain in force. [Third-party notices](THIRD_PARTY_NOTICES.md) identify separate licenses and the removed assets with unresolved provenance; the root license does not grant new rights to third-party code, media, fonts or referenced downloads.
+
+See [governance](GOVERNANCE.md), [Code of Conduct](CODE_OF_CONDUCT.md), the
+[one-year roadmap](ROADMAP.md) and [dated quality evidence and limits](docs/quality.md).
