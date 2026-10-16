@@ -6,8 +6,8 @@ const http = require('node:http');
 const crypto = require('node:crypto');
 const assert = require('node:assert/strict');
 const playwright = require(path.resolve(process.env.DIAGNOSTIC_PLAYWRIGHT));
-const media = fs.readFileSync('ottplay-foss2/tests/fixtures/browser-media/probe.mp4');
-const output = path.resolve('media-diagnostics');
+const media = fs.readFileSync(process.env.DIAGNOSTIC_MEDIA || 'ottplay-foss2/tests/fixtures/browser-media/probe.mp4');
+const output = path.resolve('media-diagnostics', process.env.DIAGNOSTIC_LABEL || 'default');
 fs.mkdirSync(output, { recursive: true });
 const requests = [], observations = [];
 const server = http.createServer((req, res) => {
@@ -31,10 +31,11 @@ const server = http.createServer((req, res) => {
     const origin = `http://127.0.0.1:${server.address().port}`;
     let browser;
     try {
-        browser = await playwright.webkit.launch({ headless: true });
+        browser = await playwright.webkit.launch({ headless: process.env.DIAGNOSTIC_HEADED !== 'true' });
         const context = await browser.newContext();
         await context.tracing.start({ screenshots: true, snapshots: true, sources: true });
-        for (const kind of ['real-loopback-http', 'routed-invalid-https', 'routed-loopback-http', 'blob']) {
+        const cases = process.env.DIAGNOSTIC_CASES ? process.env.DIAGNOSTIC_CASES.split(',') : ['real-loopback-http', 'routed-invalid-https', 'routed-loopback-http', 'blob'];
+        for (const kind of cases) {
             const page = await context.newPage(), network = [];
             page.on('request', req => network.push({ event: 'request', url: req.url(), type: req.resourceType() }));
             page.on('response', res => network.push({ event: 'response', url: res.url(), status: res.status() }));
@@ -68,10 +69,10 @@ const server = http.createServer((req, res) => {
             await page.close();
         }
         await context.tracing.stop({ path: path.join(output, 'trace.zip') });
-        const report = { diagnosticOnly: true, releaseAcceptance: false, sourceSha: process.env.GITHUB_SHA || null, playwrightVersion: require(path.resolve(process.env.DIAGNOSTIC_PLAYWRIGHT, 'package.json')).version, browserVersion: browser.version(), platform: process.platform, mediaSha256: crypto.createHash('sha256').update(media).digest('hex'), observations, requests };
+        const report = { diagnosticOnly: true, releaseAcceptance: false, label: process.env.DIAGNOSTIC_LABEL || 'default', headed: process.env.DIAGNOSTIC_HEADED === 'true', sourceSha: process.env.GITHUB_SHA || null, playwrightVersion: require(path.resolve(process.env.DIAGNOSTIC_PLAYWRIGHT, 'package.json')).version, browserVersion: browser.version(), platform: process.platform, mediaSha256: crypto.createHash('sha256').update(media).digest('hex'), observations, requests };
         fs.writeFileSync(path.join(output, 'report.json'), JSON.stringify(report, null, 2) + '\n');
         console.log(JSON.stringify(report, null, 2));
-        assert.equal(observations.length, 4);
+        assert.equal(observations.length, cases.length);
     } finally {
         if (browser) await browser.close();
         await new Promise(resolve => server.close(resolve));

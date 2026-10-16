@@ -1,4 +1,4 @@
-name: Isolated Windows WebKit media diagnostics
+name: Isolated Windows WebKit media topology diagnostics
 on:
   workflow_dispatch:
 permissions:
@@ -7,15 +7,13 @@ jobs:
   diagnose:
     if: ${{ github.event.repository.private == false }}
     runs-on: windows-2022
-    timeout-minutes: 10
-    strategy:
-      fail-fast: false
-      max-parallel: 3
-      matrix:
-        version: ['1-64-0', '1-63-0', '1-62-1']
+    timeout-minutes: 12
     defaults:
       run:
         shell: bash
+    env:
+      DIAGNOSTIC_PLAYWRIGHT: ottplay-foss2/tools/browser-compatibility/playwright-1-64-0/node_modules/playwright
+      DIAGNOSTIC_CASES: real-loopback-http
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -25,19 +23,49 @@ jobs:
           node-version: '22'
       - name: Install locked toolchain and Windows media prerequisite
         env:
-          TOOLCHAIN: ottplay-foss2/tools/browser-compatibility/playwright-${{ matrix.version }}
+          TOOLCHAIN: ottplay-foss2/tools/browser-compatibility/playwright-1-64-0
         run: |
           npm ci --prefix "$TOOLCHAIN" --ignore-scripts --omit=optional --no-audit --no-fund
           node "$TOOLCHAIN/node_modules/playwright/cli.js" install-deps chromium
           node "$TOOLCHAIN/node_modules/playwright/cli.js" install webkit
-      - name: Observe actual media transport and codec capabilities
-        env:
-          DIAGNOSTIC_PLAYWRIGHT: ottplay-foss2/tools/browser-compatibility/playwright-${{ matrix.version }}/node_modules/playwright
-        run: node scripts/diagnose-browser-media.cjs
+      - name: Record audio and display devices before probing
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force media-diagnostics | Out-Null
+          Get-Service Audiosrv,AudioEndpointBuilder | Select-Object Name,Status,StartType | ConvertTo-Json | Out-File -Encoding utf8 media-diagnostics/before-services.json
+          Get-CimInstance Win32_SoundDevice | Select-Object Name,Status,Manufacturer | ConvertTo-Json | Out-File -Encoding utf8 media-diagnostics/sound-devices.json
+          Get-CimInstance Win32_VideoController | Select-Object Name,Status,AdapterCompatibility,DriverVersion | ConvertTo-Json | Out-File -Encoding utf8 media-diagnostics/video-devices.json
+          Get-PnpDevice -Class AudioEndpoint -ErrorAction SilentlyContinue | Select-Object FriendlyName,Status | ConvertTo-Json | Out-File -Encoding utf8 media-diagnostics/audio-endpoints.json
+      - name: Compare original and diagnostic video-only media, headed and headless
+        run: |
+          for headed in false true; do
+            for variant in original video-only; do
+              media=ottplay-foss2/tests/fixtures/browser-media/probe.mp4
+              if [[ "$variant" == video-only ]]; then media=scripts/diagnostic-video-only.mp4; fi
+              DIAGNOSTIC_HEADED="$headed" DIAGNOSTIC_MEDIA="$media" DIAGNOSTIC_LABEL="before-$headed-$variant" node scripts/diagnose-browser-media.cjs
+            done
+          done
+      - name: Start audio services on this disposable runner and record outcome
+        shell: pwsh
+        run: |
+          foreach ($service in @('AudioEndpointBuilder','Audiosrv')) {
+            try { Set-Service $service -StartupType Manual; Start-Service $service }
+            catch { $_ | Out-File -Append -Encoding utf8 media-diagnostics/service-start-errors.txt }
+          }
+          Get-Service Audiosrv,AudioEndpointBuilder | Select-Object Name,Status,StartType | ConvertTo-Json | Out-File -Encoding utf8 media-diagnostics/after-services.json
+      - name: Repeat original and diagnostic video-only media after audio service setup
+        run: |
+          for headed in false true; do
+            for variant in original video-only; do
+              media=ottplay-foss2/tests/fixtures/browser-media/probe.mp4
+              if [[ "$variant" == video-only ]]; then media=scripts/diagnostic-video-only.mp4; fi
+              DIAGNOSTIC_HEADED="$headed" DIAGNOSTIC_MEDIA="$media" DIAGNOSTIC_LABEL="after-$headed-$variant" node scripts/diagnose-browser-media.cjs
+            done
+          done
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         if: always()
         with:
-          name: diagnostic-only-windows-webkit-${{ matrix.version }}
+          name: diagnostic-only-windows-webkit-topology
           path: media-diagnostics/
           if-no-files-found: error
           retention-days: 7
