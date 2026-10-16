@@ -241,15 +241,27 @@ Each target installs its own locked Playwright toolchain, records
 its actual browser/version/platform and rejects missing or mismatched evidence.
 Hosted Windows WebKit rows prepare the Media Foundation prerequisite through
 their locked Playwright dependency installer. This does not install or select
-Chromium; all rows must still pass the actual decoded H.264/AAC probe.
+Chromium. Every target must pass the same playback-time, ready-state and nonzero
+video-dimension assertions. The three hosted Windows WebKit targets select a
+video-only derivative before execution because these runners have no audio
+endpoint; they never fall back after a failed media test. Their endpoint inventory
+must be empty, and their report states `audio_not_verified_due_to_missing_endpoint`.
+The other 32 targets retain the original muxed H.264/AAC fixture. The manifest and
+each `mediaCoverage` report record both fixtures' SHA-256 and stream inventories,
+the selected fixture and its scope. No row claims an audible-output assertion.
 
 Source CI downloads the exact compiler artifact from its own run and stages it
 through `distribute.cjs`. Release qualification waits for the final package,
 verifies its source-bound receipt and all compiler-file hashes, then tests that
 exact packaged JavaScript with the same synthetic provider and guide fixtures. The existing Chromium/ffmpeg gate remains responsible for actual media
 decode and legacy MSE/worker fallback checks. The broader matrix qualifies UI,
-provider navigation, persistence, EPG behavior and the bundled H.264/AAC probe;
-it does not claim every codec,
+provider navigation, persistence, EPG behavior and decoded H.264 video on all 35
+targets, including muxed H.264/AAC pipeline advancement on 32. Synthetic media is
+served by a real loopback HTTP server with bounded single-range and HEAD support,
+so native media stacks that bypass Playwright routing still receive the exact
+fixture bytes. Authentication and resolved provider-URL assertions remain in the
+journeys. The matrix does not qualify AAC on the three hosted Windows WebKit
+rows or claim every codec,
 TV webview, native Safari or mobile device has been tested.
 
 Browser reports and screenshots are retained per target. Playwright WebKit is

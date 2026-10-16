@@ -5,6 +5,14 @@
 ### Changed
 
 - Qualify this release with a bounded RC fuzz campaign, offline target execution, and deterministic seed replay checks.
+- Exercise decoded H.264 video and provider/guide journeys on all 35 extended
+  browser targets. The original muxed H.264/AAC probe runs on 32; three hosted
+  Windows WebKit targets use the same encoded video without AAC because the
+  runner has no audio endpoint. Their reports explicitly mark AAC unverified;
+  no target claims audible-output validation. Keep the separate Chromium media,
+  audio-switching and legacy decoder tests.
+- Serve synthetic media through loopback HTTP with byte ranges so native media
+  requests can reach the same fixture outside Playwright's request routing.
 - Bind release evidence to the exact source and toolkit revision, validate seed corpora, and retain engine execution counts and diagnostic artifacts.
 - Document the fuzzing scope, resource limits, and the distinction between synthetic checks and target acceptance.
 

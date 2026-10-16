@@ -63,3 +63,18 @@ For an unallocated local development build, run `npm ci --prefix shared-core`, t
 `npm --prefix shared-core run check:js`, and `python3 scripts/package_core_release.py`.
 Use a fresh output directory; never hand-edit compiler artifacts or their
 manifest. Further workflow details are in [release-workflow.md](release-workflow.md).
+
+## Browser media evidence
+
+Before accepting an RC, retain all 35 source/run/artifact-bound browser reports
+and their `mediaCoverage` receipts. Require 35 decoded-video results, 32 selections
+of the original H.264/AAC fixture, and exactly three video-only selections for
+hosted Windows WebKit. Those three must explicitly report
+`audio_not_verified_due_to_missing_endpoint` and an empty endpoint inventory.
+Both fixture hashes and stream inventories must match the reviewed source
+manifest. A missing or unexpected limitation is a failure, not an implicit skip.
+
+Release notes must distinguish 35-target decoded-video coverage from 32-target
+muxed H.264/AAC pipeline coverage. The three Windows WebKit targets do not qualify
+AAC playback, and no browser-matrix row asserts audible output. Preserve the
+separate media/audio-switching tests and their evidence.
