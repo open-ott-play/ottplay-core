@@ -11,10 +11,15 @@ Changing `shared-core` and merging the change into `main` starts this chain:
 2. `browser-client` checks the committed FOSS2 pin, then installs that uploaded
    candidate into a disposable checkout and exercises the browser contracts.
    `wire-contracts` independently checks the integration snapshot and wire policy.
-3. After all three jobs succeed, the pinned shared CI toolkit validates the source
+3. `browser-compatibility` exercises the candidate in the complete configured
+   browser matrix. `browser-qualification` records success under one exact job
+   name only when that reusable workflow succeeds; failed, skipped or cancelled
+   matrices cannot qualify delivery. The Actions API exposes reusable child jobs
+   under qualified names, so the parent workflow name alone is not a job receipt.
+4. After all four qualification jobs succeed, the pinned shared CI toolkit validates the source
    commit/run, archive digest, manifest and source receipt and creates signed
    draft vendor updates wherever the committed consumer package differs.
-4. Consumer CI validates each update before acceptance. The consumer's existing
+5. Consumer CI validates each update before acceptance. The consumer's existing
    beta/release workflow follows its own policy.
 
 Delivery targets are:

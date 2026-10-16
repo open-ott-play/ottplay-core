@@ -177,6 +177,22 @@ jobs:
         node ../shared-core/scripts/distribute.cjs check-web "$PWD"
       browser-test-command: node scripts/browser-acceptance.cjs
 
+  browser-qualification:
+    # Reusable workflow jobs have qualified child names in the Actions API.
+    # Publish one exact-name gate only after their aggregate result succeeds.
+    needs: [scope, browser-compatibility]
+    if: >-
+      ${{ always() && github.ref == 'refs/heads/main' &&
+          (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+          (needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Require the complete browser matrix
+        env:
+          BROWSER_RESULT: ${{ needs.browser-compatibility.result }}
+        run: test "$BROWSER_RESULT" = success
+
   wire-contracts:
     needs: scope
     if: ${{ needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only' }}
@@ -206,7 +222,7 @@ jobs:
       - run: python3 scripts/workspace-wire.py --check
 
   deliver:
-    needs: [portable, browser-client, browser-compatibility, wire-contracts]
+    needs: [portable, browser-client, browser-qualification, wire-contracts]
     if: >-
       vars.CORE_DELIVERY_ENABLED == 'true' &&
       github.ref == 'refs/heads/main' &&
@@ -237,7 +253,7 @@ jobs:
       artifact-files: '["ottplay-core.js","ottplay-core.d.ts","ottplay-core.jar","ottplay-core.manifest.json","ottplay-core.LICENSE.txt"]'
       manifest: ottplay-core.manifest.json
       manifest-name: ottplay-shared-core
-      qualifying-jobs: '["portable","browser-client","browser-compatibility","wire-contracts"]'
+      qualifying-jobs: '["portable","browser-client","browser-qualification","wire-contracts"]'
       target-repository: ${{ matrix.repository }}
       destination-prefix: ${{ matrix.destination }}
       copy-files: ${{ matrix.files }}

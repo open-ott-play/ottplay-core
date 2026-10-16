@@ -6,6 +6,7 @@ small, deliberately explicit job/step blocks that control runner admission.
 
 import ast
 import re
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -89,12 +90,42 @@ class WorkflowRoutingTests(unittest.TestCase):
         self.assertIn("distribute.cjs check-web", matrix)
         self.assertIn("browser-test-command: node scripts/browser-acceptance.cjs", matrix)
         delivery = workflow["deliver"]
-        self.assertIn("needs: [portable, browser-client, browser-compatibility, wire-contracts]", delivery)
+        self.assertIn("needs: [portable, browser-client, browser-qualification, wire-contracts]", delivery)
         updater = delivery_revision(delivery)
         self.assertIsNotNone(updater)
         self.assertIn("artifact-digest: ${{ needs.portable.outputs.artifact-digest }}", delivery)
         self.assertNotIn("CI_RUNNER_MODE", delivery)
         self.assertNotIn("ottplay-k3s", delivery)
+
+    def test_browser_delivery_gate_rejects_every_non_success_result(self):
+        """Exercise the actual aggregate command, including skipped/cancelled runs."""
+        workflow = jobs("core.yml")
+        gate = workflow["browser-qualification"]
+        self.assertIn("needs: [scope, browser-compatibility]", gate)
+        self.assertIn("always()", gate)
+        self.assertIn("github.ref == 'refs/heads/main'", gate)
+        self.assertIn("github.event_name == 'push'", gate)
+        self.assertIn("github.event_name == 'workflow_dispatch'", gate)
+        self.assertIn("BROWSER_RESULT: ${{ needs.browser-compatibility.result }}", gate)
+        condition = re.search(r"if: >-\n(.*?)\n    runs-on:", gate, re.S).group(1)
+        condition = " ".join(condition.split())[3:-2].strip()
+        for scope_run, reason in (("false", "documentation-only"), ("true", "source"), ("", ""), ("false", "unknown")):
+            for event in ("push", "workflow_dispatch", "pull_request"):
+                expression = condition.replace("always()", "True").replace("&&", "and").replace("||", "or")
+                for name, value in {"github.ref": "refs/heads/main", "github.event_name": event,
+                                    "needs.scope.outputs.run": scope_run, "needs.scope.outputs.reason": reason}.items():
+                    expression = expression.replace(name, repr(value))
+                selected = eval(expression, {"__builtins__": {}})
+                self.assertEqual(selected, event != "pull_request" and not (scope_run == "false" and reason == "documentation-only"))
+        command = re.search(r"^        run: (.+)$", gate, re.M).group(1)
+        for result in ("success", "failure", "skipped", "cancelled", "", "unknown"):
+            with self.subTest(result=result):
+                run = subprocess.run(["/bin/sh", "-c", command], env={"BROWSER_RESULT": result}, check=False)
+                self.assertEqual(run.returncode == 0, result == "success")
+        self.assertIn(
+            "qualifying-jobs: '[\"portable\",\"browser-client\",\"browser-qualification\",\"wire-contracts\"]'",
+            workflow["deliver"],
+        )
 
     def test_comments_cannot_supply_a_delivery_revision(self):
         """An obsolete SHA in a comment must not qualify an unpinned call."""
@@ -112,7 +143,7 @@ class WorkflowRoutingTests(unittest.TestCase):
 
     def test_scope_and_all_linux_jobs_route_directly_without_hosted_bootstrap(self):
         workflow = jobs("core.yml")
-        self.assertEqual(set(workflow), {"scope", "portable", "browser-client", "browser-compatibility", "wire-contracts", "deliver"})
+        self.assertEqual(set(workflow), {"scope", "portable", "browser-client", "browser-compatibility", "browser-qualification", "wire-contracts", "deliver"})
         self.assertIn("runner: " + routed(GENERIC, "ubuntu-latest"), workflow["scope"])
         self.assertRegex(workflow["scope"], r"change-scope.yml@[0-9a-f]{40}\n")
         for name in ("portable", "browser-client", "wire-contracts"):
