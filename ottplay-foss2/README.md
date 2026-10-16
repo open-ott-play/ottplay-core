@@ -239,6 +239,9 @@ Stable promotion reuses the accepted RC bytes. The shared release verdict checks
 the exact target set, channel, source, run/attempt and candidate artifact ID.
 Each target installs its own locked Playwright toolchain, records
 its actual browser/version/platform and rejects missing or mismatched evidence.
+Hosted Windows WebKit rows prepare the Media Foundation prerequisite through
+their locked Playwright dependency installer. This does not install or select
+Chromium; all rows must still pass the actual decoded H.264/AAC probe.
 
 Source CI downloads the exact compiler artifact from its own run and stages it
 through `distribute.cjs`. Release qualification waits for the final package,

@@ -155,7 +155,7 @@ jobs:
   browser-compatibility:
     needs: [scope, portable]
     if: ${{ needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only' }}
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@5b72b09e8a6bf17b482124891f17fd9662182bf6
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@eb3d3a18937c8ca0b9c9a8edfd48e85cca0eddad
     with:
       node-version: '22'
       run-node-ci: false
