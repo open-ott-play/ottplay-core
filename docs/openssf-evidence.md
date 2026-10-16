@@ -30,13 +30,11 @@ analyzed.
 
 The owner confirmed MIT licensing for original root tooling, contracts and documentation on 2026-10-16. The root LICENSE and THIRD_PARTY_NOTICES.md record the scope; component licenses remain unchanged. Unused Fontello resources with incomplete glyph provenance have been removed. New parental PINs use native Web Crypto PBKDF2; legacy verifiers migrate only after authentication and confirmed storage. See the [security design](security-design.md) and [migration guide](../ottplay-foss2/docs/PARENTAL-CONTROLS.md). This does not qualify all network/runtime paths or untested hardware. Complete the criteria review before claiming a badge.
 
-The project maintainer must confirm secure-design/common-error knowledge for
-this project and supply the history of bug, enhancement and vulnerability
-reports across all channels. Confirm actual private-reporting availability and
-review/branch settings. Verify releases have meaningful change/security notes;
-measure test coverage and map static/dynamic analysis to every project-owned
-language. Review each cryptographic criterion individually. Do not transfer
-another repository's attestations, badge identifier or test results here.
+The maintainer has supplied the secure-design/common-error and no-outside-report
+attestations recorded in [dated quality evidence](quality.md). Private GitHub
+reporting is enabled. The same document distinguishes actual source tests from
+unfinished full-network, dependency, native and hardware qualification. Governance,
+conduct and the one-year roadmap are published; continuity remains unmet.
 
 Record each completed analysis with its source SHA, commands/tool versions,
 result and material limitations. Add the repository's actual badge only after

@@ -31,8 +31,9 @@ existing PIN; protection is preserved. There is no weak hashing fallback.
 Run the FOSS2 Node services on a supported Node 22 or newer runtime. The relay
 and default EPG downloader require [OpenSSL security level 2](https://docs.openssl.org/3.5/man3/SSL_CTX_set_security_level/) for HTTPS, preserving
 the configured cipher selection and any explicitly higher `@SECLEVEL` in
-`tls.DEFAULT_CIPHERS`. This rejects RSA certificates below 2048 bits and EC
-certificates below 224 bits throughout the verified chain. Normal certificate
+`tls.DEFAULT_CIPHERS`. This rejects low effective-strength keys, but does not establish an exact
+2048-bit RSA floor: OpenSSL can admit a 2047-bit key under this level. Full-chain
+exact-bit boundary qualification remains incomplete. Normal certificate
 trust and hostname checks remain enabled. Upgrade an upstream server's weak
 certificate or CA chain if these services report an upstream connection failure;
 do not disable verification to restore connectivity.

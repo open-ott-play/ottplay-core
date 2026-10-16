@@ -42,3 +42,8 @@ merging; do not use an administrator bypass.
 ## Contribution rights
 
 Contribute original material under the root MIT license only when you have the right to do so. Preserve third-party attribution and license terms; record imported code and assets in THIRD_PARTY_NOTICES.md or the linked component notices. A public download URL alone is not a redistribution license.
+
+See [governance](GOVERNANCE.md), [conduct](CODE_OF_CONDUCT.md) and the
+[roadmap](ROADMAP.md). All major functionality changes require meaningful
+automated regression coverage and relevant negative cases, with test invocation
+and limitations documented in the pull request.
