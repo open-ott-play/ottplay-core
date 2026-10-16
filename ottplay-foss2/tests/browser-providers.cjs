@@ -122,7 +122,10 @@ async function navigate(page, selector) {
         const episodeURL = providerOrigin + '/series/' + encodeURIComponent(username) + '/' + encodeURIComponent(password) + '/70.mp4';
         await page.waitForFunction(expected => document.getElementById('player-video').src === expected, episodeURL);
         await page.waitForFunction(() => document.getElementById('foss2-home').style.display === 'none');
-        if (media) await page.waitForFunction(() => document.getElementById('player-video').currentTime > 0.1);
+        if (media) await page.waitForFunction(() => {
+            const video = document.getElementById('player-video');
+            return video.currentTime > 0.1 && video.readyState >= 2 && video.videoWidth > 0 && video.videoHeight > 0;
+        });
         await page.click('#player-home');
         await page.getByRole('button', { name: /Fixture Episode/ }).waitFor();
         await navigate(page, "#nav-sources");
@@ -154,7 +157,10 @@ async function navigate(page, selector) {
         await page.getByRole('button', { name: /Portal Movie/ }).click();
         await page.click('#watch');
         await page.waitForFunction(expected => document.getElementById('player-video').src === expected, providerOrigin + '/portal-movie.mp4');
-        if (media) await page.waitForFunction(() => document.getElementById('player-video').currentTime > 0.1);
+        if (media) await page.waitForFunction(() => {
+            const video = document.getElementById('player-video');
+            return video.currentTime > 0.1 && video.readyState >= 2 && video.videoWidth > 0 && video.videoHeight > 0;
+        });
         const storedPortal = await page.evaluate(() => localStorage.getItem('ottplay2:state:v1'));
         assert.equal(storedPortal.includes('synthetic-session'), false, 'Portal bearer sessions never enter persisted state');
         await page.click('#player-home');
