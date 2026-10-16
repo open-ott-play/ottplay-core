@@ -38,3 +38,7 @@ test assertions enabled, resolve new warnings, and document any remaining
 warning with its reason and scope. Do not suppress a real security finding to
 obtain a passing check. Wait for required checks and independent review before
 merging; do not use an administrator bypass.
+
+## Contribution rights
+
+Contribute original material under the root MIT license only when you have the right to do so. Preserve third-party attribution and license terms; record imported code and assets in THIRD_PARTY_NOTICES.md or the linked component notices. A public download URL alone is not a redistribution license.
