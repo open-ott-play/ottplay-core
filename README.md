@@ -1,5 +1,7 @@
 # OttPlay core and FOSS2
 
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/15596/badge)](https://www.bestpractices.dev/en/projects/15596)
+
 [![Fuzzing: RC only](https://img.shields.io/badge/Fuzzing-RC%20only-blue)](docs/fuzzing.md)
 
 
