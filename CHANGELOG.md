@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Publish the owner-authorized MIT license for original root code, contracts and documentation; preserve existing component terms and identify unresolved font provenance.
+
+
 ## [0.1.1] - Development line
 
 ### Changed

@@ -9,7 +9,7 @@
   "contribution_requirements_status": "Met",
   "floss_license_status": "?",
   "floss_license_osi_status": "?",
-  "license_location_status": "?",
+  "license_location_status": "Met",
   "documentation_basics_status": "Met",
   "documentation_interface_status": "?",
   "sites_https_status": "Met",
@@ -88,7 +88,7 @@
   "test_invocation_justification": "https://github.com/open-ott-play/ottplay-core/blob/main/CONTRIBUTING.md documents the project evidence; see https://github.com/open-ott-play/ottplay-core/blob/main/docs/openssf-evidence.md for scope and unresolved criteria.",
   "test_policy_justification": "https://github.com/open-ott-play/ottplay-core/blob/main/CONTRIBUTING.md documents the project evidence; see https://github.com/open-ott-play/ottplay-core/blob/main/docs/openssf-evidence.md for scope and unresolved criteria.",
   "tests_documented_added_justification": "https://github.com/open-ott-play/ottplay-core/blob/main/CONTRIBUTING.md documents the project evidence; see https://github.com/open-ott-play/ottplay-core/blob/main/docs/openssf-evidence.md for scope and unresolved criteria.",
-  "floss_license_justification": "MIT grants exist in shared-core and FOSS2, but root tooling/contracts need an explicit license scope. Project-owned parental PIN cryptography prevents blindly asserting crypto_call/crypto_password_storage. Complete the criteria review before claiming a badge.",
-  "floss_license_osi_justification": "MIT grants exist in shared-core and FOSS2, but root tooling/contracts need an explicit license scope. Project-owned parental PIN cryptography prevents blindly asserting crypto_call/crypto_password_storage. Complete the criteria review before claiming a badge.",
-  "license_location_justification": "MIT grants exist in shared-core and FOSS2, but root tooling/contracts need an explicit license scope. Project-owned parental PIN cryptography prevents blindly asserting crypto_call/crypto_password_storage. Complete the criteria review before claiming a badge."
+  "floss_license_justification": "The owner-authorized root MIT license now covers original tooling, contracts and documentation. Existing component notices remain unchanged. The existing FOSS2 Fontello glyph provenance remains unresolved, so complete distribution licensing is not yet asserted. https://github.com/open-ott-play/ottplay-core/blob/main/THIRD_PARTY_NOTICES.md",
+  "floss_license_osi_justification": "The owner-authorized root MIT license now covers original tooling, contracts and documentation. Existing component notices remain unchanged. The existing FOSS2 Fontello glyph provenance remains unresolved, so complete distribution licensing is not yet asserted. https://github.com/open-ott-play/ottplay-core/blob/main/THIRD_PARTY_NOTICES.md",
+  "license_location_justification": "The root LICENSE covers original project code and documentation; component notices and license exceptions remain in THIRD_PARTY_NOTICES.md. https://github.com/open-ott-play/ottplay-core/blob/main/LICENSE https://github.com/open-ott-play/ottplay-core/blob/main/THIRD_PARTY_NOTICES.md"
 }

@@ -163,3 +163,7 @@ For the client developed inside this repository, see [FOSS2](ottplay-foss2/READM
 See [contribution and test requirements](CONTRIBUTING.md), the
 [security reporting policy](SECURITY.md), [security design](docs/security-design.md),
 and the [OpenSSF evidence and remaining criteria](docs/openssf-evidence.md).
+
+## Licensing
+
+Original project code, contracts, tooling and documentation are released under the [MIT license](LICENSE). Existing component copyright notices remain in force. [Third-party notices](THIRD_PARTY_NOTICES.md) identify separate licenses and unresolved asset provenance; the root license does not grant new rights to third-party code, media, fonts or referenced downloads.
