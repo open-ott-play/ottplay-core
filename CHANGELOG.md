@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Enforce exact certificate-key floors for both Node relay and EPG HTTPS paths,
+  including the trust-store root; RSA-2047 is rejected before any HTTP bytes.
+  Require TLS 1.2+ and ephemeral elliptic-curve key agreement while preserving
+  stronger operator cipher policies and fresh-session verification.
+
+## Unreleased
+
 - Replace the FOSS2 parental PIN's custom repeated SHA-256 hash with native Web
   Crypto PBKDF2-HMAC-SHA-256, 600,000 iterations and a fresh 128-bit salt. Correct
   legacy PINs migrate after durable storage confirmation; failed checks do not.
