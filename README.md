@@ -7,8 +7,8 @@
 
 This repository maintains the shared OttPlay business logic, its compiled
 JVM/ES5 distributions, service wire contracts and the FOSS2 browser client.
-The five independent consumer repositories live beside it, normally under
-`~/victron`. Consumers carry generated artifacts and build without a sibling
+The five independent consumer repositories can share a parent directory for
+integration work. Consumers carry generated artifacts and build without a sibling
 core checkout or Kotlin compiler.
 
 ## Architecture
@@ -43,22 +43,24 @@ packaged artifact. See [shared core API and builds](shared-core/README.md),
 
 The [open-ott-play/ottplay-core](https://github.com/open-ott-play/ottplay-core)
 repository owns `shared-core`, its distribution tooling, the service wire
-contracts and `ottplay-foss2`. Its usual local checkout is `~/victron/ottplay-core`.
+contracts and `ottplay-foss2`. Choose any local workspace directory.
 The other five repositories remain
 independently versioned consumers/services. Their integration commits are pinned
 in `checkouts.json`.
 
-To clone the source repository into the flat workspace:
+For example, create a workspace and clone the source repository into it:
 
 ```sh
-cd ~/victron
-git clone git@github.com:open-ott-play/ottplay-core.git ottplay-core
+mkdir -p "$HOME/ottplay-workspace"
+cd "$HOME/ottplay-workspace"
+git clone https://github.com/open-ott-play/ottplay-core.git ottplay-core
+cd ottplay-core
 ```
 
 The default layout is:
 
 ```text
-~/victron/
+ottplay-workspace/
   ottplay-core/                 # this repository (local name is not significant)
     shared-core/
     contracts/
