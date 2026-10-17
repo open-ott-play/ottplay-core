@@ -29,14 +29,23 @@ existing PIN; protection is preserved. There is no weak hashing fallback.
 ## Node HTTPS transport profile
 
 Run the FOSS2 Node services on a supported Node 22 or newer runtime. The relay
-and default EPG downloader require [OpenSSL security level 2](https://docs.openssl.org/3.5/man3/SSL_CTX_set_security_level/) for HTTPS, preserving
-the configured cipher selection and any explicitly higher `@SECLEVEL` in
-`tls.DEFAULT_CIPHERS`. This rejects low effective-strength keys, but does not establish an exact
-2048-bit RSA floor: OpenSSL can admit a 2047-bit key under this level. Full-chain
-exact-bit boundary qualification remains incomplete. Normal certificate
-trust and hostname checks remain enabled. Upgrade an upstream server's weak
-certificate or CA chain if these services report an upstream connection failure;
-do not disable verification to restore connectivity.
+and default EPG downloader preserve the configured cipher selection and any
+explicitly higher `@SECLEVEL` in `tls.DEFAULT_CIPHERS`, with a minimum of
+[OpenSSL security level 2](https://docs.openssl.org/3.5/man3/SSL_CTX_set_security_level/).
+An additional check uses Node's verified certificate chain, including the root
+loaded from its trust store even when the server omits that root. Every RSA/RSA-PSS
+key must have at least 2048 bits; DSA requires 2048-bit p and 224-bit q; EC is
+restricted to named P-224, P-256, secp256k1, P-384 and P-521; Ed25519 and Ed448 are
+accepted. Missing, cyclic, overlong or unrecognized chains fail closed.
+
+Normal certificate trust and hostname checks remain enabled. The supplemental
+check uses `node:crypto` to inspect keys and does not implement cryptography.
+Connections require TLS 1.2 or newer and use ECDHE/TLS 1.3 key agreement with
+X25519, P-256, P-384 or P-521. Static RSA, finite-field DH and PSK cipher families
+are excluded; a stronger configured OpenSSL policy remains effective.
+Upgrade an upstream server's weak certificate or CA chain if these services
+report an upstream connection failure; do not disable verification to restore
+connectivity. These changes also apply before forwarding an authorization header.
 
 Both services deliberately retain `agent: false` and accept no caller-supplied
 TLS session. Each upstream request therefore performs a fresh handshake and
@@ -44,7 +53,10 @@ certificate check. Security level changes alone do not revalidate a session
 previously established under a weaker policy; do not replace these isolated
 connections with a shared session cache without a separate security review.
 Tests prime and successfully resume the default agent's cache before checking
-that these services reject weak chains and never reuse that session. The EPG
+that these services reject weak chains and never reuse that session. Actual
+TLS 1.2 and TLS 1.3 fixtures cover RSA-1024 and RSA-2047 in the leaf, intermediate
+and omitted trust root; RSA-2048 succeeds. Rejected connections deliver no HTTP
+request to the fixture server. The EPG
 fixture redirects only its fixed endpoint to a loopback TLS server while keeping
 its actual request options; the relay test uses its default transport.
 
