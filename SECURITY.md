@@ -43,3 +43,14 @@ the device owner. Read the [upgrade and recovery guide](ottplay-foss2/docs/PAREN
 before changing browser versions or restoring data.
 
 See [security design and validation boundaries](docs/security-design.md).
+
+## Release transport
+
+Release preparation, candidate publication, stable promotion and final
+publication install a pinned GitHub CLI, verify both its archive and executable
+hashes, and select its FIPS TLS profile. Local maintainers must use the same
+[release CLI setup](docs/release-github-cli.md), including its environment and
+configuration restrictions. This profile covers the documented release
+commands; it does not qualify arbitrary CLI extensions, custom GitHub hosts or
+every build dependency. The guide records the dated, command-specific advisory
+assessment and its remaining update deadline.
