@@ -1,5 +1,34 @@
 # Changelog
 
+## [0.1.2] - 2026-10-17
+
+### Changed
+
+- Support versioned parental-control metadata in the shared Kotlin core,
+  including validated PBKDF2-HMAC-SHA-256 parameters while retaining legacy input
+  validation. Cryptographic operations remain the consumer's responsibility.
+- Require real browser qualification before distributing compiler output and
+  use the qualified GitHub CLI for release publication.
+- Document the original-code MIT license, retained third-party notices and the
+  limits of the browser, fuzzing and device evidence.
+
+### Upgrade
+
+This release publishes the JVM17 and ES5 shared-core artifacts. It does not
+publish or deploy the separately versioned FOSS2 application. Consumers using
+schema-2 parental metadata must preserve the documented downgrade lock and
+migration behavior; an older reader must not silently discard protected state.
+Keep the previous immutable core package and validate consumer compatibility
+before changing a deployed pin.
+
+### Security
+
+The shared core validates the versioned parental-control metadata and its
+PBKDF2 parameters; each consumer remains responsible for performing the
+cryptographic operation and preserving protected state. This package release
+does not deploy FOSS2's separate PIN migration or establish target-device
+acceptance. Retained third-party license notices accompany the distribution.
+
 ## Unreleased
 
 - Enforce exact certificate-key floors for both Node relay and EPG HTTPS paths,
