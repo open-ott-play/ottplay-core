@@ -12,7 +12,7 @@
 - Document the original-code MIT license, retained third-party notices and the
   limits of the browser, fuzzing and device evidence.
 
-### Compatibility and rollback
+### Upgrade
 
 This release publishes the JVM17 and ES5 shared-core artifacts. It does not
 publish or deploy the separately versioned FOSS2 application. Consumers using
@@ -20,6 +20,14 @@ schema-2 parental metadata must preserve the documented downgrade lock and
 migration behavior; an older reader must not silently discard protected state.
 Keep the previous immutable core package and validate consumer compatibility
 before changing a deployed pin.
+
+### Security
+
+The shared core validates the versioned parental-control metadata and its
+PBKDF2 parameters; each consumer remains responsible for performing the
+cryptographic operation and preserving protected state. This package release
+does not deploy FOSS2's separate PIN migration or establish target-device
+acceptance. Retained third-party license notices accompany the distribution.
 
 ## Unreleased
 
