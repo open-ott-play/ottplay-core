@@ -67,7 +67,7 @@ jobs:
 
       - name: Require a complete Scorecard analysis
         env:
-          GITHUB_AUTH_TOKEN: ${{ github.token }}
+          GITHUB_AUTH_TOKEN: ${{ secrets.SCORECARD_TOKEN || github.token }}
         run: >-
           "$RUNNER_TEMP/scorecard-scan"
           -repo "$GITHUB_REPOSITORY"
