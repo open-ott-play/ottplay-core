@@ -1,5 +1,10 @@
 # OttPlay core and FOSS2
 
+[![FOSS2 browser client on first launch in perspective](docs/images/hero.png)](docs/images/foss2-start.jpg)
+
+*FOSS2 0.6.0-beta.4, the browser client included in this repository, captured locally
+with its menu open and no playlist configured. [Original and regeneration](docs/images/README.md).*
+
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/15596/badge)](https://www.bestpractices.dev/en/projects/15596)
 
 [![Fuzzing: RC only](https://img.shields.io/badge/Fuzzing-RC%20only-blue)](docs/fuzzing.md)
