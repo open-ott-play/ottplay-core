@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.1.3] - 2026-10-18
+
+### Changed
+
+- Refresh the verified shared-core receipt used by the separately versioned FOSS2 consumer and declare repository code owners.
+
+### Upgrade
+
+The shared-core API and serialized format are unchanged. Consumer deployments remain explicit; keep the prior immutable package for rollback.
+
+### Security
+
+This maintenance release preserves existing parental-metadata validation and distribution checks.
+
 ## [0.1.2] - 2026-10-17
 
 ### Changed
