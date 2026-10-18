@@ -1,5 +1,10 @@
 # OTT-play FOSS 2
 
+[![FOSS2 browser client on first launch in perspective](../docs/images/hero.png)](../docs/images/foss2-start.jpg)
+
+*FOSS2 0.6.0-beta.4, the browser client included in this repository, captured locally
+with its menu open and no playlist configured. [Original and regeneration](../docs/images/README.md).*
+
 **Beta 0.6.0-beta.4** — [release notes and upgrade instructions](docs/RELEASE-0.6.0-beta.4.md).
 
 An IPTV player with an ES5 application runtime and a compact interface for LG televisions and remote controls. Bundled fonts and media libraries are distributed with their notices.
