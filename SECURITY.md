@@ -54,3 +54,20 @@ configuration restrictions. This profile covers the documented release
 commands; it does not qualify arbitrary CLI extensions, custom GitHub hosts or
 every build dependency. The guide records the dated, command-specific advisory
 assessment and its remaining update deadline.
+
+## Scorecard authentication
+
+The complete Scorecard scan must read classic branch-protection settings.
+Configure the repository secret `SCORECARD_TOKEN` with a fine-grained token
+restricted to this repository, with **Administration: read-only** and the
+automatic **Metadata: read-only** permission. These are the
+[upstream documented permissions](https://github.com/ossf/scorecard-action/blob/main/docs/authentication/fine-grained-auth-token.md).
+The configured checks do not include the experimental Webhooks check.
+
+The token is used only by the analysis step; checkout and SARIF upload retain
+the workflow token and their declared permissions. The workflow falls back to
+`github.token` when the secret is absent, but cannot complete analysis if that
+token cannot read the branch rules. Missing permissions remain a failed scan.
+After provisioning or rotating the secret, verify a complete successful scan
+before treating the security report as current, and renew the token before its
+configured expiration.
