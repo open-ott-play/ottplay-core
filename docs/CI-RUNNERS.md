@@ -1,57 +1,90 @@
 # CI runner selection
 
-The repository variable `CI_RUNNER_MODE` selects runners before any job starts.
-Only `k3s` opts in; `github`, an empty value or any other value keeps the existing
-GitHub-hosted runners. Public `ottplay-foss` is outside this configuration.
+The current repository setting is `CI_RUNNER_MODE=github`. Public ARC standby
+has not been accepted or activated. Prepared workflow selectors and registered
+credentials do not demonstrate a working or isolated runner.
 
-In `k3s` mode, the scope, compiler, browser-client and wire-contract jobs for
-trusted main runs route directly to `ottplay-k3s-linux-x64`. The scope workflow
-is pinned to toolkit commit `733de629b521477102822ccfcc855427de2f2b08`, which
-accepts the runner input. Compiler artifact IDs/digests and the browser's exact
-artifact download remain intact. Signed vendor delivery retains its existing
-reusable workflow and hosted runner; its credentials never enter the Linux pool.
+Two selector families coexist. The managed shared workflows use configurable
+ARC labels; the existing Core compiler jobs retain their fixed legacy labels.
+Changing the mode does not make these two pools interchangeable.
 
-## Public repositories and event admission
+## Managed shared ARC standby
 
-Both repositories are public. The opt-in applies only to `push`,
-`workflow_dispatch` or `schedule` on `refs/heads/main`. All pull requests
-(including same-repository PRs), merge queues and manual runs on other branches
-stay on GitHub-hosted runners even when `CI_RUNNER_MODE=k3s`. Step provisioning
+The CodeQL and dependency-review jobs, quality-gate helpers, and shared browser
+workflow use the reviewed [toolkit runner policy](https://github.com/victron-venus/venus-os-ci-toolkit/blob/6b2d99519d513d2b871d2a845ddd6134dea4af2c/docs/RUNNERS.md).
+With hosted execution enabled, `github`, an unset mode or an unrecognized mode
+keeps GitHub-hosted execution. Either `self-hosted` or `k3s` opts the managed CI
+selector into `CI_RUNNER_LABELS` for these events only:
+
+- A `pull_request` whose head repository is this repository.
+- `push`, `schedule` or `workflow_dispatch` on the repository's default branch.
+
+Fork pull requests, `pull_request_target`, merge queues and manual runs on other
+branches retain hosted routing. Only the browser matrix's `ubuntu-latest` rows
+use this CI selector; explicit Windows, macOS and other platform rows keep their
+specified platforms. Existing job conditions still decide whether a job runs.
+
+This event policy differs from the legacy pool below. Before enabling managed
+standby, separately qualify the public CI image, disposable worker lifecycle,
+network and credential isolation, repository access and controller admission for
+these exact workflows and same-repository PRs. Keep release and automation
+credentials out of the CI pool. Workflow expressions alone cannot enforce this
+boundary against a PR that edits YAML. Do not point `CI_RUNNER_LABELS` at the
+legacy trusted-main pool or a private runner. Leave the mode `github` until these
+requirements have been demonstrated; no such acceptance is claimed here.
+
+Managed release jobs, including signed vendor delivery, use the separate
+`CI_RUNNER_RELEASE_LABELS` selector for default-branch push, dispatch or schedule
+events. They do not admit PRs to the release pool. Updating a reusable workflow
+pin does not move delivery credentials into the CI pool. Standalone
+`ottplay-foss` has its own workflows and configuration.
+
+## Legacy Core pool and event admission
+
+The scope, compiler, browser-client and wire-contract jobs in `core.yml` and its
+qualification copy still opt in only with `CI_RUNNER_MODE=k3s`. Their fixed label
+is `ottplay-k3s-linux-x64`; `self-hosted` does not activate these legacy selectors.
+The scope workflow is pinned to toolkit commit
+`6b2d99519d513d2b871d2a845ddd6134dea4af2c`, which accepts the explicit runner input.
+Compiler artifact IDs/digests and the browser's exact artifact download remain
+intact.
+
+For these legacy jobs, the opt-in applies only to `push`, `workflow_dispatch` or
+`schedule` on `refs/heads/main`. All pull requests, including same-repository PRs,
+merge queues and manual runs on other branches stay hosted. Step provisioning
 uses `runner.environment`, so a hosted PR still installs its OS dependencies.
 
-Workflow conditions are routing defaults, not a security boundary against a PR
-that edits YAML. Before admitting these public repositories, runner-group or
-controller admission must restrict self-hosted jobs to the reviewed workflow
-files on `refs/heads/main`. Do not enable a repository-wide unrestricted public
-runner pool. If the deployment cannot enforce trusted-main workflow admission,
-leave the pools disabled and use GitHub-hosted execution. Smoke jobs are manual
-and main-only, but need the same infrastructure enforcement. Adding these files
-does not provision pools, change repository variables or trigger admission.
+Before admitting jobs to this legacy pool, runner-group or controller admission
+must restrict it to the reviewed workflow files on `refs/heads/main`. If that
+restriction cannot be enforced, leave the pool disabled. The legacy manual smoke
+is main-only and needs the same infrastructure enforcement; it does not qualify
+the managed ARC pool or its PR policy.
 
-## Admission and switching
+## Legacy admission and switching
 
-1. Provision the ARC scale set and restrict it to authorized repositories.
-   Use disposable runner pods and preserve the existing PR admission rules.
+1. Provision the legacy scale set with authorized-repository and trusted-main
+   workflow restrictions. Use disposable runner pods.
 2. Review the current `main` commit and record its full 40-character SHA. Dispatch
    **k3s runner admission** (`runner-smoke.yml`) on that current `main`.
    It ignores `CI_RUNNER_MODE`, so it can start a scale set with zero idle pods.
    Its stable job is `smoke-linux`, on `ottplay-k3s-linux-x64`.
 3. Require a successful run on the reviewed SHA, no older than 24 hours, with the
    expected runner label. Pass `--expected-sha FULL40 --smoke-run RUN_ID` to the
-   infrastructure operator before setting this repository's `CI_RUNNER_MODE=k3s`.
-   The reviewed SHA must still match both current `main` and the smoke run. If
-   `main` advances, review and smoke the new commit. This explicit review does not
-   assume paid branch-protection features. A registered or idle runner alone is
-   not proof of readiness.
-4. To return to hosted runners, explicitly set the repository variable to
-   `github`. A queued or running job keeps its original selection; cancel and
-   rerun it deliberately when changing pools.
+   infrastructure operator. The reviewed SHA must still match both current `main`
+   and the smoke run. If `main` advances, review and smoke the new commit. This
+   explicit review does not assume paid branch-protection features. A registered
+   or idle runner alone is not proof of readiness.
+4. Before selecting `k3s`, also satisfy the managed standby requirements above:
+   that mode affects both selector families. Do not use a legacy smoke result as
+   evidence for the managed pool. To return both families to hosted execution,
+   set `CI_RUNNER_MODE=github`. Queued or running jobs keep their original
+   selection; cancel and rerun them deliberately when changing pools.
 
 These workflows neither change the variable nor retry paid/failed jobs on another
 pool. Billing-driven switching belongs to the external operator: it must retain
 the same admission checks and must not convert a failed test into a runner retry.
 
-## Image contract
+## Legacy image contract
 
 Use Ubuntu 24.04 x86_64 with `bash`, Python 3 plus pip, `git`, `curl`, `jq`, `gh`,
 `unzip`, `tar`, `gzip`, `ffmpeg`, and Playwright Chromium OS dependencies installed
