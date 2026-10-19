@@ -14,6 +14,16 @@ ROOT = Path(__file__).resolve().parents[2]
 GENERIC = "ottplay-k3s-linux-x64"
 KVM = "ottplay-k3s-kvm-x64"
 RELEASE = "ottplay-k3s-release-x64"
+# This metadata-only gate uses the canonical opt-in public CI selector.
+PUBLIC_CI_RUNNER = (
+    "${{ fromJSON((vars.CI_RUNNER_MODE == 'self-hosted' || vars.CI_RUNNER_MODE == "
+    "'k3s') && ((github.event_name == 'pull_request' && "
+    'github.event.pull_request.head.repo.full_name == github.repository) || '
+    '(contains(fromJSON(\'["push","schedule","workflow_dispatch"]\'), github.event_name) '
+    "&& github.ref == format('refs/heads/{0}', "
+    "github.event.repository.default_branch))) && (vars.CI_RUNNER_LABELS || '[]') || "
+    '\'["ubuntu-latest"]\') }}'
+)
 
 
 def jobs(name):
@@ -54,6 +64,11 @@ class WorkflowRoutingTests(unittest.TestCase):
     def test_public_prs_and_nonmain_runs_stay_hosted_even_in_k3s_mode(self):
         for name in ['core.yml']:
             for job, source in jobs(name).items():
+                if job == "browser-qualification":
+                    # The gate's own condition still restricts execution to trusted main.
+                    # Keep every canonical selector condition, role and fallback exact.
+                    self.assertIn("runs-on: " + PUBLIC_CI_RUNNER + "\n", source)
+                    continue
                 match = re.search(r"(?:runs-on|runner): (\$\{\{ .*? \}\})", source)
                 if not match:
                     continue
