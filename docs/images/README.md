@@ -3,7 +3,7 @@
 The FOSS2 client bundled with this repository is a user interface; the shared
 core library itself is not. The hero shows its real first-run screen in English,
 with the navigation menu expanded and no provider or playlist configured.
-The version shown by the source package is `0.6.0-beta.4`. This documents the
+The source package used for this capture was `0.6.0-beta.4`. This documents the
 client interface, not platform coverage or playback acceptance.
 
 ## Capture

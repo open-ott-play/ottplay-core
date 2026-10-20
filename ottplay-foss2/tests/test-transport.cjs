@@ -5,27 +5,27 @@ const fs = require("node:fs");
 const vm = require("node:vm");
 const path = require("node:path");
 
-function fixture(configuration) {
-    const modules = {}, requests = [], timers = new Map(), results = [];
+function fixture(configuration, sendError) {
+    const modules = {}, requests = [], timers = new Map(), timerDelays = [], results = [];
     let nextTimer = 0;
     class XHR {
         constructor() { this.readyState = 0; this.status = 0; this.responseText = ""; this.headers = {}; requests.push(this); }
         open(method, url) { this.method = method; this.url = url; }
         setRequestHeader(name, value) { this.headers[name] = value; }
-        send(value) { this.sent = value; }
+        send(value) { this.sent = value; if (sendError) throw sendError; }
         abort() { this.aborted = true; }
         complete(status, text) { this.readyState = 4; this.status = status; this.responseText = text; if (this.onreadystatechange) this.onreadystatechange(); }
     }
     const environment = {
         XMLHttpRequest: XHR,
-        setTimeout(fn) { const id = ++nextTimer; timers.set(id, fn); return id; },
+        setTimeout(fn, delay) { const id = ++nextTimer; timers.set(id, fn); timerDelays.push(delay); return id; },
         clearTimeout(id) { timers.delete(id); }
     };
     const context = vm.createContext({ OTT2: { define(name, factory) { modules[name] = factory(); } } });
     vm.runInContext("Promise = undefined; fetch = undefined; Map = undefined; Set = undefined; URL = undefined;", context);
     vm.runInContext(fs.readFileSync(path.join(__dirname, "../src/transport.js"), "utf8"), context);
     const request = modules.transport.create(environment, configuration);
-    return { requests, timers, results, start(url = "https://epg.test/guide", options) { return request(url, (error, text) => results.push({ error, text }), options); } };
+    return { requests, timers, timerDelays, results, start(url = "https://epg.test/guide", options) { return request(url, (error, text) => results.push({ error, text }), options); } };
 }
 
 test("transport keeps normal XMLTV text and decodes no provider messages into diagnostics", () => {
@@ -79,6 +79,33 @@ test("cancellation and timeout detach every XHR callback and complete at most on
     assert.equal(timed.results[0].error.code, "TIMEOUT");
     assert.equal(timed.requests[0].onprogress, null);
     assert.equal(timed.requests[0].aborted, true);
+});
+test("a synchronous send failure clears the request watchdog before reporting or cancellation", () => {
+    for (const builtinEPG of [false, true]) {
+        for (const cancelBeforeError of [false, true]) {
+            const f = fixture(undefined, new Error("NetworkError"));
+            const cancel = f.start("https://epg.test/guide", { builtinEPG });
+            const xhr = f.requests[0];
+            assert.deepEqual(f.timerDelays, [builtinEPG ? 125000 : 20000, 0]);
+            assert.equal(f.timers.size, 1, "only the asynchronous error notification should remain");
+            assert.equal(f.results.length, 0, "startup failures must still report asynchronously");
+            if (cancelBeforeError) {
+                cancel();
+                assert.equal(f.results.length, 0);
+                assert.equal(xhr.aborted, true);
+            } else {
+                const notify = Array.from(f.timers.values())[0];
+                notify();
+                notify();
+                assert.equal(f.results.length, 1);
+                assert.equal(f.results[0].error.code, "NETWORK");
+            }
+            assert.equal(f.timers.size, 0, "no orphaned watchdog may outlive the failed request");
+            assert.equal(xhr.onreadystatechange, null);
+            assert.equal(xhr.onerror, null);
+            assert.equal(xhr.onprogress, null);
+        }
+    }
 });
 test("built-in guide posts only channel identities, independent of relay and provider credentials", () => {
     const f = fixture({ relay: true });
