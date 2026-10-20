@@ -56,7 +56,7 @@ OTT2.define("transport", function () {
                     xhr.send(builtin ? JSON.stringify({ channels: (options.channels || []).map(function (channel) {
                         return { tvgId: String(channel.tvgId || ""), tvgName: String(channel.tvgName || ""), name: String(channel.name || ""), archiveDays: Math.max(0, Math.min(7, (Number(channel.archiveDays) || 0))) };
                     }) }) : relay ? JSON.stringify({ url: url, headers: options.headers || {} }) : null);
-                } catch (error) { timer = environment.setTimeout(function () { finish(failure("Source request could not start", error.code === "PORTAL_TRANSPORT" ? "PORTAL_TRANSPORT" : "NETWORK")); }, 0); }
+                } catch (error) { environment.clearTimeout(timer); timer = environment.setTimeout(function () { finish(failure("Source request could not start", error.code === "PORTAL_TRANSPORT" ? "PORTAL_TRANSPORT" : "NETWORK")); }, 0); }
             }
             return function cancel() { done = true; environment.clearTimeout(timer); if (xhr) { xhr.onreadystatechange = xhr.onerror = xhr.ontimeout = xhr.onprogress = null; try { xhr.abort(); } catch (ignore) {} } };
         };
