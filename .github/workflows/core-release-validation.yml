@@ -7,7 +7,7 @@ permissions:
   contents: read
 jobs:
   scope:
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/change-scope.yml@6b2d99519d513d2b871d2a845ddd6134dea4af2c
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/change-scope.yml@5d5f3c5d94a3845e0906131348e55f4d221831e3
     with:
       runner: ${{ vars.CI_RUNNER_MODE == 'k3s' && github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule') && 'ottplay-k3s-linux-x64' || 'ubuntu-latest' }}
       force-full: true
@@ -37,7 +37,7 @@ jobs:
         working-directory: shared-core
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
+        uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2 # v2.22.2
         with:
           egress-policy: audit
 
@@ -60,7 +60,7 @@ jobs:
           python3 -m venv .venv-workflow
           .venv-workflow/bin/python -m pip install --require-hashes --only-binary=:all: -r .github/requirements-workflow-contracts.txt
           .venv-workflow/bin/python scripts/workflow_contracts.py --actions-only
-      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6
+      - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad
         with:
           distribution: temurin
           java-version: '17'
@@ -97,7 +97,7 @@ jobs:
         working-directory: ottplay-foss2
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
+        uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2 # v2.22.2
         with:
           egress-policy: audit
 
@@ -155,7 +155,7 @@ jobs:
   browser-compatibility:
     needs: [scope, portable]
     if: ${{ needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only' }}
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@6b2d99519d513d2b871d2a845ddd6134dea4af2c
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@5d5f3c5d94a3845e0906131348e55f4d221831e3
     with:
       node-version: '22'
       run-node-ci: false
@@ -178,7 +178,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
+        uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2 # v2.22.2
         with:
           egress-policy: audit
 
