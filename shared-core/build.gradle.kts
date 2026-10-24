@@ -10,7 +10,7 @@ version = (groovy.json.JsonSlurper().parse(file("package.json")) as Map<*, *>)["
 rootProject.plugins.withType<NodeJsRootPlugin> {
     // Mocha's transitive range still selects a vulnerable serializer.
     rootProject.extensions.configure<NpmExtension> {
-        override("serialize-javascript", "7.0.5")
+        override("serialize-javascript", "7.1.3")
         override("diff", "8.0.3")
     }
 }
