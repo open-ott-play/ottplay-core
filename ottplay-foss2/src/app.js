@@ -6,12 +6,12 @@ OTT2.define("app", function (require) {
         var repository = require("state").create(storage), saved = repository.snapshot();
         var devices = require("devices"), profile = devices.detect(environment);
         var request = require("transport").create(environment, { relay: function () { return saved.settings.relay; } }), providers = require("providers").create({ request: request, portalTransport: function () { return saved.settings.relay; } }), epg = require("epg");
-        var guideLookup = epg.createLookup ? epg.createLookup({ limit: 4096 }) : null, decoratedCatalog = null, decoratedSource = null, overrideSignature = JSON.stringify(saved.channelOverrides), decoratedSignature = "";
+        var guideLookup = epg.createLookup ? epg.createLookup({ limit: 4096 }) : null, catalogIndex = null, modelIndex = null, guideSnapshot = null, modelSource = null, modelDiscovered = null, modelSignature = "", overrideSignature = JSON.stringify(saved.channelOverrides);
         var channels = [], guide = null, sourceEpoch = 0, resolveEpoch = 0, cancelSource, cancelGuide, cancelResolve, sourceEpgUrls = [];
         var guideRefresh = new environment.OttPlayCore.BrowserGuideRefresh();
         var defaultEpgUrl = "https://cdn.epg.one/epg2.xml.gz", guideInfo = guideRefresh.snapshot().info;
         var identity = require("channel-identity"), identityReport = null, catalogSourceId = "";
-        var guideFeeds = {}, hostSuspended = false;
+        var guideFeeds = {}, hostSuspended = false, guideRowsSnapshot = null, guideRowsKey = "", guideRowsExpiry = 0, sortedGuideRows = [];
         var television = ["pc", "pc2", "nodejs", "edem"].indexOf(profile.id) === -1;
         hostSuspended = television && !!(d.hidden || d.webkitHidden);
         var library = require("library"), browsing = false, browseItems = null, discovered = [], parentsById = {}, breadcrumbs = [], browseEpoch = 0, cancelBrowse, guidePage = 0, reminderTimer, notifiedReminders = {}, startupRestore = null, pinChallenge = null, pendingMigration = null;
@@ -35,12 +35,13 @@ OTT2.define("app", function (require) {
         var stopDevices = devices.init(environment, profile);
         var gate = require("security").create({ getState: function () { return saved; }, persist: function (dto) { repository.updateSecurity(dto); saved = repository.snapshot(); return true; } });
         var features = require("features").create({ view: view, t: t, persist: persist, state: function () { return saved; }, channels: catalog, find: getChannel, render: render, gate: gate, onLock: function () { if (current && gate.isProtected(permissionId(current), "playback")) { stopPlayback(); showHome(); } } });
+        catalogIndex = library.createIndex(); modelIndex = library.createIndex();
+        guideSnapshot = library.createGuideSnapshot(programmeFor, function (channel) {
+            return JSON.stringify([channel.tvgId, channel.tvgName, channel.name, channel.tvgShift, channel.epgUrls]);
+        });
         function catalog(includeHidden) {
-            if (decoratedSource !== channels || decoratedSignature !== overrideSignature || !decoratedCatalog) {
-                decoratedSource = channels; decoratedSignature = overrideSignature;
-                decoratedCatalog = library.decorate(channels, saved.channelOverrides, true);
-            }
-            return includeHidden ? decoratedCatalog.slice() : decoratedCatalog.filter(function (entry) { return !entry.hidden; });
+            catalogIndex.update(channels, saved.channelOverrides, overrideSignature);
+            return catalogIndex.all(includeHidden);
         }
         function challenge(scope, id, proceed) {
             if (gate.authorize(scope, id).ok) { proceed(); return; }
@@ -68,8 +69,9 @@ OTT2.define("app", function (require) {
             if (!repository.status().persistent) view.toast(t("Настройки доступны в этой сессии; сохранение недоступно.", "Settings are in memory; persistent storage is unavailable."));
         }
         function getChannel(id) {
-            var all = catalog(true), i;
-            for (i = 0; i < all.length; i++) if (all[i].id === id) return all[i];
+            catalogIndex.update(channels, saved.channelOverrides, overrideSignature);
+            var found = catalogIndex.get(id), all, i;
+            if (found) return found;
             if (discovered.length) {
                 all = library.decorate(channels.concat(discovered), saved.channelOverrides, true);
                 for (i = 0; i < all.length; i++) if (all[i].id === id) return all[i];
@@ -161,31 +163,41 @@ OTT2.define("app", function (require) {
             var availableHeight = height - inset - (compact && !portrait ? 7 : 0);
             return { textSize: textSize, pageSize: Math.max(4, Math.floor((availableHeight / textSize - chrome) / rowHeight)) };
         }
+        function clearGuideRows() {
+            guideRowsSnapshot = null; guideRowsKey = ""; guideRowsExpiry = 0; sortedGuideRows = []; guideRows = [];
+        }
         function buildModel() {
-            var favorites = saved.favorites[saved.activeFavorites] || [], rows = [], search = query.toLowerCase(), i, all = screen === "favorites" ? favoriteCatalog() : screen === "vod" && browseItems ? library.decorate(browseItems, saved.channelOverrides, false) : catalog(false), guideAll = [], pageSize = layout().pageSize;
-            var matched = 0, currentCount = 0, favoriteOrder = Object.create(null), nowSeconds = Date.now() / 1000;
-            favorites.forEach(function (id, index) { favoriteOrder[id] = index; });
-            nowById = {}; nextById = {}; logosById = {}; guideRows = [];
-            for (i = 0; i < all.length; i++) {
-                var ch = all[i];
-                if (guide) {
-                    var now = programmeFor(ch, nowSeconds), metadata = now.metadata, programmes = now.entries;
-                    if (metadata && metadata.logo) logosById[ch.id] = metadata.logo;
-                    if (programmes.length) matched++;
-                    if (now.current) { nowById[ch.id] = now.current; currentCount++; }
-                    if (now.next) nextById[ch.id] = now.next;
-                    if (screen === "guide" && (!group || ch.group === group) && (!search || ch.name.toLowerCase().indexOf(search) >= 0)) for (var p = 0; p < programmes.length && guideAll.length < 50000; p++) {
-                        if (programmes[p].end > Date.now() / 1000 - 7 * 86400) guideAll.push({ channel: ch, programme: programmes[p] });
-                    }
-                }
-                if (screen === "favorites" && !Object.prototype.hasOwnProperty.call(favoriteOrder, ch.id)) continue;
-                if (screen !== "favorites" && (screen === "vod" ? ch.kind !== "vod" && ch.kind !== "folder" : ch.kind === "vod" || ch.kind === "folder")) continue;
-                if (group && ch.group !== group) continue;
-                if (search && ch.name.toLowerCase().indexOf(search) === -1) continue;
-                rows.push(ch);
+            var favorites = saved.favorites[saved.activeFavorites] || [], search = query.toLowerCase(), i, pageSize = layout().pageSize;
+            var selectionSignature = JSON.stringify([screen, overrideSignature, screen === "favorites" ? favorites : null, screen === "favorites" ? saved.favoriteItems : null]);
+            if (modelSource !== (browseItems || channels) || modelSignature !== selectionSignature || modelDiscovered !== discovered) {
+                clearGuideRows();
+                modelSource = browseItems || channels; modelDiscovered = discovered; modelSignature = selectionSignature;
+                var items = screen === "favorites" ? favoriteCatalog() : screen === "vod" && browseItems ? browseItems : channels;
+                modelIndex.update(items, screen === "favorites" ? {} : saved.channelOverrides, selectionSignature);
             }
-            if (screen === "favorites") rows.sort(function (a, b) { return favoriteOrder[a.id] - favoriteOrder[b.id]; });
-            guideAll.sort(function (a, b) { return a.programme.start - b.programme.start; });
+            var all = modelIndex.all(false), rows = modelIndex.select(screen, group, search, favorites), guideAll = [];
+            var nowSeconds = Date.now() / 1000, info = guideSnapshot(all, guide, nowSeconds);
+            nowById = info.now; nextById = info.next; logosById = info.logos;
+            var guideKey = JSON.stringify([group, search]);
+            if (screen !== "guide" || !guide) clearGuideRows();
+            if (screen === "guide" && guide) {
+                if (guideRowsSnapshot !== info || guideRowsKey !== guideKey || nowSeconds >= guideRowsExpiry) {
+                    guideRowsSnapshot = info; guideRowsKey = guideKey; guideRowsExpiry = Infinity;
+                    info.entries.forEach(function (entry) {
+                        var ch = entry.channel;
+                        if (ch.hidden || (group && ch.group !== group) || (search && ch.name.toLowerCase().indexOf(search) < 0)) return;
+                        for (var p = 0; p < entry.programmes.length && guideAll.length < 50000; p++) {
+                            var programme = entry.programmes[p];
+                            if (programme.end > nowSeconds - 7 * 86400) {
+                                guideAll.push({ channel: ch, programme: programme });
+                                guideRowsExpiry = Math.min(guideRowsExpiry, programme.end + 7 * 86400);
+                            }
+                        }
+                    });
+                    guideAll.sort(function (a, b) { return a.programme.start - b.programme.start; });
+                    sortedGuideRows = guideAll;
+                } else guideAll = sortedGuideRows;
+            }
             guidePage = Math.max(0, Math.min(guidePage, Math.ceil(guideAll.length / 30) - 1));
             guideRows = guideAll.slice(guidePage * 30, guidePage * 30 + 30);
             page = Math.max(0, Math.min(page, Math.max(0, Math.ceil(rows.length / pageSize) - 1)));
@@ -195,7 +207,7 @@ OTT2.define("app", function (require) {
                 sourceName: active ? active.name : "", pageSize: pageSize, playerEngineLabel: engineLabel(saved.settings.playerEngine), screen: screen, page: page, query: query, group: group, loading: loading,
                 selectedChannelId: pendingChannelFocus || (view.selectedChannelId ? view.selectedChannelId() : ""), currentChannel: current, currentState: resolving ? "loading" : media.getState().state,
                 homeVisible: homeVisible, channels: channels, rows: rows.slice(page * pageSize, page * pageSize + pageSize), filteredTotal: rows.length,
-                guidePage: guidePage, guideTotal: guideAll.length, breadcrumbs: breadcrumbs, activeFavorites: saved.activeFavorites, nowById: nowById, nextById: nextById, logosById: logosById, epgStatus: guideStatus(matched, currentCount), guideRows: guideRows };
+                guidePage: guidePage, guideTotal: guideAll.length, breadcrumbs: breadcrumbs, activeFavorites: saved.activeFavorites, nowById: nowById, nextById: nextById, logosById: logosById, epgStatus: guideStatus(info.matched, info.current), guideRows: guideRows };
         }
         function resize() {
             if (destroyed) return;
@@ -477,7 +489,7 @@ OTT2.define("app", function (require) {
             var picture = playbackPreferences.settings();
             media.setAspect(picture.aspect === "auto" ? "fit" : picture.aspect); media.setZoom(picture.zoom);
         }
-        function clearBrowse() { browsing = false; browseEpoch++; if (cancelBrowse) cancelBrowse(); cancelBrowse = null; browseItems = null; discovered = []; parentsById = {}; breadcrumbs = []; }
+        function clearBrowse() { clearGuideRows(); browsing = false; browseEpoch++; if (cancelBrowse) cancelBrowse(); cancelBrowse = null; browseItems = null; discovered = []; parentsById = {}; breadcrumbs = []; }
         function rememberBrowse(node, items) {
             var latest = Object.create(null);
             items.forEach(function (entry, index) { parentsById[entry.id] = (parentsById[node.id] || []).concat([node.id]); latest[entry.id] = index; });
@@ -953,7 +965,8 @@ OTT2.define("app", function (require) {
             if (environment.removeEventListener) { environment.removeEventListener("pagehide", flushBookmark, false); environment.removeEventListener("beforeunload", flushBookmark, false); }
             if (d.removeEventListener) { d.removeEventListener("visibilitychange", visibilityChanged, false); d.removeEventListener("webkitvisibilitychange", visibilityChanged, false); }
             if (guideLookup) guideLookup.clear();
-            decoratedCatalog = decoratedSource = null; playbackPreferences.reset();
+            clearGuideRows(); modelSource = modelDiscovered = null;
+            catalogIndex = modelIndex = guideSnapshot = null; playbackPreferences.reset();
             if (video.removeEventListener) { video.removeEventListener("webkitbeginfullscreen", fullscreenChanged, false); video.removeEventListener("webkitendfullscreen", fullscreenChanged, false); }
             ["player-home", "player-pause", "player-stop", "player-fullscreen"].forEach(function (id) { d.getElementById(id).onclick = null; }); if (d.getElementById("player-options")) d.getElementById("player-options").onclick = null; if (d.getElementById("player-engines")) d.getElementById("player-engines").onclick = null; video.onclick = null;
             if (root.removeEventListener) root.removeEventListener("scroll", syncPlaybackPreview, true);

@@ -65,6 +65,14 @@ acceptance. Retained third-party license notices accompany the distribution.
 - Publish the owner-authorized MIT license for original root code, contracts and documentation; preserve existing component terms.
 - Remove unused Fontello icon resources with incomplete glyph provenance and their unused CSS declaration; retain the licensed text fonts and text-based controls.
 
+### Performance
+
+- Reuse FOSS2 indexed catalog selections across pages and guide snapshots until
+  programme boundaries. Guide updates refresh only changed channel identities;
+  source, edit, favorite and guide replacements invalidate their projections.
+  Add 10,000-channel regression tests and a reproducible synthetic benchmark.
+  This changes FOSS2 only, not shared-core artifacts or classic deployments.
+
 ### Security
 
 - Require OpenSSL security level 2 or an explicitly stronger configured policy
