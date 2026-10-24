@@ -3,7 +3,8 @@
 This candidate retains the runtime and bundled dependencies of beta 5. It adds
 an explicit RC packaging channel, keeps the existing deterministic archive and
 records the candidate channel in the release manifest. The beta command rejects
-an RC version, and stable versions cannot be rebuilt by the packager.
+an RC version, and stable versions cannot be rebuilt by the packager. Packaging
+rejects a missing, incomplete or stale acceptance report before writing output.
 
 Read the [beta 5 changes and upgrade guidance](RELEASE-0.6.0-beta.5.md), including
 parental PIN recovery and HTTPS requirements. The shared-core library keeps its

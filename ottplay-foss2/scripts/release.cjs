@@ -6,6 +6,7 @@ const root=path.resolve(__dirname,'..');
 const digest=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
 const roots=['src','ui','vendor','fonts','icons','licenses','assets','docs','scripts','tests'];
 const top=['index.html','manifest.webmanifest','package.json','package-lock.json','LICENSE','README.md','TECHNICAL-SPEC.md','MEDIA-API.md','THIRD-PARTY-NOTICES.md'];
+const requiredChecks=Object.freeze(['unit-es5-resources-vendors','browser','browser-providers','browser-engines','browser-media','browser-epg','browser-browse','browser-compat','browser-scroll','browser-controls','browser-startup','browser-window-controls']);
 function files(base=root) {
     const result=[];
     function add(name) {
@@ -39,11 +40,23 @@ function versionChannel(version) {
     if(!match) throw new Error('A numbered beta or RC version is required; stable releases promote verified RC bytes');
     return match[1];
 }
+function validateReport(report,entries,version) {
+    const invalid=()=>{throw new Error('Release validation is missing, incomplete or stale; run npm run verify:release');};
+    if(!report || report.version!==version || report.passed!==true || report.inputsUnchanged!==true) invalid();
+    if(!Array.isArray(report.checks) || report.checks.length!==requiredChecks.length) invalid();
+    if(report.checks.some((check,index)=>!check || check.name!==requiredChecks[index] || check.exitCode!==0 || check.signal!==null)) invalid();
+    if(!report.sourceHashes || typeof report.sourceHashes!=='object' || Array.isArray(report.sourceHashes)) invalid();
+    if(Object.keys(report.sourceHashes).length!==entries.length || new Set(entries.map(entry=>entry.name)).size!==entries.length) invalid();
+    for(const entry of entries) if(report.sourceHashes[entry.name]!==digest(entry.data)) invalid();
+}
 function build(output=path.join(root,'releases'),expectedChannel='beta') {
     const pkg=JSON.parse(fs.readFileSync(path.join(root,'package.json')));
     const channel=versionChannel(pkg.version);
     if(channel!==expectedChannel) throw new Error('Requested channel does not match package version');
     const name='ottplay-foss2-'+pkg.version,entries=files(),manifest={name:pkg.name,version:pkg.version,channel,files:{}};
+    const validation=path.join(root,'test-results','release-'+pkg.version,'validation.json');
+    if(!fs.existsSync(validation)) throw new Error('Release validation is missing; run npm run verify:release');
+    validateReport(JSON.parse(fs.readFileSync(validation,'utf8')),entries,pkg.version);
     for(const entry of entries) manifest.files[entry.name]={bytes:entry.data.length,sha256:digest(entry.data)};
     const metadata=Buffer.from(JSON.stringify(manifest,null,2)+'\n');
     entries.push({name:'release-manifest.json',data:metadata});
@@ -60,4 +73,4 @@ if(require.main===module) {
     const channel=args.length ? args[0].slice('--channel='.length) : 'beta';
     console.log(JSON.stringify(build(undefined,channel),null,2));
 }
-module.exports={files,zip,build,versionChannel};
+module.exports={files,zip,build,versionChannel,requiredChecks,validateReport};
