@@ -26,3 +26,11 @@ test('Candidate channels are explicit and stable cannot be rebuilt',()=>{
     const current=versionChannel(require('../package.json').version);
     assert.throws(()=>build(undefined,current==='beta'?'rc':'beta'),/does not match/);
 });
+
+test('The page and package identify the same candidate version',()=>{
+    const fs=require('node:fs'),path=require('node:path');
+    const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
+    const match=/<meta name="application-version" content="([^"]+)">/.exec(html);
+    assert.ok(match,'page declares its application version');
+    assert.equal(match[1],require('../package.json').version);
+});
