@@ -45,6 +45,8 @@ acceptance. Retained third-party license notices accompany the distribution.
 
 ## Unreleased
 
+- Update the FOSS2 test-only HTTP client and Kotlin/JS test serializer to the patched versions for GHSA-xjj6-f33q-929c and GHSA-m5mm-p8h7-m29v. Distributed player and shared-core runtime assets are unchanged.
+
 - Enforce exact certificate-key floors for both Node relay and EPG HTTPS paths,
   including the trust-store root; RSA-2047 is rejected before any HTTP bytes.
   Require TLS 1.2+ and ephemeral elliptic-curve key agreement while preserving
