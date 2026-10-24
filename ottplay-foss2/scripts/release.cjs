@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* Build a reproducible, allowlisted beta archive without runtime dependencies. */
+/* Build a reproducible, allowlisted candidate archive without runtime dependencies. */
 'use strict';
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),zlib=require('node:zlib');
 const root=path.resolve(__dirname,'..');
@@ -34,10 +34,16 @@ function zip(entries,prefix) {
     const end=Buffer.alloc(22);end.writeUInt32LE(0x06054b50);end.writeUInt16LE(entries.length,8);end.writeUInt16LE(entries.length,10);end.writeUInt32LE(centralLength,12);end.writeUInt32LE(offset,16);
     return Buffer.concat(local.concat(central,[end]));
 }
-function build(output=path.join(root,'releases')) {
+function versionChannel(version) {
+    const match=/^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)-(beta|rc)\.[1-9]\d*$/.exec(version);
+    if(!match) throw new Error('A numbered beta or RC version is required; stable releases promote verified RC bytes');
+    return match[1];
+}
+function build(output=path.join(root,'releases'),expectedChannel='beta') {
     const pkg=JSON.parse(fs.readFileSync(path.join(root,'package.json')));
-    if(!/^\d+\.\d+\.\d+-beta\.\d+$/.test(pkg.version)) throw new Error('A beta version is required');
-    const name='ottplay-foss2-'+pkg.version,entries=files(),manifest={name:pkg.name,version:pkg.version,channel:'beta',files:{}};
+    const channel=versionChannel(pkg.version);
+    if(channel!==expectedChannel) throw new Error('Requested channel does not match package version');
+    const name='ottplay-foss2-'+pkg.version,entries=files(),manifest={name:pkg.name,version:pkg.version,channel,files:{}};
     for(const entry of entries) manifest.files[entry.name]={bytes:entry.data.length,sha256:digest(entry.data)};
     const metadata=Buffer.from(JSON.stringify(manifest,null,2)+'\n');
     entries.push({name:'release-manifest.json',data:metadata});
@@ -48,5 +54,10 @@ function build(output=path.join(root,'releases')) {
     fs.writeFileSync(path.join(directory,'SHA256SUMS'),digest(bytes)+'  '+name+'.zip\n'+digest(metadata)+'  release-manifest.json\n');
     return {version:pkg.version,archive:path.join(directory,name+'.zip'),files:entries.length,bytes:bytes.length,sha256:digest(bytes)};
 }
-if(require.main===module) console.log(JSON.stringify(build(),null,2));
-module.exports={files,zip,build};
+if(require.main===module) {
+    const args=process.argv.slice(2);
+    if(args.length>1 || (args.length===1 && !/^--channel=(beta|rc)$/.test(args[0]))) throw new Error('Usage: release.cjs [--channel=beta|--channel=rc]');
+    const channel=args.length ? args[0].slice('--channel='.length) : 'beta';
+    console.log(JSON.stringify(build(undefined,channel),null,2));
+}
+module.exports={files,zip,build,versionChannel};

@@ -1,6 +1,6 @@
 'use strict';
 const test=require('node:test'),assert=require('node:assert/strict'),zlib=require('node:zlib');
-const {zip,files}=require('../scripts/release.cjs');
+const {zip,files,versionChannel,build}=require('../scripts/release.cjs');
 test('Release archive has deterministic standard ZIP headers, compressed payload and CRC',()=>{
     const entries=[{name:'example.txt',data:Buffer.from('123456789')}];
     const result=zip(entries,'beta'); assert.deepEqual(result,zip(entries,'beta'));
@@ -15,4 +15,14 @@ test('Release inputs include runtime, server, fonts and licenses without local r
     for(const required of ['src/channel-identity.js','scripts/epg.cjs','scripts/serve.cjs','scripts/check-core.cjs','vendor/ottplay-core.js','vendor/ottplay-core.manifest.json','vendor/ottplay-core.LICENSE.txt','vendor/hls.worker.js','vendor/core-js.min.js','LICENSE','package-lock.json','docs/RELEASE-0.6.0-beta.1.md']) assert.ok(names.includes(required),required);
     assert.ok(names.some(name=>name.startsWith('fonts/')));
     assert.ok(names.every(name=>!/(?:^|\/)(?:node_modules|test-results|releases|\.git|\.env)(?:\/|$)/.test(name)));
+});
+
+test('Candidate channels are explicit and stable cannot be rebuilt',()=>{
+    assert.equal(versionChannel('0.6.0-beta.5'),'beta');
+    assert.equal(versionChannel('0.6.0-rc.1'),'rc');
+    for(const version of ['0.6.0','0.6.0-dev.1','0.6.0-rc.0','0.6.0-rc.01','01.6.0-rc.1','0.6.0-rc.1+local']) {
+        assert.throws(()=>versionChannel(version),/numbered beta or RC/);
+    }
+    const current=versionChannel(require('../package.json').version);
+    assert.throws(()=>build(undefined,current==='beta'?'rc':'beta'),/does not match/);
 });
