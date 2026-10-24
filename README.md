@@ -137,6 +137,9 @@ accounts. Product releases and deployments remain separate from source
 publication and core delivery. FOSS2 installation and upgrade instructions are in
 [the beta release notes](ottplay-foss2/docs/RELEASE-0.6.0-beta.2.md).
 
+FOSS2 catalog/guide cache behavior, benchmark instructions and delivery scope are
+documented in [catalog performance](docs/foss2-catalog-performance.md).
+
 Optional trusted-main k3s runner routing is documented in [CI runner selection](docs/CI-RUNNERS.md).
 
 ## Project directory

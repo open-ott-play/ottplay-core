@@ -93,7 +93,13 @@ function fixture(options = {}) {
             command(command) { if (dialog && command === "back") { this.closeDialog(); return true; } return dialog || model.homeVisible && ["left", "right", "up", "down", "ok"].includes(command); }
         };
     } };
-    vm.runInContext(fs.readFileSync(path.join(__dirname, "../src/app.js"), "utf8"), context);
+    let appCode = fs.readFileSync(path.join(__dirname, "../src/app.js"), "utf8");
+    if (options.inspectGuideRetention) {
+        const original = "return { destroy: destroy, snapshot: buildModel };";
+        assert(appCode.includes(original));
+        appCode = appCode.replace(original, "return { destroy: destroy, snapshot: buildModel, guideRetention: function () { return { snapshot: guideRowsSnapshot, rows: sortedGuideRows }; } };");
+    }
+    vm.runInContext(appCode, context);
     controller = modules.app.start(environment);
     const live = { id: "source:live", name: "Live", kind: "live", url: "https://media.example/live.mp4", group: "News" };
     const film = { id: "source:film", name: "Film", kind: "vod", url: "https://media.example/film.mp4", group: "Movies" };
@@ -1507,4 +1513,47 @@ test('TV host Pause arriving before visibility cannot overwrite explicit playbac
         if(!paused) {f.video.paused=false;f.video.fire('loadedmetadata');f.video.fire('playing');assert.equal(f.video.currentTime,51);}
         f.controller.destroy();
     }
+});
+
+test('catalog paging reuses EPG projection while a guide replacement invalidates it', () => {
+    let lookups=0;
+    const programmes=[{start:1,end:9e9,title:'Current'}];
+    const epg={parseXML:()=>({}),mergeGuides:values=>values[0],
+        matchChannel(channel){lookups++;return channel.kind==='live'?programmes:[];},
+        currentNext:entries=>({current:entries[0]})};
+    const f=fixture({epg,extraChannels:Array.from({length:100},(_,i)=>({id:'extra'+i,name:'Extra '+i,kind:'live',group:'News'}))});
+    f.guideCalls[0].callback(null,'guide');
+    const initial=lookups;
+    assert(initial>=101);
+    f.action('page','1');f.action('page','2');
+    assert.equal(lookups,initial,'paging reuses the complete guide projection');
+    f.action('refreshEPG');f.guideCalls[1].callback(null,'replacement');
+    assert(lookups>initial,'new guide identity refreshes channel matching');
+    f.controller.destroy();
+});
+
+
+test('guide projections release retained rows on leaving, source replacement, browsing reset and destroy', () => {
+    const programmes=Array.from({length:100},(_,i)=>({start:1+i,end:9e9+i,title:'Programme '+i}));
+    const epg={parseXML:()=>({}),mergeGuides:values=>values[0],matchChannel:()=>programmes,currentNext:entries=>({current:entries[0]})};
+    const f=fixture({epg,inspectGuideRetention:true});
+    f.guideCalls[0].callback(null,'guide');
+    f.action('screen','guide');
+    const retained=f.controller.guideRetention();
+    assert(retained.rows.length>0); assert(retained.snapshot);
+    f.action('guidePage','1');
+    assert.strictEqual(f.controller.guideRetention().rows,retained.rows,'same guide keeps its reusable rows');
+    f.action('screen','tv');
+    assert.equal(f.controller.guideRetention().snapshot,null);
+    assert.equal(f.controller.guideRetention().rows.length,0);
+    f.action('screen','guide'); assert(f.controller.guideRetention().rows.length>0);
+    f.action('loadSource','source');
+    assert.equal(f.controller.guideRetention().snapshot,null,'source/browse reset discards the previous guide');
+    assert.equal(f.controller.guideRetention().rows.length,0);
+    f.sourceCalls[f.sourceCalls.length-1].callback(null,{channels:[f.live],epgUrls:[],warnings:[]});
+    f.guideCalls[f.guideCalls.length-1].callback(null,'next guide');
+    f.action('screen','guide'); assert(f.controller.guideRetention().rows.length>0);
+    f.controller.destroy();
+    assert.equal(f.controller.guideRetention().snapshot,null);
+    assert.equal(f.controller.guideRetention().rows.length,0);
 });

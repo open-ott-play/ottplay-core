@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Performance
+
+- Reuse FOSS2 indexed catalog selections across pages and guide snapshots until
+  programme boundaries. Guide updates refresh only changed channel identities;
+  source, edit, favorite and guide replacements invalidate their projections.
+  Add 10,000-channel regression tests and a reproducible synthetic benchmark.
+  This changes FOSS2 only, not shared-core artifacts or classic deployments.
+
 ### Security
 
 - Require OpenSSL security level 2 or an explicitly stronger configured policy
