@@ -5,7 +5,7 @@
 *FOSS2 0.6.0-beta.4, the browser client included in this repository, captured locally
 with its menu open and no playlist configured. [Original and regeneration](../docs/images/README.md).*
 
-**Release candidate 0.6.0-rc.1** — [release notes, qualification and promotion](docs/RELEASE-0.6.0-rc.1.md).
+**Beta 0.6.1-beta.1** — [release notes and qualification](docs/RELEASE-0.6.1-beta.1.md).
 
 An IPTV player with an ES5 application runtime and a compact interface for LG televisions and remote controls. Bundled fonts and media libraries are distributed with their notices.
 
@@ -14,7 +14,7 @@ An IPTV player with an ES5 application runtime and a compact interface for LG te
 ## Run
 
 ```sh
-cd ottplay-foss2-0.6.0-rc.1
+cd ottplay-foss2-0.6.1-beta.1
 npm ci --omit=dev
 npm start
 ```
