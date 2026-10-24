@@ -7,7 +7,8 @@ const test = require("node:test");
 
 function fixture(options = {}) {
     const modules = {}, nodes = {}, handlers = {}, timers = new Map(), sourceCalls = [], resolveCalls = [], browseCalls = [], guideCalls = [], toasts = [], mediaLoads = [];
-    let securityClock = Date.now();
+    let securityClock = Date.now(), appGate;
+    const storageValues = {};
     let timerId = 0, viewAction, model, stored, media, controller, destroyViewCalls = 0, destroyMediaCalls = 0, dialogCalls = 0, dialog = false, dialogTitle = "", selectedId = "", focusedId = "", menuOpen = false;
     const ids = ["foss2-home", "player-video", "player-osd", "player-status", "player-title", "player-home", "player-pause", "player-stop", "player-fullscreen", "player-stage", "player-info-hitarea", "player-programme-title", "player-programme-time", "player-programme-details", "player-description", "player-next"];
     for (const id of ids) nodes[id] = { id, style: {}, textContent: "", onclick: null, attributes: {}, setAttribute(name, value) { this.attributes[name] = value; } };
@@ -37,7 +38,7 @@ function fixture(options = {}) {
     const environment = {
         document, innerWidth: 1280, innerHeight: 720,
         crypto: require("node:crypto").webcrypto, Uint8Array,
-        localStorage: { getItem() { return stored; }, setItem(key, value) { stored = value; } },
+        localStorage: { getItem(key) { return storageValues[key] || null; }, setItem(key, value) { storageValues[key] = value; } },
         setTimeout(callback, delay) { const id = ++timerId; timers.set(id, { callback, delay }); return id; },
         clearTimeout(id) { timers.delete(id); },
         addEventListener(name, callback) { handlers[name] = callback; },
@@ -50,7 +51,7 @@ function fixture(options = {}) {
     require("./load-core.cjs")(context);
     for (const file of ["security", "library", "channel-identity", "features", "playback-preferences", "playback-view", "playback-info", "state", "media", "devices"]) vm.runInContext(fs.readFileSync(path.join(__dirname, "../src/" + file + ".js"), "utf8"), context);
     const securityCreate = modules.security.create;
-    modules.security.create = function (config) { config.now = () => securityClock; return securityCreate(config); };
+    modules.security.create = function (config) { config.now = () => securityClock; return appGate = securityCreate(config); };
     const createMedia = modules.media.create;
     modules.media = { create(config) {
         media = createMedia(config);
@@ -64,10 +65,14 @@ function fixture(options = {}) {
     defaults.activeSourceId = "source";
     if (options.language) defaults.settings.language = options.language;
     Object.assign(defaults.settings, options.settings || {});
-    if (options.protected) { const gate = modules.security.create({getState: () => defaults, persist: value => { defaults.security = value; }}); gate.configure("", "1234"); gate.verify("1234"); gate.setProtected("source:live", true); gate.lock(); }
+    if (options.protected) {
+        const salt = '0123456789abcdef0123456789abcdef';
+        Object.assign(defaults.security, {schema: 2, enabled: true, algorithm: 'PBKDF2-HMAC-SHA256', salt, iterations: 600000,
+            hash: require('node:crypto').pbkdf2Sync('1234', Buffer.from(salt, 'hex'), 600000, 32, 'sha256').toString('hex'), protectedIds: ['source:live']});
+    }
     if (options.bookmark) defaults.bookmarks["source:film"] = options.bookmark;
     if (options.lastChannel) defaults.lastChannel = options.lastChannel;
-    stored = JSON.stringify(options.saved || defaults);
+    stored = JSON.stringify(options.saved || defaults); storageValues[modules.state.key] = stored;
     const devices = modules.devices;
     modules.devices = {
         detect: devices.detect, init: devices.init, keyCode: devices.keyCode,
@@ -107,6 +112,11 @@ function fixture(options = {}) {
     return {
         controller, nodes, document, video, media, environment, timers, sourceCalls, resolveCalls, browseCalls, guideCalls, toasts, mediaLoads, live, film,
         action(name, value, values) { viewAction(name, value, values); },
+        async pinAction(name, value, values) {
+            viewAction(name, value, values);
+            const deadline = Date.now() + 5000;
+            while (appGate.status().busy) { if (Date.now() > deadline) throw new Error('PIN operation timed out'); await new Promise(resolve => setTimeout(resolve, 5)); }
+        },
         key(command, extra = {}) { handlers.keydown(Object.assign({ command, preventDefault() {} }, extra)); },
         keyDown(keyCode, extra = {}) { const event = Object.assign({ keyCode, preventDefault() { this.defaultPrevented = true; } }, extra); if (handlers.keydown) handlers.keydown(event); return event; },
         keyUp(keyCode, extra = {}) { if (handlers.keyup) handlers.keyup(Object.assign({ keyCode }, extra)); },
@@ -116,7 +126,7 @@ function fixture(options = {}) {
         resolve(index = resolveCalls.length - 1) { const call = resolveCalls[index]; call.callback(null, { url: call.channel.url }); },
         runDelay(delay) { const entry = Array.from(timers.entries()).find(x => x[1].delay === delay); assert.ok(entry); timers.delete(entry[0]); entry[1].callback(); },
         advance(milliseconds) { securityClock += milliseconds; },
-        get selectedId() { return selectedId; }, get focusedId() { return focusedId; }, get menuOpen() { return menuOpen; }, get saved() { return JSON.parse(stored); }, get hasDialog() { return dialog; }, get dialogCalls() { return dialogCalls; }, get model() { return model; }, get destroyViewCalls() { return destroyViewCalls; }, get destroyMediaCalls() { return destroyMediaCalls; }, get dialogTitle() { return dialogTitle; }, get listenerNames() { return Object.keys(handlers); }, get documentListenerCount() { return Object.values(documentListeners).reduce((count, entries) => count + entries.length, 0); }
+        get selectedId() { return selectedId; }, get focusedId() { return focusedId; }, get menuOpen() { return menuOpen; }, get saved() { const upgraded = storageValues[modules.state.secureKey]; return upgraded ? JSON.parse(upgraded).state : JSON.parse(storageValues[modules.state.key]); }, get hasDialog() { return dialog; }, get dialogCalls() { return dialogCalls; }, get model() { return model; }, get destroyViewCalls() { return destroyViewCalls; }, get destroyMediaCalls() { return destroyMediaCalls; }, get dialogTitle() { return dialogTitle; }, get listenerNames() { return Object.keys(handlers); }, get documentListenerCount() { return Object.values(documentListeners).reduce((count, entries) => count + entries.length, 0); }
     };
 }
 
@@ -277,20 +287,20 @@ test("English is the default and an explicit Russian choice persists", () => {
     russian.controller.destroy();
 });
 
-test("protected playback and resume require a PIN, lock stops the protected stream", () => {
+test("protected playback and resume require a PIN, lock stops the protected stream", async () => {
     const f = fixture({protected: true});
     f.action("play", f.live.id);
     assert.equal(f.resolveCalls.length, 0);
-    f.action("unlock", "", {"access-pin": "0000"});
+    await f.pinAction("unlock", "", {"access-pin": "0000"});
     assert.equal(f.resolveCalls.length, 0);
-    f.action("unlock", "", {"access-pin": "1234"});
+    await f.pinAction("unlock", "", {"access-pin": "1234"});
     assert.equal(f.resolveCalls.length, 1);
     f.resolve(); f.video.fire("playing");
     f.action("lockPIN");
     assert.equal(f.media.getState().state, "stopped");
     f.action("play", f.live.id);
     assert.equal(f.resolveCalls.length, 1);
-    f.action("unlock", "", {"access-pin": "1234"});
+    await f.pinAction("unlock", "", {"access-pin": "1234"});
     assert.equal(f.resolveCalls.length, 2);
     f.controller.destroy();
 });
@@ -368,41 +378,73 @@ test("remembering a large folder scans earlier discoveries once", () => {
 });
 
 
-test("a paused protected stream and delayed resolver recheck an expired PIN grant", () => {
+test("a paused protected stream and delayed resolver recheck an expired PIN grant", async () => {
     const f = fixture({protected: true});
-    f.action("play", f.live.id); f.action("unlock", "", {"access-pin": "1234"});
+    f.action("play", f.live.id); await f.pinAction("unlock", "", {"access-pin": "1234"});
     f.advance(6 * 60000); f.resolve();
     assert.equal(f.video.playCalls, 0, "An old resolver may not consume an expired grant");
-    f.action("unlock", "", {"access-pin": "1234"}); f.video.fire("playing");
+    await f.pinAction("unlock", "", {"access-pin": "1234"}); f.video.fire("playing");
     assert.equal(f.video.playCalls, 1);
     f.key("pause"); f.advance(6 * 60000); f.key("play");
     assert.equal(f.video.playCalls, 1, "Resume must reauthorize");
-    f.action("unlock", "", {"access-pin": "1234"});
+    await f.pinAction("unlock", "", {"access-pin": "1234"});
     assert.equal(f.video.playCalls, 2);
     f.controller.destroy();
 });
 
 
-test("first PIN setup can protect the channel that opened the setup flow", () => {
+test("first PIN setup can protect the channel that opened the setup flow", async () => {
     const f = fixture();
     f.action("protectChannel", f.live.id);
-    f.action("configurePIN", "", {"pin-new":"5678", "pin-repeat":"5678", "pin-channel":f.live.id});
+    await f.pinAction("configurePIN", "", {"pin-new":"5678", "pin-repeat":"5678", "pin-channel":f.live.id});
     assert.equal(f.saved.security.enabled, true);
     assert.deepEqual(f.saved.security.protectedIds, [f.live.id]);
     f.action("play", f.live.id);
     assert.equal(f.resolveCalls.length, 0);
-    f.action("unlock", "", {"access-pin":"5678"});
+    await f.pinAction("unlock", "", {"access-pin":"5678"});
     assert.equal(f.resolveCalls.length, 1);
     f.controller.destroy();
 });
 
-test("PIN setup reports unavailable secure randomness without enabling protection", () => {
+test("PIN setup reports unavailable secure randomness without enabling protection", async () => {
     const f = fixture({ environment: { crypto: undefined, msCrypto: undefined } });
     f.action("protectChannel", f.live.id);
-    f.action("configurePIN", "", {"pin-new":"5678", "pin-repeat":"5678", "pin-channel":f.live.id});
+    await f.pinAction("configurePIN", "", {"pin-new":"5678", "pin-repeat":"5678", "pin-channel":f.live.id});
     assert.equal(f.saved.security.enabled, false);
-    assert.equal(f.toasts.at(-1), "This browser cannot safely create a PIN. Use a browser with Web Crypto.");
+    assert.equal(f.toasts.at(-1), "Use an HTTPS browser with Web Crypto. Existing protection is preserved.");
     f.controller.destroy();
+});
+
+test("late native PIN work cannot unlock or change state after a UI cancellation", async () => {
+    const native = require('node:crypto').webcrypto;
+    for (const setup of [false, true]) for (const cancel of ['close', 'pagehide', 'hidden', 'new-action', 'destroy']) {
+        let release;
+        const crypto = {getRandomValues: native.getRandomValues.bind(native), subtle: {
+            importKey: native.subtle.importKey.bind(native.subtle), digest: native.subtle.digest.bind(native.subtle),
+            deriveBits(...args) { return native.subtle.deriveBits(...args).then(bytes => new Promise(resolve => { release = () => resolve(bytes); })); }
+        }};
+        const f = fixture({protected: !setup, environment: {crypto}}), before = f.saved.security;
+        if (setup) {
+            f.action('protectChannel', f.live.id);
+            f.action('configurePIN', '', {'pin-new':'5678','pin-repeat':'5678','pin-channel':f.live.id});
+        } else {
+            f.action('play', f.live.id);
+            f.action('unlock', '', {'access-pin':'1234'});
+        }
+        const deadline = Date.now() + 5000;
+        while (!release) { assert.ok(Date.now() < deadline); await new Promise(resolve => setTimeout(resolve, 5)); }
+        if (cancel === 'close') f.key('back');
+        else if (cancel === 'pagehide') f.fireWindow('pagehide');
+        else if (cancel === 'hidden') { f.document.hidden = true; f.document.fire('visibilitychange'); }
+        else if (cancel === 'new-action') f.action('history');
+        else f.controller.destroy();
+        release();
+        await new Promise(resolve => setImmediate(resolve));
+        assert.deepEqual(f.saved.security, before, setup + ':' + cancel + ' preserves the verifier');
+        assert.equal(f.resolveCalls.length, 0, setup + ':' + cancel + ' cannot start playback');
+        assert.equal(f.video.playCalls, 0);
+        f.controller.destroy();
+    }
 });
 
 
@@ -445,20 +487,20 @@ test("paused unresolved playback retains a changed engine until explicit Play", 
     f.controller.destroy();
 });
 
-test("expired PIN grants prevent engine and format changes until successful authorization", () => {
+test("expired PIN grants prevent engine and format changes until successful authorization", async () => {
     for (const [action, value, field] of [["selectEngine", "native", "playerEngine"], ["selectFormat", "file", "streamFormat"]]) {
         const f = fixture({ protected: true });
-        f.action("play", f.live.id); f.action("unlock", "", { "access-pin": "1234" });
+        f.action("play", f.live.id); await f.pinAction("unlock", "", { "access-pin": "1234" });
         f.resolve(); f.video.fire("playing");
         f.advance(6 * 60000);
         f.action(action, value);
         assert.equal(f.hasDialog, true);
         assert.equal(f.saved.settings[field], "auto", "Expired access cannot change the saved playback preference");
         assert.equal(f.video.playCalls, 1, "Expired access cannot restart a protected channel through an engine change");
-        f.action("unlock", "", { "access-pin": "9999" });
+        await f.pinAction("unlock", "", { "access-pin": "9999" });
         assert.equal(f.saved.settings[field], "auto");
         assert.equal(f.video.playCalls, 1);
-        f.action("unlock", "", { "access-pin": "1234" });
+        await f.pinAction("unlock", "", { "access-pin": "1234" });
         assert.equal(f.saved.settings[field], value);
         assert.equal(f.video.playCalls, 2);
         f.controller.destroy();
@@ -1145,7 +1187,7 @@ test("Saved startup identity uses raw provider metadata rather than custom displ
     f.controller.destroy();
 });
 
-test("Equivalent M3U copies restore the same HD broadcast from an old reference without losing its PIN", () => {
+test("Equivalent M3U copies restore the same HD broadcast from an old reference without losing its PIN", async () => {
     const oldID = "source:m3u:tvg:shared:aaaa-bbbb";
     const seed = fixture({protected:true}), state = seed.saved; seed.controller.destroy();
     state.lastChannel = {sourceId:"source",id:oldID};
@@ -1157,7 +1199,7 @@ test("Equivalent M3U copies restore the same HD broadcast from an old reference 
     f.sourceCalls[0].callback(null,{channels:[hd,{...hd,id:"uhd",name:"Station UHD",group:"News"},{...hd,id:"sd",name:"Station",group:"Other"},duplicate],epgUrls:[]});
     assert.equal(f.dialogTitle,"PIN required");
     assert.equal(f.resolveCalls.length,0,"Equivalent copies cannot bypass authorization");
-    f.action("unlock","",{"access-pin":"1234"});
+    await f.pinAction("unlock","",{"access-pin":"1234"});
     assert.equal(f.resolveCalls[0].channel.id,hd.id);
     f.resolve(); f.video.fire("playing");
     assert.equal(f.model.homeVisible,false);
@@ -1168,14 +1210,14 @@ test("Equivalent M3U copies restore the same HD broadcast from an old reference 
     f.controller.destroy();
 });
 
-test("A refreshed startup channel retains its PIN protection before resolution and on another restart", () => {
+test("A refreshed startup channel retains its PIN protection before resolution and on another restart", async () => {
     const f = fixture({protected:true,lastChannel:{sourceId:"source",id:"source:live",name:"Live"},deferSource:true});
     const fresh = {...f.live,id:"source:fresh",sourceId:"source"};
     f.sourceCalls[0].callback(null,{channels:[fresh],epgUrls:[]});
     assert.equal(f.dialogTitle,"PIN required");
     assert.equal(f.resolveCalls.length,0);
     assert.deepEqual(f.saved.security.protectedIds,["source:fresh"], "Confirmed identity migration moves the protected ID atomically");
-    f.action("unlock","",{"access-pin":"1234"});
+    await f.pinAction("unlock","",{"access-pin":"1234"});
     assert.equal(f.resolveCalls[0].channel.id,fresh.id);
     f.resolve(); f.video.fire("playing");
     assert.equal(f.saved.lastChannel.id,fresh.id);
@@ -1220,11 +1262,11 @@ test("Failed startup and canceled source loads cannot re-arm automatic playback"
     delayed.controller.destroy();
 });
 
-test("Restoring a protected channel requires a new PIN before resolving or playing", () => {
+test("Restoring a protected channel requires a new PIN before resolving or playing", async () => {
     const f = fixture({protected:true,lastChannel:{sourceId:"source",id:"source:live"}});
     assert.equal(f.dialogTitle, "PIN required");
     assert.equal(f.resolveCalls.length, 0);
-    f.action("unlock", "", {"access-pin":"1234"});
+    await f.pinAction("unlock", "", {"access-pin":"1234"});
     assert.equal(f.model.homeVisible, false);
     assert.equal(f.resolveCalls.length, 1);
     f.resolve(); f.video.fire("playing");
@@ -1362,7 +1404,7 @@ test("Per-channel audio, subtitles and picture choices restore after track reord
     reopened.controller.destroy();
 });
 
-test("PreviousChannel cannot load another source through a locked source PIN scope", () => {
+test("PreviousChannel cannot load another source through a locked source PIN scope", async () => {
     const initial = fixture({ protected: true });
     const snapshot = initial.saved; initial.controller.destroy();
     snapshot.security.scopes.source = true;
@@ -1372,7 +1414,7 @@ test("PreviousChannel cannot load another source through a locked source PIN sco
     const f=fixture({saved:snapshot}); const before=f.sourceCalls.length;
     f.key('previousChannel');
     assert.equal(f.sourceCalls.length,before); assert.equal(f.dialogTitle,'PIN required');
-    f.action('unlock','',{'access-pin':'1234'});
+    await f.pinAction('unlock','',{'access-pin':'1234'});
     assert.equal(f.sourceCalls.length,before+1); assert.equal(f.sourceCalls.at(-1).source.id,'other');
     f.controller.destroy();
 });
@@ -1436,9 +1478,9 @@ test('TV foreground restores playback intent and position while deliberate pause
         f.controller.destroy();
     }
 });
-test('TV hidden resolution defers attachment; foreground rechecks expired PIN and respects Stop', () => {
+test('TV hidden resolution defers attachment; foreground rechecks expired PIN and respects Stop', async () => {
     const f=fixture({protected:true,environment:{location:{pathname:'/f/lg/webos/'}}});
-    f.action('play',f.live.id); f.action('unlock','',{'access-pin':'1234'});
+    f.action('play',f.live.id); await f.pinAction('unlock','',{'access-pin':'1234'});
     f.document.hidden=true; f.document.fire('visibilitychange'); f.resolve();
     assert.equal(f.video.playCalls,0);
     f.advance(31*60000); f.document.hidden=false; f.document.fire('visibilitychange');
@@ -1457,7 +1499,7 @@ function identityPlaylist(rows) {
     return JSON.parse(JSON.stringify(modules.providers.parseM3U('#EXTM3U\n'+rows.map(row=>'#EXTINF:-1 tvg-id="news" group-title="News",'+row.name+'\nhttps://media.example/'+row.path+'.mp4').join('\n'),{id:'source',type:'m3u',url:'https://media.example/list.m3u'})));
 }
 
-test('catalog variant splits reconcile favorites and PIN before startup autoplay or a manual channel selection', () => {
+test('catalog variant splits reconcile favorites and PIN before startup autoplay or a manual channel selection', async () => {
     const before=identityPlaylist([{name:'News HD',path:'hd'}]);
     const after=identityPlaylist([{name:'News SD',path:'sd'},{name:'News HD',path:'hd'}]);
     const oldId=before.channels[0].id, newId=after.channels[1].id;
@@ -1465,9 +1507,9 @@ test('catalog variant splits reconcile favorites and PIN before startup autoplay
     initial.action('favorite',oldId); initial.action('closeDialog');
     initial.action('saveChannel',oldId,{'channel-name':'My News','channel-group':'Favorites','channel-order':'1','channel-hidden':false});
     initial.action('protectChannel',oldId);
-    initial.action('configurePIN','',{'pin-new':'1234','pin-repeat':'1234','pin-channel':oldId});
+    await initial.pinAction('configurePIN','',{'pin-new':'1234','pin-repeat':'1234','pin-channel':oldId});
     initial.action('play',oldId); assert.equal(initial.resolveCalls.length,0);
-    initial.action('unlock','',{'access-pin':'1234'});initial.resolve();initial.video.fire('playing');
+    await initial.pinAction('unlock','',{'access-pin':'1234'});initial.resolve();initial.video.fire('playing');
     assert.equal(initial.saved.channelReferences.find(ref=>ref.id===oldId).name,'News HD','Persistence remembers the raw provider identity, not its custom display name');
     const saved=initial.saved;initial.controller.destroy();
     const reboot=fixture({saved,deferSource:true});reboot.sourceCalls[0].callback(null,after);
@@ -1477,7 +1519,7 @@ test('catalog variant splits reconcile favorites and PIN before startup autoplay
     reboot.key('back');reboot.action('screen','favorites');
     assert.equal(reboot.model.rows.length,1);assert.equal(reboot.model.rows[0].id,newId);assert.equal(reboot.model.rows[0].name,'My News');
     reboot.action('play',newId);assert.equal(reboot.resolveCalls.length,0);assert.equal(reboot.dialogTitle,'PIN required');
-    reboot.action('unlock','',{'access-pin':'1234'});assert.equal(reboot.resolveCalls.length,1);assert.equal(reboot.resolveCalls[0].channel.id,newId);
+    await reboot.pinAction('unlock','',{'access-pin':'1234'});assert.equal(reboot.resolveCalls.length,1);assert.equal(reboot.resolveCalls[0].channel.id,newId);
     reboot.controller.destroy();
 });
 

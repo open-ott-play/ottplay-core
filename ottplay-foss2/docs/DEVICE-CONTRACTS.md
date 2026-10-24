@@ -201,13 +201,12 @@ Retain selectable font labels System, Roboto, Roboto Condensed, Caveat, Liberati
 - `LiberationSans-Regular.ttf` → Liberation.
 - `Gabriela-Regular.ttf` → Gabriela.
 - `PTSansNarrow-Regular.ttf` → PTSansNarrow.
-- `fontello.eot`, `fontello.woff2`, `fontello.woff`, `fontello.ttf`, `fontello.svg` → Fontello icon face.
 
 **Font alias:** `LiberationSans-Regular.ttf` has the same bytes as `Roboto-Regular.ttf` and embeds family Roboto. There are six text filenames/menu aliases but five distinct text payloads. Preserve mapping if retaining appearance; do not describe the payload as a distinct Liberation font. A later replacement is a deliberate visual change, with separate license/metric testing.
 
 Asset metadata is in `licenses/bundled-font-metadata.txt` and
-`THIRD-PARTY-NOTICES.md`. Retain the notices and hashes. Fontello has mixed glyph
-provenance; do not assume every icon shares one license.
+`THIRD-PARTY-NOTICES.md`. Retain the notices and hashes. Unused Fontello icon
+resources were removed because complete glyph provenance was not established.
 
 Fonts are local and must work without Google Fonts or a CDN. Supply a system fallback while loading or on failure. Required visual fixtures: Cyrillic, Latin with diacritics, Greek, Hebrew, Armenian, Turkish, long text, numeric clocks and all UI icon fallbacks. Resource existence alone is not proof of glyph coverage. If a glyph is absent, fallback must keep the interface readable. Font selection cannot change application behavior or cursor indices.
 

@@ -1,0 +1,13 @@
+{
+  "source_commit": "48bd5b3f7888c03e33efffdca788d370ba24496e",
+  "capture_date": "2026-10-17",
+  "browser": "Codex in-app browser",
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "source_image": "foss2-start.jpg",
+  "source_sha256": "4efbee24e493a790c6654b018ae8ebb024cfb3e395c0511c2cffe842bc55e781",
+  "content": "Local first-run FOSS2 client with its menu expanded; no source configured.",
+  "processing": "Original browser JPEG preserved unchanged; hero uses geometric perspective, rounded corners, background and shadow only."
+}

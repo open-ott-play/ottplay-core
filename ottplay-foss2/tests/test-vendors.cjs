@@ -18,7 +18,7 @@ test("locked vendor generation reproduces all committed JS and license bytes", t
     const bytes = fs.readFileSync(path.join(directory, "vendor/runtime-manifest.json"));
     assert.equal(first.packages["hls.js"].version, "1.7.3");
     assert.equal(first.packages["core-js-bundle"].version, "3.50.0");
-    assert.equal(first.packages["shaka-player"].version, "5.2.10");
+    assert.equal(first.packages["shaka-player"].version, "5.2.13");
     assert.equal(first.packages["mpegts.js"].version, "1.8.2");
     for (const name of Object.keys(first.assets)) assert.deepEqual(fs.readFileSync(path.join(directory, name)), fs.readFileSync(path.join(root, name)), name);
     assert.deepEqual(checkVendors(directory), first);

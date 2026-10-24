@@ -3,8 +3,7 @@
 ## Reporting a vulnerability
 
 Use [GitHub private vulnerability reporting](https://github.com/open-ott-play/ottplay-core/security/advisories/new).
-If the form is unavailable, contact a maintainer through the repository's GitHub
-profile to arrange a private channel before sharing sensitive details. Public
+If the form is unavailable, email **alvit.work@gmail.com** privately. Public
 issues are for non-sensitive defects and feature requests.
 
 Include the affected commit/release, prerequisites, a minimal synthetic
@@ -16,18 +15,59 @@ credentials, personal data or access to devices you do not own.
 Maintainers aim to acknowledge a private report within 14 days, investigate its
 scope, and agree on remediation and disclosure with the reporter. If no reply
 arrives within 14 days, follow up privately. Confirmed security defects are
-prioritized by impact; critical defects take precedence over feature work.
+prioritized by impact; critical defects are handled immediately. Known medium-or-higher
+vulnerabilities in supported project results are fixed within 60 days of public
+disclosure. If an upstream fix is unavailable, document a reviewed mitigation or
+disable the affected supported path rather than claiming it is clean.
 
 Security fixes target the current default branch and latest published release,
 where one exists. Older snapshots are not maintained security branches. Release
-notes must identify security fixes, affected versions and upgrade actions without
-disclosing credentials. This policy is a commitment for handling reports, not
+notes must identify security fixes, affected versions, available CVE/GHSA
+identifiers and upgrade actions without
+disclosing credentials. Credit reporters of fixed vulnerabilities unless they
+request anonymity, and coordinate disclosure before publishing private details.
+This policy is a commitment for handling reports, not
 a claim that no vulnerabilities exist or that past reports met a response SLA.
 
 ## Project boundary
 
 This project provides the shared Kotlin domain core, FOSS2 browser client and cross-repository wire contracts.
 
-Platform adapters own networking, parsing, storage and cryptography; the shared core owns domain decisions. Preserve the explicit boundary when importing source data or generating consumer artifacts. The FOSS2 relay accepts exact operator-approved origins, revalidates redirects/DNS, bounds bodies and pins resolved addresses. Its transport destination comes from the allowlist. Local parental PINs use a project-owned legacy SHA-256 implementation and 2048 iterations; this is a deterrent for old TVs, not a password vault or protection against a device owner.
+Platform adapters own networking, parsing, storage and cryptography; the shared core owns domain decisions. Preserve the explicit boundary when importing source data or generating consumer artifacts. The FOSS2 relay accepts exact operator-approved origins, revalidates redirects/DNS, bounds bodies and pins resolved addresses. Its transport destination comes from the allowlist.
+
+FOSS2 parental PINs use native Web Crypto PBKDF2-HMAC-SHA-256 with 600,000
+iterations and a fresh 128-bit salt. Legacy verifiers migrate only after correct
+authentication and confirmed storage. Unsupported Web Crypto environments stay
+locked. This is local access control, not encrypted storage or a defense against
+the device owner. Read the [upgrade and recovery guide](ottplay-foss2/docs/PARENTAL-CONTROLS.md)
+before changing browser versions or restoring data.
 
 See [security design and validation boundaries](docs/security-design.md).
+
+## Release transport
+
+Release preparation, candidate publication, stable promotion and final
+publication install a pinned GitHub CLI, verify both its archive and executable
+hashes, and select its FIPS TLS profile. Local maintainers must use the same
+[release CLI setup](docs/release-github-cli.md), including its environment and
+configuration restrictions. This profile covers the documented release
+commands; it does not qualify arbitrary CLI extensions, custom GitHub hosts or
+every build dependency. The guide records the dated, command-specific advisory
+assessment and its remaining update deadline.
+
+## Scorecard authentication
+
+The complete Scorecard scan must read classic branch-protection settings.
+Configure the repository secret `SCORECARD_TOKEN` with a fine-grained token
+restricted to this repository, with **Administration: read-only** and the
+automatic **Metadata: read-only** permission. These are the
+[upstream documented permissions](https://github.com/ossf/scorecard-action/blob/main/docs/authentication/fine-grained-auth-token.md).
+The configured checks do not include the experimental Webhooks check.
+
+The token is used only by the analysis step; checkout and SARIF upload retain
+the workflow token and their declared permissions. The workflow falls back to
+`github.token` when the secret is absent, but cannot complete analysis if that
+token cannot read the branch rules. Missing permissions remain a failed scan.
+After provisioning or rotating the secret, verify a complete successful scan
+before treating the security report as current, and renew the token before its
+configured expiration.

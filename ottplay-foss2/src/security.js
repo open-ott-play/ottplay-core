@@ -1,181 +1,245 @@
-/* Local parental controls, independent from any provider or remote authentication.
- * ES5 SHA-256 with 2048 iterations is a bounded deterrent suitable for old TVs.
- * A short PIN and browser storage do not resist an owner with developer tools.
- * Creating or changing a PIN requires a cryptographically secure random source.
+/* Local parental controls, not provider authentication or a device-owner boundary.
+ * New PINs use native Web Crypto PBKDF2. Legacy hashes are read only to migrate
+ * after successful authentication. No weak crypto or entropy fallback exists.
  */
 OTT2.define("security", function () {
     "use strict";
-    var has = Object.prototype.hasOwnProperty, iterations = 2048;
-    var constants = [1116352408, 1899447441, 3049323471, 3921009573, 961987163, 1508970993, 2453635748, 2870763221,
-        3624381080, 310598401, 607225278, 1426881987, 1925078388, 2162078206, 2614888103, 3248222580,
-        3835390401, 4022224774, 264347078, 604807628, 770255983, 1249150122, 1555081692, 1996064986,
-        2554220882, 2821834349, 2952996808, 3210313671, 3336571891, 3584528711, 113926993, 338241895,
-        666307205, 773529912, 1294757372, 1396182291, 1695183700, 1986661051, 2177026350, 2456956037,
-        2730485921, 2820302411, 3259730800, 3345764771, 3516065817, 3600352804, 4094571909, 275423344,
-        430227734, 506948616, 659060556, 883997877, 958139571, 1322822218, 1537002063, 1747873779,
-        1955562222, 2024104815, 2227730452, 2361852424, 2428436474, 2756734187, 3204031479, 3329325298];
-    function rotate(n, bits) { return (n >>> bits) | (n << (32 - bits)); }
-    function sha256(text) {
-        var bytes = [], words = [], work = [], h = [1779033703, 3144134277, 1013904242, 2773480762, 1359893119, 2600822924, 528734635, 1541459225];
-        var i, j, n, next, length, a, b, c, d, e, f, g, v, t1, t2, result = "";
-        for (i = 0; i < text.length; i++) {
-            n = text.charCodeAt(i);
-            if (n >= 55296 && n <= 56319) {
-                next = text.charCodeAt(i + 1);
-                if (next >= 56320 && next <= 57343) { n = 65536 + ((n - 55296) << 10) + next - 56320; i++; }
-                else n = 65533;
-            } else if (n >= 56320 && n <= 57343) n = 65533;
-            if (n < 128) bytes.push(n);
-            else if (n < 2048) bytes.push(192 | (n >>> 6), 128 | (n & 63));
-            else if (n < 65536) bytes.push(224 | (n >>> 12), 128 | ((n >>> 6) & 63), 128 | (n & 63));
-            else bytes.push(240 | (n >>> 18), 128 | ((n >>> 12) & 63), 128 | ((n >>> 6) & 63), 128 | (n & 63));
-        }
-        length = bytes.length;
-        bytes.push(128);
-        while (bytes.length % 64 !== 56) bytes.push(0);
-        for (i = 7; i >= 0; i--) bytes.push(i >= 4 ? Math.floor(length / Math.pow(2, i * 8 - 3)) & 255 : ((length * 8) >>> (i * 8)) & 255);
-        for (i = 0; i < bytes.length; i += 4) words.push((bytes[i] << 24) | (bytes[i + 1] << 16) | (bytes[i + 2] << 8) | bytes[i + 3]);
-        for (i = 0; i < words.length; i += 16) {
-            for (j = 0; j < 64; j++) {
-                if (j < 16) work[j] = words[i + j];
-                else {
-                    n = work[j - 15]; next = work[j - 2];
-                    work[j] = (work[j - 16] + (rotate(n, 7) ^ rotate(n, 18) ^ (n >>> 3)) + work[j - 7] + (rotate(next, 17) ^ rotate(next, 19) ^ (next >>> 10))) | 0;
-                }
-            }
-            a = h[0]; b = h[1]; c = h[2]; d = h[3]; e = h[4]; f = h[5]; g = h[6]; v = h[7];
-            for (j = 0; j < 64; j++) {
-                t1 = (v + (rotate(e, 6) ^ rotate(e, 11) ^ rotate(e, 25)) + ((e & f) ^ (~e & g)) + constants[j] + work[j]) | 0;
-                t2 = ((rotate(a, 2) ^ rotate(a, 13) ^ rotate(a, 22)) + ((a & b) ^ (a & c) ^ (b & c))) | 0;
-                v = g; g = f; f = e; e = (d + t1) | 0; d = c; c = b; b = a; a = (t1 + t2) | 0;
-            }
-            h[0] = (h[0] + a) | 0; h[1] = (h[1] + b) | 0; h[2] = (h[2] + c) | 0; h[3] = (h[3] + d) | 0;
-            h[4] = (h[4] + e) | 0; h[5] = (h[5] + f) | 0; h[6] = (h[6] + g) | 0; h[7] = (h[7] + v) | 0;
-        }
-        for (i = 0; i < h.length; i++) result += ("00000000" + (h[i] >>> 0).toString(16)).slice(-8);
+    var has = Object.prototype.hasOwnProperty, iterations = 600000, algorithm = "PBKDF2-HMAC-SHA256";
+    function copy(value) { return JSON.parse(JSON.stringify(value)); }
+    function defaults() { return OttPlayCore.parentalDefaults(); }
+    function finiteInteger(value, minimum, maximum) {
+        return typeof value === "number" && isFinite(value) && value % 1 === 0 && value >= minimum && value <= maximum;
+    }
+    function validate(value) {
+        var modern = value && value.schema === 2, base, result;
+        if (value && value.enabled && !finiteInteger(value.iterations, modern ? iterations : 1024, modern ? 2000000 : 8192)) throw new Error("Invalid parental-control work factor");
+        if (!modern) return OttPlayCore.parentalValidate(value);
+        if (value.enabled !== true || value.algorithm !== algorithm || typeof value.salt !== "string" || typeof value.hash !== "string" || !/^[0-9a-f]{32}$/.test(value.salt) || !/^[0-9a-f]{64}$/.test(value.hash)) throw new Error("Invalid parental-control KDF");
+        // Crypto parameters are host effects. Reuse the same pure domain rules
+        // even with an older pinned core; candidate-core CI checks both versions.
+        base = copy(value); base.schema = 1; base.salt = "crypto-parameters-validated"; base.hash = new Array(65).join("0"); base.iterations = 2048;
+        result = OttPlayCore.parentalValidate(base);
+        result.schema = 2; result.algorithm = algorithm; result.salt = value.salt; result.hash = value.hash; result.iterations = value.iterations;
         return result;
     }
-    function hashPin(pin, salt, count) {
-        var digest = sha256(salt + ":" + pin), i;
-        for (i = 1; i < count; i++) digest = sha256(salt + ":" + digest);
-        return digest;
-    }
-    function defaults() { return OttPlayCore.parentalDefaults(); }
-    function validate(value) { return OttPlayCore.parentalValidate(value); }
     function validPin(pin) { return OttPlayCore.parentalValidPin(pin); }
     function equal(left, right) {
         var different = left.length ^ right.length, i;
         for (i = 0; i < left.length; i++) different |= left.charCodeAt(i) ^ right.charCodeAt(i);
         return different === 0;
     }
+    function environment(options) {
+        var host = typeof window !== "undefined" ? window : {}, crypto = options.crypto || host.crypto;
+        var Bytes = options.Uint8Array || host.Uint8Array;
+        if (!crypto || !crypto.subtle || !crypto.subtle.importKey || !crypto.subtle.deriveBits || !crypto.subtle.digest || !Bytes) return null;
+        return { crypto: crypto, Bytes: Bytes };
+    }
+    function hex(bytes) {
+        var result = "", i;
+        for (i = 0; i < bytes.length; i++) result += ("0" + bytes[i].toString(16)).slice(-2);
+        return result;
+    }
+    function ascii(api, text) {
+        var bytes = new api.Bytes(text.length), i;
+        for (i = 0; i < text.length; i++) bytes[i] = text.charCodeAt(i);
+        return bytes;
+    }
+    function saltBytes(api, text) {
+        var bytes = new api.Bytes(16), i;
+        for (i = 0; i < 16; i++) bytes[i] = parseInt(text.slice(i * 2, i * 2 + 2), 16);
+        return bytes;
+    }
+    function freshSalt(api, options) {
+        var bytes = new api.Bytes(16), i, supplied;
+        if (options.randomBytes) {
+            supplied = options.randomBytes(16);
+            if (!supplied || supplied.length !== 16) throw new Error("Random bytes unavailable");
+            for (i = 0; i < 16; i++) {
+                if (!finiteInteger(supplied[i], 0, 255)) throw new Error("Invalid random byte");
+                bytes[i] = supplied[i];
+            }
+        } else api.crypto.getRandomValues(bytes);
+        return hex(bytes);
+    }
+    function derive(api, pin, salt, count) {
+        return api.crypto.subtle.importKey("raw", ascii(api, pin), "PBKDF2", false, ["deriveBits"]).then(function (key) {
+            return api.crypto.subtle.deriveBits({ name: "PBKDF2", salt: saltBytes(api, salt), iterations: count, hash: "SHA-256" }, key, 256);
+        }).then(function (bytes) { return hex(new api.Bytes(bytes)); });
+    }
+    function legacy(api, pin, config) {
+        var round = 0;
+        function next(text) {
+            return api.crypto.subtle.digest("SHA-256", ascii(api, config.salt + ":" + text)).then(function (bytes) {
+                var digest = hex(new api.Bytes(bytes));
+                return ++round < config.iterations ? next(digest) : digest;
+            });
+        }
+        return next(pin);
+    }
     function create(options) {
         options = options || {};
-        var local = defaults(), session = new OttPlayCore.BrowserParentalSession();
+        var local = defaults(), session = new OttPlayCore.BrowserParentalSession(), generation = 0, pending = null, observed = "", currentSource = null, lastClock = 0;
+        function lock() { generation++; pending = null; session.lock(); }
         function clock() {
             var value = options.now ? options.now() : new Date().getTime();
+            if (typeof value !== "number" || !isFinite(value) || value < lastClock) lock();
+            else lastClock = value;
             return session.clock(value);
-        }
-        function save(config) {
-            local = validate(config);
-            if (options.persist) options.persist(validate(local));
-            return local;
         }
         function read() {
             var state = options.getState ? options.getState() : local;
             var config = validate(state && has.call(state, "security") ? state.security : state);
-            var currentIdentity = config.enabled + ":" + config.salt + ":" + config.hash;
-            var currentSource = state && typeof state.activeSourceId === "string" ? state.activeSourceId : null;
-            session.observe(currentIdentity, currentSource);
+            var source = state && typeof state.activeSourceId === "string" ? state.activeSourceId : null;
+            currentSource = source;
+            var identity = config.enabled + ":" + config.schema + ":" + config.salt + ":" + config.hash;
+            var signature = identity + ":" + source;
+            if (observed && signature !== observed) lock();
+            observed = signature; session.observe(identity, source);
             return config;
         }
-        function lock() { session.lock(); }
+        function save(config) {
+            var validated = validate(config);
+            if (!options.persist || options.persist(copy(validated)) !== true) throw new Error("Durable storage unavailable");
+            local = validated;
+        }
+        function reply(callback, result) { if (callback) callback(result); return result; }
+        function begin(callback) {
+            var config = read(), time = clock(), api = environment(options);
+            if (pending) return { result: reply(callback, { ok: false, code: "BUSY" }) };
+            if (!api) { lock(); return { result: reply(callback, { ok: false, code: "CRYPTO_UNAVAILABLE" }) }; }
+            var operation = { config: config, time: time, api: api, generation: generation, source: currentSource, stamp: JSON.stringify(config), callback: callback, done: false };
+            pending = operation;
+            return operation;
+        }
+        function current(operation) {
+            try {
+                var config = read(); clock();
+                return pending === operation && operation.generation === generation && JSON.stringify(config) === operation.stamp;
+            } catch (error) { lock(); return false; }
+        }
+        function finish(operation, result) {
+            if (operation.done) return result;
+            operation.done = true;
+            if (pending === operation) pending = null;
+            return reply(operation.callback, result);
+        }
+        function failed(operation, code) {
+            if (!current(operation)) return finish(operation, { ok: false, code: "CANCELLED" });
+            session.lock();
+            return finish(operation, { ok: false, code: code });
+        }
         function status() {
             var config = read(), time = clock();
-            if (config.blockedUntil !== OttPlayCore.parentalBlock(config.blockedUntil, time)) { config.blockedUntil = OttPlayCore.parentalBlock(config.blockedUntil, time); save(config); }
             return { enabled: config.enabled, unlocked: config.enabled && session.expires(time) > 0, expiresAt: session.expires(time),
-                retryAfter: OttPlayCore.parentalRetry(config.blockedUntil, time), failures: config.failures };
+                retryAfter: OttPlayCore.parentalRetry(OttPlayCore.parentalBlock(config.blockedUntil, time), time), failures: config.failures, busy: !!pending };
         }
-        function verify(pin) {
-            var config = read(), time = clock(), wait, correct;
-            if (!config.enabled) return { ok: true, code: "DISABLED" };
-            if (config.blockedUntil !== OttPlayCore.parentalBlock(config.blockedUntil, time)) { config.blockedUntil = OttPlayCore.parentalBlock(config.blockedUntil, time); save(config); }
-            wait = OttPlayCore.parentalRetry(config.blockedUntil, time);
-            if (wait) return { ok: false, code: "RATE_LIMIT", retryAfter: wait };
-            correct = validPin(pin) && equal(hashPin(pin, config.salt, config.iterations), config.hash);
-            if (!correct) {
-                lock(); config.failures = OttPlayCore.parentalFailedCount(config.failures);
-                config.blockedUntil = OttPlayCore.parentalFailedBlock(config.failures, config.blockedUntil, time);
-                save(config);
-                return { ok: false, code: config.blockedUntil > time ? "RATE_LIMIT" : "WRONG_PIN", retryAfter: OttPlayCore.parentalRetry(config.blockedUntil, time) };
-            }
-            config.failures = 0; config.blockedUntil = 0; save(config);
-            var grantUntil = session.grant(time, config.sessionMinutes);
-            return { ok: true, code: "AUTHORIZED", expiresAt: grantUntil };
+        function savedFor(operation, config) {
+            // Persistence adapters can notify observers synchronously. Do not
+            // turn a source switch/cancellation during that write into a grant.
+            var time = clock();
+            if (pending !== operation || operation.generation !== generation) return null;
+            var latest = read();
+            return currentSource === operation.source && JSON.stringify(latest) === JSON.stringify(validate(config)) ? time : null;
         }
-        function isProtected(channelId, action) {
-            var config = read();
-            return OttPlayCore.parentalProtected(config, channelId, action);
+        function storeAuthorized(operation, config) {
+            if (!current(operation)) return finish(operation, { ok: false, code: "CANCELLED" });
+            config.failures = 0; config.blockedUntil = 0;
+            try { save(config); } catch (error) { return failed(operation, "STORAGE_UNAVAILABLE"); }
+            var savedAt = savedFor(operation, config);
+            if (savedAt === null) { lock(); return finish(operation, { ok: false, code: "CANCELLED" }); }
+            var grantUntil = session.grant(savedAt, config.sessionMinutes);
+            return finish(operation, { ok: true, code: "AUTHORIZED", expiresAt: grantUntil });
         }
-        function authorize(action, channelId, pin) {
-            if (!isProtected(channelId, action)) return { ok: true, code: "UNPROTECTED" };
-            if (pin !== undefined) return verify(pin);
-            var current = status();
-            if (current.retryAfter) return { ok: false, code: "RATE_LIMIT", retryAfter: current.retryAfter };
-            return current.unlocked ? { ok: true, code: "SESSION", expiresAt: current.expiresAt } : { ok: false, code: "PIN_REQUIRED" };
-        }
-        function salt() {
-            var bytes, i, text = "", host = typeof window !== "undefined" ? window : {}, crypto = host.crypto || host.msCrypto;
-            try {
-                if (options.randomBytes) bytes = options.randomBytes(16);
-                else if (crypto && crypto.getRandomValues && host.Uint8Array) { bytes = new host.Uint8Array(16); crypto.getRandomValues(bytes); }
-                if (bytes && bytes.length === 16) {
-                    for (i = 0; i < 16; i++) {
-                        if (typeof bytes[i] !== "number" || !isFinite(bytes[i]) || bytes[i] < 0 || bytes[i] > 255 || bytes[i] % 1) throw new Error("Invalid salt byte");
-                        text += ("0" + bytes[i].toString(16)).slice(-2);
-                    }
-                    return text;
+        function verify(pin, callback) {
+            var config = read(), time = clock(), wait, operation;
+            if (!config.enabled) return reply(callback, { ok: true, code: "DISABLED" });
+            wait = OttPlayCore.parentalRetry(OttPlayCore.parentalBlock(config.blockedUntil, time), time);
+            if (wait) return reply(callback, { ok: false, code: "RATE_LIMIT", retryAfter: wait });
+            operation = begin(callback);
+            if (operation.result) return operation.result;
+            function checked(digest) {
+                if (!current(operation)) return finish(operation, { ok: false, code: "CANCELLED" });
+                if (!validPin(pin) || !equal(digest, config.hash)) {
+                    session.lock(); config.failures = OttPlayCore.parentalFailedCount(config.failures);
+                    config.blockedUntil = OttPlayCore.parentalFailedBlock(config.failures, OttPlayCore.parentalBlock(config.blockedUntil, time), time);
+                    try { save(config); } catch (error) { return failed(operation, "STORAGE_UNAVAILABLE"); }
+                    return finish(operation, { ok: false, code: config.blockedUntil > time ? "RATE_LIMIT" : "WRONG_PIN", retryAfter: OttPlayCore.parentalRetry(config.blockedUntil, time) });
                 }
-            } catch (ignore) { /* Do not fall back to a predictable salt. */ }
-            return null;
+                if (config.schema === 2) return storeAuthorized(operation, config);
+                var salt;
+                try { salt = freshSalt(operation.api, options); } catch (error) { return failed(operation, "RANDOM_UNAVAILABLE"); }
+                return derive(operation.api, pin, salt, iterations).then(function (hash) {
+                    config.schema = 2; config.algorithm = algorithm; config.salt = salt; config.iterations = iterations; config.hash = hash;
+                    return storeAuthorized(operation, config);
+                });
+            }
+            if (!validPin(pin)) { checked(""); return { ok: false, code: "PENDING" }; }
+            var calculation;
+            try { calculation = config.schema === 2 ? derive(operation.api, pin, config.salt, config.iterations) : legacy(operation.api, pin, config); }
+            catch (error) { return failed(operation, "CRYPTO_UNAVAILABLE"); }
+            calculation.then(checked).then(null, function () { failed(operation, "CRYPTO_UNAVAILABLE"); });
+            return { ok: false, code: "PENDING" };
         }
         function configure(currentPin, newPin, callback) {
-            var config = read(), result, newSalt;
-            if (!validPin(newPin)) result = { ok: false, code: "PIN_FORMAT" };
-            else if (config.enabled && !(result = verify(currentPin)).ok) { /* Keep existing configuration. */ }
-            else {
-                newSalt = salt();
-                if (!newSalt) { lock(); result = { ok: false, code: "RANDOM_UNAVAILABLE" }; }
-                else {
-                    config.enabled = true; config.salt = newSalt; config.iterations = iterations;
-                    config.hash = hashPin(newPin, config.salt, config.iterations); config.failures = 0; config.blockedUntil = 0;
-                    save(config); lock(); result = { ok: true, code: "CONFIGURED" };
-                }
+            if (!validPin(newPin)) return reply(callback, { ok: false, code: "PIN_FORMAT" });
+            if (pending) return reply(callback, { ok: false, code: "BUSY" });
+            function change() {
+                lock();
+                var operation = begin(callback), salt, calculation;
+                if (operation.result) return operation.result;
+                try { salt = freshSalt(operation.api, options); } catch (error) { return failed(operation, "RANDOM_UNAVAILABLE"); }
+                try { calculation = derive(operation.api, newPin, salt, iterations); }
+                catch (error) { return failed(operation, "CRYPTO_UNAVAILABLE"); }
+                calculation.then(function (hash) {
+                    if (!current(operation)) return finish(operation, { ok: false, code: "CANCELLED" });
+                    var config = operation.config;
+                    config.enabled = true; config.schema = 2; config.algorithm = algorithm; config.salt = salt; config.iterations = iterations; config.hash = hash;
+                    config.failures = 0; config.blockedUntil = 0;
+                    try { save(config); } catch (error) { return failed(operation, "STORAGE_UNAVAILABLE"); }
+                    if (savedFor(operation, config) === null) { lock(); return finish(operation, { ok: false, code: "CANCELLED" }); }
+                    session.lock();
+                    return finish(operation, { ok: true, code: "CONFIGURED" });
+                }).then(null, function () { failed(operation, "CRYPTO_UNAVAILABLE"); });
+                return { ok: false, code: "PENDING" };
             }
-            if (callback) callback(result);
-            return result;
+            if (read().enabled) return verify(currentPin, function (result) { if (result.ok) change(); else reply(callback, result); });
+            return change();
         }
-        function setProtected(id, protect, pin) {
-            if (!OttPlayCore.parentalChannelId(id)) return { ok: false, code: "CHANNEL_ID" };
-            if (!read().enabled) return { ok: false, code: "PIN_NOT_CONFIGURED" };
-            var result = authorize("security", "", pin), config, index;
-            if (!result.ok) return result;
-            config = read(); index = config.protectedIds.indexOf(id);
-            OttPlayCore.editFavoriteSelection(config.protectedIds, id, protect ? "add" : "remove");
-            save(config); return { ok: true, code: "UPDATED" };
+        function isProtected(channelId, action) { return OttPlayCore.parentalProtected(read(), channelId, action); }
+        function authorize(action, channelId, pin, callback) {
+            if (!isProtected(channelId, action)) return reply(callback, { ok: true, code: "UNPROTECTED" });
+            if (pin !== undefined) return verify(pin, callback);
+            var now = status();
+            if (now.retryAfter) return reply(callback, { ok: false, code: "RATE_LIMIT", retryAfter: now.retryAfter });
+            return reply(callback, now.unlocked ? { ok: true, code: "SESSION", expiresAt: now.expiresAt } : { ok: false, code: "PIN_REQUIRED" });
         }
-        function setScopes(scopes, pin) {
-            var result = authorize("security", "", pin), config;
-            if (!result.ok) return result;
-            config = read(); config.scopes = scopes; save(config); lock();
-            return { ok: true, code: "UPDATED" };
+        function edit(pin, mutate, callback) {
+            function apply(result) {
+                if (!result.ok) return reply(callback, result);
+                var config = read(); mutate(config);
+                try { save(config); } catch (error) { lock(); return reply(callback, { ok: false, code: "STORAGE_UNAVAILABLE" }); }
+                return reply(callback, { ok: true, code: "UPDATED" });
+            }
+            if (pin !== undefined) return authorize("security", "", pin, apply);
+            return apply(authorize("security", ""));
         }
-        function disable(pin) {
-            var result = verify(pin);
-            if (!result.ok) return result;
-            save(defaults()); lock(); return { ok: true, code: "DISABLED" };
+        function setProtected(id, protect, pin, callback) {
+            if (!OttPlayCore.parentalChannelId(id)) return reply(callback, { ok: false, code: "CHANNEL_ID" });
+            if (!read().enabled) return reply(callback, { ok: false, code: "PIN_NOT_CONFIGURED" });
+            return edit(pin, function (config) { OttPlayCore.editFavoriteSelection(config.protectedIds, id, protect ? "add" : "remove"); }, callback);
+        }
+        function setScopes(scopes, pin, callback) {
+            return edit(pin, function (config) { config.scopes = scopes; session.lock(); }, callback);
+        }
+        function disable(pin, callback) {
+            return verify(pin, function (result) {
+                if (!result.ok) return reply(callback, result);
+                try { save(defaults()); } catch (error) { lock(); return reply(callback, { ok: false, code: "STORAGE_UNAVAILABLE" }); }
+                lock(); return reply(callback, { ok: true, code: "DISABLED" });
+            });
         }
         return { configure: configure, verify: verify, isProtected: isProtected, authorize: authorize, lock: lock,
             resetSession: lock, status: status, setProtected: setProtected, setScopes: setScopes, disable: disable };
     }
-    return { create: create, defaults: defaults, validate: validate, sha256: sha256, hashPin: hashPin };
+    return { create: create, defaults: defaults, validate: validate };
 });

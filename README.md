@@ -1,9 +1,19 @@
 # OttPlay core and FOSS2
 
+[![FOSS2 browser client on first launch in perspective](docs/images/hero.png)](docs/images/foss2-start.jpg)
+
+*FOSS2 0.6.0-beta.4, the browser client included in this repository, captured locally
+with its menu open and no playlist configured. [Original and regeneration](docs/images/README.md).*
+
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/15596/badge)](https://www.bestpractices.dev/en/projects/15596)
+
+[![Fuzzing: RC only](https://img.shields.io/badge/Fuzzing-RC%20only-blue)](docs/fuzzing.md)
+
+
 This repository maintains the shared OttPlay business logic, its compiled
 JVM/ES5 distributions, service wire contracts and the FOSS2 browser client.
-The five independent consumer repositories live beside it, normally under
-`~/victron`. Consumers carry generated artifacts and build without a sibling
+The five independent consumer repositories can share a parent directory for
+integration work. Consumers carry generated artifacts and build without a sibling
 core checkout or Kotlin compiler.
 
 ## Architecture
@@ -38,22 +48,24 @@ packaged artifact. See [shared core API and builds](shared-core/README.md),
 
 The [open-ott-play/ottplay-core](https://github.com/open-ott-play/ottplay-core)
 repository owns `shared-core`, its distribution tooling, the service wire
-contracts and `ottplay-foss2`. Its usual local checkout is `~/victron/ottplay-core`.
+contracts and `ottplay-foss2`. Choose any local workspace directory.
 The other five repositories remain
 independently versioned consumers/services. Their integration commits are pinned
 in `checkouts.json`.
 
-To clone the source repository into the flat workspace:
+For example, create a workspace and clone the source repository into it:
 
 ```sh
-cd ~/victron
-git clone git@github.com:open-ott-play/ottplay-core.git ottplay-core
+mkdir -p "$HOME/ottplay-workspace"
+cd "$HOME/ottplay-workspace"
+git clone https://github.com/open-ott-play/ottplay-core.git ottplay-core
+cd ottplay-core
 ```
 
 The default layout is:
 
 ```text
-~/victron/
+ottplay-workspace/
   ottplay-core/                 # this repository (local name is not significant)
     shared-core/
     contracts/
@@ -135,7 +147,7 @@ Automated tests do not certify physical TV/STB codecs, DRM, provider accounts or
 installation/rollback behavior. Those require the corresponding devices and
 accounts. Product releases and deployments remain separate from source
 publication and core delivery. FOSS2 installation and upgrade instructions are in
-[the beta release notes](ottplay-foss2/docs/RELEASE-0.6.0-beta.2.md).
+[the beta release notes](ottplay-foss2/docs/RELEASE-0.6.0-beta.5.md).
 
 FOSS2 catalog/guide cache behavior, benchmark instructions and delivery scope are
 documented in [catalog performance](docs/foss2-catalog-performance.md).
@@ -163,3 +175,10 @@ For the client developed inside this repository, see [FOSS2](ottplay-foss2/READM
 See [contribution and test requirements](CONTRIBUTING.md), the
 [security reporting policy](SECURITY.md), [security design](docs/security-design.md),
 and the [OpenSSF evidence and remaining criteria](docs/openssf-evidence.md).
+
+## Licensing
+
+Original project code, contracts, tooling and documentation are released under the [MIT license](LICENSE). Existing component copyright notices remain in force. [Third-party notices](THIRD_PARTY_NOTICES.md) identify separate licenses and the removed assets with unresolved provenance; the root license does not grant new rights to third-party code, media, fonts or referenced downloads.
+
+See [governance](GOVERNANCE.md), [Code of Conduct](CODE_OF_CONDUCT.md), the
+[one-year roadmap](ROADMAP.md) and [dated quality evidence and limits](docs/quality.md).

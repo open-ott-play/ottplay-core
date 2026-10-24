@@ -1,0 +1,82 @@
+name: Package verified shared core
+on:
+  workflow_call:
+    inputs:
+      version:
+        type: string
+        required: true
+      channel:
+        type: string
+        required: true
+      release_plan_artifact:
+        type: string
+        required: true
+permissions:
+  contents: read
+jobs:
+  package:
+    outputs:
+      browser-artifact-id: ${{ steps.assets.outputs.artifact-id }}
+    runs-on: ${{ fromJSON((vars.CI_RUNNER_MODE == 'self-hosted' || vars.CI_RUNNER_MODE == 'k3s') && (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)) && (vars.CI_RUNNER_RELEASE_LABELS || '[]') || '["ubuntu-latest"]') }}
+    timeout-minutes: 25
+    steps:
+      - uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: shared-core/package-lock.json
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+        with:
+          name: ${{ inputs.release_plan_artifact }}
+          path: .
+      - name: Apply frozen package version before compilation
+        run: python3 scripts/version_plan.py sync --root . --plan .release-plan.json
+      - name: Build and verify actual JVM and ES5 distribution
+        run: |
+          npm ci --ignore-scripts --prefix shared-core
+          npm --prefix shared-core run pack:core
+          npm --prefix shared-core run check:core
+          npm --prefix shared-core run check:js
+      - name: Stage only declared compiler artifacts
+        run: |
+          python3 scripts/package_core_release.py
+          python3 scripts/stage_release_assets.py --target shared-core --pattern 'release-dist/*'
+      - id: assets
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: release-assets-shared-core
+          path: release-assets/shared-core/*
+          if-no-files-found: error
+          retention-days: 30
+
+  browser-release:
+    needs: package
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@6b2d99519d513d2b871d2a845ddd6134dea4af2c
+    with:
+      node-version: '22'
+      run-node-ci: false
+      working-directory: ottplay-foss2
+      browser-matrix-file: ottplay-foss2/.github/browser-compatibility.json
+      browser-release-channel: ${{ inputs.channel }}
+      browser-extended: ${{ inputs.channel == 'rc' || inputs.channel == 'stable' }}
+      browser-evidence-prefix: browser-release
+      browser-artifact-id: ${{ needs.package.outputs.browser-artifact-id }}
+      browser-artifact-path: browser-candidate
+      browser-prepare-command: >-
+        npm ci --ignore-scripts && node scripts/check-core.cjs &&
+        node scripts/prepare-browser-candidate.cjs ../browser-candidate
+      browser-test-command: node scripts/browser-acceptance.cjs

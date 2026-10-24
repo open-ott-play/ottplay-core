@@ -1,6 +1,69 @@
 # Changelog
 
+## [0.1.3] - 2026-10-18
+
+### Changed
+
+- Refresh the verified shared-core receipt used by the separately versioned FOSS2 consumer and declare repository code owners.
+
+### Upgrade
+
+The shared-core API and serialized format are unchanged. Consumer deployments remain explicit; keep the prior immutable package for rollback.
+
+### Security
+
+This maintenance release preserves existing parental-metadata validation and distribution checks.
+
+## [0.1.2] - 2026-10-17
+
+### Changed
+
+- Support versioned parental-control metadata in the shared Kotlin core,
+  including validated PBKDF2-HMAC-SHA-256 parameters while retaining legacy input
+  validation. Cryptographic operations remain the consumer's responsibility.
+- Require real browser qualification before distributing compiler output and
+  use the qualified GitHub CLI for release publication.
+- Document the original-code MIT license, retained third-party notices and the
+  limits of the browser, fuzzing and device evidence.
+
+### Upgrade
+
+This release publishes the JVM17 and ES5 shared-core artifacts. It does not
+publish or deploy the separately versioned FOSS2 application. Consumers using
+schema-2 parental metadata must preserve the documented downgrade lock and
+migration behavior; an older reader must not silently discard protected state.
+Keep the previous immutable core package and validate consumer compatibility
+before changing a deployed pin.
+
+### Security
+
+The shared core validates the versioned parental-control metadata and its
+PBKDF2 parameters; each consumer remains responsible for performing the
+cryptographic operation and preserving protected state. This package release
+does not deploy FOSS2's separate PIN migration or establish target-device
+acceptance. Retained third-party license notices accompany the distribution.
+
 ## Unreleased
+
+- Update the FOSS2 test-only HTTP client and Kotlin/JS test serializer to the patched versions for GHSA-xjj6-f33q-929c and GHSA-m5mm-p8h7-m29v. Distributed player and shared-core runtime assets are unchanged.
+
+- Enforce exact certificate-key floors for both Node relay and EPG HTTPS paths,
+  including the trust-store root; RSA-2047 is rejected before any HTTP bytes.
+  Require TLS 1.2+ and ephemeral elliptic-curve key agreement while preserving
+  stronger operator cipher policies and fresh-session verification.
+
+- Replace the FOSS2 parental PIN's custom repeated SHA-256 hash with native Web
+  Crypto PBKDF2-HMAC-SHA-256, 600,000 iterations and a fresh 128-bit salt. Correct
+  legacy PINs migrate after durable storage confirmation; failed checks do not.
+  Protected operations fail closed when Web Crypto is unavailable. No CVE has
+  been assigned to this project-owned weakness.
+- Add versioned parental metadata to the shared Kotlin core, a downgrade lock
+  for older browser clients, storage failure/read-back checks and cancellation
+  of stale asynchronous PIN operations. See the FOSS2 migration guide before
+  updating or rolling back; old HTTP-only TV engines may need a compatible
+  HTTPS client. Target hardware performance has not been measured.
+- Publish the owner-authorized MIT license for original root code, contracts and documentation; preserve existing component terms.
+- Remove unused Fontello icon resources with incomplete glyph provenance and their unused CSS declaration; retain the licensed text fonts and text-based controls.
 
 ### Performance
 
@@ -36,3 +99,66 @@
 - Document contribution/testing rules, security boundaries and partial OpenSSF
   evidence, including the remaining license-scope and legacy parental-PIN
   cryptography questions. No certification or consumer rollout is implied.
+
+## [0.1.1] - Development line
+
+### Changed
+
+- Qualify this release with a bounded RC fuzz campaign, offline target execution, and deterministic seed replay checks.
+- Exercise decoded H.264 video and provider/guide journeys on all 35 extended
+  browser targets. The original muxed H.264/AAC probe runs on 32; three hosted
+  Windows WebKit targets use the same encoded video without AAC because the
+  runner has no audio endpoint. Their reports explicitly mark AAC unverified;
+  no target claims audible-output validation. Keep the separate Chromium media,
+  audio-switching and legacy decoder tests.
+- Serve synthetic media through loopback HTTP with byte ranges so native media
+  requests can reach the same fixture outside Playwright's request routing.
+- Bind release evidence to the exact source and toolkit revision, validate seed corpora, and retain engine execution counts and diagnostic artifacts.
+- Document the fuzzing scope, resource limits, and the distinction between synthetic checks and target acceptance.
+
+### Upgrade
+
+Use the existing installation or update procedure. This release changes validation
+and release tooling; existing user configuration and data formats are preserved.
+Keep the previous immutable release for rollback. Test the exact RC package on the
+intended target before accepting a stable promotion.
+
+### Security
+
+Fuzz targets and deterministic preflight commands run offline on synthetic
+inputs. Setup and dependency installation may use the runner network. The
+campaign rejects missing or invalid seed corpora and incomplete execution
+evidence. These checks do not establish untested hardware, integrations,
+credentials, or deployment behavior.
+
+## [0.1.0]
+
+- Publish the existing compiled JVM17 JAR, ES5 JavaScript, declarations, source
+  manifest and original license notices through the shared beta/RC pipeline.
+- Add bounded offline RC fuzzing of the actual Kotlin playlist parser and guide
+  timeline exports, with retained corpus, mutation logs and release evidence.
+- Preserve input order when programme start times compare equal, including
+  negative and positive zero, so requesting one or several future programmes
+  returns a consistent prefix. Add the discovered input as a regression seed
+  and test the common fix on both JVM and JavaScript.
+- Qualify release candidates with the existing portable, browser-consumer and
+  wire checks without invoking consumer delivery.
+
+### Upgrade
+
+This is the first `v0.1.0-*` release line for the compiled shared-core package;
+FOSS2 retains its independent `foss2-*` version and release process. No consumer
+repository or running application is updated by publishing these files.
+Select a candidate explicitly and keep its JVM/ES5 files, declarations,
+license notices and manifest together. Review the consuming application's
+compatibility checks before integrating it. For a local reproduction, use the
+exact source commit and synchronize its frozen version plan as described in
+`docs/CORE-RELEASING.md` in that source checkout.
+
+### Security
+
+The new offline RC campaigns exercise malformed playlist data and guide timing
+boundaries in the actual compiled core. The equal-time ordering correction is
+a consistency fix; it does not change authentication, network access or provider
+URL policy. Keep the consuming application's input and access controls enabled;
+this package does not perform a device deployment or establish device acceptance.

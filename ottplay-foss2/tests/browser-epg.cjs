@@ -1,12 +1,12 @@
-/* Real Chromium EPG journeys. Every guide, logo and stream reference is synthetic. */
+/* Real browser EPG journeys. Every guide, logo and stream reference is synthetic. */
 "use strict";
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const http = require("node:http");
-const { chromium } = require("playwright");
+const { browserType, launchOptions, identity } = require("./browser-runtime.cjs");
 const { handler } = require("../scripts/serve.cjs");
-const output = path.resolve(__dirname, "../test-results");
+const output = path.resolve(process.env.OTT2_BROWSER_OUTPUT || path.join(__dirname, "../test-results"));
 fs.mkdirSync(output, { recursive: true });
 const channelCount = 48;
 
@@ -62,8 +62,9 @@ async function navigate(page, selector) {
         layoutChecks.push({ label, ...metrics });
     }
     try {
-        browser = await chromium.launch({ headless: true });
+        browser = await browserType.launch(launchOptions);
         const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
+        if (process.env.CI_BROWSER_DIAGNOSTICS) await page.context().tracing.start({ screenshots: true, snapshots: true, sources: true });
         page.setDefaultTimeout(15000);
         page.on("pageerror", error => pageErrors.push(error.message));
         await page.route("**/*", async route => {
@@ -170,13 +171,18 @@ async function navigate(page, selector) {
         assert.ok(customRequests.length >= 5);
         assert.deepEqual(pageErrors, []);
         assert.deepEqual(unexpected, [], "No fixture contacts a real guide, icon service or media provider");
-        const report = { passed: true, browser: "Chromium", pageErrors, builtinRequests, customRequestCount: customRequests.length, playlistRequests, layoutChecks,
+        const report = { passed: true, ...identity(browser), pageErrors, builtinRequests, customRequestCount: customRequests.length, playlistRequests, layoutChecks,
             scenarios: ["built-in EPG fallback for an M3U without an EPG header", "POST identity metadata only; stream URLs and credentials omitted", "HD and FHD aliases match independent XMLTV IDs", "actual current/next programme text and loaded logo pixels", "guide rows show channel logos and programme details", "EPG completion updates the channel list without dismissing a modal or stealing focus", "At least twenty TV rows with logos and EPG status fit at 720p", "enlarged TV type fits with bounded page size", "explicit custom XMLTV URL wins over built-in and playlist guides after reload", "visible failure status retains a usable guide and Refresh recovers"] };
         fs.writeFileSync(path.join(output, "browser-epg-report.json"), JSON.stringify(report, null, 2));
         console.log(JSON.stringify(report));
     } finally {
         releaseBuiltin();
-        if (browser) await browser.close();
+        if (browser) {
+            if (process.env.CI_BROWSER_DIAGNOSTICS) {
+                for (const context of browser.contexts()) await context.tracing.stop({ path: path.join(output, "epg-trace.zip") }).catch(() => {});
+            }
+            await browser.close();
+        }
         await new Promise(resolve => server.close(resolve));
     }
 })().catch(error => { console.error(error); process.exitCode = 1; });

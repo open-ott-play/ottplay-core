@@ -1,14 +1,14 @@
 {
   "name": "ottplay-shared-core-validation",
   "private": true,
-  "version": "0.1.0-dev",
+  "version": "0.1.3",
   "scripts": {
     "check:js": "node scripts/test-minify-js.cjs --compiled && node scripts/check-js.cjs",
     "pack:core": "node scripts/distribute.cjs build",
     "check:core": "node scripts/distribute.cjs check"
   },
   "devDependencies": {
-    "acorn": "8.16.0",
+    "acorn": "8.19.0",
     "core-js-bundle": "3.50.0",
     "terser": "5.51.2"
   }

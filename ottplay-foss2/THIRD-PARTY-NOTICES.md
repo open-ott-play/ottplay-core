@@ -21,7 +21,7 @@ The `fonts/` asset origins and SHA-256 values are recorded in `assets/provenance
 
 `LiberationSans-Regular.ttf` and `Roboto-Regular.ttf` are identical and contain the Roboto family. This is an existing asset naming defect. The application does not claim to provide a distinct Liberation typeface.
 
-Fontello EOT, WOFF2, WOFF, TTF and SVG files are retained as compatibility resources. The interface uses text commands and does not depend on their glyphs. The retained asset metadata does not establish the complete provenance of every glyph; the application's MIT license does not relicense these assets. The retained upstream application license is `licenses/upstream-MIT.txt`. Glyph provenance remains a separate distribution review item.
+The unused Fontello EOT, WOFF2, WOFF, TTF and SVG resources and their CSS declaration were removed because their metadata did not establish complete glyph provenance. The interface uses text commands and does not depend on those glyphs. Historical copies remain in Git history; this removal does not relicense them. The retained upstream application license is `licenses/upstream-MIT.txt`.
 
 ## core-js 3.50.0
 
@@ -35,7 +35,7 @@ It runs after native capability capture and before all application/media scripts
 
 Both payloads are checked with an ES5 grammar. The full bundle also needs newer runtime APIs. The compatibility bootstrap runs before evaluation in each realm, and the application checks real native media capabilities before loading the library. The same-origin worker wrapper is application code; the vendor worker remains unchanged. Missing or failing workers fall back to main-thread transmuxing.
 
-## Shaka Player 5.2.10
+## Shaka Player 5.2.13
 
 `vendor/shaka.min.js` is the unmodified ES5-syntax `dist/shaka-player.compiled.js` from the official `shaka-player` npm package. The [Apache-2.0 license](vendor/shaka.LICENSE.txt), registry integrity and file SHA-256 are supplied in [its provenance](vendor/shaka.provenance.json). [Upstream project](https://github.com/shaka-project/shaka-player).
 

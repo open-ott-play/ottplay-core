@@ -2,7 +2,7 @@
 /* Run release acceptance serially and fingerprint the exact tested inputs. */
 'use strict';
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),{spawnSync}=require('node:child_process');
-const root=path.resolve(__dirname,'..'), {files}=require('./release.cjs');
+const root=path.resolve(__dirname,'..'), {files,requiredChecks}=require('./release.cjs');
 const hash=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
 const fingerprint=()=>Object.fromEntries(files().map(entry=>[entry.name,hash(entry.data)]));
 const version=require('../package.json').version,output=path.join(root,'test-results','release-'+version);
@@ -12,7 +12,7 @@ const fixture=spawnSync(process.env.FFMPEG||'ffmpeg',['-hide_banner','-loglevel'
 if(fixture.status!==0) throw new Error('FFmpeg could not create the synthetic release media fixture');
 const childEnvironment=Object.assign({},process.env,{OTT2_TEST_MEDIA:fixturePath});
 const report={version,mediaFixture:{generated:true,sha256:hash(fs.readFileSync(fixturePath))},startedAt:new Date().toISOString(),node:process.version,platform:process.platform,architecture:process.arch,sourceHashes:fingerprint(),checks:[],passed:false};
-const browserNames=['browser','browser-providers','browser-engines','browser-media','browser-epg','browser-browse','browser-compat','browser-scroll','browser-controls','browser-startup','browser-window-controls'];
+const browserNames=requiredChecks.slice(1);
 const checks=[{name:'unit-es5-resources-vendors',command:'npm',args:['test']}].concat(browserNames.map(name=>({name,command:process.execPath,args:['tests/'+name+'.cjs']})));
 for(const check of checks) {
     console.log('RUN '+check.name);

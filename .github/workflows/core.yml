@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   scope:
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/change-scope.yml@733de629b521477102822ccfcc855427de2f2b08
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/change-scope.yml@6b2d99519d513d2b871d2a845ddd6134dea4af2c
     with:
       runner: ${{ vars.CI_RUNNER_MODE == 'k3s' && github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule') && 'ottplay-k3s-linux-x64' || 'ubuntu-latest' }}
       force-full: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' }}
@@ -42,7 +42,7 @@ jobs:
         working-directory: shared-core
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@351661ca32ac09a36dc5ee2d536e3128f2a3c8ed # v2.22.0
+        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
         with:
           egress-policy: audit
 
@@ -53,12 +53,24 @@ jobs:
         if: runner.environment == 'self-hosted'
         working-directory: ${{ github.workspace }}
         run: python3 scripts/ci-runner-preflight.py base
+      - name: Set up Python for workflow contract checks
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: .github/requirements-workflow-contracts.txt
+      - name: Validate pinned actions and RC fuzz runtime consistency
+        working-directory: ${{ github.workspace }}
+        run: |
+          python3 -m venv .venv-workflow
+          .venv-workflow/bin/python -m pip install --require-hashes --only-binary=:all: -r .github/requirements-workflow-contracts.txt
+          .venv-workflow/bin/python scripts/workflow_contracts.py --actions-only
       - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6
         with:
           distribution: temurin
           java-version: '17'
           cache: gradle
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
           node-version: '22'
           cache: npm
@@ -70,8 +82,10 @@ jobs:
       - run: npm run pack:core
       - run: npm run check:js
       - run: npm run check:core
+      - name: Replay fuzz contracts against this run's compiler output
+        run: node ../fuzz/replay.mjs
       - id: distribution
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: ottplay-shared-core
           path: shared-core/dist/
@@ -88,7 +102,7 @@ jobs:
         working-directory: ottplay-foss2
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@351661ca32ac09a36dc5ee2d536e3128f2a3c8ed # v2.22.0
+        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
         with:
           egress-policy: audit
 
@@ -99,16 +113,16 @@ jobs:
         if: runner.environment == 'self-hosted'
         working-directory: ${{ github.workspace }}
         run: python3 scripts/ci-runner-preflight.py browser
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
-          node-version: '22'
+          node-version: '^22.22.2'
           cache: npm
           cache-dependency-path: ottplay-foss2/package-lock.json
       - run: npm ci --ignore-scripts
       - name: Verify the committed client pin before staging the candidate
         run: node scripts/check-core.cjs
       - name: Download the exact compiler output qualified by this run
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
         with:
           artifact-ids: ${{ needs.portable.outputs.artifact-id }}
           path: shared-core/dist
@@ -135,13 +149,49 @@ jobs:
           OTT2_TEST_MEDIA: ${{ runner.temp }}/ottplay-test.mp4
       - run: npm run test:epg-browser
       - run: npm run test:compat-browser
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         if: always()
         with:
           name: foss2-browser-reports
           path: ottplay-foss2/test-results/
           if-no-files-found: warn
           retention-days: ${{ job.status == 'success' && 1 || 3 }}
+
+  browser-compatibility:
+    needs: [scope, portable]
+    # PRs and merge queues use the identical required Quality gate route once.
+    if: ${{ github.event_name != 'pull_request' && github.event_name != 'merge_group' && (needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only') }}
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@6b2d99519d513d2b871d2a845ddd6134dea4af2c
+    with:
+      node-version: '22'
+      run-node-ci: false
+      working-directory: ottplay-foss2
+      browser-matrix-file: ottplay-foss2/.github/browser-compatibility.json
+      browser-extended: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' }}
+      browser-artifact-id: ${{ needs.portable.outputs.artifact-id }}
+      browser-artifact-path: shared-core/dist
+      browser-prepare-command: >-
+        npm ci --ignore-scripts && node scripts/check-core.cjs &&
+        npm ci --ignore-scripts --prefix ../shared-core &&
+        node ../shared-core/scripts/distribute.cjs install-web "$PWD" &&
+        node ../shared-core/scripts/distribute.cjs check-web "$PWD"
+      browser-test-command: node scripts/browser-acceptance.cjs
+
+  browser-qualification:
+    # Reusable workflow jobs have qualified child names in the Actions API.
+    # Publish one exact-name gate only after their aggregate result succeeds.
+    needs: [scope, browser-compatibility]
+    if: >-
+      ${{ always() && github.ref == 'refs/heads/main' &&
+          (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+          (needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only') }}
+    runs-on: ${{ fromJSON((vars.CI_RUNNER_MODE == 'self-hosted' || vars.CI_RUNNER_MODE == 'k3s') && ((github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) || (contains(fromJSON('["push","schedule","workflow_dispatch"]'), github.event_name) && github.ref == format('refs/heads/{0}', github.event.repository.default_branch))) && (vars.CI_RUNNER_LABELS || '[]') || '["ubuntu-latest"]') }}
+    timeout-minutes: 5
+    steps:
+      - name: Require the complete browser matrix
+        env:
+          BROWSER_RESULT: ${{ needs.browser-compatibility.result }}
+        run: test "$BROWSER_RESULT" = success
 
   wire-contracts:
     needs: scope
@@ -150,7 +200,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@351661ca32ac09a36dc5ee2d536e3128f2a3c8ed # v2.22.0
+        uses: step-security/harden-runner@ccd8616d44fd3846e67624a50d5aad6d37bf2d25 # v2.22.1
         with:
           egress-policy: audit
 
@@ -172,7 +222,7 @@ jobs:
       - run: python3 scripts/workspace-wire.py --check
 
   deliver:
-    needs: [portable, browser-client, wire-contracts]
+    needs: [portable, browser-client, browser-qualification, wire-contracts]
     if: >-
       vars.CORE_DELIVERY_ENABLED == 'true' &&
       github.ref == 'refs/heads/main' &&
@@ -193,9 +243,9 @@ jobs:
           - repository: open-ott-play/ottplay-core
             destination: ottplay-foss2/vendor
             files: '["ottplay-core.js","ottplay-core.manifest.json","ottplay-core.LICENSE.txt"]'
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/vendor-update.yml@25f56bb98f1cbdb388735c7c2c53e8028993caeb
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/vendor-update.yml@6b2d99519d513d2b871d2a845ddd6134dea4af2c
     with:
-      toolkit-revision: '25f56bb98f1cbdb388735c7c2c53e8028993caeb'
+      toolkit-revision: '6b2d99519d513d2b871d2a845ddd6134dea4af2c'
       source-workflow: .github/workflows/core.yml
       source-tree: shared-core
       artifact-id: ${{ needs.portable.outputs.artifact-id }}
@@ -203,7 +253,7 @@ jobs:
       artifact-files: '["ottplay-core.js","ottplay-core.d.ts","ottplay-core.jar","ottplay-core.manifest.json","ottplay-core.LICENSE.txt"]'
       manifest: ottplay-core.manifest.json
       manifest-name: ottplay-shared-core
-      qualifying-jobs: '["portable","browser-client","wire-contracts"]'
+      qualifying-jobs: '["portable","browser-client","browser-qualification","wire-contracts"]'
       target-repository: ${{ matrix.repository }}
       destination-prefix: ${{ matrix.destination }}
       copy-files: ${{ matrix.files }}

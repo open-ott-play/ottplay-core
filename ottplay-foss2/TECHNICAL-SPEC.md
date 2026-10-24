@@ -91,8 +91,8 @@ The ordinary page and legacy television layout must not depend on those rules.
 
 RobotoCondensed is the default, with system Helvetica/Arial/sans-serif fallbacks.
 Local families are Roboto, RobotoCondensed, Caveat, Liberation, Gabriela and
-PTSansNarrow; Fontello resources include EOT/WOFF2/WOFF/TTF/SVG. Preserve family
-names. Commands must not rely on emoji or remote icon fonts for their meaning:
+PTSansNarrow. Preserve these text family names. Unused Fontello icon resources
+are not distributed. Commands must not rely on emoji or remote icon fonts for their meaning:
 every icon has text. Failed font downloads must not prevent navigation. All menus
 use the selected family and scale. LiberationSans-Regular.ttf contains the
 Roboto family; the selectable Liberation alias must not claim to supply a

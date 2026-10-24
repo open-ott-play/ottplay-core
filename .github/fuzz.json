@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "language": "javascript",
+  "setup": [
+    [
+      "bash",
+      "scripts/prepare_core_fuzz.sh"
+    ]
+  ],
+  "targets": [
+    {
+      "name": "playlist",
+      "engine": "libfuzzer",
+      "command": [
+        "node",
+        "fuzz/node_modules/@jazzer.js/core/dist/cli.js",
+        "fuzz/playlist.mjs",
+        "--sync",
+        "--"
+      ],
+      "corpus": "fuzz/corpus/playlist",
+      "seconds": 60
+    },
+    {
+      "name": "guide-timeline",
+      "engine": "libfuzzer",
+      "command": [
+        "node",
+        "fuzz/node_modules/@jazzer.js/core/dist/cli.js",
+        "fuzz/guide-timeline.mjs",
+        "--sync",
+        "--"
+      ],
+      "corpus": "fuzz/corpus/guide-timeline",
+      "seconds": 60
+    }
+  ],
+  "preflight": [
+    [
+      "node",
+      "fuzz/replay.mjs"
+    ]
+  ]
+}

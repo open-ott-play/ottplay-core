@@ -1,0 +1,7 @@
+#EXTM3U x-tvg-url="offline://guide,offline://guide"
+#EXTINF:-1 tvg-id="one" group-title="News" catchup-days="3",News, HD
+https://example.invalid/live
+#EXTINF:-1 tvg-id="one" catchup-days="Infinity",Duplicate
+https://example.invalid/live
+#EXTINF:-1 group-title="__proto__" catchup-days="1e309",Prototype
+https://example.invalid/second

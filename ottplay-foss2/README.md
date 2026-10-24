@@ -1,6 +1,11 @@
 # OTT-play FOSS 2
 
-**Beta 0.6.0-beta.2** — [release notes and upgrade instructions](docs/RELEASE-0.6.0-beta.2.md).
+[![FOSS2 browser client on first launch in perspective](../docs/images/hero.png)](../docs/images/foss2-start.jpg)
+
+*FOSS2 0.6.0-beta.4, the browser client included in this repository, captured locally
+with its menu open and no playlist configured. [Original and regeneration](../docs/images/README.md).*
+
+**Release candidate 0.6.0-rc.1** — [release notes, qualification and promotion](docs/RELEASE-0.6.0-rc.1.md).
 
 An IPTV player with an ES5 application runtime and a compact interface for LG televisions and remote controls. Bundled fonts and media libraries are distributed with their notices.
 
@@ -9,7 +14,7 @@ An IPTV player with an ES5 application runtime and a compact interface for LG te
 ## Run
 
 ```sh
-cd ottplay-foss2-0.6.0-beta.2
+cd ottplay-foss2-0.6.0-rc.1
 npm ci --omit=dev
 npm start
 ```
@@ -42,11 +47,22 @@ The transparent area between the native buttons can drag the window. Channel lis
 - **Playback options:** choose available audio/subtitle tracks, picture size, zoom, volume and picture in picture. Options reflect the actual media backend. Audio, subtitles (including Off), aspect and zoom are remembered per channel. Live seeking requires a DVR window.
 - **Settings:** choose the font and scale, accent color, startup restore, sleep timer, history, hidden channels, local relay and parental PIN.
 
-Creating or changing a parental PIN requires Web Crypto secure randomness
-(`crypto.getRandomValues`, or the legacy `msCrypto` equivalent). If unavailable,
-the player leaves protection settings unchanged and explains the requirement.
-Existing PIN verification still works on those browsers. This local control is
-a deterrent against casual access, not protection against the device owner.
+Creating, checking or changing a parental PIN requires the standard Web Crypto
+API (`crypto.subtle` and `crypto.getRandomValues`) in a secure context: HTTPS, or
+the browser's trusted loopback context. Plain HTTP at a LAN IP and old TV engines
+may not provide it. Protected operations then stay locked; there is no legacy
+`msCrypto` or JavaScript hashing fallback. Unprotected playback remains available.
+Use a compatible HTTPS browser on the same origin/profile to retain access to
+stored settings. A change of origin has separate browser storage.
+
+New PINs use PBKDF2-HMAC-SHA-256 with 600,000 iterations and a fresh 128-bit salt.
+An existing PIN migrates only after a successful check and confirmed storage
+write. The upgraded storage retains a locked placeholder for older player
+versions; downgrading does not restore access. Keep a private backup before
+upgrading and read the [migration and recovery details](docs/PARENTAL-CONTROLS.md).
+This local control deters casual access; it does not encrypt settings or defend
+against the device owner. No latency or compatibility claim is made for untested
+TV hardware.
 - **Import/export:** review an OTT-play 2 backup or a supported original-player JSON/XML export before replacing settings. Source URLs and credentials are excluded from ordinary exports; including them requires the explicit checkbox.
 
 The TV channel browser uses a compact single heading and dense rows, normally showing 26 channels at standard 720p/1080p text size and 25 when desktop window controls reserve space. Larger text and shorter windows reduce page capacity. Channels, filters and the optional EPG status share the heading; the redundant column heading is omitted. The page counter stays in that heading, and TV pages have no separate Previous/Next row. Use the remote page keys or mouse wheel to page through channels. Long programme details on the right start scrolling after 3 seconds, move at 14 pixels per second, pause for 4 seconds at the bottom and then return to the start. Moving to another channel starts its description at the top, while ordinary EPG refreshes preserve the reading position. Scrolling pauses for dialogs and inactive views; using a mouse temporarily pauses automatic movement. Remote focus stays on the selected channel.
@@ -123,7 +139,7 @@ The relay accepts only same-origin JSON POST requests to `/api/relay`, performs 
 
 The application scripts are ES5 and use callback-based XHR. The interface and native HTML5 path do not require Promise, fetch, Map, Set, URL, Object.assign or Array.from. Layout does not require CSS Grid, Flexbox or CSS custom properties. The Node server uses `saxes` for streaming XMLTV parsing; this server dependency is not sent to the TV and is outside the browser's ES5 runtime.
 
-The 24 legacy device profiles and 192 URL routes are retained as **input/detection contracts**. They are not a claim that 24 firmware-specific media engines have been implemented or tested. Playback uses the device's HTML5 element, native HLS where available, and locally bundled Hls.js 1.7.3, Shaka Player 5.2.10 and mpegts.js 1.8.2 where runtime capabilities allow them. All three vendor bundles parse as ES5 but need additional APIs; unsupported environments keep the native path. LG webOS 1/2 lack MSE, while later firmware capabilities still need checking on the actual television.
+The 24 legacy device profiles and 192 URL routes are retained as **input/detection contracts**. They are not a claim that 24 firmware-specific media engines have been implemented or tested. Playback uses the device's HTML5 element, native HLS where available, and locally bundled Hls.js 1.7.3, Shaka Player 5.2.13 and mpegts.js 1.8.2 where runtime capabilities allow them. All three vendor bundles parse as ES5 but need additional APIs; unsupported environments keep the native path. LG webOS 1/2 lack MSE, while later firmware capabilities still need checking on the actual television.
 
 Eleven bundled font resources provide the selectable font families. `LiberationSans-Regular.ttf` is a Roboto alias, not a distinct Liberation face; asset metadata records the actual family.
 
@@ -161,7 +177,7 @@ Update it through the shared-core distribution script; do not edit the generated
 bundle or restore an application-local copy of these rules. The existing ES5
 bootstrap supplies its required standard APIs on older hosts.
 
-Development tools were verified with Node.js 26.3.1. Install the pinned server and development dependencies when needed:
+Development and test tools require Node.js 22.22.2 or later in the 22.x series, 24.15.0 or later in the 24.x series, or 26.0.0 and later. CI uses the supported Node 22 series; local checks also passed with Node.js 26.3.1. Install the pinned server and development dependencies when needed:
 
 ```sh
 npm ci
@@ -223,3 +239,48 @@ npm run check:vendors
 Runtime modules have explicit dependencies through the small `OTT2` registry. State, transport, provider parsing, EPG, security, migration, collection operations, view, keyboard and playback are separate modules. The application controller owns cancellations, session generations and teardown. Data from playlists is rendered as escaped text, not executable HTML.
 
 The MIT application license does not replace third-party resource licenses.
+
+
+### Browser and operating-system qualification
+
+The required CI gate runs the existing provider and EPG journeys against current
+Chromium, Firefox and WebKit on Linux, Chromium on Windows and WebKit on macOS.
+Pull requests and merge queues run that matrix once through the required
+Quality gate. The standalone Shared core workflow retains the five targets on
+push and selects all 35 targets for an explicit manual run.
+Nightly and beta package qualification use five targets. RC qualification and
+manual source audits expand the same assertions to three locked browser
+generations and current Chrome/Edge Stable and Beta channels (35 targets).
+Stable promotion reuses the accepted RC bytes. The shared release verdict checks
+the exact target set, channel, source, run/attempt and candidate artifact ID.
+Each target installs its own locked Playwright toolchain, records
+its actual browser/version/platform and rejects missing or mismatched evidence.
+Hosted Windows WebKit rows prepare the Media Foundation prerequisite through
+their locked Playwright dependency installer. This does not install or select
+Chromium. Every target must pass the same playback-time, ready-state and nonzero
+video-dimension assertions. The three hosted Windows WebKit targets select a
+video-only derivative before execution because these runners have no audio
+endpoint; they never fall back after a failed media test. Their endpoint inventory
+must be empty, and their report states `audio_not_verified_due_to_missing_endpoint`.
+The other 32 targets retain the original muxed H.264/AAC fixture. The manifest and
+each `mediaCoverage` report record both fixtures' SHA-256 and stream inventories,
+the selected fixture and its scope. No row claims an audible-output assertion.
+
+Source CI downloads the exact compiler artifact from its own run and stages it
+through `distribute.cjs`. Release qualification waits for the final package,
+verifies its source-bound receipt and all compiler-file hashes, then tests that
+exact packaged JavaScript with the same synthetic provider and guide fixtures. The existing Chromium/ffmpeg gate remains responsible for actual media
+decode and legacy MSE/worker fallback checks. The broader matrix qualifies UI,
+provider navigation, persistence, EPG behavior and decoded H.264 video on all 35
+targets, including muxed H.264/AAC pipeline advancement on 32. Synthetic media is
+served by a real loopback HTTP server with bounded single-range and HEAD support,
+so native media stacks that bypass Playwright routing still receive the exact
+fixture bytes. Authentication and resolved provider-URL assertions remain in the
+journeys. The matrix does not qualify AAC on the three hosted Windows WebKit
+rows or claim every codec,
+TV webview, native Safari or mobile device has been tested.
+
+Browser reports and screenshots are retained per target. Playwright WebKit is
+not Safari, and Playwright Firefox is its patched engine build. Update the three
+historical toolchains together through the shared toolkit generator rather than
+collapsing them to a single dependency version.

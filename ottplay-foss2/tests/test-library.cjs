@@ -9,7 +9,7 @@ vm.runInContext('Promise=undefined; fetch=undefined; URL=undefined; Map=undefine
 require('./load-core.cjs')(context);
 for(const name of ['security','state','library'])vm.runInContext(fs.readFileSync(path.join(__dirname,'../src/'+name+'.js'),'utf8'),context);
 const library=modules.library, state=modules.state, plain=value=>JSON.parse(JSON.stringify(value));
-function storage(){let value='';return {getItem(){return value;},setItem(key,next){value=next;}};}
+function storage(){const values={};return {getItem(key){return values[key]||null;},setItem(key,next){values[key]=next;}};}
 const channels=[{id:'s1:1',name:'One',group:'News'},{id:'s1:2',name:'Two',group:'Movies'},{id:'s2:1',name:'Other source',group:'News'}];
 
 test('channel edits survive persistence, sorting/hiding preserve source objects and IDs',()=>{
