@@ -23,9 +23,9 @@ The `fonts/` asset origins and SHA-256 values are recorded in `assets/provenance
 
 The unused Fontello EOT, WOFF2, WOFF, TTF and SVG resources and their CSS declaration were removed because their metadata did not establish complete glyph provenance. The interface uses text commands and does not depend on those glyphs. Historical copies remain in Git history; this removal does not relicense them. The retained upstream application license is `licenses/upstream-MIT.txt`.
 
-## core-js 3.50.0
+## core-js 3.51.0
 
-`vendor/core-js.min.js` is the unmodified `minified.js` file from the official `core-js-bundle@3.50.0` npm distribution. It is supplied under the [MIT license](vendor/core-js.LICENSE.txt). The exact package source, archive integrity and bundle SHA-256 are recorded in [its provenance](vendor/core-js.provenance.json). The project supplies this local bundle rather than downloading a polyfill service at startup. [Upstream project](https://github.com/zloirock/core-js/tree/v3.50.0).
+`vendor/core-js.min.js` is the unmodified `minified.js` file from the official `core-js-bundle@3.51.0` npm distribution. It is supplied under the [MIT license](vendor/core-js.LICENSE.txt). The exact package source, archive integrity and bundle SHA-256 are recorded in [its provenance](vendor/core-js.provenance.json). The project supplies this local bundle rather than downloading a polyfill service at startup. [Upstream project](https://github.com/zloirock/core-js/tree/v3.51.0).
 
 It runs after native capability capture and before all application/media scripts. The same bundle runs inside the HLS worker before its payload. It supplies missing JavaScript standard-library features; it does not add a browser decoder, native MediaSource, a real binary buffer implementation, a proprietary device playback bridge or a working network stack. The ES5 helpers in `src/compat.js` preserve usable native object-URL functions and provide a clock fallback.
 
@@ -35,7 +35,7 @@ It runs after native capability capture and before all application/media scripts
 
 Both payloads are checked with an ES5 grammar. The full bundle also needs newer runtime APIs. The compatibility bootstrap runs before evaluation in each realm, and the application checks real native media capabilities before loading the library. The same-origin worker wrapper is application code; the vendor worker remains unchanged. Missing or failing workers fall back to main-thread transmuxing.
 
-## Shaka Player 5.2.13
+## Shaka Player 5.3.1
 
 `vendor/shaka.min.js` is the unmodified ES5-syntax `dist/shaka-player.compiled.js` from the official `shaka-player` npm package. The [Apache-2.0 license](vendor/shaka.LICENSE.txt), registry integrity and file SHA-256 are supplied in [its provenance](vendor/shaka.provenance.json). [Upstream project](https://github.com/shaka-project/shaka-player).
 
