@@ -45,6 +45,8 @@ acceptance. Retained third-party license notices accompany the distribution.
 
 ## Unreleased
 
+- Update the FOSS2 test-only HTTP client and Kotlin/JS test serializer to the patched versions for GHSA-xjj6-f33q-929c and GHSA-m5mm-p8h7-m29v. Distributed player and shared-core runtime assets are unchanged.
+
 - Enforce exact certificate-key floors for both Node relay and EPG HTTPS paths,
   including the trust-store root; RSA-2047 is rejected before any HTTP bytes.
   Require TLS 1.2+ and ephemeral elliptic-curve key agreement while preserving
@@ -62,6 +64,14 @@ acceptance. Retained third-party license notices accompany the distribution.
   HTTPS client. Target hardware performance has not been measured.
 - Publish the owner-authorized MIT license for original root code, contracts and documentation; preserve existing component terms.
 - Remove unused Fontello icon resources with incomplete glyph provenance and their unused CSS declaration; retain the licensed text fonts and text-based controls.
+
+### Performance
+
+- Reuse FOSS2 indexed catalog selections across pages and guide snapshots until
+  programme boundaries. Guide updates refresh only changed channel identities;
+  source, edit, favorite and guide replacements invalidate their projections.
+  Add 10,000-channel regression tests and a reproducible synthetic benchmark.
+  This changes FOSS2 only, not shared-core artifacts or classic deployments.
 
 ### Security
 
