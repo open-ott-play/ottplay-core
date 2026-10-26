@@ -1,0 +1,62 @@
+name: Temporary reviewed vendor inputs
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+permissions:
+  contents: read
+jobs:
+  vendor-inputs:
+    if: github.event.pull_request.number == 108 && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: ottplay-foss2
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Materialize provenance for independent review
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const crypto = require('node:crypto');
+          const assert = require('node:assert/strict');
+          const lock = JSON.parse(fs.readFileSync('package-lock.json'));
+          for (const [name, short, repo] of [
+            ['core-js-bundle', 'core-js', 'zloirock/core-js'],
+            ['shaka-player', 'shaka', 'shaka-project/shaka-player']
+          ]) {
+            const entry = lock.packages['node_modules/' + name];
+            assert.equal(JSON.parse(fs.readFileSync('node_modules/' + name + '/package.json')).version, entry.version);
+            const path = 'vendor/' + short + '.provenance.json';
+            const provenance = JSON.parse(fs.readFileSync(path));
+            const bytes = fs.readFileSync('node_modules/' + name + '/' + provenance.file);
+            Object.assign(provenance, {
+              version: entry.version,
+              source: 'https://github.com/' + repo + '/tree/v' + entry.version,
+              registry: entry.resolved,
+              registryIntegrity: entry.integrity,
+              bytes: bytes.length,
+              sha256: crypto.createHash('sha256').update(bytes).digest('hex'),
+              origin: 'Unmodified official npm package bundle; npm ci verified the lockfile integrity. No install scripts executed.'
+            });
+            fs.writeFileSync(path, JSON.stringify(provenance, null, 2) + '\n');
+          }
+          NODE
+          npm run build:vendors
+          npm run check:vendors
+          mkdir vendor-inputs
+          npm pack core-js-bundle@3.51.0 shaka-player@5.3.1 --ignore-scripts --pack-destination vendor-inputs
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: reviewed-vendor-inputs
+          if-no-files-found: error
+          retention-days: 3
+          path: |
+            ottplay-foss2/vendor/
+            ottplay-foss2/vendor-inputs/
