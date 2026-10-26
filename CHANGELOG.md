@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.1.4] - Unreleased
+
+### Changed
+
+- Prepare the next shared-core candidate cycle after the published 0.1.3 release,
+  keeping all owned package and Kotlin/JS workspace versions consistent.
+- Refresh the pinned CI workflows and the separately versioned FOSS2 browser
+  validation dependencies, including verified Shaka and core-js source provenance.
+
+### Upgrade
+
+Keep the prior immutable package for rollback and qualify each consumer before
+changing its deployed pin. The shared-core API and serialized formats are unchanged. The official pipeline
+produces JVM17 and ES5 candidate artifacts and runs the existing software checks.
+This cycle does not deploy consumers or establish physical-device acceptance;
+FOSS2 remains independently versioned.
+
+### Security
+
+Candidate artifacts retain upstream notices and exact distribution hashes.
+Existing parental-metadata validation remains enabled; consumers must continue
+enforcing the documented downgrade protections.
+
 ## [0.1.3] - 2026-10-18
 
 ### Changed
