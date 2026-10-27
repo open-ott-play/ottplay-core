@@ -266,6 +266,50 @@ class CheckoutTests(Fixture):
         self.assertFalse((self.root / "ottplay-foss").exists())
         self.assertFalse((self.source / "ottplay-foss").exists())
 
+    def test_missing_checkout_fetches_pin_outside_cloned_branches(self):
+        seed = self.root / "seed"
+        original = initialize(seed, "https://example.invalid/fixture.git")
+        (seed / "fixture.txt").write_text("pinned pull request\n")
+        git(seed, "add", "fixture.txt")
+        git(
+            seed, "-c", "commit.gpgsign=false", "-c", "core.hooksPath=/dev/null",
+            "commit", "-qm", "pull request",
+        )
+        revision = git(seed, "rev-parse", "HEAD")
+        git(seed, "update-ref", "refs/pull/1/head", revision)
+        git(seed, "reset", "--hard", original)
+        # file:// uses the upload protocol instead of copying local objects,
+        # so the PR-only commit is absent from a normal branch/tag clone.
+        url = seed.as_uri()
+        probe = self.root / "ordinary-clone"
+        subprocess.run(
+            ["git", "clone", "--no-checkout", url, str(probe)],
+            check=True, capture_output=True,
+        )
+        with self.assertRaises(subprocess.CalledProcessError):
+            git(probe, "cat-file", "-e", f"{revision}^{{commit}}")
+        self.pins["ottplay-foss"] = {"url": url, "revision": revision}
+        self.save_pins()
+        with contextlib.redirect_stdout(io.StringIO()):
+            checkouts.materialize(["ottplay-foss"], self.source, {})
+        target = self.root / "ottplay-foss"
+        self.assertEqual(git(target, "rev-parse", "HEAD"), revision)
+        self.assertEqual((target / "fixture.txt").read_text(), "pinned pull request\n")
+        self.assertEqual(git(target, "status", "--porcelain"), "")
+
+    def test_missing_checkout_rejects_unavailable_pin(self):
+        seed = self.root / "seed"
+        initialize(seed, "https://example.invalid/fixture.git")
+        self.pins["ottplay-foss"] = {"url": seed.as_uri(), "revision": "f" * 40}
+        self.save_pins()
+        with self.assertRaises(subprocess.CalledProcessError):
+            checkouts.materialize(["ottplay-foss"], self.source, {})
+        target = self.root / "ottplay-foss"
+        self.assertFalse((target / "fixture.txt").exists())
+        # A failed preparation must not silently accept origin's default head.
+        with self.assertRaisesRegex(ValueError, "differs from pin"):
+            checkouts.materialize(["ottplay-foss"], self.source, {})
+
 
 class WireTests(Fixture):
     def setUp(self):

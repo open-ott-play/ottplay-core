@@ -89,6 +89,18 @@ def materialize(names, source_root=SOURCE_ROOT, environ=None):
             subprocess.run(
                 ["git", "clone", "--no-checkout", pin["url"], str(target)], check=True
             )
+            try:
+                git(target, "cat-file", "-e", f"{pin['revision']}^{{commit}}")
+            except subprocess.CalledProcessError:
+                # PR-only commits may not be reachable from cloned branches or
+                # tags. Fetch the exact pin; never substitute a branch tip.
+                subprocess.run(
+                    [
+                        "git", "-C", str(target), "fetch", "--no-tags", "origin",
+                        pin["revision"],
+                    ],
+                    check=True,
+                )
             subprocess.run(
                 ["git", "-C", str(target), "checkout", "--detach", pin["revision"]],
                 check=True,
