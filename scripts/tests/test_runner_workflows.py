@@ -179,7 +179,7 @@ class WorkflowRoutingTests(unittest.TestCase):
         browser = jobs("core.yml")["browser-client"]
         self.assertIn("ci-runner-preflight.py browser", browser)
         system_steps = [step for step in steps(browser) if "sudo " in step or "--with-deps" in step]
-        self.assertEqual(len(system_steps), 2)
+        self.assertEqual(len(system_steps), 3)
         for step in system_steps:
             self.assertIn("if: runner.environment == 'github-hosted'", step)
         prepared = named_step(browser, "Install Chromium on the prepared self-hosted image")
