@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "builderSha256": "d506c7c35964ac9e8a4a138a7d01bd28bf9f70194a7b7a7c44e1c3e2514961a5",
-  "lockfileSha256": "5e63d1acdd0e9472b643d60349399aa23b68a2870f9bda31848f386f074aaa66",
+  "lockfileSha256": "260a16dc83f65d910569f7ec386fadf737bd96998eced9aa614c174f6700a6af",
   "packages": {
     "core-js-bundle": {
       "version": "3.51.0",
@@ -14,9 +14,9 @@
       "resolved": "https://registry.npmjs.org/hls.js/-/hls.js-1.7.3.tgz"
     },
     "shaka-player": {
-      "version": "5.3.1",
-      "integrity": "sha512-nlhxDfgQKXfc+ecNQos/l1epXILup8C3n7CrQSm43M47vAY1WDlpIAq448YDXTRHK5vZ/4JGiDfxOVkv7vwegg==",
-      "resolved": "https://registry.npmjs.org/shaka-player/-/shaka-player-5.3.1.tgz"
+      "version": "5.3.2",
+      "integrity": "sha512-Fwf9OFMv1P3as/SJeDq1bIGDeRLamfC+fppojIbF+rBLq0C1FVpDCnRg2V/ZlkiwBoCxcn48Rk2Oqsg1HZYe0Q==",
+      "resolved": "https://registry.npmjs.org/shaka-player/-/shaka-player-5.3.2.tgz"
     },
     "mpegts.js": {
       "version": "1.8.2",
@@ -42,7 +42,7 @@
   "provenance": {
     "vendor/core-js.provenance.json": "e11dea8537e74e9532f608bf5fe8e54535b2b4f252dd2faa3d57d6de559cbecb",
     "vendor/hls.provenance.json": "3c9431df5700e711a478a6182b1a64d5364d0a45455eae233ca7dcc832d5de45",
-    "vendor/shaka.provenance.json": "c90dc0487ab6773e9bf609e37e2abc078c13365096aaac8d973bc81f9df8953e",
+    "vendor/shaka.provenance.json": "618db11e463de8e86532399c352f23fe9df693e61320f2f0e689a9fb74ddf470",
     "vendor/mpegts.provenance.json": "1b88dae3d23c7b6a527d7e41b548c5dc4864489556ecb18942547d28d23ef16f"
   },
   "assets": {
@@ -51,7 +51,7 @@
     "vendor/hls.min.js": "a12e7ee1cd64a69dcdb314157e45dafcba705bfb0b1440b7935cb265d374423e",
     "vendor/hls.worker.js": "42794b9ca89d78c54407c6a0e46cdcde9fbd976e476259428e506be857cb16ea",
     "vendor/hls.LICENSE.txt": "ca8773cf798c7ed997d4dd7c8e23c348699f8d5b7462636694cc14de6cda12db",
-    "vendor/shaka.min.js": "ae7f3052b1c1b207de92122d46b647465f4c3f2c2a188497b23d159dae7770d9",
+    "vendor/shaka.min.js": "2d5c6a72458103fd0987d8f1e6d40f56eca917f644c0f9d23b90d7db5386e905",
     "vendor/shaka.LICENSE.txt": "20ce2eba547fd0a8c4023511c003eabe510982a335cccd4e270f1f55ffbd2250",
     "vendor/mpegts.min.js": "bda31748736a69cb610c2edf4623e633f1f4f47b5bda83668c8d287e51b0c3a8",
     "vendor/mpegts.js.LICENSE.txt": "dc4d5273f129801a2575dcb2649d5ad2ca06be1334c9be2a8f7929118e0e8668",

@@ -33,7 +33,7 @@
     "mpegts.js": "1.8.2",
     "parse5": "8.0.1",
     "playwright": "1.64.1",
-    "shaka-player": "5.3.1"
+    "shaka-player": "5.3.2"
   },
   "dependencies": {
     "saxes": "6.0.0"
