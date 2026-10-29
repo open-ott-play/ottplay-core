@@ -62,7 +62,7 @@ VOD/archive engine changes retain seconds. Live changes retain distance behind t
 
 ## Reproducible local vendors
 
-`npm run build:vendors` derives all 11 pinned JavaScript/license assets from the installed exact npm distributions. `npm run check:vendors` verifies the derived bytes and `vendor/runtime-manifest.json`, including the lockfile and builder fingerprints. Hls.js and its Worker remain paired at 1.7.3, Shaka at 5.3.1, mpegts.js at 1.8.2 and core-js at 3.51.0. This maintainer pipeline adds no runtime build step. Dependency changes still require ES5 parsing and page/Worker playback checks.
+`npm run build:vendors` derives all 11 pinned JavaScript/license assets from the installed exact npm distributions. `npm run check:vendors` verifies the derived bytes and `vendor/runtime-manifest.json`, including the lockfile and builder fingerprints. Hls.js and its Worker remain paired at 1.7.3, Shaka at 5.3.2, mpegts.js at 1.8.2 and core-js at 3.51.0. This maintainer pipeline adds no runtime build step. Dependency changes still require ES5 parsing and page/Worker playback checks.
 
 Recoverable Shaka errors retain the adapter under the bounded no-progress watchdog; critical errors use the normal fallback policy. Pending VOD/archive position and live DVR offset survive an intermediate engine failure without usable metadata. TV host suspension releases resources; foreground restores position and explicit pause intent through the controller-authorized `suspend()`/`resume()` API.
 
