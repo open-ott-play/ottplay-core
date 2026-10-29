@@ -348,7 +348,7 @@ jobs:
       }}
     uses: victron-venus/venus-os-ci-toolkit/.github/workflows/fuzz.yml@e71559f44e41f39ad0037bf13c7f43bbbb2ec9af # main
     with:
-      toolkit-ref: 6b2d99519d513d2b871d2a845ddd6134dea4af2c
+      toolkit-ref: e71559f44e41f39ad0037bf13c7f43bbbb2ec9af
       release-plan-artifact: ${{ needs.prepare.outputs.plan_artifact }}
     permissions:
       contents: read

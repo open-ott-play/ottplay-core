@@ -287,7 +287,7 @@ jobs:
             files: '["ottplay-core.js","ottplay-core.manifest.json","ottplay-core.LICENSE.txt"]'
     uses: victron-venus/venus-os-ci-toolkit/.github/workflows/vendor-update.yml@e71559f44e41f39ad0037bf13c7f43bbbb2ec9af
     with:
-      toolkit-revision: '6b2d99519d513d2b871d2a845ddd6134dea4af2c'
+      toolkit-revision: 'e71559f44e41f39ad0037bf13c7f43bbbb2ec9af'
       source-workflow: .github/workflows/core.yml
       source-tree: shared-core
       artifact-id: ${{ needs.portable.outputs.artifact-id }}
