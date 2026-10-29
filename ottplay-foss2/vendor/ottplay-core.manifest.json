@@ -3,7 +3,7 @@
   "name": "ottplay-shared-core",
   "version": "0.1.4",
   "source": {
-    "sha256": "7fb250c7d1ec7212d8fa396e5b516a795b942c51d73bdd051e87cfc1fb03556e",
+    "sha256": "333de48a46307b7b2c4feed348b88aae089aa6901c8420225b8683d6d5b33542",
     "files": {
       "LICENSE": "ec6a17ce723ea8b4c6b08f277ab84750440a8c3e5401aaa9f4e4e9d5fd0fd72c",
       "build.gradle.kts": "61fc5f9a13c23576f605f15a712f1b6a94881b26027efdce2a43e61621ba943b",
@@ -13,8 +13,8 @@
       "kotlin-js-store/package-lock.json": "009b25d4efdb9865efe6efd5eb0346abcfcc5c77c4ad5474c4219e58be6bfd27",
       "licenses/kotlin-LICENSE.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
       "licenses/kotlin-NOTICE.txt": "0b09a83d3ef7795c7dec65e815866597c066c53898f2852a76599b8f5552941a",
-      "package-lock.json": "92c9a7ec22f5968969629b20928eaa012393e3afadbfe14389c0ac3f235280f3",
-      "package.json": "cd486cc4e47d9447052d9447b9dca39436c94d368fb6641698543d15b8e21946",
+      "package-lock.json": "1c77c8c6c44f2e007b40304732fd049f7990c13bf0694ff3e4144d94d62a72a2",
+      "package.json": "7c1eee716fc845c17cd2beae1d3972fcce7bcde4565997963b135cfac34593eb",
       "scripts/canonical-js.cjs": "6f16fad688335bb753bb76e4875f3d64b1c213f9d19c1fc269f441f2a043ecff",
       "scripts/distribute.cjs": "24843da0dc62f54c77877fe13e53d839bd294bd3ff6d2ad510cb2efd628d7cd2",
       "scripts/minify-js.cjs": "9be597ae8bfb8f7d29872835b545e78c97239d0422d35bed0d97110ad8d35525",
