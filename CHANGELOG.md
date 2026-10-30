@@ -1,6 +1,30 @@
 # Changelog
 
-## [0.1.4] - Unreleased
+## [0.1.5] - Unreleased
+
+### Changed
+
+- Refresh the separately versioned FOSS2 consumer's shared-core source receipt
+  after verifying all 125 source files; retain the existing compiled payload
+  hashes and include the updated package, lockfile and Gradle wrapper inputs.
+- Update the locked Gradle wrapper, shared-core browser test dependencies and
+  FOSS2 player validation dependency; keep their release checks enabled.
+- Harden release publication and exact-pin checkout, and use the qualified
+  Ubuntu browser mirror fallback when the primary package mirror is unavailable.
+
+### Upgrade
+
+The shared-core API and serialized formats are unchanged. Qualify each consumer
+before updating its immutable package pin and retain its previous package for
+rollback. This release does not deploy FOSS2 or claim physical-device acceptance.
+
+### Security
+
+Preserve parental-metadata validation, browser qualification, retained upstream
+notices and distribution hash checks. The refreshed source receipt records the
+verified build inputs without substituting new unqualified compiled assets.
+
+## [0.1.4] - 2026-10-26
 
 ### Changed
 
