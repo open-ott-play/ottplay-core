@@ -24,7 +24,7 @@ Preserve parental-metadata validation, browser qualification, retained upstream
 notices and distribution hash checks. The refreshed source receipt records the
 verified build inputs without substituting new unqualified compiled assets.
 
-## [0.1.4] - Unreleased
+## [0.1.4] - 2026-10-26
 
 ### Changed
 
