@@ -22,7 +22,7 @@
   "release_notes": "CHANGELOG.md",
   "single_entry_ci": false,
   "fuzzing": {
-    "toolkit_ref": "e71559f44e41f39ad0037bf13c7f43bbbb2ec9af"
+    "toolkit_ref": "6f0bf114a398f9c2b7e5407042c3828a8cc28b40"
   },
   "versioning": {
     "schema": 1,
@@ -77,7 +77,10 @@
         "value": "package"
       }
     ],
-    "toolkit_revision": "f0bf0ec4921619f0de09ecd3eaa5e8673e4f9695"
+    "toolkit_revision": "f0bf0ec4921619f0de09ecd3eaa5e8673e4f9695",
+    "required_build_receipts": [
+      "release-inputs-shared-core.json"
+    ]
   },
   "toolkit_revision": "f0bf0ec4921619f0de09ecd3eaa5e8673e4f9695"
 }
