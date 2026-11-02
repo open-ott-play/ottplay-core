@@ -34,6 +34,20 @@ no-ops and repeated attempts reuse the same update, so this creates no update
 loop. Documentation-only runs skip compilation and delivery. `checkouts.json`
 remains an explicit integration snapshot, independent of consumer default branches.
 
+The three destinations enable `skip-receipt-only`. After normal source and
+artifact qualification, delivery compares every copied runtime and license byte
+with the consumer's current base. It also validates the existing receipt against
+the entire qualified package, including artifacts that destination does not copy.
+If both match, it keeps the original delivery receipt and creates no PR just to
+change source metadata. Changed payloads or licenses still produce updates; a
+missing or invalid existing receipt produces a repair update or explicit failure,
+never a successful no-op.
+
+Qualification uses the successful named jobs from the current run attempt and
+rechecks run identity. A temporarily `queued` parent status is not sufficient to
+reject completed child jobs, nor is it sufficient to authorize delivery without
+those job results. Incomplete job pagination and source or attempt changes fail.
+
 ## Pull-request qualification
 
 Pull requests and merge groups enter through `quality-gate.yml` once. It calls

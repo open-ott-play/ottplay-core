@@ -109,6 +109,7 @@ class WorkflowRoutingTests(unittest.TestCase):
         updater = delivery_revision(delivery)
         self.assertIsNotNone(updater)
         self.assertIn("artifact-digest: ${{ needs.portable.outputs.artifact-digest }}", delivery)
+        self.assertIn("      skip-receipt-only: true\n", delivery)
         self.assertNotIn("CI_RUNNER_MODE", delivery)
         self.assertNotIn("ottplay-k3s", delivery)
 
