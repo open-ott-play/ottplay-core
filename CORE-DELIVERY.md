@@ -34,6 +34,23 @@ no-ops and repeated attempts reuse the same update, so this creates no update
 loop. Documentation-only runs skip compilation and delivery. `checkouts.json`
 remains an explicit integration snapshot, independent of consumer default branches.
 
+## Pull-request qualification
+
+Pull requests and merge groups enter through `quality-gate.yml` once. It calls
+`core-release-validation.yml`, which retains the portable compiler tests,
+consumer browser tests, full configured browser matrix, and wire contracts.
+`core.yml` runs on main pushes and manual dispatches for qualified delivery;
+it does not launch a second copy of the PR tests.
+
+The required branch contexts for the reusable route are
+`check-0 / scope / Classify changed paths`, `check-0 / portable`,
+`check-0 / wire-contracts`, and `check-0 / browser-client`. The separate CodeQL,
+dependency review, CodeRabbit, and aggregate `CI gate` requirements remain.
+The canonical GitHub Terraform configuration manages these names; update that
+policy together with workflow routing so an obsolete context cannot block merges.
+Release qualification still calls `core-release-validation.yml`, and delivery
+receipts still identify `core.yml` and its original qualification job names.
+
 ## Repository configuration
 
 `CORE_DELIVERY_ENABLED=true` activates the final delivery job. Keep it false
