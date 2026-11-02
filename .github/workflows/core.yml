@@ -283,9 +283,9 @@ jobs:
           - repository: open-ott-play/ottplay-core
             destination: ottplay-foss2/vendor
             files: '["ottplay-core.js","ottplay-core.manifest.json","ottplay-core.LICENSE.txt"]'
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/vendor-update.yml@e71559f44e41f39ad0037bf13c7f43bbbb2ec9af
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/vendor-update.yml@1748f0419fbb301065aeccb76cf61eb52fb1da42
     with:
-      toolkit-revision: 'e71559f44e41f39ad0037bf13c7f43bbbb2ec9af'
+      toolkit-revision: '1748f0419fbb301065aeccb76cf61eb52fb1da42'
       source-workflow: .github/workflows/core.yml
       source-tree: shared-core
       artifact-id: ${{ needs.portable.outputs.artifact-id }}
@@ -297,6 +297,7 @@ jobs:
       target-repository: ${{ matrix.repository }}
       destination-prefix: ${{ matrix.destination }}
       copy-files: ${{ matrix.files }}
+      skip-receipt-only: true
       committer-name: ${{ vars.CORE_DELIVERY_COMMITTER_NAME }}
       committer-email: ${{ vars.CORE_DELIVERY_COMMITTER_EMAIL }}
     secrets:
