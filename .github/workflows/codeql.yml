@@ -20,6 +20,11 @@ on:
   schedule:
     - cron: "0 0 * * 1"
 
+# New PR commits supersede prior analysis; current main analysis finishes.
+concurrency:
+  group: codeql-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 permissions:
   contents: read
 
