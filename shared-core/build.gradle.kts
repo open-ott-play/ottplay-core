@@ -8,10 +8,12 @@ group = "play.ott"
 version = (groovy.json.JsonSlurper().parse(file("package.json")) as Map<*, *>)["version"].toString()
 
 rootProject.plugins.withType<NodeJsRootPlugin> {
-    // Mocha's transitive range still selects a vulnerable serializer.
+    // Mocha's transitive ranges still select vulnerable serializer and glob releases.
     rootProject.extensions.configure<NpmExtension> {
         override("serialize-javascript", "7.1.3")
         override("diff", "8.0.3")
+        override("glob", "14.0.2")
+        override("minimatch", "11.0.1")
     }
 }
 
