@@ -20,6 +20,9 @@ rollback. This release does not deploy FOSS2 or claim physical-device acceptance
 
 ### Security
 
+Pin the transitive JavaScript test runner dependencies to patched glob 14.0.2
+and minimatch 11.0.1, retaining their package-lock integrity checks.
+
 Preserve parental-metadata validation, browser qualification, retained upstream
 notices and distribution hash checks. The refreshed source receipt records the
 verified build inputs without substituting new unqualified compiled assets.

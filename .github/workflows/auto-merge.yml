@@ -13,12 +13,14 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: write
-  pull-requests: write
-  checks: read
+  contents: read
 
 jobs:
   auto-merge:
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: read
     # Positive evaluation keeps its existing author/repository/default-base route.
     # Withdrawals have a separate bounded, cancellation-only PR-target job.
     if: >-
@@ -40,6 +42,10 @@ jobs:
       BOT_PAT: ${{ secrets.BOT_PAT }}
 
   withdraw-auto-merge:
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: read
     # PTR loads the default-branch workflow even for conflicts or a different target.
     # Never check out a PR ref or execute PR-controlled code in this job.
     if: >-
