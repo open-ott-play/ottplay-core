@@ -259,6 +259,20 @@ class CoreReleaseTests(unittest.TestCase):
         )
         self.assertNotIn("deliver", qualification["jobs"])
 
+    def test_pr_qualification_has_one_workflow_entry_point(self):
+        delivery = yaml.safe_load((ROOT / ".github/workflows/core.yml").read_text())
+        required = yaml.safe_load((ROOT / ".github/workflows/quality-gate.yml").read_text())
+        delivery_events = delivery.get("on", delivery.get(True))
+        required_events = required.get("on", required.get(True))
+        self.assertEqual(set(delivery_events), {"push", "workflow_dispatch"})
+        self.assertEqual(delivery_events["push"]["branches"], ["main"])
+        self.assertTrue({"pull_request", "merge_group", "workflow_call"}.issubset(required_events))
+        self.assertEqual(required["jobs"]["check-0"]["uses"],
+                         "./.github/workflows/core-release-validation.yml")
+        self.assertIn("check-0", required["jobs"]["gate"]["needs"])
+        self.assertEqual(delivery["jobs"]["deliver"]["with"]["source-workflow"],
+                         ".github/workflows/core.yml")
+
     def test_browser_deduplication_preserves_required_pr_and_delivery_routes(self):
         original = yaml.safe_load((ROOT / ".github/workflows/core.yml").read_text())
         required = yaml.safe_load((ROOT / ".github/workflows/quality-gate.yml").read_text())
