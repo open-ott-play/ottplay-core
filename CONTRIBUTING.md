@@ -39,6 +39,32 @@ warning with its reason and scope. Do not suppress a real security finding to
 obtain a passing check. Wait for required checks and independent review before
 merging; do not use an administrator bypass.
 
+### Automatic pull request reviews
+
+The installed Greptile GitHub App reviews eligible pull requests when they open,
+receive pushes or are rebased. [`.greptile/config.json`](.greptile/config.json)
+records these triggers and enables the native status check and status comments.
+The app leaves pull request descriptions unchanged. No GitHub Actions workflow
+or repository API secret is needed for this integration.
+
+The repository config deliberately leaves the existing Greptile dashboard
+filters and base review tier in place. Drafts are skipped, and the dashboard's
+excluded authors, including `californiantiramisu`, remain excluded. Opening or
+updating an eligible, non-draft pull request should produce a Greptile status
+check and review activity; inspect the app installation and dashboard filters
+first if it does not.
+
+After a push, confirm a new `Greptile Review` check belongs to the pull request's
+current head commit and that the review summary's last-reviewed commit matches.
+A successful check on an earlier commit does not verify the latest changes.
+See the [configuration reference](https://www.greptile.com/docs/code-review/greptile-config-reference)
+for trigger and status settings.
+
+The Greptile check is advisory, not a required merge check. A successful check
+means the review completed; it does not guarantee that the review found no
+issues. Read and address its findings alongside the existing required checks
+and independent review policy above.
+
 ## Contribution rights
 
 Contribute original material under the root MIT license only when you have the right to do so. Preserve third-party attribution and license terms; record imported code and assets in THIRD_PARTY_NOTICES.md or the linked component notices. A public download URL alone is not a redistribution license.
