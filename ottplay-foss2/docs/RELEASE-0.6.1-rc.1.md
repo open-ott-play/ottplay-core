@@ -2,8 +2,10 @@
 
 This candidate keeps the runtime and dependency bytes qualified in
 [0.6.1-beta.2](RELEASE-0.6.1-beta.2.md). It changes only the candidate version,
-release documentation and the generated package-lock digest. The shared-core
-library retains its independent version and release workflow.
+release documentation and the generated package-lock digest. It also refreshes
+the shared-core source receipt from the successful current-source compiler run;
+all compiled payloads and license bytes remain identical. The shared-core library
+retains its independent version and release workflow.
 
 ## Qualify and package
 
