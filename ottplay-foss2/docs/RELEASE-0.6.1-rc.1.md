@@ -1,10 +1,11 @@
 # OTT-play FOSS 2 — 0.6.1-rc.1
 
 This candidate keeps the runtime and dependency bytes qualified in
-[0.6.1-beta.2](RELEASE-0.6.1-beta.2.md). It changes only the candidate version,
-release documentation and the generated package-lock digest. It also refreshes
-the shared-core source receipt from the successful current-source compiler run;
-all compiled payloads and license bytes remain identical. The shared-core library
+[0.6.1-beta.2](RELEASE-0.6.1-beta.2.md). It updates the candidate version,
+release documentation, generated package-lock digest and resize-test readiness.
+It also refreshes the shared-core source receipt from the successful
+current-source compiler run; all compiled payloads and license bytes remain
+identical. The shared-core library
 retains its independent version and release workflow.
 
 ## Qualify and package
