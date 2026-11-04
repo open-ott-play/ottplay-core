@@ -218,10 +218,15 @@ function guide() {
 
         await remoteKey(page, 461);
         await navigate(page, "tv");
+        await page.evaluate(() => {
+            window.__portraitResizeComplete = false;
+            // Registered after the app's synchronous resize/render listener.
+            window.addEventListener("resize", () => { window.__portraitResizeComplete = true; }, { once: true });
+        });
         await page.setViewportSize({ width: 360, height: 640 });
-        await page.waitForFunction(() => getComputedStyle(document.getElementById("f2-channel-detail")).position === "relative");
+        await page.waitForFunction(() => window.__portraitResizeComplete && getComputedStyle(document.getElementById("f2-channel-detail")).position === "relative");
         const portraitSelected = await page.locator("#f2-selected-channel").innerText();
-        await page.locator("#f2-selected-description").evaluate(node => node.scrollIntoView(true));
+        await page.evaluate(() => document.getElementById("f2-selected-description").scrollIntoView(true));
         const portraitBefore = await scrollMetrics(page, "#foss2-home");
         assert.ok(portraitBefore.total > portraitBefore.height + 280, "Portrait EPG has real outer-page overflow");
         await wheel(page, "#f2-selected-description", 280);
