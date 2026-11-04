@@ -29,13 +29,13 @@ The unused Fontello EOT, WOFF2, WOFF, TTF and SVG resources and their CSS declar
 
 It runs after native capability capture and before all application/media scripts. The same bundle runs inside the HLS worker before its payload. It supplies missing JavaScript standard-library features; it does not add a browser decoder, native MediaSource, a real binary buffer implementation, a proprietary device playback bridge or a working network stack. The ES5 helpers in `src/compat.js` preserve usable native object-URL functions and provide a clock fallback.
 
-## Hls.js 1.7.3
+## Hls.js 1.7.4
 
-`vendor/hls.min.js` and its matching `vendor/hls.worker.js` are unmodified files from the official `hls.js@1.7.3` npm distribution. Their [Apache-2.0 license](vendor/hls.LICENSE.txt), exact source, version and hashes are supplied in [the provenance record](vendor/hls.provenance.json). [Upstream source and compatibility requirements](https://github.com/video-dev/hls.js/tree/v1.7.3).
+`vendor/hls.min.js` and its matching `vendor/hls.worker.js` are unmodified files from the official `hls.js@1.7.4` npm distribution. Their [Apache-2.0 license](vendor/hls.LICENSE.txt), exact source, version and hashes are supplied in [the provenance record](vendor/hls.provenance.json). [Upstream source and compatibility requirements](https://github.com/video-dev/hls.js/tree/v1.7.4).
 
 Both payloads are checked with an ES5 grammar. The full bundle also needs newer runtime APIs. The compatibility bootstrap runs before evaluation in each realm, and the application checks real native media capabilities before loading the library. The same-origin worker wrapper is application code; the vendor worker remains unchanged. Missing or failing workers fall back to main-thread transmuxing.
 
-## Shaka Player 5.3.2
+## Shaka Player 5.3.3
 
 `vendor/shaka.min.js` is the unmodified ES5-syntax `dist/shaka-player.compiled.js` from the official `shaka-player` npm package. The [Apache-2.0 license](vendor/shaka.LICENSE.txt), registry integrity and file SHA-256 are supplied in [its provenance](vendor/shaka.provenance.json). [Upstream project](https://github.com/shaka-project/shaka-player).
 
