@@ -49,7 +49,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: victron-venus/venus-os-ci-toolkit
-          ref: c3c1d3eb1b6df6497ac9b3c074f7d22d778c806b
+          ref: a6983b980c6c0a1a29fcc1959cc54de4cb80265d
           path: .scorecard-toolkit
           persist-credentials: false
 
