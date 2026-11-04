@@ -85,7 +85,7 @@ for (const worker of [false, true]) {
         assert.equal(vm.runInContext("typeof ReadableStream", context), "undefined");
         assert.equal(vm.runInContext("typeof MediaSource", context), "undefined");
         vm.runInContext(hls, context, { filename: "hls.min.js" });
-        assert.equal(vm.runInContext("Hls.version", context), "1.7.3");
+        assert.equal(vm.runInContext("Hls.version", context), "1.7.4");
         assert.equal(vm.runInContext("Hls.isSupported()", context), false);
     });
 }

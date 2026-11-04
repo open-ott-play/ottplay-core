@@ -16,9 +16,9 @@ function temporary(t) {
 test("locked vendor generation reproduces all committed JS and license bytes", t => {
     const directory = temporary(t), first = buildVendors(directory);
     const bytes = fs.readFileSync(path.join(directory, "vendor/runtime-manifest.json"));
-    assert.equal(first.packages["hls.js"].version, "1.7.3");
+    assert.equal(first.packages["hls.js"].version, "1.7.4");
     assert.equal(first.packages["core-js-bundle"].version, "3.51.0");
-    assert.equal(first.packages["shaka-player"].version, "5.3.2");
+    assert.equal(first.packages["shaka-player"].version, "5.3.3");
     assert.equal(first.packages["mpegts.js"].version, "1.8.2");
     for (const name of Object.keys(first.assets)) assert.deepEqual(fs.readFileSync(path.join(directory, name)), fs.readFileSync(path.join(root, name)), name);
     assert.deepEqual(checkVendors(directory), first);
@@ -55,10 +55,10 @@ test("vendor generation refuses ranges or an installed version different from th
     // Package bytes remain read-only; only the isolated lock/manifest is varied.
     fs.symlinkSync(path.join(root, "node_modules"), path.join(directory, "node_modules"), "dir");
     const pkg = JSON.parse(fs.readFileSync(path.join(directory, "package.json")));
-    pkg.devDependencies["hls.js"] = "^1.7.3";
+    pkg.devDependencies["hls.js"] = "^1.7.4";
     fs.writeFileSync(path.join(directory, "package.json"), JSON.stringify(pkg));
     assert.throws(() => buildVendors(directory, directory), /Vendor dependency must use an exact version: hls\.js/);
-    pkg.devDependencies["hls.js"] = "1.7.3";
+    pkg.devDependencies["hls.js"] = "1.7.4";
     fs.writeFileSync(path.join(directory, "package.json"), JSON.stringify(pkg));
     const lock = JSON.parse(fs.readFileSync(path.join(directory, "package-lock.json")));
     lock.packages["node_modules/hls.js"].version = "0.0.0";

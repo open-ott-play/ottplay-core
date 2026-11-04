@@ -1,15 +1,15 @@
 {
   "package": "shaka-player",
-  "version": "5.3.2",
-  "source": "https://github.com/shaka-project/shaka-player/tree/v5.3.2",
-  "registry": "https://registry.npmjs.org/shaka-player/-/shaka-player-5.3.2.tgz",
-  "registryIntegrity": "sha512-Fwf9OFMv1P3as/SJeDq1bIGDeRLamfC+fppojIbF+rBLq0C1FVpDCnRg2V/ZlkiwBoCxcn48Rk2Oqsg1HZYe0Q==",
+  "version": "5.3.3",
+  "source": "https://github.com/shaka-project/shaka-player/tree/v5.3.3",
+  "registry": "https://registry.npmjs.org/shaka-player/-/shaka-player-5.3.3.tgz",
+  "registryIntegrity": "sha512-Y0i1Vkdv2kdGVfjKWiKENw+/mgavB031tXi9toHunAwRqvs40nkelbkw/hOMnCaLH5rrs7+1w0vhkfqMaIfwZg==",
   "file": "dist/shaka-player.compiled.js",
-  "bytes": 886066,
-  "sha256": "2d5c6a72458103fd0987d8f1e6d40f56eca917f644c0f9d23b90d7db5386e905",
+  "bytes": 888223,
+  "sha256": "3104019d171c78dd7428085cfc45bb976411ed2394bc59681860b16b7052e1c0",
   "license": "Apache-2.0",
   "licenseFile": "shaka.LICENSE.txt",
   "syntax": "Acorn ecmaVersion 5 passes",
-  "origin": "Unmodified official npm package bundle; npm ci verified the lockfile integrity. No install scripts executed.",
+  "origin": "Unmodified official npm package bundle; package archive verified against the lockfile integrity. No install scripts executed.",
   "runtime": "Optional modern MSE/EME backend. Load only after checking Promise, Map, Set, Uint8Array, ArrayBuffer, URL.createObjectURL, MSE and required modern collection APIs. Install upstream polyfills before checking Player.isBrowserSupported. ES5 grammar does not guarantee codec, DRM or firmware compatibility."
 }
