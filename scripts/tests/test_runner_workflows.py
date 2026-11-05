@@ -161,7 +161,7 @@ class WorkflowRoutingTests(unittest.TestCase):
         workflow = jobs("core.yml")
         self.assertEqual(set(workflow), {"scope", "portable", "browser-client", "browser-compatibility", "browser-qualification", "wire-contracts", "deliver"})
         self.assertIn("runner: " + routed(GENERIC, "ubuntu-latest"), workflow["scope"])
-        self.assertRegex(workflow["scope"], r"change-scope.yml@[0-9a-f]{40}\n")
+        self.assertRegex(workflow["scope"], r"change-scope\.yml@[0-9a-f]{40}(?:[ \t]+#[^\n]*)?\n")
         for name in ("portable", "browser-client", "wire-contracts"):
             job = workflow[name]
             self.assertIn("runs-on: " + routed(GENERIC, "ubuntu-latest"), job)
