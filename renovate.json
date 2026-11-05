@@ -1,0 +1,79 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "local>victron-venus/venus-os-ci-toolkit:renovate-fleet"
+  ],
+  "enabledManagers": [
+    "custom.jsonata",
+    "custom.regex",
+    "github-actions",
+    "gradle",
+    "gradle-wrapper",
+    "npm",
+    "pip_requirements"
+  ],
+  "ignorePaths": [
+    "**/vendor/**",
+    "**/node_modules/**",
+    "**/fixtures/**",
+    "**/tools/browser-compatibility/**",
+    "security/provider/**",
+    "build-support/tls-armv7/**"
+  ],
+  "packageRules": [
+    {
+      "matchManagers": [
+        "gradle",
+        "gradle-wrapper"
+      ],
+      "matchFileNames": [
+        "shared-core/**"
+      ],
+      "schedule": [
+        "* * * * 1"
+      ]
+    },
+    {
+      "matchManagers": [
+        "npm"
+      ],
+      "matchFileNames": [
+        "/^ottplay\\-foss2/[^/]+$/"
+      ],
+      "schedule": [
+        "* * * * 1"
+      ]
+    },
+    {
+      "matchManagers": [
+        "npm"
+      ],
+      "matchFileNames": [
+        "/^ottplay\\-foss2/[^/]+$/"
+      ],
+      "matchPackageNames": [
+        "*"
+      ],
+      "groupName": "browser-dependencies",
+      "groupSlug": "browser-dependencies",
+      "separateMajorMinor": false,
+      "separateMinorPatch": false
+    },
+    {
+      "matchManagers": [
+        "npm"
+      ],
+      "matchFileNames": [
+        "/^shared\\-core/[^/]+$/"
+      ],
+      "schedule": [
+        "* * * * 1"
+      ]
+    }
+  ],
+  "pip_requirements": {
+    "managerFilePatterns": [
+      "/(^|/)requirements[^/]*\\.(txt|pip)$/"
+    ]
+  }
+}

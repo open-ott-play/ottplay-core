@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   scope:
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/change-scope.yml@e71559f44e41f39ad0037bf13c7f43bbbb2ec9af
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/change-scope.yml@e71559f44e41f39ad0037bf13c7f43bbbb2ec9af # main
     with:
       runner: ${{ vars.CI_RUNNER_MODE == 'k3s' && github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule') && 'ottplay-k3s-linux-x64' || 'ubuntu-latest' }}
       force-full: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' }}
@@ -44,7 +44,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - name: Check self-hosted runner prerequisites
@@ -63,12 +63,12 @@ jobs:
           python3 -m venv .venv-workflow
           .venv-workflow/bin/python -m pip install --require-hashes --only-binary=:all: -r .github/requirements-workflow-contracts.txt
           .venv-workflow/bin/python scripts/workflow_contracts.py --actions-only
-      - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad
+      - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           distribution: temurin
           java-version: '17'
           cache: gradle
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '22'
           cache: npm
@@ -83,7 +83,7 @@ jobs:
       - name: Replay fuzz contracts against this run's compiler output
         run: node ../fuzz/replay.mjs
       - id: distribution
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: ottplay-shared-core
           path: shared-core/dist/
@@ -104,14 +104,14 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - name: Check self-hosted runner prerequisites
         if: runner.environment == 'self-hosted'
         working-directory: ${{ github.workspace }}
         run: python3 scripts/ci-runner-preflight.py browser
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '^22.22.2'
           cache: npm
@@ -120,7 +120,7 @@ jobs:
       - name: Verify the committed client pin before staging the candidate
         run: node scripts/check-core.cjs
       - name: Download the exact compiler output qualified by this run
-        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           artifact-ids: ${{ needs.portable.outputs.artifact-id }}
           path: shared-core/dist
@@ -189,7 +189,7 @@ jobs:
           OTT2_TEST_MEDIA: ${{ runner.temp }}/ottplay-test.mp4
       - run: npm run test:epg-browser
       - run: npm run test:compat-browser
-      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:
           name: foss2-browser-reports
@@ -201,7 +201,7 @@ jobs:
     needs: [scope, portable]
     # PRs and merge queues use the identical required Quality gate route once.
     if: ${{ github.event_name != 'pull_request' && github.event_name != 'merge_group' && (needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only') }}
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@e71559f44e41f39ad0037bf13c7f43bbbb2ec9af
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@e71559f44e41f39ad0037bf13c7f43bbbb2ec9af # main
     with:
       node-version: '22'
       run-node-ci: false
@@ -244,14 +244,14 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - name: Check self-hosted runner prerequisites
         if: runner.environment == 'self-hosted'
         working-directory: ${{ github.workspace }}
         run: python3 scripts/ci-runner-preflight.py base
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version: '1.26.8'
           cache: false
@@ -283,7 +283,7 @@ jobs:
           - repository: open-ott-play/ottplay-core
             destination: ottplay-foss2/vendor
             files: '["ottplay-core.js","ottplay-core.manifest.json","ottplay-core.LICENSE.txt"]'
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/vendor-update.yml@1748f0419fbb301065aeccb76cf61eb52fb1da42
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/vendor-update.yml@1748f0419fbb301065aeccb76cf61eb52fb1da42 # main
     with:
       toolkit-revision: '1748f0419fbb301065aeccb76cf61eb52fb1da42'
       source-workflow: .github/workflows/core.yml
