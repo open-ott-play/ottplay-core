@@ -201,7 +201,7 @@ jobs:
     needs: [scope, portable]
     # PRs and merge queues use the identical required Quality gate route once.
     if: ${{ github.event_name != 'pull_request' && github.event_name != 'merge_group' && (needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only') }}
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@e71559f44e41f39ad0037bf13c7f43bbbb2ec9af # main
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@1c7ae0892d4d34437fc0e094062f7e30b4f2ea1d # main
     with:
       node-version: '22'
       run-node-ci: false
