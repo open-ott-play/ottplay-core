@@ -189,6 +189,13 @@ jobs:
           OTT2_TEST_MEDIA: ${{ runner.temp }}/ottplay-test.mp4
       - run: npm run test:epg-browser
       - run: npm run test:compat-browser
+      - name: Verify progressive Local playback with synthetic media
+        timeout-minutes: 3
+        env:
+          OTT2_TEST_MEDIA: ${{ runner.temp }}/ottplay-local-test.mp4
+        run: |
+          ffmpeg -hide_banner -loglevel error -nostdin -y -f lavfi -i testsrc2=size=320x180:rate=24 -f lavfi -i sine=frequency=440 -t 60 -c:v libx264 -preset ultrafast -crf 35 -pix_fmt yuv420p -c:a aac -movflags +faststart "$OTT2_TEST_MEDIA"
+          node tests/browser-local-media.cjs
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: always()
         with:

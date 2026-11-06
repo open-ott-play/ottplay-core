@@ -36,6 +36,7 @@ OTT2.define("view", function (require) {
             var nav = [["tv", "TV", t("Телевидение", "Television")], ["favorites", "★", t("Избранное", "Favorites")], ["guide", "EPG", t("Программа", "TV guide")], ["vod", "▶", t("Видеотека", "Video library")], ["sources", "+", t("Источники", "Sources")], ["settings", "…", t("Настройки", "Settings")]];
             var html = '<div id="f2-sidebar" class="f2-sidebar" style="display:' + (menuOpen ? 'block' : 'none') + '" aria-hidden="' + (menuOpen ? 'false' : 'true') + '"><div class="f2-brand">ott<span>play</span><div class="f2-edition">FOSS / 02</div></div><nav class="f2-nav" aria-label="' + t("Разделы", "Sections") + '">';
             for (var i = 0; i < nav.length; i++) html += btn("nav-" + nav[i][0], "screen", '<span class="f2-icon" aria-hidden="true">' + nav[i][1] + '</span><span class="f2-nav-label">' + nav[i][2] + '</span>', nav[i][0], model.screen === nav[i][0] ? "f2-active" : "");
+            html += btn("nav-local", "localOpen", '<span class="f2-icon" aria-hidden="true">▸</span><span class="f2-nav-label">Local</span>');
             html += '</nav><div class="f2-side-note"><span class="f2-status-dot"></span>' + t(" Профиль устройства", " Device profile") + '<strong>' + esc(model.device.label || model.device.id) + '</strong>OTT-play FOSS 2</div></div>';
             return html;
         }
@@ -189,6 +190,7 @@ OTT2.define("view", function (require) {
         }
         function channels() {
             var size = model.pageSize || 12, isLibrary = model.screen === "vod", html = model.screen === "vod" && model.breadcrumbs && model.breadcrumbs.length ? '<div class="f2-toolbar">' + btn("browse-back", "browseBack", t("Назад к разделам", "Back to folders")) + '<span>' + esc(model.breadcrumbs[model.breadcrumbs.length - 1].node.name) + '</span></div>' : "";
+            if (model.localMode && model.local) html += '<div class="f2-toolbar">' + btn("local-sources", "localOpen", t("Локальные источники", "Local sources")) + btn("local-next", "localNext", t("Следующий файл", "Next file")) + btn("local-repeat", "localRepeat", t("Повтор: ", "Repeat: ") + esc(model.local.repeat)) + '</div><p class="f2-help" role="status">' + (model.local.scanning ? t("Поиск файлов продолжается…", "Finding more files…") : model.local.error ? esc(model.local.error) : t("Все файлы загружены", "All files listed")) + '</p>';
             if (!model.channels.length && model.screen === "tv" && !model.loading) return hero();
             if (isLibrary) html += '<div class="f2-channel-tools"><span class="f2-section-title">' + t("Фильмы и сериалы", "Movies and series") + '<span class="f2-count">' + model.filteredTotal + '</span></span><div class="f2-toolbar">' + channelFilters() + '</div></div>';
             if (!model.rows.length) return html + empty(model.loading ? t("Загружаем источник…", "Loading source…") : t("Каналы не найдены", "No channels found"), model.screen === "favorites" ? t("Откройте канал и добавьте его в избранное.", "Open a channel and add it to Favorites.") : t("Проверьте группу и поиск или добавьте другой источник.", "Check the group and search, or add another source."));
@@ -198,7 +200,7 @@ OTT2.define("view", function (require) {
             for (var i = 0; i < model.rows.length; i++) {
                 var row = model.rows[i], snapshot = rowSnapshot(row);
                 rowSnapshots.push(snapshot);
-                html += btn("channel-" + i, row.kind === "vod" || row.kind === "folder" ? "channel" : "play", '<span class="f2-channel-number">' + (model.page * size + i + 1) + '</span><span class="f2-channel-name f2-channel-identity">' + logo(row) + esc(row.name) + '</span><span class="f2-program">' + snapshot.programme + '</span><span class="f2-next">' + snapshot.next + '</span>', row.id, "f2-channel" + (model.currentChannel && model.currentChannel.id === row.id ? " f2-playing" : ""));
+                html += btn("channel-" + i, row.local ? "resume" : row.kind === "vod" || row.kind === "folder" ? "channel" : "play", '<span class="f2-channel-number">' + (model.page * size + i + 1) + '</span><span class="f2-channel-name f2-channel-identity">' + logo(row) + esc(row.name) + '</span><span class="f2-program">' + snapshot.programme + '</span><span class="f2-next">' + snapshot.next + '</span>', row.id, "f2-channel" + (model.currentChannel && model.currentChannel.id === row.id ? " f2-playing" : ""));
             }
             html += '</div>';
             if (isLibrary) html += '<div class="f2-pages">' + (model.page > 0 ? btn("prev", "page", t("Назад", "Previous"), String(model.page - 1)) : "") + '<span>' + (model.page + 1) + " / " + Math.max(1, Math.ceil(model.filteredTotal / size)) + '</span>' + (model.page * size + size < model.filteredTotal ? btn("next", "page", t("Дальше", "Next"), String(model.page + 1)) : "") + '</div>';
@@ -207,6 +209,14 @@ OTT2.define("view", function (require) {
         }
         function sources() {
             var html = '<div class="f2-toolbar">' + btn("add-source", "addSource", t("Добавить источник", "Add source"), "", "f2-primary") + '</div>';
+            var local = model.local;
+            if (local) {
+                html += '<h2>Local</h2><div class="f2-toolbar">' + (local.folderPicker ? btn("local-folder", "localFolder", t("Открыть папку", "Open folder")) : "") + (local.filePicker ? btn("local-files", "localFiles", t("Открыть файлы", "Open files")) : "") + btn("local-helper", "localHelper", t("Подключить helper", "Connect helper")) + '</div><p class="f2-help">' + t("Папки, разрешения, закладки Local и URL helper остаются на этом устройстве; экспорт IPTV их не включает.", "Local folders, permissions, bookmarks and helper URLs stay on this device and are excluded from IPTV exports.") + (!local.persistent ? ' ' + t("Хранилище недоступно: текущие изменения действуют до закрытия.", "Storage unavailable: current changes last for this session.") : "") + '</p>';
+                local.sources.forEach(function (entry, index) {
+                    html += '<div class="f2-source"><strong>' + esc(entry.name) + '</strong><p>' + (entry.kind === "helper" ? 'Helper' : t("Файлы устройства", "Device files")) + '</p>' + btn("local-play-" + index, "localPlay", t("Играть", "Play"), entry.id) + btn("local-shuffle-" + index, "localShuffle", t("Перемешать", "Shuffle"), entry.id) + (local.selected === entry.id && local.current ? btn("local-resume-" + index, "localResume", t("Продолжить", "Resume"), entry.id) : "") + btn("local-refresh-" + index, "localRefresh", t("Обновить файлы", "Refresh files"), entry.id) + btn("local-remove-" + index, "localRemove", t("Удалить", "Remove"), entry.id) + '</div>';
+                });
+                html += '<h2>IPTV</h2>';
+            }
             if (!model.sources.length) html += empty(t("Ваши источники", "Your sources"), t("Добавьте URL, вставьте M3U-текст или выберите локальный файл.", "Add a URL, paste M3U text or select a local file."));
             for (var i = 0; i < model.sources.length; i++) {
                 var source = model.sources[i];

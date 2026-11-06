@@ -25,11 +25,15 @@ OTT2.define("app", function (require) {
         var view = require("view").create({ root: root, document: d, environment: environment, onAction: action, onDialogClose: function () {
             if (gate && gate.status().busy) gate.lock();
             pinChallenge = null;
+            localHelperDialog = false;
+            if (local) { localAction++; local.cancelConnect(); }
             if (quitRequested) { quitRequested = false; if (playbackInfo) playbackInfo.setEnabled(!destroyed && !homeVisible && !!current); }
             if (fileReader) { fileReader.onload = null; fileReader.onerror = null; try { fileReader.abort(); } catch (ignore) {} fileReader = null; }
         } });
         var playbackInfo = require("playback-info").create({ document: d, environment: environment, t: t, timeout: 6000, shouldAutoHide: function () { return !autoplayBlocked; } });
         var media = require("media").create({ video: video, environment: environment, onEvent: mediaEvent, options: { device: profile.id } });
+        var localMode = false, localAction = 0, localHelperDialog = false;
+        var local = require("local-media").create(environment, { storage: storage, changed: localChanged, start: function (row, resume) { if (localMode) play(row, resume, true); } });
         var playbackPreferences = require("playback-preferences").create({ media: media, persist: persist, state: function () { return saved; } });
         var playbackView = require("playback-view").create({ view: view, media: media, preferences: playbackPreferences, t: t, persist: persist, state: function () { return saved; }, changeEngine: changeEngine, changeFormat: changeFormat });
         var stopDevices = devices.init(environment, profile);
@@ -51,6 +55,7 @@ OTT2.define("app", function (require) {
             view.focus("access-pin");
         }
         function actionScope(name, value) {
+            if (/^local/.test(name)) return "source";
             if (["security", "configurePIN", "disablePIN", "protectChannel"].indexOf(name) >= 0) return "security";
             if (name === "screen") return value === "settings" ? "settings" : value === "sources" ? "source" : "";
             if (["addSource", "editSource", "saveSource", "loadSource", "deleteSource", "confirmDelete"].indexOf(name) >= 0) return "source";
@@ -136,6 +141,7 @@ OTT2.define("app", function (require) {
             return t("ошибка сети, доступа или CORS", "network, access or CORS error");
         }
         function guideStatus(matched, currentCount) {
+            if (localMode) return "";
             if (!channels.length || loading) return "";
             if (guideInfo.phase === "loading") return t("EPG: загрузка… ", "EPG: loading… ") + guideInfo.done + "/" + guideInfo.total;
             if (guideInfo.phase === "error") return "EPG: " + epgError(guideInfo.errors[0]);
@@ -202,9 +208,9 @@ OTT2.define("app", function (require) {
             guideRows = guideAll.slice(guidePage * 30, guidePage * 30 + 30);
             page = Math.max(0, Math.min(page, Math.max(0, Math.ceil(rows.length / pageSize) - 1)));
             if (pendingChannelFocus) for (i = 0; i < rows.length; i++) if (rows[i].id === pendingChannelFocus) { page = Math.floor(i / pageSize); break; }
-            var active = source(saved.activeSourceId);
+            var active = source(saved.activeSourceId), localState = local.snapshot();
             return { device: profile, settings: saved.settings, sources: saved.sources, activeSourceId: saved.activeSourceId,
-                sourceName: active ? active.name : "", pageSize: pageSize, playerEngineLabel: engineLabel(saved.settings.playerEngine), screen: screen, page: page, query: query, group: group, loading: loading,
+                local: localState, localMode: localMode, sourceName: localMode ? "Local" : active ? active.name : "", pageSize: pageSize, playerEngineLabel: engineLabel(saved.settings.playerEngine), screen: screen, page: page, query: query, group: group, loading: loading,
                 selectedChannelId: pendingChannelFocus || (view.selectedChannelId ? view.selectedChannelId() : ""), currentChannel: current, currentState: resolving ? "loading" : media.getState().state,
                 homeVisible: homeVisible, channels: channels, rows: rows.slice(page * pageSize, page * pageSize + pageSize), filteredTotal: rows.length,
                 guidePage: guidePage, guideTotal: guideAll.length, breadcrumbs: breadcrumbs, activeFavorites: saved.activeFavorites, nowById: nowById, nextById: nextById, logosById: logosById, epgStatus: guideStatus(info.matched, info.current), guideRows: guideRows };
@@ -368,6 +374,7 @@ OTT2.define("app", function (require) {
         }
         function saveBookmark() {
             var snapshot = media.getState();
+            if (current && current.local) { if (snapshot.state !== "ended" && snapshot.channel && snapshot.channel.id === current.id && !pendingResume) local.checkpoint(current.id, snapshot.position); return; }
             if (current && current.kind === "vod" && snapshot.state !== "ended" && snapshot.channel && snapshot.channel.id === current.id && snapshot.position > 0 && !pendingResume && saved.bookmarks[current.id] !== snapshot.position) {
                 persist(function (s) { s.bookmarks[current.id] = snapshot.position; });
             }
@@ -390,6 +397,7 @@ OTT2.define("app", function (require) {
         }
         function stopPlayback() {
             saveBookmark();
+            if (local) local.interrupt();
             playbackPreferences.reset();
             resolveEpoch++;
             if (typeof cancelResolve === "function") cancelResolve();
@@ -426,6 +434,14 @@ OTT2.define("app", function (require) {
                 var playButton = d.getElementById("player-pause");
                 if (playButton && typeof playButton.focus === "function") playButton.focus();
             }
+            if (current && current.local) {
+                if (snapshot.channel && snapshot.channel.id === current.id) {
+                    if (snapshot.state === "playing" && pendingResume > 0) { var localResume = pendingResume; pendingResume = 0; if (!media.seek(localResume)) pendingResume = localResume; }
+                    if (snapshot.state === "playing" && event.type === "timeupdate" && !pendingResume && Date.now() - lastBookmark > 15000) { lastBookmark = Date.now(); local.checkpoint(current.id, snapshot.position); }
+                    if (event.type === "ended" && snapshot.state === "ended" && !pendingPaused && !hostSuspended) local.ended(current.id);
+                }
+                return;
+            }
             if (snapshot.state === "ended" && current && current.kind === "vod") persist(function (s) { delete s.bookmarks[current.id]; });
             if (snapshot.state === "playing" && current && snapshot.channel && snapshot.channel.id === current.id) {
                 if (pendingResume > 0) {
@@ -451,25 +467,27 @@ OTT2.define("app", function (require) {
                 }
             }
         }
-        function play(ch, resume) {
+        function play(ch, resume, localStart) {
             if (!ch || destroyed || loading) return;
+            if (ch.local && !localStart) { saveBookmark(); local.choose(ch.id, resume); return; }
             if (ch.kind === "folder") { browse(ch); return; }
             if (!gate.authorize("playback", permissionId(ch)).ok) { challenge("playback", permissionId(ch), function () { play(ch, resume); }); return; }
             if (ch.restorePath) { restoreSavedItem(ch, resume); return; }
             stopPlayback();
             var epoch = ++resolveEpoch;
-            view.closeDialog(); current = ch; pendingResume = resume ? saved.bookmarks[ch.id] || 0 : 0;
+            if (!localStart || !localHelperDialog) view.closeDialog();
+            current = ch; pendingResume = resume ? ch.local ? local.snapshot().position : saved.bookmarks[ch.id] || 0 : 0;
             if (ch.kind !== "vod" && ch.kind !== "folder" && source(ch.sourceId || saved.activeSourceId)) {
                 var original = ch;
                 for (var i = 0; i < channels.length; i++) if (channels[i].id === ch.id) { original = channels[i]; break; }
                 currentReference = library.channelReference(original, ch.sourceId || saved.activeSourceId);
             }
-            playbackPreferences.begin(ch, currentReference || library.channelReference(ch, ch.sourceId || saved.activeSourceId), channels);
+            playbackPreferences.begin(ch, ch.local ? null : currentReference || library.channelReference(ch, ch.sourceId || saved.activeSourceId), channels);
             resolving = true; lastBookmark = Date.now();
             homeVisible = false; render();
             d.getElementById("player-title").textContent = ch.name; showOSD();
             d.getElementById("player-status").textContent = t("Получение потока…", "Resolving stream…");
-            cancelResolve = providers.resolve(ch, function (error, resolved) {
+            cancelResolve = (ch.local ? local.resolve : providers.resolve)(ch, function (error, resolved) {
                 if (destroyed || epoch !== resolveEpoch) return;
                 resolving = false;
                 if (error || !resolved || typeof resolved.url !== "string") { stopPlayback(); view.toast(t("Не удалось получить поток.", "Could not resolve stream.")); showHome(); return; }
@@ -485,7 +503,7 @@ OTT2.define("app", function (require) {
                 challenge("playback", permissionId(current), function () { if (!destroyed && epoch === resolveEpoch) playbackCommand("play"); }); return;
             }
             if (hostSuspended) { pendingPlayable = playable; return; }
-            media.volume(saved.settings.volume); media.mute(saved.settings.muted); media.load(playable, { engine: saved.settings.playerEngine, format: saved.settings.streamFormat });
+            media.volume(saved.settings.volume); media.mute(saved.settings.muted); media.load(playable, { engine: saved.settings.playerEngine, format: playable.local ? "file" : saved.settings.streamFormat });
             var picture = playbackPreferences.settings();
             media.setAspect(picture.aspect === "auto" ? "fit" : picture.aspect); media.setZoom(picture.zoom);
         }
@@ -530,6 +548,7 @@ OTT2.define("app", function (require) {
         }
         function loadSource(item, restore) {
             if (!item || destroyed) return;
+            localAction++; if (localMode) { stopPlayback(); local.leave(); localMode = false; }
             if (!restore) startupRestore = null;
             gate.lock();
             if (cancelSource) cancelSource(); if (cancelGuide) cancelGuide(); if (cancelBrowse) cancelBrowse();
@@ -557,6 +576,29 @@ OTT2.define("app", function (require) {
                 catch (error) { done(error); }
             } else cancelSource = providers.load(item, done);
         }
+        function localChanged(items, state) {
+            if (destroyed || !view || !local) return;
+            if (localMode) { channels = items; loading = false; if (state.error) view.toast(t("Локальный источник недоступен. Проверьте доступ и подключение.", "Local source unavailable. Check access and connection.")); }
+            render();
+        }
+        function beginLocal(id, shuffle, resume, allowPrompt, refresh) {
+            if (destroyed || !local.snapshot().sources.some(function (source) { return source.id === id; })) return false;
+            if (!gate.authorize("source").ok) { challenge("source", "", function () { beginLocal(id, shuffle, resume, allowPrompt, refresh); }); return true; }
+            if (localHelperDialog) view.closeDialog();
+            localAction++; startupRestore = null; gate.lock();
+            if (cancelSource) cancelSource(); if (cancelGuide) cancelGuide();
+            sourceEpoch++; clearBrowse(); guideRefresh.reset(true); stopPlayback();
+            if (providers.close && saved.activeSourceId) providers.close(saved.activeSourceId);
+            localMode = true; channels = []; guide = null; if (guideLookup) guideLookup.clear();
+            identityReport = null; catalogSourceId = ""; loadingSourceId = ""; loading = false;
+            screen = "vod"; page = 0; group = ""; query = ""; homeVisible = true;
+            local.select(id, shuffle, resume, allowPrompt, refresh); render(); return true;
+        }
+        function localFailure(failure) { if (!destroyed && (!failure || failure.name !== "AbortError")) view.toast(t("Не удалось открыть локальный источник. Проверьте разрешения и адрес helper.", "Could not open local source. Check permissions and helper address.")); }
+        function pickLocal(folder) {
+            var token = ++localAction;
+            (folder ? local.importFolder() : local.importFiles()).then(function (id) { if (!destroyed && token === localAction && id) beginLocal(id, false, false, true); }, localFailure);
+        }
         function restoreReference(reference) {
             var last = getChannel(reference.id);
             if (!last && !reference.exactOnly) {
@@ -583,7 +625,7 @@ OTT2.define("app", function (require) {
             }
         }
         function refreshGuideIfDue() {
-            if (!loading && !(d.hidden || d.webkitHidden) && channels.length && guideRefresh.isDue(Date.now())) loadEPG(preferredEpgUrls(), true);
+            if (!localMode && !loading && !(d.hidden || d.webkitHidden) && channels.length && guideRefresh.isDue(Date.now())) loadEPG(preferredEpgUrls(), true);
         }
         function loadEPG(urls, automatic) {
             if (destroyed) return;
@@ -658,6 +700,7 @@ OTT2.define("app", function (require) {
         }
         function action(name, value, values) {
             if (destroyed) return;
+            if (name !== "menuLayout") localAction++;
             startupRestore = null;
             if (name !== "unlock" && gate.status().busy) gate.lock();
             values = values || {};
@@ -678,6 +721,16 @@ OTT2.define("app", function (require) {
             }
             var scope = actionScope(name, value);
             if (scope && !gate.authorize(scope).ok) { challenge(scope, "", function () { action(name, value, values); }); return; }
+            if (name === "localFolder" || name === "localFiles") { pickLocal(name === "localFolder"); return; }
+            if (name === "localHelper") { view.dialog(t("Подключить Local helper", "Connect Local helper"), view.field("local-endpoint", t("Авторизованный URL helper", "Authenticated helper URL"), "", "password") + '<p class="f2-help">' + t("URL хранится только на этом устройстве и не входит в экспорт IPTV.", "The URL stays on this device and is excluded from IPTV exports.") + '</p>' + view.btn("local-connect", "localConnect", t("Подключить", "Connect"))); localHelperDialog = true; return; }
+            if (name === "localConnect") { var connectAction = ++localAction; local.connect(values["local-endpoint"]).then(function () { if (!destroyed && connectAction === localAction) { view.closeDialog(); screen = "sources"; render(); } }, function (failure) { if (connectAction === localAction) localFailure(failure); }); return; }
+            if (name === "localPlay" || name === "localShuffle" || name === "localResume") { beginLocal(value, name === "localShuffle", name === "localResume", true); return; }
+            if (name === "localRefresh") { var localState = local.snapshot(); beginLocal(value, localState.shuffle, localState.selected === value, true, true); return; }
+            if (name === "localRepeat") { local.repeat(); return; }
+            if (name === "localNext") { saveBookmark(); local.next(); return; }
+            if (name === "localRemove") { if (local.snapshot().selected === value) stopPlayback(); local.remove(value); return; }
+            if (name === "localOpen") { screen = "sources"; showHome(); return; }
+            if (name === "screen" && localMode && ["tv", "favorites", "guide"].indexOf(value) >= 0) { localAction++; stopPlayback(); local.leave(); localMode = false; var previousSource = source(saved.activeSourceId); if (previousSource) loadSource(previousSource); else channels = []; }
             if (features.handle(name, value, values) || playbackView.handle(name, value, values)) return;
             var html, list, i, ch;
             if (name === "screen") { if (browsing) { browseEpoch++; if (cancelBrowse) cancelBrowse(); browsing = false; loading = false; } screen = value; page = 0; guidePage = 0; group = ""; query = ""; pendingChannelFocus = ""; render(); if ((value === "tv" || value === "favorites" || value === "vod") && view.focusChannel) view.focusChannel(current ? current.id : "", 0); else if (view.focusContent) view.focusContent(); else view.focus("menu-toggle"); }
@@ -802,7 +855,7 @@ OTT2.define("app", function (require) {
             if (command === "yellow") { playbackView.openEngines(); return true; }
             if (command === "ok") { showOSD(); d.getElementById("player-pause").focus(); return true; }
             if (command === "playPause") command = pendingPaused || snapshot.paused || snapshot.state === "error" || (!resolving && snapshot.state === "stopped") || snapshot.state === "ended" ? "play" : "pause";
-            if (command === "pause") { pendingPaused = true; saveBookmark(); media.pause(); if (resolving || pendingPlayable) d.getElementById("player-status").textContent = t("Пауза", "Paused"); }
+            if (command === "pause") { if (localMode) local.interrupt(); pendingPaused = true; saveBookmark(); media.pause(); if (resolving || pendingPlayable) d.getElementById("player-status").textContent = t("Пауза", "Paused"); }
             else if (command === "play") {
                 if (current && !gate.authorize("playback", permissionId(current)).ok) { challenge("playback", permissionId(current), function () { playbackCommand("play"); }); return true; }
                 pendingPaused = false;
@@ -811,16 +864,19 @@ OTT2.define("app", function (require) {
             }
             else if (command === "stop") { stopPlayback(); showHome(); }
             else if (command === "left" || command === "right" || command === "rewind" || command === "fastForward") {
+                if (localMode) local.interrupt();
                 if (!resolving && !pendingPlayable) media.seek(Math.max(0, snapshot.position + (command === "left" || command === "rewind" ? -15 : 15)));
             }
             else if (command === "volumeUp" || command === "volumeDown") { persist(function (s) { s.settings.volume = Math.max(0, Math.min(1, s.settings.volume + (command === "volumeUp" ? 0.05 : -0.05))); }); media.volume(saved.settings.volume); }
             else if (command === "mute") { persist(function (s) { s.settings.muted = !s.settings.muted; }); media.mute(saved.settings.muted); }
             else if (command === "channelUp" || command === "channelDown") {
+                if (localMode) { saveBookmark(); if (command === "channelDown") local.previous(); else local.next(); return true; }
                 var live = catalog(false).filter(function (entry) { return entry.kind !== "vod" && entry.kind !== "folder"; });
                 for (i = 0; i < live.length; i++) if (current && live[i].id === current.id) index = i;
                 if (live.length) play(live[environment.OttPlayCore.playbackChannelIndex(index, live.length, command === "channelUp" ? 1 : -1, "browser")], false);
             } else if (/^digit[0-9]$/.test(command || "")) {
                 if (current && (current.kind === "vod" || current.kind === "archive")) {
+                    if (localMode) local.interrupt();
                     if (!resolving && !pendingPlayable && isFinite(snapshot.duration) && snapshot.duration > 0) media.seek(snapshot.duration * Number(command.slice(-1)) / 10);
                     showOSD(); return true;
                 }
@@ -948,11 +1004,15 @@ OTT2.define("app", function (require) {
         render();
         if (!repository.status().persistent) view.toast(t("Хранилище недоступно. Изменения останутся в этой сессии.", "Storage is unavailable. Changes remain in this session."));
         startupRestore = startupChannel();
-        if (startupRestore) loadSource(source(startupRestore.sourceId), startupRestore);
-        else if (saved.activeSourceId) loadSource(source(saved.activeSourceId));
+        var localRestore = local.snapshot();
+        if (!(localRestore.active && localRestore.selected && saved.settings.restore && beginLocal(localRestore.selected, localRestore.shuffle, true, false))) {
+            if (startupRestore) loadSource(source(startupRestore.sourceId), startupRestore);
+            else if (saved.activeSourceId) loadSource(source(saved.activeSourceId));
+        }
         function destroy() {
             if (destroyed) return;
             saveBookmark(); gate.lock(); destroyed = true; browseEpoch++; if (cancelBrowse) cancelBrowse(); environment.clearTimeout(reminderTimer); sourceEpoch++; guideRefresh.destroy(); resolveEpoch++;
+            localAction++; local.destroy();
             if (cancelSource) cancelSource(); if (cancelGuide) cancelGuide(); if (cancelResolve) cancelResolve();
             if (fileReader) { fileReader.onload = null; fileReader.onerror = null; try { fileReader.abort(); } catch (ignore) {} fileReader = null; }
             exitFullscreen(); if (providers.close) saved.sources.forEach(function (entry) { providers.close(entry.id); }); media.destroy(); if (typeof stopDevices === "function") stopDevices();

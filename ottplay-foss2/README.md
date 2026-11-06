@@ -5,7 +5,7 @@
 *FOSS2 0.6.0-beta.4, the browser client included in this repository, captured locally
 with its menu open and no playlist configured. [Original and regeneration](../docs/images/README.md).*
 
-**Release candidate 0.6.1-rc.1** — [release notes and qualification](docs/RELEASE-0.6.1-rc.1.md).
+**Release candidate 0.6.2-rc.1** — [release notes and qualification](docs/RELEASE-0.6.2-rc.1.md).
 
 An IPTV player with an ES5 application runtime and a compact interface for LG televisions and remote controls. Bundled fonts and media libraries are distributed with their notices.
 
@@ -14,7 +14,7 @@ An IPTV player with an ES5 application runtime and a compact interface for LG te
 ## Run
 
 ```sh
-cd ottplay-foss2-0.6.1-rc.1
+cd ottplay-foss2-0.6.2-rc.1
 npm ci --omit=dev
 npm start
 ```
@@ -80,6 +80,48 @@ An archive remembers its underlying channel and returns to live playback on star
 Installations with only old viewing history retain exact-ID restoration, including VOD bookmarks. History alone cannot identify a live channel reliably after an ID or source disappears, so it does not select another channel by name.
 
 Startup playback is enabled by default. Existing installations receive this default once during the upgrade; **Settings → Preferences → Restore the last channel on startup** can disable it afterward. The video view does not automatically request browser fullscreen. If the browser blocks autoplay, the footer and Play control remain visible until playback begins; press Play or use OK on the focused control. The player keeps the saved sound setting. Once playback starts, the normal six-second footer timeout resumes.
+
+## Local files and slow links
+
+Open **Local** in the menu. Browsers exposing the File System Access API offer
+**Open folder** and **Open files**. Other browsers can use **Connect helper** with
+the authenticated `/offline-media/<token>` URL from an OTT Local helper that is
+reachable from the device and permits the player's origin. The helper lists its
+registered sources; choose **Play**, **Shuffle**, or **Resume** for one source.
+An Android input profile does not itself provide filesystem access or a native
+bridge. Browser permissions, network reachability and supported media codecs
+still apply.
+
+The first eligible file starts as soon as its original is readable. Folder
+enumeration continues in the background and does not replace the active decoder.
+Shuffle starts from the available prefix and adds later discoveries to the
+unplayed tail; it does not wait for a complete, uniformly shuffled catalog.
+At the current tail, natural completion waits for the selected source's next
+file. Pause, seek, Stop, or a new selection cancels that deferred advance. After
+the scan completes, **Repeat** applies off/all/one behavior. **Resume** prioritizes
+the saved exact file and position when it remains accessible.
+After pausing at the end, manual **Play** replays the current file; it does not
+restore the cancelled automatic advance. **Refresh files** explicitly rescans a
+source, including a helper catalog that had already completed.
+
+Browser discovery uses a shared window of four iterator/original-read tasks, so
+a stalled child does not retain its parent cursor. Cancelled reads keep their
+slots until the browser settles them; repeated selections cannot accumulate
+unlimited filesystem reads. A scan stops with a visible error after 60 seconds
+without progress or after 100,000 directory entries. The helper is polled once
+per second while waiting for a first/next file and once per ten seconds during
+playback; reaching the current tail wakes its next poll immediately.
+Playback reopens have two separate admission slots, so stalled catalog reads
+cannot block validation of an already discovered file. Their cancelled reads
+also retain their slots until completion; queued requests can be cancelled
+without opening a file.
+
+Local source descriptors, selected item, bookmarks and shuffle/repeat choices
+use a separate device-local store. Browser grants are retained in IndexedDB
+where supported; storage failures leave the current import available for the
+session. Local grants, files and authenticated helper URLs are excluded from
+IPTV profile import/export. Switching back to TV keeps the IPTV source and
+settings intact. Use **Remove** in Local to forget a source on this device.
 
 ## Playback engine selection
 

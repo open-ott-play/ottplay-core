@@ -6,7 +6,7 @@ const root=path.resolve(__dirname,'..');
 const digest=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
 const roots=['src','ui','vendor','fonts','icons','licenses','assets','docs','scripts','tests'];
 const top=['index.html','manifest.webmanifest','package.json','package-lock.json','LICENSE','README.md','TECHNICAL-SPEC.md','MEDIA-API.md','THIRD-PARTY-NOTICES.md'];
-const requiredChecks=Object.freeze(['unit-es5-resources-vendors','browser','browser-providers','browser-engines','browser-media','browser-epg','browser-browse','browser-compat','browser-scroll','browser-controls','browser-startup','browser-window-controls']);
+const requiredChecks=Object.freeze(['unit-es5-resources-vendors','browser','browser-providers','browser-engines','browser-media','browser-epg','browser-browse','browser-compat','browser-scroll','browser-controls','browser-startup','browser-window-controls','browser-local-media']);
 function files(base=root) {
     const result=[];
     function add(name) {
