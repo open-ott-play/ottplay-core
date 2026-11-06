@@ -18,7 +18,7 @@ jobs:
       force-full: ${{ inputs.force-full }}
       required-paths: '["CHANGELOG.md"]'
       documentation-paths: >-
-        ["CORE-DELIVERY.md", "contracts/README.md", "shared-core/README.md",
+        ["GOVERNANCE.md", "ROADMAP.md", "CORE-DELIVERY.md", "contracts/README.md", "shared-core/README.md",
         "ottplay-foss2/README.md", "ottplay-foss2/TECHNICAL-SPEC.md",
         "ottplay-foss2/IMPLEMENTATION-STATUS.md", "ottplay-foss2/MEDIA-API.md",
         "ottplay-foss2/THIRD-PARTY-NOTICES.md",

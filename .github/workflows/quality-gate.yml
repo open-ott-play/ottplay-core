@@ -37,7 +37,7 @@ jobs:
       - id: scope
         name: Classify documentation and build inputs
         env:
-          DOCUMENTATION_PATHS: "[\"CORE-DELIVERY.md\", \"contracts/README.md\", \"shared-core/README.md\", \"ottplay-foss2/README.md\", \"ottplay-foss2/TECHNICAL-SPEC.md\", \"ottplay-foss2/IMPLEMENTATION-STATUS.md\", \"ottplay-foss2/MEDIA-API.md\", \"ottplay-foss2/THIRD-PARTY-NOTICES.md\", \"ottplay-foss2/docs/ARCHITECTURE-RISKS.md\", \"ottplay-foss2/docs/DEEP-COMPATIBILITY-AUDIT-20260918.md\", \"ottplay-foss2/docs/DEVICE-CONTRACTS.md\", \"ottplay-foss2/docs/ENGINE-COMPATIBILITY.md\", \"ottplay-foss2/docs/EPG.md\", \"ottplay-foss2/docs/FEATURE-INVENTORY.md\", \"ottplay-foss2/docs/PROVIDER-API.md\", \"ottplay-foss2/docs/RELEASE-0.6.0-beta.1.md\", \"ottplay-foss2/docs/RELEASE-0.6.0-beta.2.md\"]"
+          DOCUMENTATION_PATHS: "[\"GOVERNANCE.md\", \"ROADMAP.md\", \"CORE-DELIVERY.md\", \"contracts/README.md\", \"shared-core/README.md\", \"ottplay-foss2/README.md\", \"ottplay-foss2/TECHNICAL-SPEC.md\", \"ottplay-foss2/IMPLEMENTATION-STATUS.md\", \"ottplay-foss2/MEDIA-API.md\", \"ottplay-foss2/THIRD-PARTY-NOTICES.md\", \"ottplay-foss2/docs/ARCHITECTURE-RISKS.md\", \"ottplay-foss2/docs/DEEP-COMPATIBILITY-AUDIT-20260918.md\", \"ottplay-foss2/docs/DEVICE-CONTRACTS.md\", \"ottplay-foss2/docs/ENGINE-COMPATIBILITY.md\", \"ottplay-foss2/docs/EPG.md\", \"ottplay-foss2/docs/FEATURE-INVENTORY.md\", \"ottplay-foss2/docs/PROVIDER-API.md\", \"ottplay-foss2/docs/RELEASE-0.6.0-beta.1.md\", \"ottplay-foss2/docs/RELEASE-0.6.0-beta.2.md\"]"
           REQUIRED_PATHS: "[\"CHANGELOG.md\"]"
           FORCE_FULL: "${{ inputs.force-full && 'true' || 'false' }}"
         run: |

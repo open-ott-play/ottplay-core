@@ -85,6 +85,8 @@
   "toolkit_revision": "f0bf0ec4921619f0de09ecd3eaa5e8673e4f9695",
   "change_scope": {
     "documentation_paths": [
+      "GOVERNANCE.md",
+      "ROADMAP.md",
       "CORE-DELIVERY.md",
       "contracts/README.md",
       "shared-core/README.md",

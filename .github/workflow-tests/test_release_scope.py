@@ -123,6 +123,35 @@ class CoreRequiredContextTests(unittest.TestCase):
                 "${{ needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only' }}",
             )
 
+    def test_outer_and_inner_documentation_paths_agree(self):
+        policy = json.loads((ROOT / ".release-policy.json").read_text())["change_scope"]
+        outer = next(
+            step
+            for step in self.quality["jobs"]["scope"]["steps"]
+            if step.get("id") == "scope"
+        )
+        inner = self.wrapper["jobs"]["scope"]["with"]
+        self.assertEqual(
+            json.loads(outer["env"]["DOCUMENTATION_PATHS"]),
+            policy["documentation_paths"],
+        )
+        self.assertEqual(
+            json.loads(inner["documentation-paths"]), policy["documentation_paths"]
+        )
+        self.assertTrue(
+            {"GOVERNANCE.md", "ROADMAP.md"}.issubset(policy["documentation_paths"])
+        )
+
+    def test_browser_candidate_mandatory_inputs_exist(self):
+        # Use the real side-effect-free archive inventory; never recreate its list here.
+        subprocess.run(
+            ["node", "-e", "require('./ottplay-foss2/scripts/release.cjs').files()"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+
     def test_gate_requires_wrapper_success_for_documentation(self):
         gate = self.quality["jobs"]["gate"]
         source = next(
