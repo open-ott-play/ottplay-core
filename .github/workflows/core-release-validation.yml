@@ -3,6 +3,11 @@
 name: Qualify shared-core candidate
 on:
   workflow_call:
+    inputs:
+      force-full:
+        description: Require complete qualification unless the caller proves ordinary documentation
+        type: boolean
+        default: true
 permissions:
   contents: read
 jobs:
@@ -10,7 +15,8 @@ jobs:
     uses: victron-venus/venus-os-ci-toolkit/.github/workflows/change-scope.yml@e71559f44e41f39ad0037bf13c7f43bbbb2ec9af # main
     with:
       runner: ${{ vars.CI_RUNNER_MODE == 'k3s' && github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule') && 'ottplay-k3s-linux-x64' || 'ubuntu-latest' }}
-      force-full: true
+      force-full: ${{ inputs.force-full }}
+      required-paths: '["CHANGELOG.md"]'
       documentation-paths: >-
         ["CORE-DELIVERY.md", "contracts/README.md", "shared-core/README.md",
         "ottplay-foss2/README.md", "ottplay-foss2/TECHNICAL-SPEC.md",
