@@ -170,6 +170,17 @@ for (const prompt of [false, true]) test("denied picked file preserves a readabl
     f.local.select(id, false, false, false); await until(() => !f.state.scanning);
     assert.equal(f.rows.length, 2); assert.equal(f.state.error, ""); f.local.destroy();
 });
+test("completed permission warning does not block Repeat all for readable files", async () => {
+    const denied = file("denied.mp4"), ready = file("ready.mp4"), f = fixture();
+    denied.queryPermission = async () => "denied";
+    f.env.showOpenFilePicker = async () => [denied, ready]; const id = await f.local.importFiles();
+    f.local.select(id, false, false, false); await until(() => !f.state.scanning);
+    assert.match(f.state.error, /permission/i); assert.equal(f.rows.length, 1); assert.equal(f.starts.length, 1);
+    f.local.repeat(); assert.equal(f.state.repeat, "all");
+    f.local.ended(f.rows[0].id);
+    assert.equal(f.starts.length, 2, "a completed readable queue repeats despite a permission warning");
+    assert.equal(f.starts[1].row.id, f.starts[0].row.id); f.local.destroy();
+});
 test("revoked picked file read preserves other readable files", async () => {
     const held = deferred(), denied = file("revoked.mp4"), ready = file("ready.mp4", held.promise), f = fixture();
     denied.getFile = async () => { const failure = new Error("revoked"); failure.name = "NotAllowedError"; throw failure; };

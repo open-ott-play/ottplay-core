@@ -5,7 +5,7 @@ OTT2.define("local-media", function () {
         options = options || {};
         var storage = options.storage, data = { version: 1, sources: [], selected: "", current: "", position: 0, bookmarks: {}, shuffle: false, repeat: "off", active: false };
         var handles = Object.create(null), rows = [], records = Object.create(null), urls = [], generation = 0, intent = 0, waiting = null, first = false;
-        var scanning = false, error = "", persistent = true, request = null, timer = null, disposed = false, database = null, seed = 1;
+        var scanning = false, failed = false, error = "", persistent = true, request = null, timer = null, disposed = false, database = null, seed = 1;
         var browserActive = 0, browserPump = null, cancelBrowser = null, wakePoll = null;
         var playbackActive = 0, playbackQueue = [], playbackCancels = [], notificationTimer = null;
         function validId(value) { return typeof value === "string" && value.length > 0 && value.length <= 8192 && value !== "__proto__" && value !== "constructor" && value !== "prototype"; }
@@ -150,7 +150,8 @@ OTT2.define("local-media", function () {
             if (data.repeat === "one") { choose(data.current, false); return; }
             if (at + 1 < rows.length) { choose(rows[at + 1].id, false); return; }
             if (scanning) { waiting = { generation: generation, intent: intent, id: data.current }; if (wakePoll) wakePoll(); return; }
-            if (!error && data.repeat === "all" && rows.length) choose(rows[0].id, false);
+            // Completed scans may carry permission warnings for skipped files.
+            if (!failed && data.repeat === "all" && rows.length) choose(rows[0].id, false);
         }
         function wake() { if (waiting && waiting.generation === generation && waiting.intent === intent && waiting.id === data.current) { waiting = null; advance(); } }
         function publish(record, token, preferred) {
@@ -171,7 +172,7 @@ OTT2.define("local-media", function () {
         }
         function finish(token, failure, warning) {
             if (!alive(token)) return;
-            scanning = false; error = !failure ? warning || "" : failure.message === "SCAN_ENTRY_LIMIT" ? "Local scan exceeds 100000 entries" : failure.message === "SCAN_TIMEOUT" ? "Local scan timed out waiting for storage" : "Local source unavailable";
+            scanning = false; failed = !!failure; error = !failure ? warning || "" : failure.message === "SCAN_ENTRY_LIMIT" ? "Local scan exceeds 100000 entries" : failure.message === "SCAN_TIMEOUT" ? "Local scan timed out waiting for storage" : "Local source unavailable";
             if (!failure && first && rows.length) { first = false; choose(rows[0].id, false); }
             notify(); wake();
         }
@@ -390,7 +391,7 @@ OTT2.define("local-media", function () {
         }
         function select(sourceId, shuffle, resume, allowPrompt, refresh) {
             var source = find(sourceId); if (!source || disposed) return false;
-            cancel(); release(); rows = []; records = Object.create(null); scanning = true; error = "";
+            cancel(); release(); rows = []; records = Object.create(null); scanning = true; failed = false; error = "";
             var preferred = resume && data.selected === sourceId ? data.current : "";
             data.selected = sourceId; data.active = true; data.shuffle = !!shuffle;
             if (!preferred) { data.current = ""; data.position = 0; }
