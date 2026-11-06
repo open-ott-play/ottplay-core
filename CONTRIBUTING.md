@@ -74,3 +74,16 @@ See [governance](GOVERNANCE.md), [conduct](CODE_OF_CONDUCT.md) and the
 regression coverage and relevant negative cases, with test invocation documented
 in the pull request. The same automation exception above applies: explain why automation is infeasible and document a reproducible
 manual procedure and its limitations in the pull request.
+
+## Gradle wrapper updates
+
+Renovate updates Gradle dependency declarations without executing repository build
+scripts. Wrapper updates, including security fixes, remain a reviewed manual unit:
+update `shared-core/gradlew`, `shared-core/gradlew.bat`,
+`shared-core/gradle/wrapper/gradle-wrapper.jar` and
+`shared-core/gradle/wrapper/gradle-wrapper.properties` together using a trusted
+Gradle installation. Verify the distribution and wrapper against the official
+Gradle checksums and retain the matching `distributionSha256Sum`. For security
+updates, verify the chosen Gradle version is in the advisory's fixed range.
+Run the existing Gradle tests and full platform CI qualification; do not enable
+unsafe wrapper execution in the dependency updater to bypass this procedure.
