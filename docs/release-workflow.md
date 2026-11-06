@@ -168,3 +168,30 @@ provenance; this narrow scope migration does not claim to replace that engine.
 The required CodeQL Python lane runs `test_release_scope.py` and rejects the older
 `FORCE_FULL: 'false'` output. Main-branch release qualification stays full even
 when pull requests containing only ordinary documentation use lightweight CI.
+
+### Verify the ordinary-documentation path
+
+For a pull request that changes only ordinary documentation, open **Checks** and
+inspect the **Quality gate** run. Both change classifiers must complete
+successfully with reason `documentation-only`. The required nested contexts
+`check-0 / portable`, `check-0 / browser-client`, and `check-0 / wire-contracts`
+remain visible as skipped; they must not disappear from the check inventory.
+The aggregate `CI gate`, CodeQL, and dependency-review checks still run.
+All four required `Analyze` contexts (Actions, Java/Kotlin, JavaScript/TypeScript,
+and Python) and the external `CodeRabbit` check must remain present and pass.
+The retained Java/Kotlin CodeQL lane still runs `jvmTest`; this path avoids
+redundant qualification jobs, not every compiler invocation.
+
+A missing required context is a routing defect, not a reason to remove branch
+protection. A failed classifier, incomplete Git history, source or workflow
+change, or a change to `CHANGELOG.md` must not use this lightweight result.
+`CHANGELOG.md` supplies release notes and therefore requires full validation.
+
+The release pipeline explicitly forces complete qualification, including when
+its source commit changes only documentation. A successful documentation-only
+PR check does not attest to compiled artifacts or authorize a release. To inspect
+a specific PR from the command line, use:
+
+```sh
+gh pr checks PR_NUMBER --repo open-ott-play/ottplay-core
+```
