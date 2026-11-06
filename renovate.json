@@ -8,7 +8,6 @@
     "custom.regex",
     "github-actions",
     "gradle",
-    "gradle-wrapper",
     "npm",
     "pip_requirements"
   ],
@@ -23,8 +22,7 @@
   "packageRules": [
     {
       "matchManagers": [
-        "gradle",
-        "gradle-wrapper"
+        "gradle"
       ],
       "matchFileNames": [
         "shared-core/**"
