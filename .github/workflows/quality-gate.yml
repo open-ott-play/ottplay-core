@@ -37,21 +37,22 @@ jobs:
       - id: scope
         name: Classify documentation and build inputs
         env:
-          DOCUMENTATION_PATHS: '[]'
-          REQUIRED_PATHS: '[]'
-          FORCE_FULL: 'true'
+          DOCUMENTATION_PATHS: "[\"GOVERNANCE.md\", \"ROADMAP.md\", \"CORE-DELIVERY.md\", \"contracts/README.md\", \"shared-core/README.md\", \"ottplay-foss2/README.md\", \"ottplay-foss2/TECHNICAL-SPEC.md\", \"ottplay-foss2/IMPLEMENTATION-STATUS.md\", \"ottplay-foss2/MEDIA-API.md\", \"ottplay-foss2/THIRD-PARTY-NOTICES.md\", \"ottplay-foss2/docs/ARCHITECTURE-RISKS.md\", \"ottplay-foss2/docs/DEEP-COMPATIBILITY-AUDIT-20260918.md\", \"ottplay-foss2/docs/DEVICE-CONTRACTS.md\", \"ottplay-foss2/docs/ENGINE-COMPATIBILITY.md\", \"ottplay-foss2/docs/EPG.md\", \"ottplay-foss2/docs/FEATURE-INVENTORY.md\", \"ottplay-foss2/docs/PROVIDER-API.md\", \"ottplay-foss2/docs/RELEASE-0.6.0-beta.1.md\", \"ottplay-foss2/docs/RELEASE-0.6.0-beta.2.md\"]"
+          REQUIRED_PATHS: "[\"CHANGELOG.md\"]"
+          FORCE_FULL: "${{ inputs.force-full && 'true' || 'false' }}"
         run: |
           args=()
           if [[ "$FORCE_FULL" == true ]]; then args+=(--force); fi
           python3 scripts/change_scope.py "${args[@]}" --documentation-paths-json "$DOCUMENTATION_PATHS" --required-paths-json "$REQUIRED_PATHS"
   check-0:
     uses: ./.github/workflows/core-release-validation.yml
+    with:
+      force-full: ${{ inputs.force-full || needs.scope.outputs.run != 'false' }}
     permissions:
       contents: read
       actions: read
     needs:
       - scope
-    if: ${{ needs.scope.outputs.run == 'true' }}
   release-contracts:
     name: Release tooling contracts
     runs-on: ${{ fromJSON((vars.CI_RUNNER_MODE == 'self-hosted' || vars.CI_RUNNER_MODE == 'k3s') && ((github.event_name
@@ -102,7 +103,7 @@ jobs:
           import json, os
           results = json.loads(os.environ['RESULTS'])
           expected = ['check-0', 'release-contracts', 'scope']
-          always = ['scope']
+          always = ['check-0', 'scope']
           if set(results) != set(expected):
               raise SystemExit('Validation job inventory differs')
           scope = results['scope']

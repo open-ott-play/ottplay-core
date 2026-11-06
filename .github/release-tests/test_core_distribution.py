@@ -246,7 +246,12 @@ class CoreReleaseTests(unittest.TestCase):
             name: copy.deepcopy(original["jobs"][name])
             for name in ("scope", "portable", "browser-client", "browser-compatibility", "wire-contracts")
         }
-        expected["scope"]["with"]["force-full"] = True
+        expected["scope"]["with"]["force-full"] = "${{ inputs.force-full }}"
+        expected["scope"]["with"]["required-paths"] = '["CHANGELOG.md"]'
+        expected["scope"]["with"]["documentation-paths"] = (
+            '["GOVERNANCE.md", "ROADMAP.md", '
+            + expected["scope"]["with"]["documentation-paths"][1:]
+        )
         # The required PR/release route does not inherit the standalone deduplication.
         expected["browser-compatibility"]["if"] = (
             "${{ needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only' }}"

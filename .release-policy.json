@@ -82,5 +82,34 @@
       "release-inputs-shared-core.json"
     ]
   },
-  "toolkit_revision": "f0bf0ec4921619f0de09ecd3eaa5e8673e4f9695"
+  "toolkit_revision": "f0bf0ec4921619f0de09ecd3eaa5e8673e4f9695",
+  "change_scope": {
+    "documentation_paths": [
+      "GOVERNANCE.md",
+      "ROADMAP.md",
+      "CORE-DELIVERY.md",
+      "contracts/README.md",
+      "shared-core/README.md",
+      "ottplay-foss2/README.md",
+      "ottplay-foss2/TECHNICAL-SPEC.md",
+      "ottplay-foss2/IMPLEMENTATION-STATUS.md",
+      "ottplay-foss2/MEDIA-API.md",
+      "ottplay-foss2/THIRD-PARTY-NOTICES.md",
+      "ottplay-foss2/docs/ARCHITECTURE-RISKS.md",
+      "ottplay-foss2/docs/DEEP-COMPATIBILITY-AUDIT-20260918.md",
+      "ottplay-foss2/docs/DEVICE-CONTRACTS.md",
+      "ottplay-foss2/docs/ENGINE-COMPATIBILITY.md",
+      "ottplay-foss2/docs/EPG.md",
+      "ottplay-foss2/docs/FEATURE-INVENTORY.md",
+      "ottplay-foss2/docs/PROVIDER-API.md",
+      "ottplay-foss2/docs/RELEASE-0.6.0-beta.1.md",
+      "ottplay-foss2/docs/RELEASE-0.6.0-beta.2.md"
+    ],
+    "required_paths": [
+      "CHANGELOG.md"
+    ],
+    "always_validate_workflows": [
+      "core-release-validation.yml"
+    ]
+  }
 }
