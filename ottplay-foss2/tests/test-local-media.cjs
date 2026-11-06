@@ -17,7 +17,7 @@ function folder(files, name = "Movies") {
 }
 function fixture(options = {}) {
     let api, state, rows = [], dbRecords = options.dbRecords || new Map();
-    const values = options.values || {}, starts = [], requests = [], revoked = [], created = [], timers = new Map();
+    const values = options.values || {}, starts = [], requests = [], revoked = [], created = [], timers = new Map(), changes = [];
     const storage = { getItem: key => values[key] || null, setItem: (key, value) => { values[key] = value; } };
     const env = {
         setTimeout(callback, delay) { const id = {}; timers.set(id, { callback, delay }); if (!delay) queueMicrotask(() => { if (timers.delete(id)) callback(); }); return id; },
@@ -39,8 +39,8 @@ function fixture(options = {}) {
         }; open.onsuccess(); }); return open; } }
     };
     vm.runInNewContext(source, { Promise, Date, Math, Object, Array, JSON, Error, encodeURIComponent, decodeURIComponent, isFinite, OTT2: { define(name, factory) { api = factory(); } } });
-    const local = api.create(env, { storage, changed(next, snapshot) { rows = next; state = snapshot; }, start(row, resume) { starts.push({ row, resume }); if (options.start) options.start(row, resume); } });
-    return { local, env, values, starts, requests, revoked, created, dbRecords, timers,
+    const local = api.create(env, { storage, changed(next, snapshot) { rows = next; state = snapshot; changes.push(snapshot); }, start(row, resume) { starts.push({ row, resume }); if (options.start) options.start(row, resume); } });
+    return { local, env, values, starts, requests, revoked, created, dbRecords, timers, changes,
         runTimer(delay) { const entry = Array.from(timers).find(([, timer]) => timer.delay === delay); assert(entry, "missing timer " + delay); timers.delete(entry[0]); entry[1].callback(); },
         get rows() { return rows; }, get state() { return state || local.snapshot(); }, key: api.key };
 }
@@ -155,6 +155,52 @@ test("multiple picked files do not wait for later permissions and keep same-name
     await until(() => restored.starts.length === 1); assert.equal(restored.starts[0].row.id, chosen); assert.equal(restored.state.position, 19);
     restored.local.destroy(); blocked.resolve("granted");
 });
+for (const prompt of [false, true]) test("denied picked file preserves a readable sibling without an unauthorized prompt: " + prompt, async () => {
+    const held = deferred(), denied = file("denied.mp4"), ready = file("ready.mp4", held.promise), f = fixture();
+    let prompts = 0;
+    denied.queryPermission = async () => "prompt";
+    denied.requestPermission = async () => { prompts++; return "denied"; };
+    f.env.showOpenFilePicker = async () => [denied, ready]; const id = await f.local.importFiles();
+    f.local.select(id, false, false, prompt); await until(() => ready.reads === 1);
+    held.resolve(); await until(() => !f.state.scanning);
+    assert.equal(f.starts.length, 1); assert.equal(f.starts[0].row.name, "ready.mp4");
+    assert.equal(denied.reads, 0); assert.equal(prompts, prompt ? 1 : 0);
+    assert.match(f.state.error, /permission/i); assert.match(f.state.error, /denied\.mp4/);
+    denied.queryPermission = async () => "granted";
+    f.local.select(id, false, false, false); await until(() => !f.state.scanning);
+    assert.equal(f.rows.length, 2); assert.equal(f.state.error, ""); f.local.destroy();
+});
+test("revoked picked file read preserves other readable files", async () => {
+    const held = deferred(), denied = file("revoked.mp4"), ready = file("ready.mp4", held.promise), f = fixture();
+    denied.getFile = async () => { const failure = new Error("revoked"); failure.name = "NotAllowedError"; throw failure; };
+    f.env.showOpenFilePicker = async () => [denied, ready]; const id = await f.local.importFiles();
+    f.local.select(id, false, false, false); await until(() => ready.reads === 1);
+    held.resolve(); await until(() => !f.state.scanning);
+    assert.equal(f.starts.length, 1); assert.equal(f.rows[0].name, "ready.mp4");
+    assert.match(f.state.error, /revoked\.mp4/); f.local.destroy();
+});
+test("partial browser tail becomes visible while an unrelated read remains held", async () => {
+    const tail = deferred(), blocked = deferred(), second = file("second.mp4", tail.promise), held = file("held.mp4", blocked.promise);
+    const f = fixture({ folder: folder([file("first.mp4"), second, held]) });
+    const id = await f.local.importFolder(); f.local.select(id, false, false, true);
+    await until(() => f.starts.length === 1 && second.reads === 1 && held.reads === 1);
+    const chosen = f.starts[0].row.id; tail.resolve(); await settled();
+    f.runTimer(100);
+    assert.equal(f.rows.length, 2); assert.equal(f.state.scanning, true);
+    assert.equal(f.starts.length, 1); assert.equal(f.state.current, chosen);
+    f.local.destroy(); blocked.resolve(); await settled();
+});
+test("notification timer cannot publish a partial browser tail after cancellation", async () => {
+    const tail = deferred(), blocked = deferred(), second = file("second.mp4", tail.promise);
+    const f = fixture({ folder: folder([file("first.mp4"), second, file("held.mp4", blocked.promise)]) });
+    const id = await f.local.importFolder(); f.local.select(id, false, false, true);
+    await until(() => f.starts.length === 1 && second.reads === 1); tail.resolve(); await settled();
+    const notification = [...f.timers.values()].find(timer => timer.delay === 100);
+    assert(notification, "partial tail owns one bounded notification timer");
+    f.local.leave(); const changes = f.changes.length;
+    notification.callback(); blocked.resolve(); await settled();
+    assert.equal(f.changes.length, changes); assert.equal(f.starts.length, 1); assert.equal(f.timers.size, 0); f.local.destroy();
+});
 test("delayed preferred file remains the head while ready siblings stay unplayed", async () => {
     const held = deferred(), preferred = file("preferred.mp4", held.promise), other = file("other.mp4");
     const values = { "ottplay2:local:v1": JSON.stringify({ version: 1, sources: [{ id: "saved", name: "Movies", kind: "browser" }], selected: "saved", current: "saved:preferred.mp4", position: 9, shuffle: true }) };
@@ -173,6 +219,15 @@ test("helper inventory makes no catalog request and preserves unknown source ava
     await poll(f, 10000); assert.equal(f.requests.length, 3); f.requests[2].respond(catalog(["a", "b", "c"], 1, "complete"));
     await until(() => !f.state.scanning); assert.equal(f.rows.length, 3); assert.equal(f.starts.length, 1); assert.equal(f.rows[0].id, f.starts[0].row.id);
     f.local.destroy();
+});
+test("partial helper tail becomes visible after each response without changing the decoder", async () => {
+    const f = fixture(), id = await helper(f); f.local.select(id, false, false, false);
+    f.requests[1].respond(catalog(["first"])); await until(() => f.starts.length === 1);
+    const chosen = f.starts[0].row.id;
+    await poll(f, 10000); f.requests[2].respond(catalog(["first", "second"])); await settled();
+    assert.equal(f.rows.length, 2); assert.equal(f.state.scanning, true);
+    assert.equal(f.starts.length, 1); assert.equal(f.state.current, chosen);
+    assert(![...f.timers.values()].some(timer => timer.delay === 100)); f.local.destroy();
 });
 test("explicit helper refresh restarts once, then polls the same generation without refresh", async () => {
     const f = fixture(), id = await helper(f); f.local.select(id, false, false, false);

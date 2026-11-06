@@ -7,7 +7,7 @@ OTT2.define("local-media", function () {
         var handles = Object.create(null), rows = [], records = Object.create(null), urls = [], generation = 0, intent = 0, waiting = null, first = false;
         var scanning = false, error = "", persistent = true, request = null, timer = null, disposed = false, database = null, seed = 1;
         var browserActive = 0, browserPump = null, cancelBrowser = null, wakePoll = null;
-        var playbackActive = 0, playbackQueue = [], playbackCancels = [];
+        var playbackActive = 0, playbackQueue = [], playbackCancels = [], notificationTimer = null;
         function validId(value) { return typeof value === "string" && value.length > 0 && value.length <= 8192 && value !== "__proto__" && value !== "constructor" && value !== "prototype"; }
         function endpoint(value) {
             var match = /^(https?:\/\/[^\s\/?#@]+)(\/offline-media\/[A-Za-z0-9_-]{32,256})\/?$/.exec(String(value || ""));
@@ -36,12 +36,24 @@ OTT2.define("local-media", function () {
         function snapshot() {
             return { sources: data.sources.map(function (source) { return { id: source.id, name: source.name, kind: source.kind }; }), selected: data.selected, current: data.current, position: data.position, shuffle: data.shuffle, repeat: data.repeat, active: data.active, scanning: scanning, error: error, persistent: persistent, folderPicker: typeof environment.showDirectoryPicker === "function", filePicker: typeof environment.showOpenFilePicker === "function" };
         }
-        function notify() { if (!disposed && options.changed) options.changed(rows.slice(), snapshot()); }
+        function notify() {
+            if (notificationTimer !== null) environment.clearTimeout(notificationTimer); notificationTimer = null;
+            if (!disposed && options.changed) options.changed(rows.slice(), snapshot());
+        }
+        function notifyLater(token) {
+            if (notificationTimer !== null) return;
+            var pending = environment.setTimeout(function () {
+                if (notificationTimer !== pending) return;
+                notificationTimer = null; if (alive(token)) notify();
+            }, 100);
+            notificationTimer = pending;
+        }
         function alive(token) { return !disposed && generation === token; }
         function interrupt() { intent++; waiting = null; first = false; }
         function release() { urls.forEach(function (url) { environment.URL.revokeObjectURL(url); }); urls = []; }
         function cancel() {
             generation++; interrupt(); scanning = false;
+            if (notificationTimer !== null) environment.clearTimeout(notificationTimer); notificationTimer = null;
             if (request) request(); request = null;
             if (timer !== null) environment.clearTimeout(timer); timer = null;
             if (wakePoll) wakePoll(); wakePoll = null;
@@ -153,12 +165,13 @@ OTT2.define("local-media", function () {
             if (first && preferred === record.row.id) { rows.splice(rows.indexOf(record.row), 1); rows.unshift(record.row); }
             // Publish the first playable item immediately; amortize large tails.
             if (rows.length === 1 || rows.length % 32 === 0 || waiting || first && preferred === record.row.id) notify();
+            else notifyLater(token);
             if (first && (!preferred || record.row.id === preferred)) { first = false; choose(record.row.id, !!preferred); }
             wake();
         }
-        function finish(token, failure) {
+        function finish(token, failure, warning) {
             if (!alive(token)) return;
-            scanning = false; error = !failure ? "" : failure.message === "SCAN_ENTRY_LIMIT" ? "Local scan exceeds 100000 entries" : failure.message === "SCAN_TIMEOUT" ? "Local scan timed out waiting for storage" : "Local source unavailable";
+            scanning = false; error = !failure ? warning || "" : failure.message === "SCAN_ENTRY_LIMIT" ? "Local scan exceeds 100000 entries" : failure.message === "SCAN_TIMEOUT" ? "Local scan timed out waiting for storage" : "Local source unavailable";
             if (!failure && first && rows.length) { first = false; choose(rows[0].id, false); }
             notify(); wake();
         }
@@ -197,8 +210,13 @@ OTT2.define("local-media", function () {
             try { savedPath = decodeURIComponent(savedPath); } catch (ignore) { savedPath = ""; }
             return new Promise(function (resolve, reject) {
                 var queue = [], iterators = [], readers = Object.create(null), grants = {}, pending = 0, entries = 0, stopped = false, ready = false;
-                var deadline = null, scheduled = null, turns = 0;
+                var deadline = null, scheduled = null, turns = 0, permissionNames = [], permissionCount = 0;
                 function current() { return !stopped && alive(token); }
+                function denied(failure, name) {
+                    if (!failure || failure.message !== "PERMISSION_REQUIRED" && failure.name !== "NotAllowedError" && failure.name !== "SecurityError") return false;
+                    if (current()) { permissionCount++; if (permissionNames.length < 8) permissionNames.push(String(name || "File").slice(0, 160)); }
+                    return true;
+                }
                 function closeIterator(iterator) {
                     if (iterator.closed) return; iterator.closed = true;
                     if (typeof iterator.value.return === "function") {
@@ -211,7 +229,8 @@ OTT2.define("local-media", function () {
                     iterators.forEach(closeIterator); iterators = [];
                     if (browserPump === pump) browserPump = null;
                     if (cancelBrowser === cancelThis) cancelBrowser = null;
-                    if (failure) reject(failure); else resolve();
+                    if (failure) reject(failure);
+                    else resolve(permissionCount ? "Permission required: " + permissionNames.join(", ") + (permissionCount > permissionNames.length ? " (+" + (permissionCount - permissionNames.length) + " more)" : "") : "");
                 }
                 function cancelThis() { stop(new Error("CANCELLED")); }
                 function progress() {
@@ -258,7 +277,7 @@ OTT2.define("local-media", function () {
                     readers[itemId] = Promise.resolve().then(function () { return current() ? handle.getFile() : null; }).then(function (file) {
                         if (!current() || !playable(file)) return;
                         publish({ handle: handle, file: file, row: { id: itemId, sourceId: source.id, name: file.name || handle.name, group: source.name, kind: "vod", local: true, format: "file", mime: file.type || "" } }, token, preferred);
-                    }, function (failure) { if (failure && failure.name === "NotAllowedError") throw failure; });
+                    }, function (failure) { denied(failure, path); });
                     return readers[itemId];
                 }
                 function visit(handle, path, depth) {
@@ -287,16 +306,22 @@ OTT2.define("local-media", function () {
                     if (!list || !list.length) throw new Error("PICK_SOURCE_AGAIN");
                     if (list.length > 100000) throw new Error("SCAN_ENTRY_LIMIT");
                     handles[source.id] = list;
-                    function grant(index) { if (!grants[index]) grants[index] = current() ? access(list[index]) : Promise.resolve(); return grants[index]; }
+                    function grant(index) {
+                        if (!grants[index]) grants[index] = Promise.resolve().then(function () { return current() ? access(list[index]) : null; }).then(function () { return current(); }, function (failure) {
+                            if (!denied(failure, (list.length > 1 ? (index + 1) + ". " : "") + list[index].name)) throw failure;
+                            return false;
+                        });
+                        return grants[index];
+                    }
                     if (savedPath) enqueue(function () {
                         var priority;
                         if (list.length > 1 || list[0].kind === "file") {
                             var index = list.length > 1 ? Number(savedPath.split("/")[0]) : 0;
                             var path = Math.floor(index) === index && index >= 0 && index < list.length ? (list.length > 1 ? index + "/" : "") + list[index].name : "";
-                            priority = path === savedPath && list[index].kind === "file" ? grant(index).then(function () { return read(list[index], path); }) : Promise.resolve();
+                            priority = path === savedPath && list[index].kind === "file" ? grant(index).then(function (allowed) { if (allowed) return read(list[index], path); }) : Promise.resolve();
                         } else {
                             var segments = savedPath.split("/"), leaf = segments.pop();
-                            priority = grant(0).then(function () { return list[0]; });
+                            priority = grant(0).then(function (allowed) { if (!allowed) throw new Error("PERMISSION_REQUIRED"); return list[0]; });
                             if (!leaf || leaf === "." || leaf === ".." || segments.some(function (name) { return !name || name === "." || name === ".."; })) priority = Promise.reject(new Error("INVALID_PATH"));
                             else {
                                 segments.forEach(function (name) { priority = priority.then(function (handle) { if (!current()) throw new Error("CANCELLED"); return handle.getDirectoryHandle(name); }); });
@@ -310,7 +335,7 @@ OTT2.define("local-media", function () {
                     });
                     else preferred = "";
                     list.forEach(function (handle, index) {
-                        enqueue(function () { return grant(index).then(function () { return visit(handle, handle.kind === "directory" && list.length === 1 ? "" : (list.length > 1 ? index + "/" : "") + handle.name, 0); }); });
+                        enqueue(function () { return grant(index).then(function (allowed) { if (allowed) return visit(handle, handle.kind === "directory" && list.length === 1 ? "" : (list.length > 1 ? index + "/" : "") + handle.name, 0); }); });
                     });
                     ready = true; pump();
                 }).catch(stop);
@@ -342,6 +367,7 @@ OTT2.define("local-media", function () {
                         if (mediaUrl !== root + "/" + item.id || !/^[A-Za-z0-9_-]+$/.test(item.id)) return;
                         publish({ url: mediaUrl, row: { id: encodeURIComponent(source.id) + ":" + item.id, sourceId: source.id, name: String(item.name || item.id), group: source.name, kind: "vod", local: true, format: "file", mime: item.mime || "" } }, token, preferred);
                     });
+                    if (notificationTimer !== null) notify();
                     if (scan && scan.state === "error") throw new Error("SOURCE_UNAVAILABLE");
                     var next = JSON.stringify([scan, catalog.scanned, rows.length]);
                     if (next !== signature) { signature = next; changed = Date.now(); }
@@ -370,7 +396,7 @@ OTT2.define("local-media", function () {
             if (!preferred) { data.current = ""; data.position = 0; }
             seed = Math.floor(Math.random() * 0x100000000) >>> 0; first = true; save(); notify(); var token = generation;
             var pending = source.kind === "helper" ? helperScan(source, token, preferred, !!refresh) : browserScan(source, token, preferred, allowPrompt);
-            pending.then(function () { finish(token); }, function (failure) { finish(token, failure); });
+            pending.then(function (warning) { finish(token, null, warning); }, function (failure) { finish(token, failure); });
             return true;
         }
         function resolve(row, callback) {
