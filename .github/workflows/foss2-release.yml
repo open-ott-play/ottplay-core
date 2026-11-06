@@ -1,0 +1,176 @@
+name: FOSS2 release
+
+on:
+  pull_request:
+    paths:
+      - ottplay-foss2/**
+      - .github/workflows/foss2-release.yml
+  push:
+    tags: ['foss2-v*-beta.*', 'foss2-v*-rc.*']
+  workflow_dispatch:
+    inputs:
+      candidate_sha:
+        description: Full 40-character candidate commit SHA
+        required: true
+        type: string
+      version:
+        description: Exact numbered beta or RC version
+        required: true
+        type: string
+      publish:
+        description: Publish after qualification (main dispatch only)
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+
+concurrency:
+  group: foss2-release-${{ github.event.inputs.version || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  tools-test:
+    name: FOSS2 release contracts
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22.23.4'
+      - name: Check publication and packaging contracts without browsers
+        working-directory: ottplay-foss2
+        run: |
+          python3 tests/test_hosted_release.py
+          node --test tests/test-release.cjs
+
+  qualify:
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.event.deleted == false)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    outputs:
+      candidate: ${{ steps.request.outputs.candidate }}
+      version: ${{ steps.request.outputs.version }}
+      publish: ${{ steps.request.outputs.publish }}
+      artifact-id: ${{ steps.assets.outputs.artifact-id }}
+    steps:
+      - uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.workflow_sha }}
+          path: control
+          persist-credentials: false
+      - name: Validate immutable request
+        id: request
+        env:
+          INPUT_CANDIDATE: ${{ inputs.candidate_sha }}
+          INPUT_VERSION: ${{ inputs.version }}
+          INPUT_PUBLISH: ${{ inputs.publish }}
+        run: python3 control/ottplay-foss2/scripts/hosted-release.py request
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ steps.request.outputs.candidate }}
+          path: candidate
+          persist-credentials: false
+      - name: Check candidate identity
+        env:
+          CANDIDATE_SHA: ${{ steps.request.outputs.candidate }}
+          CANDIDATE_VERSION: ${{ steps.request.outputs.version }}
+        run: python3 control/ottplay-foss2/scripts/hosted-release.py preflight --repo candidate
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22.23.4'
+          cache: npm
+          cache-dependency-path: candidate/ottplay-foss2/package-lock.json
+      - name: Install locked Linux qualification tools
+        working-directory: candidate/ottplay-foss2
+        run: |
+          npm ci --ignore-scripts
+          npx --no-install playwright install --with-deps chromium
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ffmpeg
+      - name: Qualify and package the candidate
+        working-directory: candidate/ottplay-foss2
+        env:
+          CANDIDATE_CHANNEL: ${{ steps.request.outputs.channel }}
+        run: |
+          python3 tests/test_hosted_release.py
+          npm run verify:release
+          case "$CANDIDATE_CHANNEL" in
+            rc) npm run release:rc ;;
+            beta) npm run release:beta ;;
+            *) exit 1 ;;
+          esac
+      - name: Bind exact source and release assets
+        env:
+          CANDIDATE_SHA: ${{ steps.request.outputs.candidate }}
+          CANDIDATE_VERSION: ${{ steps.request.outputs.version }}
+        run: python3 control/ottplay-foss2/scripts/hosted-release.py stage --repo candidate --bundle release-assets
+      - id: assets
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: foss2-release-${{ github.run_id }}-${{ github.run_attempt }}
+          path: release-assets/*
+          if-no-files-found: error
+          retention-days: 30
+      - name: Retain qualification logs
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: foss2-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            candidate/ottplay-foss2/test-results/release-*/validation.json
+            candidate/ottplay-foss2/test-results/release-*/*.log
+            candidate/ottplay-foss2/test-results/release-*/*-report.json
+          if-no-files-found: warn
+          retention-days: 30
+
+  publish:
+    needs: qualify
+    if: >-
+      needs.qualify.outputs.publish == 'true' &&
+      ((github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
+       (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/foss2-v')))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    env:
+      CANDIDATE_SHA: ${{ needs.qualify.outputs.candidate }}
+      CANDIDATE_VERSION: ${{ needs.qualify.outputs.version }}
+    steps:
+      - uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.workflow_sha }}
+          path: control
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.qualify.outputs.candidate }}
+          path: candidate
+          persist-credentials: false
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          artifact-ids: ${{ needs.qualify.outputs.artifact-id }}
+          path: release-assets
+          merge-multiple: true
+      - name: Verify approved source and publish fresh assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 control/ottplay-foss2/scripts/hosted-release.py publish --repo candidate --control control --bundle release-assets

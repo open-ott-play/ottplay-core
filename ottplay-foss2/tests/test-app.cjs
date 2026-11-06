@@ -9,6 +9,7 @@ function fixture(options = {}) {
     const modules = {}, nodes = {}, handlers = {}, timers = new Map(), sourceCalls = [], resolveCalls = [], browseCalls = [], guideCalls = [], toasts = [], mediaLoads = [];
     let securityClock = Date.now(), appGate;
     const storageValues = {};
+    if (options.localState) storageValues["ottplay2:local:v1"] = JSON.stringify(options.localState);
     let timerId = 0, viewAction, model, stored, media, controller, destroyViewCalls = 0, destroyMediaCalls = 0, dialogCalls = 0, dialog = false, dialogTitle = "", selectedId = "", focusedId = "", menuOpen = false;
     const ids = ["foss2-home", "player-video", "player-osd", "player-status", "player-title", "player-home", "player-pause", "player-stop", "player-fullscreen", "player-stage", "player-info-hitarea", "player-programme-title", "player-programme-time", "player-programme-details", "player-description", "player-next"];
     for (const id of ids) nodes[id] = { id, style: {}, textContent: "", onclick: null, attributes: {}, setAttribute(name, value) { this.attributes[name] = value; } };
@@ -49,7 +50,7 @@ function fixture(options = {}) {
     environment.window = environment;
     const context = vm.createContext(environment);
     require("./load-core.cjs")(context);
-    for (const file of ["security", "library", "channel-identity", "features", "playback-preferences", "playback-view", "playback-info", "state", "media", "devices"]) vm.runInContext(fs.readFileSync(path.join(__dirname, "../src/" + file + ".js"), "utf8"), context);
+    for (const file of ["security", "library", "channel-identity", "features", "playback-preferences", "playback-view", "playback-info", "state", "media", "devices", "local-media"]) vm.runInContext(fs.readFileSync(path.join(__dirname, "../src/" + file + ".js"), "utf8"), context);
     const securityCreate = modules.security.create;
     modules.security.create = function (config) { config.now = () => securityClock; return appGate = securityCreate(config); };
     const createMedia = modules.media.create;
@@ -108,9 +109,10 @@ function fixture(options = {}) {
     controller = modules.app.start(environment);
     const live = { id: "source:live", name: "Live", kind: "live", url: "https://media.example/live.mp4", group: "News" };
     const film = { id: "source:film", name: "Film", kind: "vod", url: "https://media.example/film.mp4", group: "Movies" };
-    if (!options.deferSource) sourceCalls[0].callback(null, { channels: [live, film].concat(options.extraChannels || []), epgUrls: options.epgUrls || [], warnings: [] });
+    if (!options.deferSource && sourceCalls[0]) sourceCalls[0].callback(null, { channels: [live, film].concat(options.extraChannels || []), epgUrls: options.epgUrls || [], warnings: [] });
     return {
         controller, nodes, document, video, media, environment, timers, sourceCalls, resolveCalls, browseCalls, guideCalls, toasts, mediaLoads, live, film,
+        get localSaved() { return JSON.parse(storageValues["ottplay2:local:v1"] || "null"); },
         action(name, value, values) { viewAction(name, value, values); },
         async pinAction(name, value, values) {
             viewAction(name, value, values);
@@ -129,6 +131,94 @@ function fixture(options = {}) {
         get selectedId() { return selectedId; }, get focusedId() { return focusedId; }, get menuOpen() { return menuOpen; }, get saved() { const upgraded = storageValues[modules.state.secureKey]; return upgraded ? JSON.parse(upgraded).state : JSON.parse(storageValues[modules.state.key]); }, get hasDialog() { return dialog; }, get dialogCalls() { return dialogCalls; }, get model() { return model; }, get destroyViewCalls() { return destroyViewCalls; }, get destroyMediaCalls() { return destroyMediaCalls; }, get dialogTitle() { return dialogTitle; }, get listenerNames() { return Object.keys(handlers); }, get documentListenerCount() { return Object.values(documentListeners).reduce((count, entries) => count + entries.length, 0); }
     };
 }
+
+const localEndpoint = "http://127.0.0.1:44000/offline-media/" + "a".repeat(64);
+async function settleLocal() { for (let i = 0; i < 24; i++) await Promise.resolve(); }
+function localFixture(options = {}) {
+    const requests = [];
+    const f = fixture({ ...options, environment: { ...(options.environment || {}), XMLHttpRequest: class {
+        open(method, url) { this.url = url; }
+        send() { requests.push(this); }
+        abort() { this.aborted = true; }
+        respond(value) { this.status = 200; this.responseText = JSON.stringify(value); this.onload(); }
+    } } });
+    return Object.assign(f, { requests });
+}
+function localCatalog(ids, complete = false) {
+    return { scanning: !complete, sources: [{ id: "movies", name: "Movies", available: true }], sourceScans: [{ sourceId: "movies", generation: 1, state: complete ? "complete" : "scanning" }], items: ids.map(id => ({ id, sourceId: "movies", name: id + ".mp4", url: localEndpoint + "/" + id, available: true })) };
+}
+async function startLocal(f) {
+    f.action("localConnect", "", { "local-endpoint": localEndpoint });
+    assert.equal(f.requests[0].url, localEndpoint + "/sources");
+    f.requests[0].respond({ sources: [{ id: "movies", name: "Movies" }] }); await settleLocal();
+    const id = f.model.local.sources[0].id;
+    f.action("localPlay", id); assert.equal(f.requests[1].url, localEndpoint + "?sourceId=movies");
+    f.requests[1].respond(localCatalog(["first"])); await settleLocal(); return id;
+}
+
+test("Local helper starts the existing decoder on the first prefix and leaves IPTV state intact", async () => {
+    const f = localFixture({ bookmark: 75 }); const prior = JSON.stringify(f.saved);
+    await startLocal(f);
+    assert.equal(f.mediaLoads.length, 1); assert.equal(f.video.src, localEndpoint + "/first");
+    assert.equal(f.mediaLoads[0].selection.format, "file"); assert.equal(f.model.local.scanning, true);
+    f.video.fire("playing"); f.video.currentTime = 31; f.key("pause");
+    assert.equal(f.localSaved.position, 31); assert.equal(JSON.stringify(f.saved), prior);
+    f.runDelay(10000); await settleLocal(); f.requests[2].respond(localCatalog(["first", "second"], true)); await settleLocal();
+    assert.equal(f.mediaLoads.length, 1); assert.equal(f.model.rows.length, 2);
+    f.action("screen", "tv"); assert.equal(f.sourceCalls.length, 2);
+    assert.equal(f.localSaved.active, false); assert.equal(f.localSaved.position, 31); assert.equal(JSON.stringify(f.saved), prior);
+    f.controller.destroy();
+});
+
+for (const action of ["append", "pause", "seek", "stop", "source"]) test("Local app EOF owns pending append after " + action, async () => {
+    const f = localFixture(); await startLocal(f); f.video.fire("playing"); f.video.fire("ended");
+    assert.equal(f.mediaLoads.length, 1);
+    if (action === "pause") f.key("pause");
+    if (action === "seek") f.key("right");
+    if (action === "stop") f.key("stop");
+    if (action === "source") f.action("loadSource", "source");
+    if (action !== "source") { await settleLocal(); f.requests[2].respond(localCatalog(["first", "second"], true)); await settleLocal(); }
+    assert.equal(f.mediaLoads.length, action === "append" ? 2 : 1);
+    if (action === "append") { assert.equal(f.video.src, localEndpoint + "/second"); f.video.fire("timeupdate"); assert.equal(f.mediaLoads.length, 2); }
+    f.controller.destroy();
+});
+
+test("Local restored helper prioritizes exact item and restores only its own bookmark", async () => {
+    const localState = { version: 1, sources: [{ id: "local-saved", kind: "helper", name: "Movies", endpoint: localEndpoint, rootId: "movies" }], selected: "local-saved", current: "local-saved:first", position: 47, bookmarks: { "local-saved:first": 47 }, active: true, shuffle: true, repeat: "off" };
+    const f = localFixture({ localState, bookmark: 75 });
+    assert.equal(f.sourceCalls.length, 0); assert.equal(f.requests[0].url, localEndpoint + "?sourceId=movies&preferredId=first");
+    f.requests[0].respond(localCatalog(["first"])); await settleLocal(); f.video.fire("playing");
+    assert.equal(f.mediaLoads.length, 1); assert.equal(f.video.currentTime, 47); assert.equal(f.saved.bookmarks["source:film"], 75);
+    f.controller.destroy();
+});
+test("manual Play after pausing at Local EOF replays the current file without reviving auto-next", async () => {
+    const f = localFixture(); await startLocal(f); f.video.fire("playing"); f.video.fire("ended"); f.key("pause");
+    await settleLocal(); f.requests[2].respond(localCatalog(["first", "second"], true)); await settleLocal();
+    const plays = f.video.playCalls; f.key("play");
+    assert.equal(f.video.playCalls, plays + 1); assert.equal(f.mediaLoads.length, 1); assert.equal(f.video.src, localEndpoint + "/first");
+    f.video.fire("playing"); assert.equal(f.mediaLoads.length, 1); f.controller.destroy();
+});
+test("Local Refresh UI explicitly refreshes a completed helper source", async () => {
+    const f = localFixture(); const id = await startLocal(f);
+    f.runDelay(10000); await settleLocal(); f.requests[2].respond(localCatalog(["first"], true)); await settleLocal();
+    f.action("localRefresh", id); assert.equal(f.requests[3].url, localEndpoint + "?sourceId=movies&preferredId=first&refresh=true");
+    const updated = localCatalog(["first", "new"], true); updated.sourceScans[0].generation = 2;
+    f.requests[3].respond(updated); await settleLocal(); assert.equal(f.model.rows.length, 2); assert.equal(f.mediaLoads.length, 2);
+    f.controller.destroy();
+});
+
+test("Local browser picker starts one decoder before the second original can be read", async () => {
+    let release, reads = 0, objects = 0; const tail = new Promise(resolve => { release = resolve; });
+    const handles = ["first", "second"].map((name, index) => ({ kind: "file", name: name + ".mp4", async getFile() { reads++; if (index) await tail; return { name: name + ".mp4", type: "video/mp4" }; } }));
+    const folder = { kind: "directory", name: "Movies", values() { let index = 0; return { next: async () => index < handles.length ? { done: false, value: handles[index++] } : { done: true } }; } };
+    const f = fixture({ environment: { showDirectoryPicker: () => Promise.resolve(folder), URL: { createObjectURL: () => "blob:local-" + ++objects, revokeObjectURL() {} } } });
+    f.action("localFolder"); await settleLocal();
+    assert.equal(f.mediaLoads.length, 1); assert.equal(f.video.src, "blob:local-1"); assert.equal(objects, 1);
+    await settleLocal();
+    assert.equal(reads, 2); assert.equal(f.mediaLoads.length, 1);
+    release(); await settleLocal(); assert.equal(f.model.rows.length, 2); assert.equal(f.mediaLoads.length, 1); assert.equal(objects, 1);
+    f.controller.destroy();
+});
 
 test("VOD resume consumes the bookmark before synchronous seek events", () => {
     const f = fixture({ bookmark: 75 });
