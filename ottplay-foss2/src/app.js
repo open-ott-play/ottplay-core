@@ -25,13 +25,14 @@ OTT2.define("app", function (require) {
         var view = require("view").create({ root: root, document: d, environment: environment, onAction: action, onDialogClose: function () {
             if (gate && gate.status().busy) gate.lock();
             pinChallenge = null;
+            localHelperDialog = false;
             if (local) { localAction++; local.cancelConnect(); }
             if (quitRequested) { quitRequested = false; if (playbackInfo) playbackInfo.setEnabled(!destroyed && !homeVisible && !!current); }
             if (fileReader) { fileReader.onload = null; fileReader.onerror = null; try { fileReader.abort(); } catch (ignore) {} fileReader = null; }
         } });
         var playbackInfo = require("playback-info").create({ document: d, environment: environment, t: t, timeout: 6000, shouldAutoHide: function () { return !autoplayBlocked; } });
         var media = require("media").create({ video: video, environment: environment, onEvent: mediaEvent, options: { device: profile.id } });
-        var localMode = false, localAction = 0;
+        var localMode = false, localAction = 0, localHelperDialog = false;
         var local = require("local-media").create(environment, { storage: storage, changed: localChanged, start: function (row, resume) { if (localMode) play(row, resume, true); } });
         var playbackPreferences = require("playback-preferences").create({ media: media, persist: persist, state: function () { return saved; } });
         var playbackView = require("playback-view").create({ view: view, media: media, preferences: playbackPreferences, t: t, persist: persist, state: function () { return saved; }, changeEngine: changeEngine, changeFormat: changeFormat });
@@ -474,7 +475,8 @@ OTT2.define("app", function (require) {
             if (ch.restorePath) { restoreSavedItem(ch, resume); return; }
             stopPlayback();
             var epoch = ++resolveEpoch;
-            view.closeDialog(); current = ch; pendingResume = resume ? ch.local ? local.snapshot().position : saved.bookmarks[ch.id] || 0 : 0;
+            if (!localStart || !localHelperDialog) view.closeDialog();
+            current = ch; pendingResume = resume ? ch.local ? local.snapshot().position : saved.bookmarks[ch.id] || 0 : 0;
             if (ch.kind !== "vod" && ch.kind !== "folder" && source(ch.sourceId || saved.activeSourceId)) {
                 var original = ch;
                 for (var i = 0; i < channels.length; i++) if (channels[i].id === ch.id) { original = channels[i]; break; }
@@ -582,6 +584,7 @@ OTT2.define("app", function (require) {
         function beginLocal(id, shuffle, resume, allowPrompt, refresh) {
             if (destroyed || !local.snapshot().sources.some(function (source) { return source.id === id; })) return false;
             if (!gate.authorize("source").ok) { challenge("source", "", function () { beginLocal(id, shuffle, resume, allowPrompt, refresh); }); return true; }
+            if (localHelperDialog) view.closeDialog();
             localAction++; startupRestore = null; gate.lock();
             if (cancelSource) cancelSource(); if (cancelGuide) cancelGuide();
             sourceEpoch++; clearBrowse(); guideRefresh.reset(true); stopPlayback();
@@ -719,7 +722,7 @@ OTT2.define("app", function (require) {
             var scope = actionScope(name, value);
             if (scope && !gate.authorize(scope).ok) { challenge(scope, "", function () { action(name, value, values); }); return; }
             if (name === "localFolder" || name === "localFiles") { pickLocal(name === "localFolder"); return; }
-            if (name === "localHelper") { view.dialog(t("Подключить Local helper", "Connect Local helper"), view.field("local-endpoint", t("Авторизованный URL helper", "Authenticated helper URL"), "", "password") + '<p class="f2-help">' + t("URL хранится только на этом устройстве и не входит в экспорт IPTV.", "The URL stays on this device and is excluded from IPTV exports.") + '</p>' + view.btn("local-connect", "localConnect", t("Подключить", "Connect"))); return; }
+            if (name === "localHelper") { view.dialog(t("Подключить Local helper", "Connect Local helper"), view.field("local-endpoint", t("Авторизованный URL helper", "Authenticated helper URL"), "", "password") + '<p class="f2-help">' + t("URL хранится только на этом устройстве и не входит в экспорт IPTV.", "The URL stays on this device and is excluded from IPTV exports.") + '</p>' + view.btn("local-connect", "localConnect", t("Подключить", "Connect"))); localHelperDialog = true; return; }
             if (name === "localConnect") { var connectAction = ++localAction; local.connect(values["local-endpoint"]).then(function () { if (!destroyed && connectAction === localAction) { view.closeDialog(); screen = "sources"; render(); } }, function (failure) { if (connectAction === localAction) localFailure(failure); }); return; }
             if (name === "localPlay" || name === "localShuffle" || name === "localResume") { beginLocal(value, name === "localShuffle", name === "localResume", true); return; }
             if (name === "localRefresh") { var localState = local.snapshot(); beginLocal(value, localState.shuffle, localState.selected === value, true, true); return; }

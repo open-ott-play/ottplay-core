@@ -170,6 +170,29 @@ test("helper registration adds sources while preserving the current Local decode
     f.runDelay(10000); await settleLocal(); f.requests[3].respond(localCatalog(["first", "second"])); await settleLocal();
     assert.equal(f.model.local.scanning, true); assert.equal(f.mediaLoads.length, 1); f.controller.destroy();
 });
+for (const connecting of [false, true]) test("Local EOF preserves the helper editor and pending connection: " + connecting, async () => {
+    const f = localFixture(); await startLocal(f);
+    f.runDelay(10000); await settleLocal(); f.requests[2].respond(localCatalog(["first", "second"], true)); await settleLocal();
+    f.video.fire("playing"); f.action("localHelper");
+    if (connecting) f.action("localConnect", "", { "local-endpoint": localEndpoint.replace(/a{64}/, "b".repeat(64)) });
+    const title = f.dialogTitle;
+    f.video.fire("ended"); await settleLocal();
+    assert.equal(f.video.src, localEndpoint + "/second"); assert.equal(f.hasDialog, true); assert.equal(f.dialogTitle, title);
+    if (connecting) {
+        assert.notEqual(f.requests[3].aborted, true);
+        f.requests[3].respond({ sources: [{ id: "other", name: "Other" }] }); await settleLocal();
+        assert.equal(f.model.local.sources.length, 2); assert.equal(f.hasDialog, false);
+    } else { f.action("closeDialog"); assert.equal(f.hasDialog, false); }
+    f.controller.destroy();
+});
+test("explicit Local source selection retires the helper editor and request", async () => {
+    const f = localFixture(), id = await startLocal(f); f.video.fire("playing");
+    f.action("localHelper"); f.action("localConnect", "", { "local-endpoint": localEndpoint.replace(/a{64}/, "b".repeat(64)) });
+    const request = f.requests[2]; f.action("localPlay", id);
+    assert.equal(f.hasDialog, false); assert.equal(request.aborted, true);
+    request.respond({ sources: [{ id: "late", name: "Late" }] }); await settleLocal();
+    assert.equal(f.model.local.sources.length, 1); f.controller.destroy();
+});
 for (const close of ["button", "back", "replacement"]) test("review: closing helper registration prevents a late save or navigation: " + close, async () => {
     const f = localFixture(); await startLocal(f); f.video.fire("playing");
     f.action("localHelper"); f.action("localConnect", "", { "local-endpoint": localEndpoint.replace(/a{64}/, "b".repeat(64)) });
