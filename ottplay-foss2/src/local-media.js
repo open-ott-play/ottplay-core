@@ -318,8 +318,8 @@ OTT2.define("local-media", function () {
         }
         function helperScan(source, token, preferred, refresh) {
             var scanGeneration = null, signature = "", changed = Date.now(), root = source.endpoint, origin = /^(https?:\/\/[^/]+)/.exec(root)[1];
-            var url = root + "?sourceId=" + encodeURIComponent(source.rootId);
-            if (preferred && preferred.indexOf(encodeURIComponent(source.id) + ":") === 0) url += "&preferredId=" + encodeURIComponent(preferred.slice(encodeURIComponent(source.id).length + 1));
+            var url = root + "?sourceId=" + encodeURIComponent(source.rootId), preferredId = "";
+            if (preferred && preferred.indexOf(encodeURIComponent(source.id) + ":") === 0) { preferredId = preferred.slice(encodeURIComponent(source.id).length + 1); url += "&preferredId=" + encodeURIComponent(preferredId); }
             function poll() {
                 if (!alive(token)) return Promise.resolve();
                 var requestUrl = url + (refresh ? "&refresh=true" : ""); refresh = false;
@@ -328,16 +328,21 @@ OTT2.define("local-media", function () {
                     if (!catalog || !Array.isArray(catalog.items)) throw new Error("INVALID_CATALOG");
                     var scans = (catalog.sourceScans || []).filter(function (scan) { return scan.sourceId === source.rootId; }), scan = scans[0];
                     if (scans.length > 1 || scan && (typeof scan.generation !== "number" || !isFinite(scan.generation) || scan.generation <= 0 || Math.floor(scan.generation) !== scan.generation || ["pending", "scanning", "complete", "error"].indexOf(scan.state) < 0)) throw new Error("INVALID_GENERATION");
-                    if (scan) { if (scanGeneration !== null && scanGeneration !== scan.generation) throw new Error("SOURCE_CHANGED"); scanGeneration = scan.generation; if (scan.state === "error") throw new Error("SOURCE_UNAVAILABLE"); }
+                    if (scan) { if (scanGeneration !== null && scanGeneration !== scan.generation) throw new Error("SOURCE_CHANGED"); scanGeneration = scan.generation; }
                     var complete = scan ? scan.state === "complete" : !catalog.scanning;
                     var sourceRow = (catalog.sources || []).filter(function (row) { return row.id === source.rootId; })[0];
                     if (!sourceRow || sourceRow.available === false) throw new Error("SOURCE_UNAVAILABLE");
+                    if (preferred && catalog.preferred && catalog.preferred.id === preferredId && catalog.preferred.state === "missing" && (scan && scan.state !== "pending" || complete)) {
+                        preferred = "";
+                        if (first && rows.length) choose(rows[0].id, false);
+                    }
                     if (scan && scan.state !== "pending" || complete) catalog.items.forEach(function (item) {
                         if (!item || item.sourceId !== source.rootId || item.available === false || !validId(item.id) || typeof item.url !== "string") return;
                         var mediaUrl = item.url.charAt(0) === "/" ? origin + item.url : item.url;
                         if (mediaUrl !== root + "/" + item.id || !/^[A-Za-z0-9_-]+$/.test(item.id)) return;
                         publish({ url: mediaUrl, row: { id: encodeURIComponent(source.id) + ":" + item.id, sourceId: source.id, name: String(item.name || item.id), group: source.name, kind: "vod", local: true, format: "file", mime: item.mime || "" } }, token, preferred);
                     });
+                    if (scan && scan.state === "error") throw new Error("SOURCE_UNAVAILABLE");
                     var next = JSON.stringify([scan, catalog.scanned, rows.length]);
                     if (next !== signature) { signature = next; changed = Date.now(); }
                     if (complete) return;

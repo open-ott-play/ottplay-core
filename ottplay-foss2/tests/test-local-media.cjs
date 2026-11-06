@@ -209,6 +209,42 @@ test("helper 401 does not fall back or expose the endpoint", async () => {
     const f = fixture(), pending = f.local.connect(endpoint); f.requests[0].respond({}, 401);
     await assert.rejects(pending, /HELPER_REQUEST/); assert.equal(f.requests.length, 1); assert.ok(!JSON.stringify(f.state).includes("aaaa")); f.local.destroy();
 });
+test("helper traversal error preserves and starts its validated prefix without repeat-all wrap", async () => {
+    const f = fixture(), id = await helper(f); f.local.select(id, false, false, false);
+    const result = catalog(["first", "second"], 1, "error"); result.scanning = false;
+    f.requests[1].respond(result); await until(() => !f.state.scanning);
+    assert.equal(f.starts.length, 1); assert.equal(f.starts[0].row.name, "first.mp4");
+    assert.equal(f.rows.length, 2); assert.ok(f.state.error);
+    f.local.repeat(); f.local.ended(f.starts[0].row.id);
+    assert.equal(f.starts.length, 2); assert.equal(f.starts[1].row.name, "second.mp4");
+    f.local.ended(f.starts[1].row.id); assert.equal(f.starts.length, 2); f.local.destroy();
+});
+test("helper error does not authorize an unavailable source prefix", async () => {
+    const f = fixture(), id = await helper(f); f.local.select(id, false, false, false);
+    const result = catalog(["first"], 1, "error"); result.sources[0].available = false;
+    f.requests[1].respond(result); await until(() => !f.state.scanning);
+    assert.equal(f.starts.length, 0); assert.equal(f.rows.length, 0); assert.ok(f.state.error); f.local.destroy();
+});
+test("only matching authoritative missing proof releases saved helper selection before scan completes", async () => {
+    const values = { "ottplay2:local:v1": JSON.stringify({ version: 1, sources: [{ id: "saved", name: "Movies", kind: "helper", endpoint, rootId: "movies" }], selected: "saved", current: "saved:gone", position: 9 }) };
+    const f = fixture({ values }); f.local.select("saved", false, true, false);
+    assert.equal(f.requests[0].url, endpoint + "?sourceId=movies&preferredId=gone");
+    let result = catalog(["ready"]); result.preferred = { id: "gone", state: "pending" };
+    f.requests[0].respond(result); await poll(f, 1000); assert.equal(f.starts.length, 0);
+    result = catalog(["ready"]); result.preferred = { id: "other", state: "missing" };
+    f.requests[1].respond(result); await poll(f, 1000); assert.equal(f.starts.length, 0);
+    result = catalog(["ready"]); result.preferred = { id: "gone", state: "missing" };
+    f.requests[2].respond(result); await until(() => f.starts.length === 1);
+    assert.equal(f.starts[0].row.name, "ready.mp4"); assert.equal(f.starts[0].resume, false);
+    assert.equal(f.local.snapshot().position, 0); assert.equal(f.state.scanning, true); f.local.destroy();
+});
+test("missing helper selection starts a newly discovered prefix in the same response", async () => {
+    const values = { "ottplay2:local:v1": JSON.stringify({ version: 1, sources: [{ id: "saved", name: "Movies", kind: "helper", endpoint, rootId: "movies" }], selected: "saved", current: "saved:gone", position: 9 }) };
+    const f = fixture({ values }); f.local.select("saved", false, true, false);
+    const result = catalog(["ready"]); result.preferred = { id: "gone", state: "missing" };
+    f.requests[0].respond(result); await until(() => f.starts.length === 1);
+    assert.equal(f.starts[0].row.name, "ready.mp4"); assert.equal(f.starts[0].resume, false); assert.equal(f.state.scanning, true); f.local.destroy();
+});
 test("helper pending generation cannot publish a stale saved row", async () => {
     const f = fixture(), id = await helper(f); f.local.select(id, false, false, false);
     f.requests[1].respond(catalog(["stale"], 1, "pending"));
