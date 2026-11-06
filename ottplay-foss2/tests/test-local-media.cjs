@@ -54,6 +54,103 @@ async function helper(f) {
     await connecting;
     return f.local.snapshot().sources[0].id;
 }
+test("review: IndexedDB retries after a transient open failure", async () => {
+    const f = fixture({ folder: folder([file("ready.mp4")]) }), open = f.env.indexedDB.open;
+    let attempts = 0;
+    f.env.indexedDB.open = function () {
+        attempts++;
+        if (attempts > 1) return open();
+        const request = {}; queueMicrotask(() => request.onerror()); return request;
+    };
+    await f.local.importFolder();
+    const id = await f.local.importFolder();
+    assert.equal(attempts, 2); assert(f.dbRecords.has(id)); f.local.destroy();
+});
+for (const result of ["abort", "late-commit", "cleanup-failure"]) test("review: import cannot persist an orphan after destroy: " + result, async () => {
+    const original = { id: "existing", handles: [file("existing.mp4")] };
+    const values = { "ottplay2:local:v1": JSON.stringify({ version: 1, sources: [{ id: "existing", name: "Existing", kind: "browser" }] }) };
+    const before = values["ottplay2:local:v1"];
+    const f = fixture({ values, dbRecords: new Map([["existing", original]]), folder: folder([file("ready.mp4")]) });
+    let transaction, closed = false, newId;
+    f.env.indexedDB.open = function () {
+        const request = {};
+        queueMicrotask(() => { request.result = { close() { closed = true; }, transaction() {
+            assert.equal(closed, false, "late cleanup must finish before closing the database");
+            const tx = { aborted: false, committed: false,
+                abort() { assert.equal(this.committed, false); this.aborted = true; queueMicrotask(() => this.onabort()); },
+                commit() { if (!this.aborted) { this.effect(); this.committed = true; this.oncomplete(); } },
+                objectStore() { return {
+                    put(value) { transaction = tx; newId = value.id; tx.effect = () => f.dbRecords.set(value.id, value); return {}; },
+                    delete(id) { tx.effect = () => f.dbRecords.delete(id); queueMicrotask(() => result === "cleanup-failure" ? tx.abort() : tx.commit()); return {}; }
+                }; }
+            }; return tx;
+        } }; request.onsuccess(); }); return request;
+    };
+    const pending = f.local.importFolder(); await until(() => transaction);
+    if (result !== "abort") transaction.commit();
+    f.local.destroy(); if (result === "abort") transaction.commit();
+    assert.equal(await pending, null); await settled();
+    assert.equal(f.local.snapshot().sources.length, 1); assert.equal(f.values[f.key], before);
+    assert.equal(f.dbRecords.get("existing"), original); assert.equal(closed, true);
+    if (result === "cleanup-failure") { assert(f.dbRecords.has(newId)); assert.equal(f.local.snapshot().persistent, false); }
+    else assert.equal(f.dbRecords.has(newId), false, "no unpublished grant may persist");
+});
+test("an import whose database opens after destroy cannot begin a write", async () => {
+    const f = fixture({ folder: folder([file("ready.mp4")]) }); let open, writes = 0, closed = false;
+    f.env.indexedDB.open = function () { open = {}; return open; };
+    const pending = f.local.importFolder(); await until(() => open);
+    f.local.destroy(); open.result = { close() { closed = true; }, transaction() {
+        writes++; const tx = { objectStore() { return { put() { queueMicrotask(() => tx.oncomplete()); return {}; } }; } }; return tx;
+    } }; open.onsuccess();
+    assert.equal(await pending, null); await settled(); assert.equal(writes, 0); assert.equal(closed, true);
+});
+test("review: helper registration preserves selected discovery and its decoder", async () => {
+    const f = fixture(), id = await helper(f); f.local.select(id, false, false, false);
+    f.requests[1].respond(catalog(["first"])); await settled();
+    const connecting = f.local.connect(endpoint.replace(/a{64}/, "b".repeat(64)));
+    assert.equal(f.local.snapshot().scanning, true);
+    f.requests[2].respond({ sources: [{ id: "other", name: "Other" }] }); await connecting;
+    await poll(f, 10000); f.requests[3].respond(catalog(["first", "second"])); await settled();
+    assert.equal(f.rows.length, 2); assert.equal(f.starts.length, 1); assert.equal(f.local.snapshot().selected, id);
+    f.local.ended(f.rows[0].id); assert.equal(f.starts.length, 2); assert.equal(f.starts[1].row.name, "second.mp4");
+    f.local.destroy();
+});
+test("review: cancelled helper registration cannot save a late inventory or cancel playback discovery", async () => {
+    const f = fixture(), id = await helper(f); f.local.select(id, false, false, false);
+    f.requests[1].respond(catalog(["first"])); await settled();
+    const connecting = f.local.connect(endpoint.replace(/a{64}/, "b".repeat(64))).catch(error => error.message);
+    f.local.cancelConnect(); assert.equal(f.requests[2].aborted, true);
+    f.requests[2].respond({ sources: [{ id: "late", name: "Late" }] }); await connecting;
+    assert.equal(f.local.snapshot().sources.length, 1); assert.equal(f.local.snapshot().scanning, true);
+    await poll(f, 10000); f.requests[3].respond(catalog(["first", "second"], 1, "complete")); await settled();
+    assert.equal(f.rows.length, 2); assert.equal(f.starts.length, 1); f.local.destroy();
+});
+test("registration cancelled after a 404 cannot issue a legacy fallback request", async () => {
+    const f = fixture(), pending = f.local.connect(endpoint).catch(error => error.message);
+    f.requests[0].respond({}, 404); f.local.cancelConnect(); await pending;
+    assert.equal(f.requests.length, 1); assert.equal(f.local.snapshot().sources.length, 0); f.local.destroy();
+});
+test("source replacement cancels only the current helper registration and rejects its late inventory", async () => {
+    const f = fixture(), id = await helper(f);
+    const pending = f.local.connect(endpoint.replace(/a{64}/, "b".repeat(64))).catch(error => error.message);
+    const registration = f.requests[1]; f.local.select(id, false, false, false);
+    registration.respond({ sources: [{ id: "late", name: "Late" }] }); await pending;
+    f.requests[2].respond(catalog(["first"])); await settled();
+    assert.equal(registration.aborted, true); assert.equal(f.local.snapshot().sources.length, 1); assert.equal(f.starts.length, 1); f.local.destroy();
+});
+for (const interrupted of [false, true]) test("review: preferred browser timeout fallback respects interruption " + interrupted, async () => {
+    const held = deferred(), selected = file("selected.mp4", held.promise), ready = file("ready.mp4");
+    const id = "saved", root = folder([selected, ready]);
+    const values = { "ottplay2:local:v1": JSON.stringify({ version: 1, sources: [{ id, name: "Saved", kind: "browser" }], selected: id, current: id + ":selected.mp4", active: true }) };
+    const f = fixture({ values, dbRecords: new Map([[id, { id, handles: [root] }]]) });
+    f.local.select(id, false, true, false); await until(() => f.rows.length === 1);
+    assert.equal(f.starts.length, 0); if (interrupted) f.local.interrupt();
+    f.runTimer(60000); await settled();
+    assert.equal(f.starts.length, interrupted ? 0 : 1);
+    assert.match(f.local.snapshot().error, /timed out/); assert.equal(f.local.snapshot().scanning, false);
+    if (!interrupted) { assert.equal(f.starts[0].row.name, "ready.mp4"); f.local.repeat(); f.local.ended(f.rows[0].id); assert.equal(f.starts.length, 1); }
+    held.resolve(); await settled(); assert.equal(f.starts.length, interrupted ? 0 : 1); f.local.destroy();
+});
 test("browser first file plays before a blocked second original read; append retains the selected item", async () => {
     const tail = deferred(), first = file("first.mp4"), second = file("second.mp4", tail.promise), f = fixture({ folder: folder([first, second]) });
     const id = await f.local.importFolder(); f.local.select(id, false, false, true);

@@ -160,6 +160,16 @@ jobs:
           path: control
           fetch-depth: 0
           persist-credentials: false
+      - name: Verify publication ancestry before repository code
+        working-directory: control
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$CANDIDATE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$GITHUB_WORKFLOW_SHA" =~ ^[0-9a-f]{40}$ ]]
+          git rev-parse --verify 'refs/remotes/origin/main^{commit}' >/dev/null
+          git merge-base --is-ancestor "$CANDIDATE_SHA" refs/remotes/origin/main
+          git merge-base --is-ancestor "$GITHUB_WORKFLOW_SHA" refs/remotes/origin/main
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ needs.qualify.outputs.candidate }}

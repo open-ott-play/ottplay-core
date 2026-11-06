@@ -28,11 +28,20 @@ the workflow revision must be in `main` before publication is eligible. A
 deleted tag does not start qualification. This workflow accepts numbered beta
 and RC versions; it does not rebuild stable releases.
 
+The publisher checks both revisions against the full checkout's `origin/main`
+before executing any repository helper, then repeats the checks in the helper.
+This prevents a tag-selected helper from bypassing its own ancestry check. It is
+defense in depth within the reviewed workflow: an actor who can replace the
+workflow YAML can also remove that gate. Repository and tag permissions remain
+the trust boundary; this workflow does not change those permissions or policies.
+
 The publishing job receives only the exact artifact produced by that run and
 checks its source/version binding, manifest, archive and checksums before
 publishing `foss2-v0.6.2-rc.1`. It must not replace existing releases, tags or
 assets. Downloaded release assets must match the staged bytes. A failed attempt
 may leave a draft for inspection; it must not overwrite that draft on retry.
+Archive validation rejects symlinks, directories and special-file metadata,
+including on the embedded manifest, while accepting ordinary DOS and Unix files.
 
 The published archive, release manifest, checksums, validation report and
 source/run binding are

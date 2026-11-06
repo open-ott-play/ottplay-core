@@ -3,8 +3,11 @@
 
 import importlib.util
 import json
+import os
 from pathlib import Path
 import re
+import stat
+import struct
 import subprocess
 import sys
 import tempfile
@@ -108,6 +111,48 @@ class ReleaseContract(unittest.TestCase):
     def verify(self):
         return release.verify(self.bundle, self.repo, self.env)
 
+    def zip_metadata(self, original, target, system, attributes):
+        """Change central-directory metadata only, preserving every member byte."""
+        archive_path = self.bundle / release.asset_names(self.version)[0]
+        archive_path.write_bytes(original)
+        with zipfile.ZipFile(archive_path) as archive:
+            position, rows = archive.start_dir, archive.infolist()
+        data = bytearray(original)
+        matched = False
+        for row in rows:
+            self.assertEqual(data[position:position + 4], b"PK\x01\x02")
+            if row.filename == target:
+                data[position + 5] = system
+                struct.pack_into("<I", data, position + 38, attributes)
+                matched = True
+            lengths = struct.unpack_from("<HHH", data, position + 28)
+            position += 46 + sum(lengths)
+        self.assertTrue(matched)
+        archive_path.write_bytes(data)
+        self.rebind()
+
+    def publication_guard(self):
+        workflow = (Path(__file__).parents[2] / ".github/workflows/foss2-release.yml").read_text()
+        publish = workflow.split("\n  publish:\n", 1)[1]
+        marker = "      - name: Verify publication ancestry before repository code\n"
+        self.assertIn(marker, publish)
+        prefix, following = publish.split(marker, 1)
+        block = following.split("\n      - ", 1)[0]
+        self.assertIn("fetch-depth: 0", prefix)
+        self.assertNotIn("run:", prefix, "The ancestry guard must be the first publisher script")
+        self.assertIn("        working-directory: control\n", block)
+        self.assertIn("        shell: bash\n", block)
+        self.assertLess(publish.index(marker), publish.index("run: python3 control/"))
+        body = block.split("        run: |\n", 1)[1]
+        self.assertTrue(all(not line or line.startswith("          ") for line in body.splitlines()))
+        return "\n".join(line[10:] for line in body.splitlines())
+
+    def run_publication_guard(self, *, candidate=None, workflow=None, then=""):
+        env = dict(os.environ, CANDIDATE_SHA=candidate or self.sha,
+                   GITHUB_WORKFLOW_SHA=workflow or self.sha)
+        return subprocess.run(["bash", "-c", self.publication_guard() + "\n" + then],
+                              cwd=self.repo, env=env, capture_output=True, text=True, timeout=10)
+
     def test_immutable_request_and_branch_dispatch_cannot_publish(self):
         env = dict(self.env, INPUT_CANDIDATE=self.sha, INPUT_VERSION=self.version, INPUT_PUBLISH="true")
         self.assertEqual(release.request(env)["publish"], "true")
@@ -182,6 +227,26 @@ class ReleaseContract(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "bytes differ"):
             self.verify()
 
+    def test_nonregular_zip_metadata_rejected_after_rebinding(self):
+        original = (self.bundle / release.asset_names(self.version)[0]).read_bytes()
+        for name in ["index.html", "release-manifest.json"]:
+            for kind in [stat.S_IFLNK, stat.S_IFDIR, stat.S_IFIFO, stat.S_IFSOCK, stat.S_IFCHR, stat.S_IFBLK]:
+                with self.subTest(name=name, kind=kind):
+                    self.zip_metadata(original, "ottplay-foss2-" + self.version + "/" + name,
+                                      3, (kind | 0o644) << 16)
+                    with self.assertRaisesRegex(ValueError, "Non-regular ZIP entry"):
+                        self.verify()
+        self.zip_metadata(original, "ottplay-foss2-" + self.version + "/index.html", 0, 0x10)
+        with self.assertRaisesRegex(ValueError, "Non-regular ZIP entry"):
+            self.verify()
+
+    def test_regular_dos_and_unix_zip_metadata_remain_compatible(self):
+        original = (self.bundle / release.asset_names(self.version)[0]).read_bytes()
+        for system, attributes in [(0, 0), (3, 0o600 << 16), (3, (stat.S_IFREG | 0o644) << 16)]:
+            with self.subTest(system=system, attributes=attributes):
+                self.zip_metadata(original, "ottplay-foss2-" + self.version + "/index.html", system, attributes)
+                self.assertEqual(self.verify()["candidate"], self.sha)
+
     def test_report_cannot_claim_different_git_source(self):
         self.report["sourceHashes"]["index.html"] = "0" * 64
         (self.bundle / "validation.json").write_bytes(release.json_bytes(self.report))
@@ -222,6 +287,33 @@ class ReleaseContract(unittest.TestCase):
         with self.assertRaises(subprocess.CalledProcessError):
             release.publish(self.bundle, self.repo, self.repo, self.env, api)
         self.assertEqual(api.calls, [])
+
+    def test_workflow_guard_accepts_main_candidate_and_control(self):
+        result = self.run_publication_guard()
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_workflow_guard_rejects_unmerged_helper_before_execution(self):
+        helper = self.root / "scripts/hosted-release.py"
+        helper.parent.mkdir()
+        marker = self.repo / "untrusted-helper-ran"
+        helper.write_text("from pathlib import Path\nPath('untrusted-helper-ran').touch()\n")
+        self.git("add", "ottplay-foss2/scripts/hosted-release.py")
+        self.git("-c", "user.email=test@example.invalid", "-c", "user.name=Test", "commit", "-qm", "unmerged helper")
+        unmerged = self.git("rev-parse", "HEAD").strip()
+        for candidate, workflow in [(unmerged, self.sha), (self.sha, unmerged), (unmerged, unmerged)]:
+            with self.subTest(candidate=candidate, workflow=workflow):
+                result = self.run_publication_guard(candidate=candidate, workflow=workflow,
+                                                    then="python3 ottplay-foss2/scripts/hosted-release.py")
+                self.assertNotEqual(result.returncode, 0)
+                self.assertFalse(marker.exists(), "No unapproved helper may execute after a failed guard")
+
+    def test_workflow_guard_rejects_non_sha_and_missing_main(self):
+        for value in ["main", "a" * 39, self.sha + "\n", "-h"]:
+            for field in ["candidate", "workflow"]:
+                with self.subTest(value=value, field=field):
+                    self.assertNotEqual(self.run_publication_guard(**{field: value}).returncode, 0)
+        self.git("update-ref", "-d", "refs/remotes/origin/main")
+        self.assertNotEqual(self.run_publication_guard().returncode, 0)
 
     def test_corrupt_download_leaves_draft_and_never_replaces_asset(self):
         api = FakeGitHub(corrupt_download=True)

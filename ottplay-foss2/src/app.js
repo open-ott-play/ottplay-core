@@ -25,6 +25,7 @@ OTT2.define("app", function (require) {
         var view = require("view").create({ root: root, document: d, environment: environment, onAction: action, onDialogClose: function () {
             if (gate && gate.status().busy) gate.lock();
             pinChallenge = null;
+            if (local) { localAction++; local.cancelConnect(); }
             if (quitRequested) { quitRequested = false; if (playbackInfo) playbackInfo.setEnabled(!destroyed && !homeVisible && !!current); }
             if (fileReader) { fileReader.onload = null; fileReader.onerror = null; try { fileReader.abort(); } catch (ignore) {} fileReader = null; }
         } });
@@ -579,7 +580,8 @@ OTT2.define("app", function (require) {
             render();
         }
         function beginLocal(id, shuffle, resume, allowPrompt, refresh) {
-            if (destroyed) return;
+            if (destroyed || !local.snapshot().sources.some(function (source) { return source.id === id; })) return false;
+            if (!gate.authorize("source").ok) { challenge("source", "", function () { beginLocal(id, shuffle, resume, allowPrompt, refresh); }); return true; }
             localAction++; startupRestore = null; gate.lock();
             if (cancelSource) cancelSource(); if (cancelGuide) cancelGuide();
             sourceEpoch++; clearBrowse(); guideRefresh.reset(true); stopPlayback();
@@ -587,7 +589,7 @@ OTT2.define("app", function (require) {
             localMode = true; channels = []; guide = null; if (guideLookup) guideLookup.clear();
             identityReport = null; catalogSourceId = ""; loadingSourceId = ""; loading = false;
             screen = "vod"; page = 0; group = ""; query = ""; homeVisible = true;
-            local.select(id, shuffle, resume, allowPrompt, refresh); render();
+            local.select(id, shuffle, resume, allowPrompt, refresh); render(); return true;
         }
         function localFailure(failure) { if (!destroyed && (!failure || failure.name !== "AbortError")) view.toast(t("Не удалось открыть локальный источник. Проверьте разрешения и адрес helper.", "Could not open local source. Check permissions and helper address.")); }
         function pickLocal(folder) {
@@ -620,7 +622,7 @@ OTT2.define("app", function (require) {
             }
         }
         function refreshGuideIfDue() {
-            if (!loading && !(d.hidden || d.webkitHidden) && channels.length && guideRefresh.isDue(Date.now())) loadEPG(preferredEpgUrls(), true);
+            if (!localMode && !loading && !(d.hidden || d.webkitHidden) && channels.length && guideRefresh.isDue(Date.now())) loadEPG(preferredEpgUrls(), true);
         }
         function loadEPG(urls, automatic) {
             if (destroyed) return;
@@ -718,7 +720,7 @@ OTT2.define("app", function (require) {
             if (scope && !gate.authorize(scope).ok) { challenge(scope, "", function () { action(name, value, values); }); return; }
             if (name === "localFolder" || name === "localFiles") { pickLocal(name === "localFolder"); return; }
             if (name === "localHelper") { view.dialog(t("Подключить Local helper", "Connect Local helper"), view.field("local-endpoint", t("Авторизованный URL helper", "Authenticated helper URL"), "", "password") + '<p class="f2-help">' + t("URL хранится только на этом устройстве и не входит в экспорт IPTV.", "The URL stays on this device and is excluded from IPTV exports.") + '</p>' + view.btn("local-connect", "localConnect", t("Подключить", "Connect"))); return; }
-            if (name === "localConnect") { stopPlayback(); var connectAction = localAction; local.connect(values["local-endpoint"]).then(function () { if (!destroyed && connectAction === localAction) { view.closeDialog(); screen = "sources"; render(); } }, localFailure); return; }
+            if (name === "localConnect") { var connectAction = ++localAction; local.connect(values["local-endpoint"]).then(function () { if (!destroyed && connectAction === localAction) { view.closeDialog(); screen = "sources"; render(); } }, function (failure) { if (connectAction === localAction) localFailure(failure); }); return; }
             if (name === "localPlay" || name === "localShuffle" || name === "localResume") { beginLocal(value, name === "localShuffle", name === "localResume", true); return; }
             if (name === "localRefresh") { var localState = local.snapshot(); beginLocal(value, localState.shuffle, localState.selected === value, true, true); return; }
             if (name === "localRepeat") { local.repeat(); return; }
@@ -865,7 +867,7 @@ OTT2.define("app", function (require) {
             else if (command === "volumeUp" || command === "volumeDown") { persist(function (s) { s.settings.volume = Math.max(0, Math.min(1, s.settings.volume + (command === "volumeUp" ? 0.05 : -0.05))); }); media.volume(saved.settings.volume); }
             else if (command === "mute") { persist(function (s) { s.settings.muted = !s.settings.muted; }); media.mute(saved.settings.muted); }
             else if (command === "channelUp" || command === "channelDown") {
-                if (localMode) { saveBookmark(); local.next(); return true; }
+                if (localMode) { saveBookmark(); if (command === "channelDown") local.previous(); else local.next(); return true; }
                 var live = catalog(false).filter(function (entry) { return entry.kind !== "vod" && entry.kind !== "folder"; });
                 for (i = 0; i < live.length; i++) if (current && live[i].id === current.id) index = i;
                 if (live.length) play(live[environment.OttPlayCore.playbackChannelIndex(index, live.length, command === "channelUp" ? 1 : -1, "browser")], false);
@@ -1000,9 +1002,10 @@ OTT2.define("app", function (require) {
         if (!repository.status().persistent) view.toast(t("Хранилище недоступно. Изменения останутся в этой сессии.", "Storage is unavailable. Changes remain in this session."));
         startupRestore = startupChannel();
         var localRestore = local.snapshot();
-        if (localRestore.active && localRestore.selected && saved.settings.restore) beginLocal(localRestore.selected, localRestore.shuffle, true, false);
-        else if (startupRestore) loadSource(source(startupRestore.sourceId), startupRestore);
-        else if (saved.activeSourceId) loadSource(source(saved.activeSourceId));
+        if (!(localRestore.active && localRestore.selected && saved.settings.restore && beginLocal(localRestore.selected, localRestore.shuffle, true, false))) {
+            if (startupRestore) loadSource(source(startupRestore.sourceId), startupRestore);
+            else if (saved.activeSourceId) loadSource(source(saved.activeSourceId));
+        }
         function destroy() {
             if (destroyed) return;
             saveBookmark(); gate.lock(); destroyed = true; browseEpoch++; if (cancelBrowse) cancelBrowse(); environment.clearTimeout(reminderTimer); sourceEpoch++; guideRefresh.destroy(); resolveEpoch++;

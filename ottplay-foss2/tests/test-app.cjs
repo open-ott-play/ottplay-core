@@ -155,6 +155,70 @@ async function startLocal(f) {
     f.action("localPlay", id); assert.equal(f.requests[1].url, localEndpoint + "?sourceId=movies");
     f.requests[1].respond(localCatalog(["first"])); await settleLocal(); return id;
 }
+test("review: invalid helper address preserves the playing decoder", async () => {
+    const f = localFixture(); await startLocal(f); f.video.fire("playing");
+    const url = f.video.src, loads = f.mediaLoads.length;
+    f.action("localConnect", "", { "local-endpoint": "invalid" }); await settleLocal();
+    assert.equal(f.video.src, url); assert.equal(f.mediaLoads.length, loads); assert.equal(f.requests.length, 2);
+    assert.equal(f.model.local.scanning, true); f.controller.destroy();
+});
+test("helper registration adds sources while preserving the current Local decoder and scan", async () => {
+    const f = localFixture(); await startLocal(f); f.video.fire("playing");
+    f.action("localHelper"); f.action("localConnect", "", { "local-endpoint": localEndpoint.replace(/a{64}/, "b".repeat(64)) });
+    f.requests[2].respond({ sources: [{ id: "other", name: "Other" }] }); await settleLocal();
+    assert.equal(f.model.local.sources.length, 2); assert.equal(f.video.src, localEndpoint + "/first"); assert.equal(f.mediaLoads.length, 1);
+    f.runDelay(10000); await settleLocal(); f.requests[3].respond(localCatalog(["first", "second"])); await settleLocal();
+    assert.equal(f.model.local.scanning, true); assert.equal(f.mediaLoads.length, 1); f.controller.destroy();
+});
+for (const close of ["button", "back", "replacement"]) test("review: closing helper registration prevents a late save or navigation: " + close, async () => {
+    const f = localFixture(); await startLocal(f); f.video.fire("playing");
+    f.action("localHelper"); f.action("localConnect", "", { "local-endpoint": localEndpoint.replace(/a{64}/, "b".repeat(64)) });
+    const request = f.requests[2];
+    if (close === "button") f.action("closeDialog");
+    else if (close === "back") f.key("back");
+    else f.action("localHelper");
+    const screen = f.model.screen, title = f.dialogTitle, open = f.hasDialog;
+    request.respond({ sources: [{ id: "late", name: "Late" }] }); await settleLocal();
+    assert.equal(f.model.local.sources.length, 1); assert.equal(f.model.screen, screen);
+    assert.equal(f.hasDialog, open); assert.equal(f.dialogTitle, title); assert.equal(request.aborted, true);
+    assert.equal(f.video.src, localEndpoint + "/first"); assert.equal(f.model.local.scanning, true); f.controller.destroy();
+});
+test("review: Local channel down selects the previous file", async () => {
+    const f = localFixture(); await startLocal(f);
+    f.runDelay(10000); await settleLocal(); f.requests[2].respond(localCatalog(["first", "second", "third"], true)); await settleLocal();
+    f.action("play", f.model.rows[1].id); await settleLocal(); f.video.fire("playing");
+    assert.equal(f.video.src, localEndpoint + "/second");
+    f.key("channelDown"); await settleLocal(); assert.equal(f.video.src, localEndpoint + "/first");
+    f.video.fire("playing"); f.key("channelUp"); await settleLocal(); assert.equal(f.video.src, localEndpoint + "/second");
+    f.controller.destroy();
+});
+test("review: invalid saved Local descriptor falls back to IPTV restore", () => {
+    const localState = { version: 1, sources: [{ id: "invalid", kind: "helper", name: "Invalid", endpoint: "bad", rootId: "movies" }], selected: "invalid", active: true };
+    const f = localFixture({ localState, lastChannel: { sourceId: "source", id: "source:live", name: "Live" } });
+    assert.equal(f.sourceCalls.length, 1); assert.equal(f.resolveCalls.length, 1); assert.equal(f.resolveCalls[0].channel.id, "source:live");
+    assert.equal(f.requests.length, 0); assert.equal(f.localSaved.selected, "invalid"); f.controller.destroy();
+});
+for (const unlock of [false, true]) test("review: Local startup honors the configured source PIN gate: " + unlock, async () => {
+    const initial = fixture({ protected: true }), saved = initial.saved; initial.controller.destroy();
+    saved.security.scopes.source = true; saved.security.protectedIds = [];
+    const localState = { version: 1, sources: [{ id: "saved", kind: "helper", name: "Saved", endpoint: localEndpoint, rootId: "movies" }], selected: "saved", current: "saved:first", active: true };
+    const f = localFixture({ saved, localState });
+    assert.equal(f.requests.length, 0); assert.equal(f.mediaLoads.length, 0); assert.equal(f.dialogTitle, "PIN required");
+    if (unlock) {
+        await f.pinAction("unlock", "", { "access-pin": "1234" });
+        assert.equal(f.requests.length, 1); f.requests[0].respond(localCatalog(["first"])); await settleLocal();
+        assert.equal(f.mediaLoads.length, 1);
+    } else { f.action("closeDialog"); await settleLocal(); assert.equal(f.requests.length, 0); }
+    f.controller.destroy();
+});
+test("review: automatic guide refresh stays inactive during Local playback", async () => {
+    let now = Date.now(); class Clock extends Date { static now() { return now; } }
+    const f = localFixture({ environment: { Date: Clock } }); await startLocal(f);
+    f.action("saveEPG", "", { "epg-url-value": "https://guide.example/local.xml" });
+    f.guideCalls.at(-1).callback(new Error("unavailable")); const calls = f.guideCalls.length;
+    now += 7200000; f.runDelay(30000);
+    assert.equal(f.guideCalls.length, calls); assert.equal(f.video.src, localEndpoint + "/first"); f.controller.destroy();
+});
 
 test("Local helper starts the existing decoder on the first prefix and leaves IPTV state intact", async () => {
     const f = localFixture({ bookmark: 75 }); const prior = JSON.stringify(f.saved);

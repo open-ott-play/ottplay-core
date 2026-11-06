@@ -7,7 +7,7 @@ OTT2.define("local-media", function () {
         var handles = Object.create(null), rows = [], records = Object.create(null), urls = [], generation = 0, intent = 0, waiting = null, first = false;
         var scanning = false, failed = false, error = "", persistent = true, request = null, timer = null, disposed = false, database = null, seed = 1;
         var browserActive = 0, browserPump = null, cancelBrowser = null, wakePoll = null;
-        var playbackActive = 0, playbackQueue = [], playbackCancels = [], notificationTimer = null;
+        var playbackActive = 0, playbackQueue = [], playbackCancels = [], notificationTimer = null, connection = null, importWrites = [];
         function validId(value) { return typeof value === "string" && value.length > 0 && value.length <= 8192 && value !== "__proto__" && value !== "constructor" && value !== "prototype"; }
         function endpoint(value) {
             var match = /^(https?:\/\/[^\s\/?#@]+)(\/offline-media\/[A-Za-z0-9_-]{32,256})\/?$/.exec(String(value || ""));
@@ -51,8 +51,13 @@ OTT2.define("local-media", function () {
         function alive(token) { return !disposed && generation === token; }
         function interrupt() { intent++; waiting = null; first = false; }
         function release() { urls.forEach(function (url) { environment.URL.revokeObjectURL(url); }); urls = []; }
+        function cancelConnect() {
+            var pending = connection; connection = null;
+            if (pending && pending.abort) pending.abort();
+        }
         function cancel() {
             generation++; interrupt(); scanning = false;
+            cancelConnect();
             if (notificationTimer !== null) environment.clearTimeout(notificationTimer); notificationTimer = null;
             if (request) request(); request = null;
             if (timer !== null) environment.clearTimeout(timer); timer = null;
@@ -69,28 +74,47 @@ OTT2.define("local-media", function () {
                 open.onupgradeneeded = function () { open.result.createObjectStore("sources", { keyPath: "id" }); };
                 open.onsuccess = function () { resolve(open.result); };
                 open.onerror = function () { reject(new Error("HANDLE_STORAGE")); };
-            });
+            }).then(function (db) { return db; }, function (failure) { database = null; throw failure; });
             return database;
         }
-        function handleRecord(id, value, remove) {
+        function closeDatabase() {
+            if (!disposed || importWrites.length || !database) return;
+            var closing = database; database = null;
+            closing.then(function (db) { db.close(); }, function () {});
+        }
+        function handleRecord(id, value, remove, owner) {
             return openDB().then(function (db) {
+                if (owner && disposed) throw new Error("CANCELLED");
                 return new Promise(function (resolve, reject) {
                     var tx = db.transaction("sources", value || remove ? "readwrite" : "readonly"), store = tx.objectStore("sources");
+                    if (owner) owner.transaction = tx;
                     var read = remove ? store.delete(id) : value ? store.put({ id: id, handles: value }) : store.get(id);
-                    tx.oncomplete = function () { resolve(value || (read.result && read.result.handles)); };
-                    tx.onerror = tx.onabort = function () { reject(new Error("HANDLE_STORAGE")); };
+                    tx.oncomplete = function () { if (owner) owner.transaction = null; resolve(value || (read.result && read.result.handles)); };
+                    tx.onabort = function () { if (owner) owner.transaction = null; reject(new Error("HANDLE_STORAGE")); };
+                    // A write remains owned until commit or abort, not merely an error event.
+                    tx.onerror = owner ? function () {} : tx.onabort;
                 });
             });
         }
         function id() { return "local-" + Date.now().toString(36) + "-" + Math.floor(Math.random() * 0x100000000).toString(36); }
         function register(picked, name) {
             if (!picked || !picked.length || disposed) return Promise.resolve(null);
-            if (data.sources.length >= 100) return Promise.reject(new Error("SOURCE_LIMIT"));
+            if (data.sources.length + importWrites.length >= 100) return Promise.reject(new Error("SOURCE_LIMIT"));
             var source = { id: id(), name: String(name || "Files").slice(0, 1024), kind: "browser" };
+            var writing = { transaction: null }; importWrites.push(writing);
+            function finished(value) {
+                importWrites.splice(importWrites.indexOf(writing), 1);
+                if (disposed) delete handles[source.id];
+                closeDatabase(); return value;
+            }
             handles[source.id] = picked;
-            return handleRecord(source.id, picked).then(function () { data.sources.push(source); save(); notify(); return source.id; }, function () {
+            return handleRecord(source.id, picked, false, writing).then(function () {
+                if (disposed) return handleRecord(source.id, null, true).then(function () { return null; }, function () { persistent = false; return null; });
+                data.sources.push(source); save(); notify(); return source.id;
+            }, function () {
+                if (disposed) return null;
                 persistent = false; data.sources.push(source); notify(); return source.id;
-            });
+            }).then(finished, function (failure) { finished(null); throw failure; });
         }
         function importFolder() {
             if (!environment.showDirectoryPicker) return Promise.reject(new Error("NO_PICKER"));
@@ -103,15 +127,15 @@ OTT2.define("local-media", function () {
             var picked; try { picked = environment.showOpenFilePicker({ multiple: true }); } catch (failure) { return Promise.reject(failure); }
             return Promise.resolve(picked).then(function (list) { return register(list, list.length === 1 ? list[0].name : "Files (" + list.length + ")"); });
         }
-        function getJSON(url, token) {
+        function getJSON(url, token, registration) {
             return new Promise(function (resolve, reject) {
                 var xhr = new environment.XMLHttpRequest(), settled = false;
-                function done(failure, value) { if (settled) return; settled = true; if (request === abort) request = null; if (failure) reject(failure); else resolve(value); }
+                function done(failure, value) { if (settled) return; settled = true; if (registration) registration.abort = null; else if (request === abort) request = null; if (failure) reject(failure); else resolve(value); }
                 function abort() { xhr.abort(); done(new Error("CANCELLED")); }
-                request = abort;
+                if (registration) registration.abort = abort; else request = abort;
                 xhr.open("GET", url, true); xhr.timeout = 60000;
                 xhr.onload = function () {
-                    if (!alive(token)) { done(new Error("CANCELLED")); return; }
+                    if (registration ? disposed || connection !== registration : !alive(token)) { done(new Error("CANCELLED")); return; }
                     if (xhr.status < 200 || xhr.status >= 300) { var failure = new Error("HELPER_REQUEST"); failure.status = xhr.status; done(failure); return; }
                     if (xhr.responseText.length > 32 * 1024 * 1024) { done(new Error("CATALOG_TOO_LARGE")); return; }
                     try { done(null, JSON.parse(xhr.responseText)); } catch (ignore) { done(new Error("INVALID_CATALOG")); }
@@ -121,13 +145,16 @@ OTT2.define("local-media", function () {
             });
         }
         function connect(value) {
+            cancelConnect();
             var base; try { base = endpoint(value); } catch (failure) { return Promise.reject(failure); }
-            cancel(); var token = generation;
-            return getJSON(base + "/sources", token).catch(function (failure) {
-                if (failure.status === 404 || failure.status === 501) return getJSON(base, token);
+            if (disposed) return Promise.reject(new Error("CANCELLED"));
+            var registration = {}; connection = registration;
+            return getJSON(base + "/sources", generation, registration).catch(function (failure) {
+                if (disposed || connection !== registration) throw new Error("CANCELLED");
+                if (failure.status === 404 || failure.status === 501) return getJSON(base, generation, registration);
                 throw failure;
             }).then(function (catalog) {
-                if (!alive(token)) return;
+                if (disposed || connection !== registration) return;
                 if (!catalog || !Array.isArray(catalog.sources)) throw new Error("INVALID_SOURCES");
                 var added = 0;
                 catalog.sources.forEach(function (row) {
@@ -136,6 +163,10 @@ OTT2.define("local-media", function () {
                     if (!existing) { data.sources.push({ id: id(), kind: "helper", name: row.name.slice(0, 1024), endpoint: base, rootId: row.id }); added++; }
                 });
                 save(); notify(); return added;
+            }).then(function (added) {
+                if (connection === registration) connection = null; return added;
+            }, function (failure) {
+                if (connection === registration) connection = null; throw failure;
             });
         }
         function random() { seed = (Math.imul ? Math.imul(seed, 1664525) : seed * 1664525) + 1013904223 >>> 0; return seed / 0x100000000; }
@@ -170,10 +201,10 @@ OTT2.define("local-media", function () {
             if (first && (!preferred || record.row.id === preferred)) { first = false; choose(record.row.id, !!preferred); }
             wake();
         }
-        function finish(token, failure, warning) {
+        function finish(token, failure, warning, fallback) {
             if (!alive(token)) return;
             scanning = false; failed = !!failure; error = !failure ? warning || "" : failure.message === "SCAN_ENTRY_LIMIT" ? "Local scan exceeds 100000 entries" : failure.message === "SCAN_TIMEOUT" ? "Local scan timed out waiting for storage" : "Local source unavailable";
-            if (!failure && first && rows.length) { first = false; choose(rows[0].id, false); }
+            if ((!failure || fallback) && first && rows.length) { first = false; choose(rows[0].id, false); }
             notify(); wake();
         }
         function playable(file) { return !!file && (typeof file.type === "string" && /^(video|audio)\//.test(file.type) || /\.(mp4|m4v|mov|webm|mkv|avi|mpg|mpeg|ts|mts|m2ts|mp3|m4a|aac|flac|ogg|oga|wav|opus)$/i.test(file.name || "")); }
@@ -397,7 +428,7 @@ OTT2.define("local-media", function () {
             if (!preferred) { data.current = ""; data.position = 0; }
             seed = Math.floor(Math.random() * 0x100000000) >>> 0; first = true; save(); notify(); var token = generation;
             var pending = source.kind === "helper" ? helperScan(source, token, preferred, !!refresh) : browserScan(source, token, preferred, allowPrompt);
-            pending.then(function (warning) { finish(token, null, warning); }, function (failure) { finish(token, failure); });
+            pending.then(function (warning) { finish(token, null, warning); }, function (failure) { finish(token, failure, "", source.kind === "browser" && failure.message === "SCAN_TIMEOUT"); });
             return true;
         }
         function resolve(row, callback) {
@@ -416,15 +447,27 @@ OTT2.define("local-media", function () {
             return function () { active = false; if (cancelRead) cancelRead(); };
         }
         return {
-            snapshot: snapshot, importFolder: importFolder, importFiles: importFiles, connect: connect, select: select, choose: choose, resolve: resolve,
+            snapshot: snapshot, importFolder: importFolder, importFiles: importFiles, connect: connect, cancelConnect: cancelConnect, select: select, choose: choose, resolve: resolve,
             checkpoint: function (itemId, position) { if (itemId === data.current) { data.position = Math.max(0, Number(position) || 0); if (data.position > 0) data.bookmarks[itemId] = data.position; else delete data.bookmarks[itemId]; var keys = Object.keys(data.bookmarks); while (keys.length > 200) delete data.bookmarks[keys.shift()]; save(); } },
             ended: function (itemId) { if (itemId !== data.current || waiting) return; data.position = 0; delete data.bookmarks[itemId]; save(); advance(); },
             next: function () { interrupt(); advance(); },
+            previous: function () {
+                interrupt();
+                for (var i = 0; i < rows.length; i++) if (rows[i].id === data.current) {
+                    if (i > 0) choose(rows[i - 1].id, false);
+                    else if (!scanning && !failed && data.repeat === "all") choose(rows[rows.length - 1].id, false);
+                    return;
+                }
+            },
             interrupt: interrupt,
             repeat: function () { data.repeat = ["off", "all", "one"][( ["off", "all", "one"].indexOf(data.repeat) + 1) % 3]; save(); notify(); },
             leave: function () { cancel(); data.active = false; save(); release(); },
             remove: function (sourceId) { if (data.selected === sourceId) { cancel(); release(); rows = []; records = Object.create(null); data.selected = ""; data.current = ""; data.position = 0; } data.sources = data.sources.filter(function (source) { return source.id !== sourceId; }); delete handles[sourceId]; handleRecord(sourceId, null, true).catch(function () {}); save(); notify(); },
-            destroy: function () { cancel(); disposed = true; release(); if (database) database.then(function (db) { db.close(); }, function () {}); }
+            destroy: function () {
+                cancel(); disposed = true; release();
+                importWrites.forEach(function (writing) { if (writing.transaction) try { writing.transaction.abort(); } catch (ignore) {} });
+                closeDatabase();
+            }
         };
     }
     return { create: create, key: key };

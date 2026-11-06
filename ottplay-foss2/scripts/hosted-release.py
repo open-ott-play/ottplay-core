@@ -13,6 +13,7 @@ import os
 from pathlib import Path, PurePosixPath
 import re
 import shutil
+import stat
 import subprocess
 import tarfile
 import urllib.error
@@ -156,6 +157,9 @@ def verify(bundle, repo, env):
         wanted = {prefix + name for name in hashes} | {prefix + "release-manifest.json"}
         require(len(rows) == len(wanted) and {row.filename for row in rows} == wanted,
                 "Unexpected or duplicate ZIP entries")
+        require(all(stat.S_IFMT(row.external_attr >> 16) in (0, stat.S_IFREG)
+                    and not row.is_dir() and not (row.external_attr & 0x10) for row in rows),
+                "Non-regular ZIP entry")
         require(sum(row.file_size for row in rows) <= MAX_BYTES, "Expanded archive too large")
         require(archive.read(prefix + "release-manifest.json") == manifest_bytes, "Embedded manifest mismatch")
         versions = {}
