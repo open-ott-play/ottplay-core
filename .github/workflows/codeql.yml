@@ -71,6 +71,7 @@ jobs:
         run: |
           python3 -m pip install --require-hashes --only-binary=:all: -r .github/requirements-workflow-contracts.txt
           python3 -m unittest discover -s .github/workflow-tests -p test_release_scope.py
+          python3 -m unittest discover -s .github/workflow-tests -p test_trusted_review_routes.py
 
       - name: Set up Java for Kotlin analysis
         if: matrix.language == 'java-kotlin'
