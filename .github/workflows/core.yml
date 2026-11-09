@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   scope:
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/change-scope.yml@e71559f44e41f39ad0037bf13c7f43bbbb2ec9af # main
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/change-scope.yml@d4b21d156067ce58f89f89149bfad545e1889ae7 # main
     with:
       runner: ${{ vars.CI_RUNNER_MODE == 'k3s' && github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule') && 'ottplay-k3s-linux-x64' || 'ubuntu-latest' }}
       force-full: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' }}
@@ -40,7 +40,7 @@ jobs:
         working-directory: shared-core
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
+        uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a # v2.22.4
         with:
           egress-policy: audit
 
@@ -63,7 +63,7 @@ jobs:
           python3 -m venv .venv-workflow
           .venv-workflow/bin/python -m pip install --require-hashes --only-binary=:all: -r .github/requirements-workflow-contracts.txt
           .venv-workflow/bin/python scripts/workflow_contracts.py --actions-only
-      - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
         with:
           distribution: temurin
           java-version: '17'
@@ -100,7 +100,7 @@ jobs:
         working-directory: ottplay-foss2
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
+        uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a # v2.22.4
         with:
           egress-policy: audit
 
@@ -208,7 +208,7 @@ jobs:
     needs: [scope, portable]
     # PRs and merge queues use the identical required Quality gate route once.
     if: ${{ github.event_name != 'pull_request' && github.event_name != 'merge_group' && (needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only') }}
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@1c7ae0892d4d34437fc0e094062f7e30b4f2ea1d # main
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@d4b21d156067ce58f89f89149bfad545e1889ae7 # main
     with:
       node-version: '22'
       run-node-ci: false
@@ -247,7 +247,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@46b06cea07f9e64621fdf066ba77ac6915163d43 # v2.22.3
+        uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a # v2.22.4
         with:
           egress-policy: audit
 
@@ -290,9 +290,9 @@ jobs:
           - repository: open-ott-play/ottplay-core
             destination: ottplay-foss2/vendor
             files: '["ottplay-core.js","ottplay-core.manifest.json","ottplay-core.LICENSE.txt"]'
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/vendor-update.yml@1748f0419fbb301065aeccb76cf61eb52fb1da42 # main
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/vendor-update.yml@d4b21d156067ce58f89f89149bfad545e1889ae7 # main
     with:
-      toolkit-revision: '1748f0419fbb301065aeccb76cf61eb52fb1da42'
+      toolkit-revision: 'd4b21d156067ce58f89f89149bfad545e1889ae7'
       source-workflow: .github/workflows/core.yml
       source-tree: shared-core
       artifact-id: ${{ needs.portable.outputs.artifact-id }}
