@@ -12,6 +12,11 @@ const dist = path.join(root, "dist");
 const version = require("../package.json").version;
 const sha256 = bytes => crypto.createHash("sha256").update(bytes).digest("hex");
 const read = file => fs.readFileSync(path.join(root, file));
+function kotlinVersion() {
+    const declaration = read("build.gradle.kts").toString().match(/^\s*plugins\s*\{\s*kotlin\("multiplatform"\)\s+version\s+"([^"]+)"\s*\}\s*$/m);
+    assert(declaration, "Cannot determine the Kotlin compiler version from build.gradle.kts");
+    return declaration[1];
+}
 function inputs(directory = "src") {
     return fs.readdirSync(path.join(root, directory), { withFileTypes: true }).flatMap(entry => {
         const file = directory + "/" + entry.name;
@@ -43,7 +48,7 @@ async function build() {
     assert.deepEqual(sourceReceipt(), source, "Source changed during compilation; retry the distribution build");
     for (const [file, bytes] of Object.entries(outputs)) fs.writeFileSync(path.join(dist, file), bytes);
     const manifest = { schema: 1, name: "ottplay-shared-core", version, source,
-        runtime: { kotlin: "2.4.20", jvm: 17, javascript: "ES5 with core-js 3.50.0 on legacy hosts" },
+        runtime: { kotlin: kotlinVersion(), jvm: 17, javascript: "ES5 with core-js 3.50.0 on legacy hosts" },
         artifacts: Object.fromEntries(Object.entries(outputs).map(([file, bytes]) => [file, { sha256: sha256(bytes), bytes: bytes.length }])) };
     fs.writeFileSync(path.join(dist, "ottplay-core.manifest.json"), JSON.stringify(manifest, null, 2) + "\n");
     return manifest;
