@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JsModuleKind
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
 import org.jetbrains.kotlin.gradle.targets.js.npm.NpmExtension
 
-plugins { kotlin("multiplatform") version "2.4.20" }
+plugins { kotlin("multiplatform") version "2.4.21" }
 
 group = "play.ott"
 version = (groovy.json.JsonSlurper().parse(file("package.json")) as Map<*, *>)["version"].toString()
