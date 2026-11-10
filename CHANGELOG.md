@@ -4,6 +4,10 @@
 
 ### Added
 
+- Share current storage-v2 XML framing with FOSS2 migration previews while
+  preserving each legacy XML profile and the host's import security boundary.
+- Add a compact source-scan status contract and one scalar UTF-16 fingerprint
+  implementation; retain existing source IDs and generation ownership rules.
 - Add explicit classic v1 channel-library, reference, portable-favorites,
   programme-reminder and live-stall policy contracts, with common JVM/JS tests
   and packaged JavaScript characterization checks.

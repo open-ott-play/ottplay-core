@@ -1,0 +1,165 @@
+{
+  "schema": 1,
+  "source": {
+    "repository": "open-ott-play/ottplay-foss",
+    "commit": "61df4e99a5541712b24b6ec334699921f4daa65a",
+    "path": "src/settings/cloud-codec.ts",
+    "sha256": "64727ab8e897dbf9e65997e28aaf82c2903a7730dbc88e0d89ad5298d304e2b4"
+  },
+  "cases": [
+    {
+      "id": "empty",
+      "items": {},
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<!--ottplay-storage-v2-->\n<properties>\n<comment>OTT-Play Preferences</comment>\n</properties>",
+      "decoded": {}
+    },
+    {
+      "id": "preferences",
+      "items": {
+        "ottplaylang": "_eng",
+        "sFont": "1",
+        "m3um3uArr": "{\"active\":0,\"M3Us\":[{\"www\":\"https://example.test/list?x=1&y=2\",\"name\":\"A & B\",\"rechours\":0}]}"
+      },
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<!--ottplay-storage-v2-->\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"&quot;ottplaylang&quot;\">&quot;_eng&quot;</entry>\n<entry key=\"&quot;sFont&quot;\">&quot;1&quot;</entry>\n<entry key=\"&quot;m3um3uArr&quot;\">&quot;{\\&quot;active\\&quot;:0,\\&quot;M3Us\\&quot;:[{\\&quot;www\\&quot;:\\&quot;https://example.test/list?x=1&amp;y=2\\&quot;,\\&quot;name\\&quot;:\\&quot;A &amp; B\\&quot;,\\&quot;rechours\\&quot;:0}]}&quot;</entry>\n</properties>",
+      "decoded": {
+        "ottplaylang": "_eng",
+        "sFont": "1",
+        "m3um3uArr": "{\"active\":0,\"M3Us\":[{\"www\":\"https://example.test/list?x=1&y=2\",\"name\":\"A & B\",\"rechours\":0}]}"
+      }
+    },
+    {
+      "id": "markup-entities",
+      "items": {
+        "": "",
+        "key<&\"'": "amp &amp; <entry key=\"x\"> > ' \"\r\n"
+      },
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<!--ottplay-storage-v2-->\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"&quot;&quot;\">&quot;&quot;</entry>\n<entry key=\"&quot;key&lt;&amp;\\&quot;&apos;&quot;\">&quot;amp &amp;amp; &lt;entry key=\\&quot;x\\&quot;&gt; &gt; &apos; \\&quot;\\r\\n&quot;</entry>\n</properties>",
+      "decoded": {
+        "": "",
+        "key<&\"'": "amp &amp; <entry key=\"x\"> > ' \"\r\n"
+      }
+    },
+    {
+      "id": "utf16",
+      "items": {
+        "\u0000\ud800<&\"￿": "\udc00",
+        "compressed": "\u0001LZ\u0001𐀀\ud800￾￿",
+        "unicode": "Фильм 😀 é é  "
+      },
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<!--ottplay-storage-v2-->\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"&quot;\\u0000\\ud800&lt;&amp;\\&quot;\\uffff&quot;\">&quot;\\udc00&quot;</entry>\n<entry key=\"&quot;compressed&quot;\">&quot;\\u0001LZ\\u0001\\ud800\\udc00\\ud800\\ufffe\\uffff&quot;</entry>\n<entry key=\"&quot;unicode&quot;\">&quot;Фильм \\ud83d\\ude00 é é  &quot;</entry>\n</properties>",
+      "decoded": {
+        "\u0000\ud800<&\"￿": "\udc00",
+        "compressed": "\u0001LZ\u0001𐀀\ud800￾￿",
+        "unicode": "Фильм 😀 é é  "
+      }
+    }
+  ],
+  "legacy": {
+    "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"normal\">ordinary</entry>\n<entry key=\"json\">{\"url\":\"https://a/?one=1&two=2\",\"markup\":\"<b>hello</b>\"}</entry>\n<entry key=\"literal\">&amp; &lt; &#0; &unknown; \"></entry>\n<entry key=\"compressed\">\u0001LZ\u0001\ud800￿</entry>\n</properties>",
+    "decoded": {
+      "normal": "ordinary",
+      "json": "{\"url\":\"https://a/?one=1&two=2\",\"markup\":\"<b>hello</b>\"}",
+      "literal": "&amp; &lt; &#0; &unknown; \">",
+      "compressed": "\u0001LZ\u0001\ud800￿"
+    }
+  },
+  "invalid": [
+    {
+      "id": "duplicate",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<!--ottplay-storage-v2-->\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"&quot;ottplaylang&quot;\">&quot;_eng&quot;</entry>\n<entry key=\"&quot;sFont&quot;\">&quot;1&quot;</entry>\n<entry key=\"&quot;m3um3uArr&quot;\">&quot;{\\&quot;active\\&quot;:0,\\&quot;M3Us\\&quot;:[{\\&quot;www\\&quot;:\\&quot;https://example.test/list?x=1&amp;y=2\\&quot;,\\&quot;name\\&quot;:\\&quot;A &amp; B\\&quot;,\\&quot;rechours\\&quot;:0}]}&quot;</entry>\n<entry key=\"&quot;sFont&quot;\">&quot;2&quot;</entry></properties>"
+    },
+    {
+      "id": "unsafe-__proto__",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<!--ottplay-storage-v2-->\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"&quot;__proto__&quot;\">&quot;x&quot;</entry>\n</properties>"
+    },
+    {
+      "id": "unsafe-constructor",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<!--ottplay-storage-v2-->\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"&quot;constructor&quot;\">&quot;x&quot;</entry>\n</properties>"
+    },
+    {
+      "id": "unsafe-prototype",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<!--ottplay-storage-v2-->\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"&quot;prototype&quot;\">&quot;x&quot;</entry>\n</properties>"
+    },
+    {
+      "id": "quoted-invalid-0",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<!--ottplay-storage-v2-->\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"&quot;ordinary&quot;\">null</entry>\n</properties>"
+    },
+    {
+      "id": "quoted-invalid-1",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<!--ottplay-storage-v2-->\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"&quot;ordinary&quot;\">[]</entry>\n</properties>"
+    },
+    {
+      "id": "quoted-invalid-2",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<!--ottplay-storage-v2-->\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"&quot;ordinary&quot;\">{}</entry>\n</properties>"
+    },
+    {
+      "id": "quoted-invalid-3",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<!--ottplay-storage-v2-->\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"&quot;ordinary&quot;\">1</entry>\n</properties>"
+    },
+    {
+      "id": "quoted-invalid-4",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<!--ottplay-storage-v2-->\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"&quot;ordinary&quot;\">true</entry>\n</properties>"
+    },
+    {
+      "id": "quoted-invalid-5",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<!--ottplay-storage-v2-->\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"&quot;ordinary&quot;\">&quot;\\x20&quot;</entry>\n</properties>"
+    },
+    {
+      "id": "quoted-invalid-6",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<!--ottplay-storage-v2-->\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"&quot;ordinary&quot;\">&quot;\\u12zz&quot;</entry>\n</properties>"
+    },
+    {
+      "id": "quoted-invalid-7",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<!--ottplay-storage-v2-->\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"&quot;ordinary&quot;\">&quot;\\u１２３４&quot;</entry>\n</properties>"
+    },
+    {
+      "id": "quoted-invalid-8",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<!--ottplay-storage-v2-->\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"&quot;ordinary&quot;\"> &quot;x&quot;</entry>\n</properties>"
+    },
+    {
+      "id": "quoted-invalid-9",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<!--ottplay-storage-v2-->\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"&quot;ordinary&quot;\">﻿&quot;x&quot;</entry>\n</properties>"
+    },
+    {
+      "id": "quoted-invalid-10",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<!--ottplay-storage-v2-->\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"&quot;ordinary&quot;\">\t&quot;x&quot;</entry>\n</properties>"
+    },
+    {
+      "id": "quoted-invalid-11",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<!--ottplay-storage-v2-->\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"&quot;ordinary&quot;\">&quot;x\n&quot;</entry>\n</properties>"
+    },
+    {
+      "id": "quoted-invalid-12",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<!--ottplay-storage-v2-->\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"&quot;ordinary&quot;\">&quot;\ud800&quot;</entry>\n</properties>"
+    },
+    {
+      "id": "quoted-invalid-13",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<!--ottplay-storage-v2-->\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"&quot;ordinary&quot;\">&quot;￿&quot;</entry>\n</properties>"
+    },
+    {
+      "id": "quoted-invalid-14",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<!--ottplay-storage-v2-->\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"&quot;ordinary&quot;\">&quot;&unknown;&quot;</entry>\n</properties>"
+    },
+    {
+      "id": "quoted-invalid-15",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<!--ottplay-storage-v2-->\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"&quot;ordinary&quot;\">&quot;&#65;&quot;</entry>\n</properties>"
+    },
+    {
+      "id": "quoted-invalid-16",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<!--ottplay-storage-v2-->\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"&quot;ordinary&quot;\">&quot;x&quot;trailing</entry>\n</properties>"
+    },
+    {
+      "id": "unexpected-dtd",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"https://unexpected.test/dtd\">\n<!--ottplay-storage-v2-->\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"&quot;ottplaylang&quot;\">&quot;_eng&quot;</entry>\n<entry key=\"&quot;sFont&quot;\">&quot;1&quot;</entry>\n<entry key=\"&quot;m3um3uArr&quot;\">&quot;{\\&quot;active\\&quot;:0,\\&quot;M3Us\\&quot;:[{\\&quot;www\\&quot;:\\&quot;https://example.test/list?x=1&amp;y=2\\&quot;,\\&quot;name\\&quot;:\\&quot;A &amp; B\\&quot;,\\&quot;rechours\\&quot;:0}]}&quot;</entry>\n</properties>"
+    },
+    {
+      "id": "double-root",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<!--ottplay-storage-v2-->\n<properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"&quot;ottplaylang&quot;\">&quot;_eng&quot;</entry>\n<entry key=\"&quot;sFont&quot;\">&quot;1&quot;</entry>\n<entry key=\"&quot;m3um3uArr&quot;\">&quot;{\\&quot;active\\&quot;:0,\\&quot;M3Us\\&quot;:[{\\&quot;www\\&quot;:\\&quot;https://example.test/list?x=1&amp;y=2\\&quot;,\\&quot;name\\&quot;:\\&quot;A &amp; B\\&quot;,\\&quot;rechours\\&quot;:0}]}&quot;</entry>\n</properties><properties></properties>"
+    },
+    {
+      "id": "declaration",
+      "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">\n<!--ottplay-storage-v2-->\n<!ENTITY x 'bad'><properties>\n<comment>OTT-Play Preferences</comment>\n<entry key=\"&quot;ottplaylang&quot;\">&quot;_eng&quot;</entry>\n<entry key=\"&quot;sFont&quot;\">&quot;1&quot;</entry>\n<entry key=\"&quot;m3um3uArr&quot;\">&quot;{\\&quot;active\\&quot;:0,\\&quot;M3Us\\&quot;:[{\\&quot;www\\&quot;:\\&quot;https://example.test/list?x=1&amp;y=2\\&quot;,\\&quot;name\\&quot;:\\&quot;A &amp; B\\&quot;,\\&quot;rechours\\&quot;:0}]}&quot;</entry>\n</properties>"
+    }
+  ],
+  "allUtf16WriterSha256": "6c16ced13e62ec8508966a7d593d00c218ea362f877e0a17e9a61a9992d47688"
+}

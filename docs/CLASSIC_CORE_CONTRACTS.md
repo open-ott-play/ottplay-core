@@ -41,6 +41,23 @@ common source; clients must not maintain another copy of these policy rules.
   reporting/reentrancy order, decoder/source ownership rechecks and consumption
   of an attempt even when restart dispatch fails. Event-driven OSD refresh is
   presentation, not a new recovery clock or budget.
+- **Cloud storage framing:** the versioned XML envelope and raw UTF-16 storage
+  strings are shared, including quoted keys/values, duplicate-key refusal and
+  the fixed declaration tokens. The classic legacy literal format and FOSS2's
+  older XML interpretation remain separate profiles. No DTD is fetched. The
+  host retains portable-key filtering, PIN preparation, semantic settings
+  validation, preview/confirmation and durable writes. Recognizing the current
+  storage-v2 envelope does not authorize importing or activating settings.
+- **Source scans:** a compact classifier distinguishes legacy omission from an
+  advertised but missing, pending, complete, failed or invalid source record.
+  A missing advertised target must not inherit global scan completion. Source
+  identity, safe integer generations and caller-specific error presentation stay
+  explicit; HTTP requests, polling, permissions and ownership remain host effects.
+- **Source fingerprints:** one dual-32-bit UTF-16 loop supplies the existing
+  noncryptographic identity fingerprints. Hosts retain their exact framing,
+  prefix and separator, so existing stored source/channel IDs do not change.
+  This scalar API does not transfer provider configuration objects or replace
+  authentication, signatures or PIN hashing.
 
 ## Delivery order and held integration
 
