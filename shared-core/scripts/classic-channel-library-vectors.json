@@ -1,0 +1,1130 @@
+{
+  "schema": 1,
+  "baseline": {
+    "commit": "9336a40ccd4e8e0e84571b037c2d2b49e8b0aaaa",
+    "path": "src/channels/library.ts",
+    "sha256": "e796b2de498cb8f464d46ad7345ba461e4a764e544919dd7a25785a47c895c26",
+    "typescript": "5.9.3"
+  },
+  "candidate_sha256": "bfe5a2b2e9bdc148bac6def69576da06dd0255b3726e737ef83386bead1e3aa9",
+  "consumer_edits": [
+    {
+      "line": 50,
+      "remove": 0,
+      "before_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "insert": [
+        "    var libraryCore = (window as any).OttPlayCore;\n",
+        "    if (!libraryCore || libraryCore.classicChannelLibraryApiVersion() !== 1)\n",
+        "        throw new Error(\"Classic channel library core API is unavailable\");\n"
+      ]
+    },
+    {
+      "line": 176,
+      "remove": 0,
+      "before_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "insert": [
+        "    function catalogLocks(): string[] {\n",
+        "        return catalog.filter(function (row) { return row.locked; })\n",
+        "            .map(function (row) { return row.itemId; });\n",
+        "    }\n"
+      ]
+    },
+    {
+      "line": 177,
+      "remove": 17,
+      "before_sha256": "7dc35710303d7b497d3733c83f38f8e15db5ae0bf2ca4205d17557f651d5a894",
+      "insert": [
+        "        return libraryCore.classicChannelLibraryEmpty(ports.sourceId, catalogLocks());\n"
+      ]
+    },
+    {
+      "line": 196,
+      "remove": 57,
+      "before_sha256": "7d9885f941879d1fff987a8cd1f227b35387d5024864f757235bcefc0b0f3857",
+      "insert": [
+        "        return libraryCore.classicChannelLibraryDecode(value, ports.sourceId, catalogLocks());\n"
+      ]
+    },
+    {
+      "line": 417,
+      "remove": 40,
+      "before_sha256": "b3fb1d1f0059756e0c2221b999033303a45137b1753aa433febfd711c105129c",
+      "insert": [
+        "        return libraryCore.classicChannelLibraryGroups(state!, provider, resolve);\n"
+      ]
+    },
+    {
+      "line": 521,
+      "remove": 15,
+      "before_sha256": "8b3c9d6871a5e78544f505b53e9019f7b2942881212197f79af5def392aec568",
+      "insert": [
+        "    function libraryProvider(request: any): LibraryGroup[] {\n",
+        "        // Core owns action dependencies. Do not re-serialize the full catalogue\n",
+        "        // for an action whose admission and reduction are catalogue-independent.\n",
+        "        return libraryCore.classicChannelLibraryNeedsProviderContext(request) ? provider : [];\n",
+        "    }\n",
+        "    function reduceLibraryDraft(draft: LibraryDocument, request: any): void {\n",
+        "        var next = libraryCore.classicChannelLibraryReduce(\n",
+        "            draft, libraryProvider(request), request, resolve, Math.random\n",
+        "        );\n",
+        "        Object.keys(draft).forEach(function (field) { delete (draft as any)[field]; });\n",
+        "        Object.keys(next).forEach(function (field) { (draft as any)[field] = next[field]; });\n",
+        "    }\n",
+        "    function libraryAction(request: any, durable = false): any {\n",
+        "        request.version = 1;\n",
+        "        var decision = libraryCore.classicChannelLibraryDecision(\n",
+        "            state!, libraryProvider(request), request, resolve\n",
+        "        );\n",
+        "        if (!decision.accepted) return request.action === \"create\" ? null : false;\n",
+        "        if (!decision.commit) return decision.result;\n",
+        "        return commit(function (draft) { reduceLibraryDraft(draft, request); }, durable)\n",
+        "            ? decision.result : request.action === \"create\" ? null : false;\n"
+      ]
+    },
+    {
+      "line": 540,
+      "remove": 23,
+      "before_sha256": "55a3627f28b68b41942ae446708099845e5fc6ff4c2dddea21c87ae11610a608",
+      "insert": [
+        "            return libraryAction({ action: \"adoptOrder\", order: order.map(function (id) {\n",
+        "                return ids[String(id)];\n",
+        "            }) });\n"
+      ]
+    },
+    {
+      "line": 580,
+      "remove": 3,
+      "before_sha256": "f80ce7d8966925024bdcfb15728b941dc20dc83eee25a537612a1a880ce6846f",
+      "insert": [
+        "                state!.locks = libraryCore.classicChannelLibraryAddedLocks(\n",
+        "                    state!.locks, addedLocks, state!.unlocks\n"
+      ]
+    },
+    {
+      "line": 586,
+      "remove": 7,
+      "before_sha256": "14dbafdfd5378718b7948471d065e31153b6c308fa642cf80d1addc5b28809d4",
+      "insert": [
+        "            if (!ports.current()) return false;\n",
+        "            var request = { version: 1, action: \"browse\", groupId: groupId, durable: durable };\n",
+        "            var decision = libraryCore.classicChannelLibraryDecision(state!, libraryProvider(request), request, resolve);\n",
+        "            if (!decision.accepted) return false;\n",
+        "            if (!decision.commit) return decision.result;\n"
+      ]
+    },
+    {
+      "line": 594,
+      "remove": 1,
+      "before_sha256": "cba8ed229620ba219337c53dc105ea64945cf2a05245ad7854172fa077724a99",
+      "insert": [
+        "                reduceLibraryDraft(draft, request);\n"
+      ]
+    },
+    {
+      "line": 640,
+      "remove": 4,
+      "before_sha256": "a6cd679adaaa2f64c2ecea0ce4fdb40df5bfdcb5075e256676303f44ae6b753d",
+      "insert": [
+        "            groupId: string, channelId: number, action: \"add\" | \"remove\" | \"move\", delta?: number\n"
+      ]
+    },
+    {
+      "line": 645,
+      "remove": 25,
+      "before_sha256": "12dc18e7b1dfe6a0bd569b9a585a272d76d833b7fc2d39118f39718feb977a64",
+      "insert": [
+        "            return libraryAction({ action: \"member\", groupId: groupId,\n",
+        "                itemId: ids[String(channelId)], memberAction: action, delta: delta });\n"
+      ]
+    },
+    {
+      "line": 672,
+      "remove": 20,
+      "before_sha256": "3662be81b0e53b552c34cc645debba20f47c73772c3438b5c32bceed3695650a",
+      "insert": [
+        "            return libraryAction({ action: \"create\", label: label, copyId: copy });\n"
+      ]
+    },
+    {
+      "line": 706,
+      "remove": 12,
+      "before_sha256": "1a9129af45cef1f8327e42fcdd61658993380c90d0f4f4f89cd6ba39d87426de",
+      "insert": [
+        "            return libraryAction({ action: \"lock\", itemId: ids[String(channelId)], locked: locked });\n"
+      ]
+    },
+    {
+      "line": 720,
+      "remove": 28,
+      "before_sha256": "77eefb13f28bd77c3f7132d3fdf7c39413abcdc289d5779519af9a8ee748d195",
+      "insert": [
+        "            return libraryAction({ action: \"move\", groupId: id, delta: delta });\n"
+      ]
+    },
+    {
+      "line": 762,
+      "remove": 7,
+      "before_sha256": "ae695450ab18ed62da097a8403c2adcd18df800922cb7af9abff7ce748af5344",
+      "insert": [
+        "            return libraryAction({ action: \"remove\", groupId: id });\n"
+      ]
+    },
+    {
+      "line": 771,
+      "remove": 13,
+      "before_sha256": "995c97835ed649db00240d3b1f404abfa0a3b4089cb12077446df3b735e51c71",
+      "insert": [
+        "            return libraryAction({ action: \"rename\", groupId: id, label: label });\n"
+      ]
+    },
+    {
+      "line": 786,
+      "remove": 24,
+      "before_sha256": "85b72858a3633947e1c2c04a680e10c750c83959dd240f6e403b0ba1de2bcfd1",
+      "insert": [
+        "            return libraryAction({ action: \"resetShuffle\", groupId: groupId });\n"
+      ]
+    },
+    {
+      "line": 830,
+      "remove": 11,
+      "before_sha256": "411de26e877d4d30beffb64420b51d0bfc4ae76c2bbb576596083be31dd3e94b",
+      "insert": [
+        "            return libraryAction({ action: \"select\", groupId: groupId, itemId: ids[String(channelId)] });\n"
+      ]
+    },
+    {
+      "line": 843,
+      "remove": 4,
+      "before_sha256": "a8bc05419ff2ebe0cf8db61bfac5e8916ef4ecabd2680c07ed23be6c3eda9b54",
+      "insert": [
+        "            kind: string, channelId: number | null, value: number | null | undefined, durable = false\n"
+      ]
+    },
+    {
+      "line": 848,
+      "remove": 13,
+      "before_sha256": "8c7439ae3f8189ae614a0974f842bd1001d2577be2e99f0f0f7f97b988278e10",
+      "insert": [
+        "            return libraryAction({ action: \"preference\", kind: kind,\n",
+        "                itemId: channelId === null ? \"media\" : ids[String(channelId)], value: value }, durable);\n"
+      ]
+    },
+    {
+      "line": 863,
+      "remove": 19,
+      "before_sha256": "9868f54cc7597925c3d55e30f0adf69ad56a11799638f24040ead97dcc863893",
+      "insert": [
+        "            return libraryAction({ action: \"shuffle\", groupId: groupId });\n"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "name": "group-membership-refresh",
+      "catalog": [
+        {
+          "id": 1,
+          "itemId": "a",
+          "label": "a",
+          "groupId": "p",
+          "groupLabel": "News",
+          "locked": true
+        },
+        {
+          "id": 2,
+          "itemId": "b",
+          "label": "b",
+          "groupId": "p",
+          "groupLabel": "News"
+        },
+        {
+          "id": 3,
+          "itemId": "c",
+          "label": "c",
+          "groupId": "q",
+          "groupLabel": "Sports"
+        }
+      ],
+      "steps": [
+        {
+          "method": "createGroup",
+          "args": [
+            " Custom ",
+            "p"
+          ]
+        },
+        {
+          "method": "renameGroup",
+          "args": [
+            "user:1",
+            "Changed"
+          ]
+        },
+        {
+          "method": "changeMember",
+          "args": [
+            "p",
+            1,
+            "remove"
+          ]
+        },
+        {
+          "method": "changeMember",
+          "args": [
+            "p",
+            2,
+            "move",
+            -1
+          ]
+        },
+        {
+          "method": "lock",
+          "args": [
+            1,
+            false
+          ]
+        },
+        {
+          "method": "setPreference",
+          "args": [
+            "audio",
+            2,
+            3
+          ]
+        },
+        {
+          "method": "select",
+          "args": [
+            "p",
+            2
+          ]
+        },
+        {
+          "method": "browse",
+          "args": [
+            "p"
+          ]
+        },
+        {
+          "method": "moveGroup",
+          "args": [
+            "q",
+            1
+          ]
+        },
+        {
+          "method": "removeGroup",
+          "args": [
+            "q"
+          ]
+        },
+        {
+          "reload": [
+            {
+              "id": 1,
+              "itemId": "a",
+              "label": "a",
+              "groupId": "p",
+              "groupLabel": "Renamed"
+            },
+            {
+              "id": 2,
+              "itemId": "b",
+              "label": "b",
+              "groupId": "p",
+              "groupLabel": "Renamed"
+            },
+            {
+              "id": 4,
+              "itemId": "d",
+              "label": "d",
+              "groupId": "p",
+              "groupLabel": "Renamed"
+            },
+            {
+              "id": 3,
+              "itemId": "c",
+              "label": "c",
+              "groupId": "q",
+              "groupLabel": "Sports"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "shuffle-reset-append",
+      "catalog": [
+        {
+          "id": 1,
+          "itemId": "a",
+          "label": "a",
+          "groupId": "p",
+          "groupLabel": "News",
+          "locked": true
+        },
+        {
+          "id": 2,
+          "itemId": "b",
+          "label": "b",
+          "groupId": "p",
+          "groupLabel": "News"
+        },
+        {
+          "id": 3,
+          "itemId": "c",
+          "label": "c",
+          "groupId": "q",
+          "groupLabel": "Sports"
+        }
+      ],
+      "random": [
+        0,
+        0.5,
+        0.25,
+        0.75
+      ],
+      "steps": [
+        {
+          "method": "shuffleGroup",
+          "args": [
+            "system:all"
+          ]
+        },
+        {
+          "method": "shuffleGroup",
+          "args": [
+            "system:all"
+          ]
+        },
+        {
+          "method": "append",
+          "args": [
+            [
+              {
+                "id": 4,
+                "itemId": "d",
+                "label": "d",
+                "groupId": "p",
+                "groupLabel": "News",
+                "locked": true
+              }
+            ]
+          ]
+        },
+        {
+          "method": "resetShuffle",
+          "args": [
+            "system:all"
+          ]
+        },
+        {
+          "method": "adoptPlaybackOrder",
+          "args": [
+            [
+              1,
+              2,
+              3,
+              4
+            ]
+          ]
+        },
+        {
+          "method": "adoptPlaybackOrder",
+          "args": [
+            [
+              4,
+              3,
+              2,
+              1
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "malformed-readonly",
+      "catalog": [
+        {
+          "id": 1,
+          "itemId": "a",
+          "label": "a",
+          "groupId": "p",
+          "groupLabel": "News",
+          "locked": true
+        },
+        {
+          "id": 2,
+          "itemId": "b",
+          "label": "b",
+          "groupId": "p",
+          "groupLabel": "News"
+        },
+        {
+          "id": 3,
+          "itemId": "c",
+          "label": "c",
+          "groupId": "q",
+          "groupLabel": "Sports"
+        }
+      ],
+      "store": {
+        "channelLibrary:source": "{\"version\":2}"
+      },
+      "steps": [
+        {
+          "method": "createGroup",
+          "args": [
+            "No write"
+          ]
+        },
+        {
+          "method": "shuffleGroup",
+          "args": [
+            "p"
+          ]
+        },
+        {
+          "method": "lock",
+          "args": [
+            1,
+            false
+          ]
+        },
+        {
+          "method": "browse",
+          "args": [
+            "p",
+            true
+          ]
+        },
+        {
+          "method": "document",
+          "args": []
+        }
+      ]
+    },
+    {
+      "name": "foreign-source-readonly",
+      "catalog": [
+        {
+          "id": 1,
+          "itemId": "a",
+          "label": "a",
+          "groupId": "p",
+          "groupLabel": "News",
+          "locked": true
+        },
+        {
+          "id": 2,
+          "itemId": "b",
+          "label": "b",
+          "groupId": "p",
+          "groupLabel": "News"
+        },
+        {
+          "id": 3,
+          "itemId": "c",
+          "label": "c",
+          "groupId": "q",
+          "groupLabel": "Sports"
+        }
+      ],
+      "store": {
+        "channelLibrary:source": "{\"groups\": [], \"hidden\": [], \"locks\": [], \"nextGroup\": 1, \"preferences\": {}, \"selected\": null, \"sourceId\": \"foreign\", \"unlocks\": [], \"version\": 1}"
+      },
+      "steps": [
+        {
+          "method": "createGroup",
+          "args": [
+            "No write"
+          ]
+        },
+        {
+          "method": "shuffleGroup",
+          "args": [
+            "p"
+          ]
+        },
+        {
+          "method": "setPreference",
+          "args": [
+            "zoom",
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "name": "preference-prototype-keys",
+      "catalog": [
+        {
+          "id": 1,
+          "itemId": "constructor",
+          "label": "constructor",
+          "groupId": "p",
+          "groupLabel": "News"
+        },
+        {
+          "id": 2,
+          "itemId": "__proto__",
+          "label": "__proto__",
+          "groupId": "p",
+          "groupLabel": "News"
+        },
+        {
+          "id": 3,
+          "itemId": "toString",
+          "label": "toString",
+          "groupId": "p",
+          "groupLabel": "News"
+        }
+      ],
+      "store": {
+        "channelLibrary:source": "{\"groups\": [], \"hidden\": [], \"locks\": [], \"nextGroup\": 1, \"preferences\": {\"audio\": {}}, \"selected\": null, \"sourceId\": \"source\", \"unlocks\": [], \"version\": 1}"
+      },
+      "steps": [
+        {
+          "method": "preference",
+          "args": [
+            "audio",
+            1
+          ]
+        },
+        {
+          "method": "preference",
+          "args": [
+            "audio",
+            2
+          ]
+        },
+        {
+          "method": "preference",
+          "args": [
+            "audio",
+            3
+          ]
+        },
+        {
+          "method": "setPreference",
+          "args": [
+            "audio",
+            2,
+            2
+          ]
+        },
+        {
+          "method": "preference",
+          "args": [
+            "audio",
+            2
+          ]
+        },
+        {
+          "method": "setPreference",
+          "args": [
+            "audio",
+            1,
+            2
+          ]
+        },
+        {
+          "method": "preference",
+          "args": [
+            "audio",
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "name": "preference-own-prototype",
+      "catalog": [
+        {
+          "id": 1,
+          "itemId": "__proto__",
+          "label": "__proto__",
+          "groupId": "p",
+          "groupLabel": "News"
+        }
+      ],
+      "store": {
+        "channelLibrary:source": "{\"groups\": [], \"hidden\": [], \"locks\": [], \"nextGroup\": 1, \"preferences\": {\"audio\": {\"__proto__\": 1}}, \"selected\": null, \"sourceId\": \"source\", \"unlocks\": [], \"version\": 1}"
+      },
+      "steps": [
+        {
+          "method": "preference",
+          "args": [
+            "audio",
+            1
+          ]
+        },
+        {
+          "method": "setPreference",
+          "args": [
+            "audio",
+            1,
+            2
+          ]
+        },
+        {
+          "method": "preference",
+          "args": [
+            "audio",
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "name": "array-preferences-legacy-shape",
+      "catalog": [
+        {
+          "id": 1,
+          "itemId": "a",
+          "label": "a",
+          "groupId": "p",
+          "groupLabel": "News",
+          "locked": true
+        },
+        {
+          "id": 2,
+          "itemId": "b",
+          "label": "b",
+          "groupId": "p",
+          "groupLabel": "News"
+        },
+        {
+          "id": 3,
+          "itemId": "c",
+          "label": "c",
+          "groupId": "q",
+          "groupLabel": "Sports"
+        }
+      ],
+      "store": {
+        "channelLibrary:source": "{\"groups\": [{\"id\": \"p\", \"label\": \"\", \"members\": [\"a\", \"a\", \"b\"]}], \"hidden\": [], \"locks\": [], \"nextGroup\": 1, \"preferences\": {\"audio\": [2, 3]}, \"selected\": null, \"sourceId\": \"source\", \"unlocks\": [], \"version\": 1}"
+      },
+      "steps": [
+        {
+          "method": "document",
+          "args": []
+        },
+        {
+          "method": "setPreference",
+          "args": [
+            "audio",
+            1,
+            4
+          ]
+        },
+        {
+          "method": "createGroup",
+          "args": [
+            "New"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "read-failure-readonly",
+      "catalog": [
+        {
+          "id": 1,
+          "itemId": "a",
+          "label": "a",
+          "groupId": "p",
+          "groupLabel": "News",
+          "locked": true
+        },
+        {
+          "id": 2,
+          "itemId": "b",
+          "label": "b",
+          "groupId": "p",
+          "groupLabel": "News"
+        },
+        {
+          "id": 3,
+          "itemId": "c",
+          "label": "c",
+          "groupId": "q",
+          "groupLabel": "Sports"
+        }
+      ],
+      "throwReads": true,
+      "steps": [
+        {
+          "method": "shuffleGroup",
+          "args": [
+            "p"
+          ]
+        },
+        {
+          "method": "createGroup",
+          "args": [
+            "No write"
+          ]
+        },
+        {
+          "method": "document",
+          "args": []
+        }
+      ]
+    },
+    {
+      "name": "durable-write-readback-refusal",
+      "catalog": [
+        {
+          "id": 1,
+          "itemId": "a",
+          "label": "a",
+          "groupId": "p",
+          "groupLabel": "News",
+          "locked": true
+        },
+        {
+          "id": 2,
+          "itemId": "b",
+          "label": "b",
+          "groupId": "p",
+          "groupLabel": "News"
+        },
+        {
+          "id": 3,
+          "itemId": "c",
+          "label": "c",
+          "groupId": "q",
+          "groupLabel": "Sports"
+        }
+      ],
+      "steps": [
+        {
+          "method": "select",
+          "args": [
+            "p",
+            1
+          ]
+        },
+        {
+          "persistWrites": false
+        },
+        {
+          "method": "setPreference",
+          "args": [
+            "audio",
+            1,
+            2,
+            true
+          ]
+        },
+        {
+          "method": "browse",
+          "args": [
+            "p",
+            true
+          ]
+        }
+      ]
+    },
+    {
+      "name": "stale-source-after-selection",
+      "catalog": [
+        {
+          "id": 1,
+          "itemId": "a",
+          "label": "a",
+          "groupId": "p",
+          "groupLabel": "News",
+          "locked": true
+        },
+        {
+          "id": 2,
+          "itemId": "b",
+          "label": "b",
+          "groupId": "p",
+          "groupLabel": "News"
+        },
+        {
+          "id": 3,
+          "itemId": "c",
+          "label": "c",
+          "groupId": "q",
+          "groupLabel": "Sports"
+        }
+      ],
+      "steps": [
+        {
+          "method": "select",
+          "args": [
+            "p",
+            1
+          ]
+        },
+        {
+          "current": false
+        },
+        {
+          "method": "select",
+          "args": [
+            "p",
+            1
+          ]
+        },
+        {
+          "method": "shuffleGroup",
+          "args": [
+            "p"
+          ]
+        },
+        {
+          "method": "createGroup",
+          "args": [
+            "No write"
+          ]
+        },
+        {
+          "method": "document",
+          "args": []
+        }
+      ]
+    },
+    {
+      "name": "legacy-import-preserved",
+      "catalog": [
+        {
+          "id": 1,
+          "itemId": "a",
+          "label": "a",
+          "groupId": "p",
+          "groupLabel": "News",
+          "legacyId": 11,
+          "locked": true
+        },
+        {
+          "id": 2,
+          "itemId": "b",
+          "label": "b",
+          "groupId": "p",
+          "groupLabel": "News",
+          "legacyId": 12
+        },
+        {
+          "id": 3,
+          "itemId": "c",
+          "label": "c",
+          "groupId": "q",
+          "groupLabel": "Sports"
+        }
+      ],
+      "store": {
+        "cats": "{\"News\": [11, 12]}",
+        "catsArray": "[\"News\"]",
+        "parentalArray": "[12]",
+        "aAudios": "{\"11\": 2}",
+        "catIndex": "1",
+        "primaryIndex": "0"
+      },
+      "legacySelection": {
+        "category": 1,
+        "index": 0,
+        "favorites": null,
+        "virtualLabels": [
+          "All",
+          "Favorites"
+        ]
+      },
+      "steps": [
+        {
+          "method": "document",
+          "args": []
+        },
+        {
+          "method": "select",
+          "args": [
+            "p",
+            1
+          ]
+        },
+        {
+          "method": "createGroup",
+          "args": [
+            "Copy",
+            "p"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "unknown-noop-and-system-refusal",
+      "catalog": [
+        {
+          "id": 1,
+          "itemId": "a",
+          "label": "a",
+          "groupId": "p",
+          "groupLabel": "News",
+          "locked": true
+        },
+        {
+          "id": 2,
+          "itemId": "b",
+          "label": "b",
+          "groupId": "p",
+          "groupLabel": "News"
+        },
+        {
+          "id": 3,
+          "itemId": "c",
+          "label": "c",
+          "groupId": "q",
+          "groupLabel": "Sports"
+        }
+      ],
+      "steps": [
+        {
+          "method": "changeMember",
+          "args": [
+            "missing",
+            1,
+            "add"
+          ]
+        },
+        {
+          "method": "renameGroup",
+          "args": [
+            "missing",
+            "Other"
+          ]
+        },
+        {
+          "method": "removeGroup",
+          "args": [
+            "missing"
+          ]
+        },
+        {
+          "method": "moveGroup",
+          "args": [
+            "system:all",
+            1
+          ]
+        },
+        {
+          "method": "renameGroup",
+          "args": [
+            "system:all",
+            "No"
+          ]
+        },
+        {
+          "method": "createGroup",
+          "args": [
+            "News"
+          ]
+        },
+        {
+          "method": "createGroup",
+          "args": [
+            "  "
+          ]
+        }
+      ]
+    },
+    {
+      "name": "group-splice-edge-semantics",
+      "catalog": [
+        {
+          "id": 1,
+          "itemId": "a",
+          "label": "a",
+          "groupId": "p",
+          "groupLabel": "News",
+          "locked": true
+        },
+        {
+          "id": 2,
+          "itemId": "b",
+          "label": "b",
+          "groupId": "p",
+          "groupLabel": "News"
+        },
+        {
+          "id": 3,
+          "itemId": "c",
+          "label": "c",
+          "groupId": "q",
+          "groupLabel": "Sports"
+        }
+      ],
+      "steps": [
+        {
+          "method": "createGroup",
+          "args": [
+            "Custom",
+            "p"
+          ]
+        },
+        {
+          "method": "changeMember",
+          "args": [
+            "user:1",
+            1,
+            "move",
+            -12
+          ]
+        },
+        {
+          "method": "moveGroup",
+          "args": [
+            "q",
+            -10
+          ]
+        },
+        {
+          "method": "moveGroup",
+          "args": [
+            "p",
+            0.5
+          ]
+        },
+        {
+          "method": "moveGroup",
+          "args": [
+            "p",
+            -1.5
+          ]
+        }
+      ]
+    }
+  ],
+  "compiler": {
+    "name": "TypeScript",
+    "version": "5.9.3",
+    "options": {
+      "target": 1,
+      "module": 1
+    },
+    "purpose": "Frozen script-only classic channel-library ports for differential characterization; never shipped as production runtime."
+  },
+  "fixtures": [
+    {
+      "kind": "baseline",
+      "path": "fixtures/classic-channel-library-baseline.js",
+      "source_sha256": "e796b2de498cb8f464d46ad7345ba461e4a764e544919dd7a25785a47c895c26",
+      "sha256": "5d637eb070eb50ed032b3c7e660761a8b6a055251c7733ebba882784f5c212f1",
+      "bytes": 31837,
+      "banner": "// Characterization fixture only; not a production runtime.\n// Source: open-ott-play/ottplay-foss@9336a40ccd4e8e0e84571b037c2d2b49e8b0aaaa:src/channels/library.ts\n// Source port: baseline; SHA-256 e796b2de498cb8f464d46ad7345ba461e4a764e544919dd7a25785a47c895c26\n// Transpiler: TypeScript 5.9.3, target ES5, module CommonJS (script has no imports or exports).\n"
+    },
+    {
+      "kind": "candidate",
+      "path": "fixtures/classic-channel-library-candidate.js",
+      "source_sha256": "bfe5a2b2e9bdc148bac6def69576da06dd0255b3726e737ef83386bead1e3aa9",
+      "sha256": "0f0a0e3c488bfc102b34f86c1e433843a8595c86c778833699b821bbe588912d",
+      "bytes": 22311,
+      "banner": "// Characterization fixture only; not a production runtime.\n// Source: open-ott-play/ottplay-foss@9336a40ccd4e8e0e84571b037c2d2b49e8b0aaaa:src/channels/library.ts\n// Source port: candidate; SHA-256 bfe5a2b2e9bdc148bac6def69576da06dd0255b3726e737ef83386bead1e3aa9\n// Transpiler: TypeScript 5.9.3, target ES5, module CommonJS (script has no imports or exports).\n"
+    }
+  ]
+}

@@ -43,6 +43,9 @@ Control-server and SWOP consume policy generated from
 receipts check schema and output integrity. Vitrine publishes the base player's
 packaged artifact. See [shared core API and builds](shared-core/README.md),
 [service contracts](contracts/README.md) and [FOSS2](ottplay-foss2/README.md).
+The [classic client contracts and migration](docs/CLASSIC_CORE_CONTRACTS.md)
+describe the compatible classic profiles, retained host responsibilities and
+qualified JS/JAR delivery order.
 
 ## Reproduce this source tree
 

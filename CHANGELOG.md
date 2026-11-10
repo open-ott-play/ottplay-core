@@ -1,5 +1,23 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Add explicit classic v1 channel-library, reference, portable-favorites,
+  programme-reminder and live-stall policy contracts, with common JVM/JS tests
+  and packaged JavaScript characterization checks.
+- Centralize M3U user-agent presets and resolution for qualified native table
+  generation, retaining custom values and host transport validation.
+- Document the linked, held FOSS migration and the host boundaries that remain
+  responsible for persistence, security, timers and media ownership.
+
+### Upgrade
+
+The classic profiles are additive; existing APIs and serialized formats remain
+compatible. Qualify the same candidate JS/JAR with each consumer before merging
+the linked migration. These notes do not replace a published 0.1.5 artifact.
+
 ## [0.1.5] - Unreleased
 
 ### Changed
