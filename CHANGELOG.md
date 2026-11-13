@@ -19,6 +19,8 @@
   and provider-order adoption work without changing duplicate or callback order.
 - Normalize malformed cloud JSON string failures to the public error contract,
   preventing parser snippets from exposing stored settings in host error text.
+- Bound portable-favorites snapshot work before schema validation and preserve
+  inherited array data slots without invoking accessors.
 
 ### Upgrade
 

@@ -68,6 +68,39 @@ equal(codec.document(doc(indexedEntries)), null, "entry array accessor rejected"
 const kindsWithGetter = ["channel"];
 Object.defineProperty(kindsWithGetter, "0", { enumerable: true, get() { getterCalls++; return "channel"; } });
 equal(codec.supports(doc(), kindsWithGetter), false, "advertised kind accessor rejected");
+for (const [label, value, check, expected] of [
+    ["entry", entry(), values => codec.document(doc(values)), codec.document(doc())],
+    ["advertised kind", "channel", values => codec.supports(doc(), values), true]
+]) {
+    const prototype = Object.create(Array.prototype);
+    Object.defineProperty(prototype, "0", { value, enumerable: false });
+    const values = new Array(1);
+    Object.setPrototypeOf(values, prototype);
+    same(check(values), expected, label + ": inherited data slot retained");
+    Object.defineProperty(values, "0", { value: label === "entry" ? entry("override") : "other" });
+    assert.notEqual(JSON.stringify(check(values)), JSON.stringify(expected), label + ": own slot overrides inherited data"); checks++;
+    const accessorPrototype = Object.create(Array.prototype);
+    Object.defineProperty(accessorPrototype, "0", { get() { getterCalls++; return value; } });
+    const accessorValues = new Array(1);
+    Object.setPrototypeOf(accessorValues, accessorPrototype);
+    equal(check(accessorValues), label === "entry" ? null : false, label + ": inherited accessor rejected");
+}
+// A small shared graph must not expand into a billion copies before schema rejection.
+let copiedSlots = 0;
+const leaf = new Proxy(Array(1000).fill("x"), {
+    getOwnPropertyDescriptor(target, key) {
+        if (key !== "length") copiedSlots++;
+        return Reflect.getOwnPropertyDescriptor(target, key);
+    }
+});
+const expandedTitle = Array(1000).fill(Array(1000).fill(leaf));
+context.favoritesCodec = codec;
+context.expandedFavorite = entry("oversized", expandedTitle);
+equal(vm.runInContext("favoritesCodec.normalize(expandedFavorite)", context, { timeout: 2000 }), null, "recursive snapshot work bounded");
+assert(copiedSlots > 0 && copiedSlots <= 16384, "request-local node budget stops repeated subtree expansion"); checks++;
+assert.notEqual(codec.normalize(entry()), null, "snapshot budget does not leak between calls"); checks++;
+delete context.favoritesCodec;
+delete context.expandedFavorite;
 const candidatesWithGetter = [{}];
 Object.defineProperty(candidatesWithGetter, "0", { enumerable: true, get() { getterCalls++; return { origin: entry().origin }; } });
 equal(status(entry(), candidatesWithGetter), "unresolved", "candidate accessor rejected");

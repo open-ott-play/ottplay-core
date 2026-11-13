@@ -4,8 +4,9 @@ import play.ott.core.*
 
 private val classicFavoritesInvalid: dynamic = js("({})")
 
-/** Inspect descriptors before copying: wire(original) would invoke hostile getters. */
-private fun classicFavoritesSnapshot(value: dynamic, depth: Int = 0): dynamic {
+/** At most 11003 nodes occur in a valid 1000-entry v1 document; also bound invalid DAG expansion. */
+private fun classicFavoritesSnapshot(value: dynamic, depth: Int = 0, budget: IntArray = intArrayOf(16384)): dynamic {
+    if (budget[0]-- <= 0) return classicFavoritesInvalid
     if (value == null || jsTypeOf(value) in listOf("undefined", "string", "number", "boolean")) return value
     if (jsTypeOf(value) != "object" || depth > 6) return classicFavoritesInvalid
     if (js("Array.isArray(value)").unsafeCast<Boolean>()) {
@@ -16,9 +17,8 @@ private fun classicFavoritesSnapshot(value: dynamic, depth: Int = 0): dynamic {
         val result: dynamic = js("[]")
         for (at in 0 until length.toInt()) {
             val key = at.toString()
-            val descriptor: dynamic = js("Object.getOwnPropertyDescriptor(value, key)")
-            if (descriptor != null && !js("'value' in descriptor").unsafeCast<Boolean>()) return classicFavoritesInvalid
-            val child = classicFavoritesSnapshot(if (descriptor == null) js("undefined") else descriptor.value, depth + 1)
+            // Like indexed reads, inherited data slots count; accessors must never run.
+            val child = classicFavoritesSnapshot(classicFavoritesData(value, key), depth + 1, budget)
             if (child === classicFavoritesInvalid) return classicFavoritesInvalid
             val property: dynamic = js("({writable: true, enumerable: true, configurable: true})")
             property.value = child
@@ -34,7 +34,7 @@ private fun classicFavoritesSnapshot(value: dynamic, depth: Int = 0): dynamic {
     for (key in keys) {
         val descriptor: dynamic = js("Object.getOwnPropertyDescriptor(value, key)")
         if (descriptor == null || descriptor.enumerable != true || !js("'value' in descriptor").unsafeCast<Boolean>()) return classicFavoritesInvalid
-        val child = classicFavoritesSnapshot(descriptor.value, depth + 1)
+        val child = classicFavoritesSnapshot(descriptor.value, depth + 1, budget)
         if (child === classicFavoritesInvalid) return classicFavoritesInvalid
         result[key] = child
     }
