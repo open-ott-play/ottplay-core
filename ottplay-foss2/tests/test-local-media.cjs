@@ -4,6 +4,8 @@ const fs = require("node:fs");
 const vm = require("node:vm");
 const test = require("node:test");
 const source = fs.readFileSync(require("node:path").join(__dirname, "../src/local-media.js"), "utf8");
+const coreContext = vm.createContext({});
+const sharedCore = require("./load-core.cjs")(coreContext);
 const endpoint = "http://127.0.0.1:44000/offline-media/" + "a".repeat(64);
 const deferred = () => { let resolve; const promise = new Promise(done => { resolve = done; }); return { promise, resolve }; };
 async function until(check) { for (let i = 0; i < 1000; i++) { if (check()) return; await new Promise(resolve => setTimeout(resolve, 2)); } assert.fail("condition did not settle"); }
@@ -38,7 +40,7 @@ function fixture(options = {}) {
             }); return tx; }
         }; open.onsuccess(); }); return open; } }
     };
-    vm.runInNewContext(source, { Promise, Date, Math, Object, Array, JSON, Error, encodeURIComponent, decodeURIComponent, isFinite, OTT2: { define(name, factory) { api = factory(); } } });
+    vm.runInNewContext(source, { OttPlayCore: sharedCore, Promise, Date, Math, Object, Array, JSON, Error, encodeURIComponent, decodeURIComponent, isFinite, OTT2: { define(name, factory) { api = factory(); } } });
     const local = api.create(env, { storage, changed(next, snapshot) { rows = next; state = snapshot; changes.push(snapshot); }, start(row, resume) { starts.push({ row, resume }); if (options.start) options.start(row, resume); } });
     return { local, env, values, starts, requests, revoked, created, dbRecords, timers, changes,
         runTimer(delay) { const entry = Array.from(timers).find(([, timer]) => timer.delay === delay); assert(entry, "missing timer " + delay); timers.delete(entry[0]); entry[1].callback(); },
@@ -459,4 +461,54 @@ for (const repeat of ["off", "all", "one"]) test("completed browser queue repeat
     const f = fixture({ folder: folder([file("first.mp4")]) }); const id = await f.local.importFolder(); f.local.select(id, false, false, true);
     await until(() => !f.state.scanning); while (f.state.repeat !== repeat) f.local.repeat();
     f.local.ended(f.rows[0].id); assert.equal(f.starts.length, repeat === "off" ? 1 : 2); f.local.destroy();
+});
+
+
+for (const protocol of ["empty", "other-source"]) test("advertised missing source stays pending instead of inheriting global completion: " + protocol, async () => {
+    const f = fixture(), id = await helper(f); f.local.select(id, false, false, false);
+    const pending = catalog(["stale"], 1, "complete"); pending.scanning = false;
+    pending.sourceScans = protocol === "empty" ? [] : [{sourceId: "other", generation: 1, state: "complete"}];
+    f.requests[1].respond(pending); await poll(f, 1000);
+    assert.equal(f.starts.length, 0); assert.equal(f.rows.length, 0); assert.equal(f.state.scanning, true);
+    const ready = catalog(["ready"], 2, "complete"); ready.scanning = false;
+    f.requests[2].respond(ready); await until(() => !f.state.scanning);
+    assert.equal(f.starts.length, 1); assert.equal(f.rows[0].name, "ready.mp4");
+    assert.equal(f.state.error, "", "the pending sentinel must not bind generation zero"); f.local.destroy();
+});
+
+for (const protocol of [null, {}, "legacy", false]) test("advertised malformed source protocol cannot authorize playback: " + JSON.stringify(protocol), async () => {
+    const f = fixture(), id = await helper(f); f.local.select(id, false, false, false);
+    const invalid = catalog(["stale"], 1, "complete"); invalid.scanning = false; invalid.sourceScans = protocol;
+    f.requests[1].respond(invalid); await until(() => !f.state.scanning);
+    assert.equal(f.starts.length, 0); assert.equal(f.rows.length, 0); assert.ok(f.state.error); f.local.destroy();
+});
+
+for (const generation of [0, -1, 1.5, "1", null, 9007199254740992]) test("invalid source generation cannot publish helper rows: " + JSON.stringify(generation), async () => {
+    const f = fixture(), id = await helper(f); f.local.select(id, false, false, false);
+    const invalid = catalog(["stale"], generation, "complete"); invalid.scanning = false;
+    f.requests[1].respond(invalid); await until(() => !f.state.scanning);
+    assert.equal(f.starts.length, 0); assert.equal(f.rows.length, 0); assert.ok(f.state.error); f.local.destroy();
+});
+
+test("duplicate selected source records cannot publish helper rows", async () => {
+    const f = fixture(), id = await helper(f); f.local.select(id, false, false, false);
+    const invalid = catalog(["stale"], 1, "complete"); invalid.scanning = false;
+    invalid.sourceScans.push({...invalid.sourceScans[0]});
+    f.requests[1].respond(invalid); await until(() => !f.state.scanning);
+    assert.equal(f.starts.length, 0); assert.equal(f.rows.length, 0); assert.ok(f.state.error); f.local.destroy();
+});
+
+test("omitted legacy source protocol retains completed helper playback", async () => {
+    const f = fixture(), id = await helper(f); f.local.select(id, false, false, false);
+    const legacy = catalog(["legacy"], 1, "complete"); legacy.scanning = false; delete legacy.sourceScans;
+    f.requests[1].respond(legacy); await until(() => !f.state.scanning);
+    assert.equal(f.starts.length, 1); assert.equal(f.rows[0].name, "legacy.mp4"); assert.equal(f.state.error, ""); f.local.destroy();
+});
+
+test("safe maximum generation and unrelated scan entries retain target playback", async () => {
+    const f = fixture(), id = await helper(f); f.local.select(id, false, false, false);
+    const ready = catalog(["ready"], 9007199254740991, "complete"); ready.scanning = false;
+    ready.sourceScans.unshift(null, {sourceId: "other", generation: "unrelated", state: "future"});
+    f.requests[1].respond(ready); await until(() => !f.state.scanning);
+    assert.equal(f.starts.length, 1); assert.equal(f.rows[0].name, "ready.mp4"); assert.equal(f.state.error, ""); f.local.destroy();
 });

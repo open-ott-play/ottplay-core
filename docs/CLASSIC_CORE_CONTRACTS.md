@@ -1,0 +1,103 @@
+# Classic client contracts and migration
+
+These additive **v1 classic profiles** preserve OTTPlay FOSS behavior. They do
+not replace the differently shaped FOSS2 `LibraryState`, `ChannelIdentity` or
+`PlaybackRetries` APIs. Public compiler outputs are built from the Kotlin
+common source. Activated ports must use the qualified common policy; the existing
+Classic bulk implementation remains the shipped oracle while that migration is
+deferred for performance. See [measured activation limits](CLASSIC_CORE_PERFORMANCE.md).
+
+## Ownership
+
+- **Channel library:** classic v1 document validation and pure edits, inherited
+  provider groups, membership, ordering, selection, hiding, locks and shuffle.
+  The host retains durable readback, legacy migration, source-generation guards,
+  callback ordering and numeric renderer projection. Randomness is an explicit
+  host input, sampled only after the host admits a writable edit.
+  `classicChannelLibraryNeedsProviderContext` lets the host omit unused catalog
+  data for independent edits; the action classification stays in common core.
+  Supplied provider data remains validated. Group projections are computed only
+  when needed, without caching mutable host objects by identity.
+- **Channel references:** numeric/item/alias graph, cycles, ambiguous references
+  and pending raw values. JavaScript's decimal-to-number-to-string conversion
+  is an explicit host primitive. JVM callers must provide that codec when
+  interoperating with legacy numeric IDs; Kotlin `Double.toString()` is not an
+  equivalent default. Renderer row numbers remain host-only.
+- **Portable global favorites:** existing document/entry shapes, supported
+  locator kinds, Unicode/path rules, identity and matching. No format bump.
+  The JavaScript boundary rejects accessor, non-enumerable and symbol extras
+  before converting untrusted objects. Storage, activation, grants and signature
+  envelopes remain with the host. Matching returns the original candidate.
+- **M3U user agents:** one preset/default definition and ASCII case-insensitive
+  preset resolution; non-ASCII and other custom values remain unchanged. Rust and Swift tables may be
+  generated from qualified JS exports to avoid a per-request embedded VM.
+  HTTP header validation, SSRF rules, proxies and request ownership remain local.
+- **Programme reminders:** source-bound validation, first-identity normalization,
+  next deadline and notify/prompt eligibility over explicit sampled times. Opaque
+  record fields are cloned in the host's JSON format. Timer handles, resolution,
+  overdue-at-load suppression, prompt ownership, generation checks and durable
+  readback remain local. Planning does not authorize playback.
+- **Live stall recovery:** classic 0..5 attempts, 10/15/20/30-second timeout,
+  three-second countdown, ten healthy seconds to reset and discontinuity/sleep
+  handling. Pure planning only establishes eligibility. The host preserves
+  reporting/reentrancy order, decoder/source ownership rechecks and consumption
+  of an attempt even when restart dispatch fails. Event-driven OSD refresh is
+  presentation, not a new recovery clock or budget.
+- **Cloud storage framing:** the versioned XML envelope and raw UTF-16 storage
+  strings are shared, including quoted keys/values, duplicate-key refusal and
+  the fixed declaration tokens. The classic legacy literal format and FOSS2's
+  older XML interpretation remain separate profiles. No DTD is fetched. The
+  host retains portable-key filtering, PIN preparation, semantic settings
+  validation, preview/confirmation and durable writes. Recognizing the current
+  storage-v2 envelope does not authorize importing or activating settings.
+- **Source scans:** a compact classifier distinguishes legacy omission from an
+  advertised but missing, pending, complete, failed or invalid source record.
+  A missing advertised target must not inherit global scan completion. Source
+  identity, safe integer generations and caller-specific error presentation stay
+  explicit; HTTP requests, polling, permissions and ownership remain host effects.
+- **Source fingerprints:** one dual-32-bit UTF-16 loop supplies the existing
+  noncryptographic identity fingerprints. Hosts retain their exact framing,
+  prefix and separator, so existing stored source/channel IDs do not change.
+  This scalar API does not transfer provider configuration objects or replace
+  authentication, signatures or PIN hashing.
+
+## Delivery order and separate activation gates
+
+1. Freeze the existing client behavior as characterization cases and common
+   contract tests, including rejected input and effect ordering.
+2. Implement additive common APIs with JVM and JS tests. Keep incompatible
+   schemas explicitly named instead of adapting them by coincidence.
+3. Run `jvmTest jsNodeTest`, `pack:core`, `check:core` and `check:js`. The generated
+   manifest binds exact source and JS/JAR bytes; never edit its hashes manually.
+4. Use the existing consumer installer/verifier for the same candidate JS/JAR.
+   Run the actual FOSS tests with that artifact, including persistence failure,
+   stale source, reentrant callback and ambiguous-reference cases.
+5. Switch consumers to thin ports and remove only the replaced local rules.
+   Recheck source/vendor equality after the final source change.
+
+The producer and consumer qualify independently. Additive contract fixes may
+merge without activating the new bulk ports. **The JavaScript channel-library
+and reference-graph migration remains deferred**: measured conversion costs
+are still materially higher than the frozen Classic path, despite the linear
+lookup fixes. Existing Classic functionality must remain available through its
+local implementation until a separately qualified transport design is ready.
+
+FOSS2 currently consumes the cloud framing, source-scan classifier and scalar
+fingerprint, not the new Classic bulk library/reference APIs. The already shipped
+`classicPortableSnapshot` and `classicInstallationState` are unchanged and are
+not newly deferred. Every consumer still needs the qualified producer package,
+its own integration tests and the ordinary release gates. A local build is not a
+released version or hardware acceptance. No device operation is required by these
+pure contract tests.
+
+## Deliberately retained implementations
+
+The native LG SDL/PlxNative application develops in `open-ott-play/ottplay-lg`;
+it is distinct from the classic hosted LG wrapper. Its historical provenance and
+GPL notices remain with that project and historical FOSS source releases.
+
+Optimized Rust XMLTV reducers remain native implementations qualified against
+the pinned core oracle. Do not substitute a per-record JS VM on their hot path.
+DOM, network, storage, media lifetimes and platform decoder logic are not shared
+domain rules. Folder-order and buffer helpers remain separate candidates until
+another actual consumer and a compatible contract justify their extraction.

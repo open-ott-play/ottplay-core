@@ -63,6 +63,37 @@ test("legacy XML is parsed without any DOM, DTD or network access", () => {
     assert.equal(result.proposed.sources[0].name, "A & B");
     assert.equal(result.proposed.settings.fontFamily, "Roboto");
 });
+test("current Classic storage-v2 writer fixtures preview through the existing importer", () => {
+    const fixtures = JSON.parse(fs.readFileSync(path.join(__dirname, "../../shared-core/vectors/cloud-storage-framing.json"), "utf8"));
+    const exported = fixtures.cases.find(row => row.id === "preferences");
+    const result = migration.preview(exported.xml);
+    assert.equal(result.format, "ottplay-properties-xml");
+    assert.equal(result.proposed.settings.language, "en");
+    assert.equal(result.proposed.settings.fontFamily, "Roboto");
+    assert.equal(result.proposed.sources[0].url, "https://example.test/list?x=1&y=2");
+    assert.equal(result.proposed.sources[0].name, "A & B");
+    assert.equal(result.requiresSourceConfirmation, true);
+    assert.equal(state.defaults().sources.length, 0, "preview never changes current state");
+    const write = values => [context.OttPlayCore.cloudStorageHeader(), ...Object.keys(values).map(key => context.OttPlayCore.cloudStorageEntry(key, values[key])), "</properties>"].join("\n");
+    const protectedValues = migration.preview(write({ottplaylang:"_eng",parentPIN:"2468",sLocalHttpDeviceCode:"installation-secret",xtreamxtream_data:"\u0001LZ\u0001\ud800"}));
+    assert(!JSON.stringify(protectedValues).includes("2468"));
+    assert(!JSON.stringify(protectedValues).includes("installation-secret"));
+    assert(protectedValues.warnings.some(value => /Compressed/.test(value)));
+    assert(protectedValues.warnings.some(value => /plaintext parental PIN/.test(value)));
+});
+test("storage-v2 malformed entries and existing input budgets fail closed", () => {
+    const fixtures = JSON.parse(fs.readFileSync(path.join(__dirname, "../../shared-core/vectors/cloud-storage-framing.json"), "utf8"));
+    for (const row of fixtures.invalid) assert.throws(() => migration.preview(row.xml), row.id);
+    const header = context.OttPlayCore.cloudStorageHeader();
+    assert.throws(() => migration.preview(header + context.OttPlayCore.cloudStorageEntry("ottplaylang", "_eng") + " ".repeat(12*1024*1024) + "</properties>"), /too large/);
+    const entries = context.OttPlayCore.cloudStorageEntry("ottplaylang","_eng") + Array.from({length:10000},(_,i)=>context.OttPlayCore.cloudStorageEntry("key"+i,"x")).join("");
+    assert.throws(() => migration.preview(header + entries + "</properties>"));
+    const nested = JSON.stringify({M3Us:[],hidden:JSON.parse("[".repeat(34)+"0"+"]".repeat(34))});
+    assert.throws(() => migration.preview(header + context.OttPlayCore.cloudStorageEntry("m3um3uArr",nested) + "</properties>"), /nesting/);
+    const nestedUnsafe = '{"M3Us":[],"__proto__":{}}';
+    assert.throws(() => migration.preview(header + context.OttPlayCore.cloudStorageEntry("m3um3uArr",nestedUnsafe) + "</properties>"), /Unsafe settings key/);
+    assert.throws(() => migration.preview('<properties><comment>OTT-Play Preferences</comment><entry key="ottplaylang"><!--ottplay-storage-v2--></entry></properties>'));
+});
 test("unknown formats, unsafe nested keys, corrupt exports and XML entities fail before proposing state", () => {
     const invalid = ["{", "null", "[]", "{}", '{"schema":99,"sources":[]}', '{"version":1,"settings":[],"parentalArray":[]}',
         '{"version":1,"settings":{"__proto__":{"polluted":true}}}', '{"ottplaylang":"_eng","constructor":{}}',

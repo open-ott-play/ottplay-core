@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.5",
   "scripts": {
-    "check:js": "node scripts/test-minify-js.cjs --compiled && node scripts/check-js.cjs",
+    "check:js": "node scripts/test-minify-js.cjs --compiled && node scripts/check-js.cjs && node scripts/test-classic-policies-js.cjs && node scripts/test-classic-references-js.cjs && node scripts/test-classic-references-differential.cjs && node scripts/check-classic-global-favorites.cjs && node scripts/classic-channel-library-parity.cjs --core dist/ottplay-core.js && node scripts/check-cloud-storage-framing.cjs && node scripts/check-local-source-scans.cjs --core dist/ottplay-core.js && node scripts/check-utf16-fingerprint.cjs",
     "pack:core": "node scripts/distribute.cjs build",
     "check:core": "node scripts/distribute.cjs check"
   },

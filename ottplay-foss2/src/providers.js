@@ -65,15 +65,7 @@
         }
 
         function hash(value) {
-            var a = 2166136261;
-            var b = 5381;
-            var i;
-            for (i = 0; i < value.length; i += 1) {
-                a ^= value.charCodeAt(i);
-                a += (a << 1) + (a << 4) + (a << 7) + (a << 8) + (a << 24);
-                b = ((b << 5) + b) ^ value.charCodeAt(i);
-            }
-            return (a >>> 0).toString(16) + "-" + (b >>> 0).toString(16);
+            return root.OttPlayCore.utf16Dual32Fingerprint(value, "-");
         }
 
         function namespace(source) {

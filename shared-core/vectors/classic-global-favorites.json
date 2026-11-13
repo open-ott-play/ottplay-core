@@ -1,0 +1,1882 @@
+{
+  "schema": 1,
+  "source": {
+    "repository": "open-ott-play/ottplay-foss",
+    "commit": "9336a40ccd4e8e0e84571b037c2d2b49e8b0aaaa",
+    "path": "src/settings/global-favorites-portable.ts",
+    "sha256": "004cc808d20401028669bfd4a14b46824b36f985268b8d38318de0a40e797d9c",
+    "fixture_sha256": {
+      "channel-name.fixtures.json": "e21b5793c5a0208e05732be8bea89bad2233b7184c896492b2b0e0a9a69efecc",
+      "nested-m3u-vportal.fixtures.json": "362978d296107b331f815f178d0f51c7893e86e0a412f0304f476b6e0b866d83",
+      "provider-id.fixtures.json": "652f207800cdbc4a7aa0cd9caa218d90558bd0bfa3938e81f43cd5b23b485143",
+      "text-semantics.fixtures.json": "7e939adaceae86308e1591e1f99224989e04a436c6a2547252351e2564840e33",
+      "example.json": "ae487f0de4dfe5a9ef6f94c0527e7372460188048f8a0acb88015045ee5dbb5a"
+    }
+  },
+  "cases": [
+    {
+      "id": "channel-name.fixtures.json:name-only",
+      "input": {
+        "title": "Favorite",
+        "origin": {
+          "provider": "m3u",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel-name",
+          "name": "News HD",
+          "group": null
+        }
+      },
+      "normalized": {
+        "locator": {
+          "group": null,
+          "kind": "channel-name",
+          "name": "News HD"
+        },
+        "origin": {
+          "profile": "Family",
+          "provider": "m3u",
+          "sourceAlias": "TV",
+          "subprofile": null
+        },
+        "title": "Favorite"
+      },
+      "identity": "{\"locator\":{\"group\":null,\"kind\":\"channel-name\",\"name\":\"News HD\"},\"origin\":{\"profile\":\"Family\",\"provider\":\"m3u\",\"sourceAlias\":\"TV\",\"subprofile\":null}}"
+    },
+    {
+      "id": "channel-name.fixtures.json:with-group",
+      "input": {
+        "title": "Favorite",
+        "origin": {
+          "provider": "m3u",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel-name",
+          "name": "News HD",
+          "group": "World"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "group": "World",
+          "kind": "channel-name",
+          "name": "News HD"
+        },
+        "origin": {
+          "profile": "Family",
+          "provider": "m3u",
+          "sourceAlias": "TV",
+          "subprofile": null
+        },
+        "title": "Favorite"
+      },
+      "identity": "{\"locator\":{\"group\":\"World\",\"kind\":\"channel-name\",\"name\":\"News HD\"},\"origin\":{\"profile\":\"Family\",\"provider\":\"m3u\",\"sourceAlias\":\"TV\",\"subprofile\":null}}"
+    },
+    {
+      "id": "channel-name.fixtures.json:missing-group",
+      "input": {
+        "title": "Favorite",
+        "origin": {
+          "provider": "m3u",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel-name",
+          "name": "News HD"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "channel-name.fixtures.json:empty-group",
+      "input": {
+        "title": "Favorite",
+        "origin": {
+          "provider": "m3u",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel-name",
+          "name": "News HD",
+          "group": ""
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "channel-name.fixtures.json:lone-surrogate",
+      "input": {
+        "title": "Favorite",
+        "origin": {
+          "provider": "m3u",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel-name",
+          "name": "\ud800",
+          "group": null
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "channel-name.fixtures.json:private-index",
+      "input": {
+        "title": "Favorite",
+        "origin": {
+          "provider": "m3u",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel-name",
+          "name": "News HD",
+          "group": null,
+          "index": 42
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "channel-name.fixtures.json:plex-no-name-fallback",
+      "input": {
+        "title": "Favorite",
+        "origin": {
+          "provider": "plex",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel-name",
+          "name": "News HD",
+          "group": null
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "nested-m3u-vportal.fixtures.json:root",
+      "input": {
+        "title": "Movie",
+        "origin": {
+          "provider": "m3u",
+          "profile": "Main playlist",
+          "subprofile": null,
+          "sourceAlias": "Main playlist"
+        },
+        "locator": {
+          "kind": "vportal-media",
+          "idField": "id",
+          "id": "42"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "id": "42",
+          "idField": "id",
+          "kind": "vportal-media"
+        },
+        "origin": {
+          "profile": "Main playlist",
+          "provider": "m3u",
+          "sourceAlias": "Main playlist",
+          "subprofile": null
+        },
+        "title": "Movie"
+      },
+      "identity": "{\"locator\":{\"id\":\"42\",\"idField\":\"id\",\"kind\":\"vportal-media\"},\"origin\":{\"profile\":\"Main playlist\",\"provider\":\"m3u\",\"sourceAlias\":\"Main playlist\",\"subprofile\":null}}"
+    },
+    {
+      "id": "nested-m3u-vportal.fixtures.json:folder",
+      "input": {
+        "title": "Movie",
+        "origin": {
+          "provider": "m3u",
+          "profile": "Main playlist",
+          "subprofile": "Movies/Comedy",
+          "sourceAlias": "Main playlist"
+        },
+        "locator": {
+          "kind": "vportal-media",
+          "idField": "episode_id",
+          "id": "s18-e1"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "id": "s18-e1",
+          "idField": "episode_id",
+          "kind": "vportal-media"
+        },
+        "origin": {
+          "profile": "Main playlist",
+          "provider": "m3u",
+          "sourceAlias": "Main playlist",
+          "subprofile": "Movies/Comedy"
+        },
+        "title": "Movie"
+      },
+      "identity": "{\"locator\":{\"id\":\"s18-e1\",\"idField\":\"episode_id\",\"kind\":\"vportal-media\"},\"origin\":{\"profile\":\"Main playlist\",\"provider\":\"m3u\",\"sourceAlias\":\"Main playlist\",\"subprofile\":\"Movies/Comedy\"}}"
+    },
+    {
+      "id": "nested-m3u-vportal.fixtures.json:unsafe-id",
+      "input": {
+        "title": "Movie",
+        "origin": {
+          "provider": "m3u",
+          "profile": "Main playlist",
+          "subprofile": null,
+          "sourceAlias": "Main playlist"
+        },
+        "locator": {
+          "kind": "vportal-media",
+          "idField": "id",
+          "id": "http://secret"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "nested-m3u-vportal.fixtures.json:raw-command",
+      "input": {
+        "title": "Movie",
+        "origin": {
+          "provider": "m3u",
+          "profile": "Main playlist",
+          "subprofile": null,
+          "sourceAlias": "Main playlist"
+        },
+        "locator": {
+          "kind": "vportal-media",
+          "idField": "id",
+          "id": "42",
+          "cmd": "secret"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "nested-m3u-vportal.fixtures.json:invented-url-folder",
+      "input": {
+        "title": "Movie",
+        "origin": {
+          "provider": "m3u",
+          "profile": "Main playlist",
+          "subprofile": "http://portal/secret",
+          "sourceAlias": "Main playlist"
+        },
+        "locator": {
+          "kind": "vportal-media",
+          "idField": "id",
+          "id": "42"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "provider:0",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "bestlist/stalker",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "channelId": "stable",
+          "kind": "channel"
+        },
+        "origin": {
+          "profile": "Family",
+          "provider": "bestlist/stalker",
+          "sourceAlias": "TV",
+          "subprofile": null
+        },
+        "title": "News"
+      },
+      "identity": "{\"locator\":{\"channelId\":\"stable\",\"kind\":\"channel\"},\"origin\":{\"profile\":\"Family\",\"provider\":\"bestlist/stalker\",\"sourceAlias\":\"TV\",\"subprofile\":null}}"
+    },
+    {
+      "id": "provider:1",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "d/maxtv",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "channelId": "stable",
+          "kind": "channel"
+        },
+        "origin": {
+          "profile": "Family",
+          "provider": "d/maxtv",
+          "sourceAlias": "TV",
+          "subprofile": null
+        },
+        "title": "News"
+      },
+      "identity": "{\"locator\":{\"channelId\":\"stable\",\"kind\":\"channel\"},\"origin\":{\"profile\":\"Family\",\"provider\":\"d/maxtv\",\"sourceAlias\":\"TV\",\"subprofile\":null}}"
+    },
+    {
+      "id": "provider:2",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "iptv-ott.ru",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "channelId": "stable",
+          "kind": "channel"
+        },
+        "origin": {
+          "profile": "Family",
+          "provider": "iptv-ott.ru",
+          "sourceAlias": "TV",
+          "subprofile": null
+        },
+        "title": "News"
+      },
+      "identity": "{\"locator\":{\"channelId\":\"stable\",\"kind\":\"channel\"},\"origin\":{\"profile\":\"Family\",\"provider\":\"iptv-ott.ru\",\"sourceAlias\":\"TV\",\"subprofile\":null}}"
+    },
+    {
+      "id": "provider:3",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "shara.club",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "channelId": "stable",
+          "kind": "channel"
+        },
+        "origin": {
+          "profile": "Family",
+          "provider": "shara.club",
+          "sourceAlias": "TV",
+          "subprofile": null
+        },
+        "title": "News"
+      },
+      "identity": "{\"locator\":{\"channelId\":\"stable\",\"kind\":\"channel\"},\"origin\":{\"profile\":\"Family\",\"provider\":\"shara.club\",\"sourceAlias\":\"TV\",\"subprofile\":null}}"
+    },
+    {
+      "id": "provider:4",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "bestlist-stalker",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "channelId": "stable",
+          "kind": "channel"
+        },
+        "origin": {
+          "profile": "Family",
+          "provider": "bestlist-stalker",
+          "sourceAlias": "TV",
+          "subprofile": null
+        },
+        "title": "News"
+      },
+      "identity": "{\"locator\":{\"channelId\":\"stable\",\"kind\":\"channel\"},\"origin\":{\"profile\":\"Family\",\"provider\":\"bestlist-stalker\",\"sourceAlias\":\"TV\",\"subprofile\":null}}"
+    },
+    {
+      "id": "provider:5",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "d-maxtv",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "channelId": "stable",
+          "kind": "channel"
+        },
+        "origin": {
+          "profile": "Family",
+          "provider": "d-maxtv",
+          "sourceAlias": "TV",
+          "subprofile": null
+        },
+        "title": "News"
+      },
+      "identity": "{\"locator\":{\"channelId\":\"stable\",\"kind\":\"channel\"},\"origin\":{\"profile\":\"Family\",\"provider\":\"d-maxtv\",\"sourceAlias\":\"TV\",\"subprofile\":null}}"
+    },
+    {
+      "id": "provider:6",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "iptv-ott-ru",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "channelId": "stable",
+          "kind": "channel"
+        },
+        "origin": {
+          "profile": "Family",
+          "provider": "iptv-ott-ru",
+          "sourceAlias": "TV",
+          "subprofile": null
+        },
+        "title": "News"
+      },
+      "identity": "{\"locator\":{\"channelId\":\"stable\",\"kind\":\"channel\"},\"origin\":{\"profile\":\"Family\",\"provider\":\"iptv-ott-ru\",\"sourceAlias\":\"TV\",\"subprofile\":null}}"
+    },
+    {
+      "id": "provider:7",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "shara-club",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "channelId": "stable",
+          "kind": "channel"
+        },
+        "origin": {
+          "profile": "Family",
+          "provider": "shara-club",
+          "sourceAlias": "TV",
+          "subprofile": null
+        },
+        "title": "News"
+      },
+      "identity": "{\"locator\":{\"channelId\":\"stable\",\"kind\":\"channel\"},\"origin\":{\"profile\":\"Family\",\"provider\":\"shara-club\",\"sourceAlias\":\"TV\",\"subprofile\":null}}"
+    },
+    {
+      "id": "provider:8",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "m3u",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "channelId": "stable",
+          "kind": "channel"
+        },
+        "origin": {
+          "profile": "Family",
+          "provider": "m3u",
+          "sourceAlias": "TV",
+          "subprofile": null
+        },
+        "title": "News"
+      },
+      "identity": "{\"locator\":{\"channelId\":\"stable\",\"kind\":\"channel\"},\"origin\":{\"profile\":\"Family\",\"provider\":\"m3u\",\"sourceAlias\":\"TV\",\"subprofile\":null}}"
+    },
+    {
+      "id": "provider:9",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "plex",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "plex-media",
+          "serverId": "PMS_1",
+          "ratingKey": "42"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "kind": "plex-media",
+          "ratingKey": "42",
+          "serverId": "PMS_1"
+        },
+        "origin": {
+          "profile": "Family",
+          "provider": "plex",
+          "sourceAlias": "TV",
+          "subprofile": null
+        },
+        "title": "News"
+      },
+      "identity": "{\"locator\":{\"kind\":\"plex-media\",\"ratingKey\":\"42\",\"serverId\":\"PMS_1\"},\"origin\":{\"profile\":\"Family\",\"provider\":\"plex\",\"sourceAlias\":\"TV\",\"subprofile\":null}}"
+    },
+    {
+      "id": "provider:10",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "local",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "local-media",
+          "rootAlias": "Movies",
+          "relativePath": "Film.mkv"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "kind": "local-media",
+          "relativePath": "Film.mkv",
+          "rootAlias": "Movies"
+        },
+        "origin": {
+          "profile": "Family",
+          "provider": "local",
+          "sourceAlias": "TV",
+          "subprofile": null
+        },
+        "title": "News"
+      },
+      "identity": "{\"locator\":{\"kind\":\"local-media\",\"relativePath\":\"Film.mkv\",\"rootAlias\":\"Movies\"},\"origin\":{\"profile\":\"Family\",\"provider\":\"local\",\"sourceAlias\":\"TV\",\"subprofile\":null}}"
+    },
+    {
+      "id": "provider:11",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "vportal",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "vportal-media",
+          "idField": "id",
+          "id": "42"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "id": "42",
+          "idField": "id",
+          "kind": "vportal-media"
+        },
+        "origin": {
+          "profile": "Family",
+          "provider": "vportal",
+          "sourceAlias": "TV",
+          "subprofile": null
+        },
+        "title": "News"
+      },
+      "identity": "{\"locator\":{\"id\":\"42\",\"idField\":\"id\",\"kind\":\"vportal-media\"},\"origin\":{\"profile\":\"Family\",\"provider\":\"vportal\",\"sourceAlias\":\"TV\",\"subprofile\":null}}"
+    },
+    {
+      "id": "provider:12",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "1provider",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "channelId": "stable",
+          "kind": "channel"
+        },
+        "origin": {
+          "profile": "Family",
+          "provider": "1provider",
+          "sourceAlias": "TV",
+          "subprofile": null
+        },
+        "title": "News"
+      },
+      "identity": "{\"locator\":{\"channelId\":\"stable\",\"kind\":\"channel\"},\"origin\":{\"profile\":\"Family\",\"provider\":\"1provider\",\"sourceAlias\":\"TV\",\"subprofile\":null}}"
+    },
+    {
+      "id": "provider:13",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "channelId": "stable",
+          "kind": "channel"
+        },
+        "origin": {
+          "profile": "Family",
+          "provider": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "sourceAlias": "TV",
+          "subprofile": null
+        },
+        "title": "News"
+      },
+      "identity": "{\"locator\":{\"channelId\":\"stable\",\"kind\":\"channel\"},\"origin\":{\"profile\":\"Family\",\"provider\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"sourceAlias\":\"TV\",\"subprofile\":null}}"
+    },
+    {
+      "id": "provider:14",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "x..y",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "channelId": "stable",
+          "kind": "channel"
+        },
+        "origin": {
+          "profile": "Family",
+          "provider": "x..y",
+          "sourceAlias": "TV",
+          "subprofile": null
+        },
+        "title": "News"
+      },
+      "identity": "{\"locator\":{\"channelId\":\"stable\",\"kind\":\"channel\"},\"origin\":{\"profile\":\"Family\",\"provider\":\"x..y\",\"sourceAlias\":\"TV\",\"subprofile\":null}}"
+    },
+    {
+      "id": "provider:15",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "provider:16",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "/a",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "provider:17",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "a/",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "provider:18",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "a//b",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "provider:19",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "a/.",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "provider:20",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "a/..",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "provider:21",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "a/../b",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "provider:22",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "../a",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "provider:23",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": ".a",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "provider:24",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "a/.hidden",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "provider:25",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "a/-b",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "provider:26",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "a\\b",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "provider:27",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "http://host",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "provider:28",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "a?token=x",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "provider:29",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "a#fragment",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "provider:30",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "a%2fb",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "provider:31",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "A",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "provider:32",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "a\n",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "provider:33",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "text:ascii",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "m3u",
+          "profile": "Profile",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "channelId": "stable",
+          "kind": "channel"
+        },
+        "origin": {
+          "profile": "Profile",
+          "provider": "m3u",
+          "sourceAlias": "TV",
+          "subprofile": null
+        },
+        "title": "News"
+      },
+      "identity": "{\"locator\":{\"channelId\":\"stable\",\"kind\":\"channel\"},\"origin\":{\"profile\":\"Profile\",\"provider\":\"m3u\",\"sourceAlias\":\"TV\",\"subprofile\":null}}"
+    },
+    {
+      "id": "text:astral_pair",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "m3u",
+          "profile": "A😀B",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "channelId": "stable",
+          "kind": "channel"
+        },
+        "origin": {
+          "profile": "A😀B",
+          "provider": "m3u",
+          "sourceAlias": "TV",
+          "subprofile": null
+        },
+        "title": "News"
+      },
+      "identity": "{\"locator\":{\"channelId\":\"stable\",\"kind\":\"channel\"},\"origin\":{\"profile\":\"A😀B\",\"provider\":\"m3u\",\"sourceAlias\":\"TV\",\"subprofile\":null}}"
+    },
+    {
+      "id": "text:lone_high",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "m3u",
+          "profile": "\ud800",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "text:lone_low",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "m3u",
+          "profile": "\udfff",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "text:high_then_ascii",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "m3u",
+          "profile": "\ud800A",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "text:nested_high",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "m3u",
+          "profile": "\ud800\ud800",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "text:high_at_end",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "m3u",
+          "profile": "A\udbff",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "text:null",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "m3u",
+          "profile": "A\u0000B",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "text:trim_bom",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "m3u",
+          "profile": "﻿Name",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "text:trim_nbsp",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "m3u",
+          "profile": "Name ",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "text:trim_line_separator",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "m3u",
+          "profile": " Name",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "text:not_js_trim_nel",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "m3u",
+          "profile": "Name",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "channelId": "stable",
+          "kind": "channel"
+        },
+        "origin": {
+          "profile": "Name",
+          "provider": "m3u",
+          "sourceAlias": "TV",
+          "subprofile": null
+        },
+        "title": "News"
+      },
+      "identity": "{\"locator\":{\"channelId\":\"stable\",\"kind\":\"channel\"},\"origin\":{\"profile\":\"Name\",\"provider\":\"m3u\",\"sourceAlias\":\"TV\",\"subprofile\":null}}"
+    },
+    {
+      "id": "text:not_js_trim_mongolian",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "m3u",
+          "profile": "᠎Name",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "channelId": "stable",
+          "kind": "channel"
+        },
+        "origin": {
+          "profile": "᠎Name",
+          "provider": "m3u",
+          "sourceAlias": "TV",
+          "subprofile": null
+        },
+        "title": "News"
+      },
+      "identity": "{\"locator\":{\"channelId\":\"stable\",\"kind\":\"channel\"},\"origin\":{\"profile\":\"᠎Name\",\"provider\":\"m3u\",\"sourceAlias\":\"TV\",\"subprofile\":null}}"
+    },
+    {
+      "id": "text:internal_space",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "m3u",
+          "profile": "A B",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "channelId": "stable",
+          "kind": "channel"
+        },
+        "origin": {
+          "profile": "A B",
+          "provider": "m3u",
+          "sourceAlias": "TV",
+          "subprofile": null
+        },
+        "title": "News"
+      },
+      "identity": "{\"locator\":{\"channelId\":\"stable\",\"kind\":\"channel\"},\"origin\":{\"profile\":\"A B\",\"provider\":\"m3u\",\"sourceAlias\":\"TV\",\"subprofile\":null}}"
+    },
+    {
+      "id": "text:limit_astral_valid",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "m3u",
+          "profile": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa😀",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "channelId": "stable",
+          "kind": "channel"
+        },
+        "origin": {
+          "profile": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa😀",
+          "provider": "m3u",
+          "sourceAlias": "TV",
+          "subprofile": null
+        },
+        "title": "News"
+      },
+      "identity": "{\"locator\":{\"channelId\":\"stable\",\"kind\":\"channel\"},\"origin\":{\"profile\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa😀\",\"provider\":\"m3u\",\"sourceAlias\":\"TV\",\"subprofile\":null}}"
+    },
+    {
+      "id": "text:limit_astral_invalid",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "m3u",
+          "profile": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa😀",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "channel",
+          "channelId": "stable"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "path:0",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "local",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "local-media",
+          "rootAlias": "Movies",
+          "relativePath": "Films/Фильм 1.mkv"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "kind": "local-media",
+          "relativePath": "Films/Фильм 1.mkv",
+          "rootAlias": "Movies"
+        },
+        "origin": {
+          "profile": "Family",
+          "provider": "local",
+          "sourceAlias": "TV",
+          "subprofile": null
+        },
+        "title": "News"
+      },
+      "identity": "{\"locator\":{\"kind\":\"local-media\",\"relativePath\":\"Films/Фильм 1.mkv\",\"rootAlias\":\"Movies\"},\"origin\":{\"profile\":\"Family\",\"provider\":\"local\",\"sourceAlias\":\"TV\",\"subprofile\":null}}"
+    },
+    {
+      "id": "path:1",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "local",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "local-media",
+          "rootAlias": "Movies",
+          "relativePath": "Films/100% real.mp4"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "kind": "local-media",
+          "relativePath": "Films/100% real.mp4",
+          "rootAlias": "Movies"
+        },
+        "origin": {
+          "profile": "Family",
+          "provider": "local",
+          "sourceAlias": "TV",
+          "subprofile": null
+        },
+        "title": "News"
+      },
+      "identity": "{\"locator\":{\"kind\":\"local-media\",\"relativePath\":\"Films/100% real.mp4\",\"rootAlias\":\"Movies\"},\"origin\":{\"profile\":\"Family\",\"provider\":\"local\",\"sourceAlias\":\"TV\",\"subprofile\":null}}"
+    },
+    {
+      "id": "path:2",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "local",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "local-media",
+          "rootAlias": "Movies",
+          "relativePath": "%2e%2e/film"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "kind": "local-media",
+          "relativePath": "%2e%2e/film",
+          "rootAlias": "Movies"
+        },
+        "origin": {
+          "profile": "Family",
+          "provider": "local",
+          "sourceAlias": "TV",
+          "subprofile": null
+        },
+        "title": "News"
+      },
+      "identity": "{\"locator\":{\"kind\":\"local-media\",\"relativePath\":\"%2e%2e/film\",\"rootAlias\":\"Movies\"},\"origin\":{\"profile\":\"Family\",\"provider\":\"local\",\"sourceAlias\":\"TV\",\"subprofile\":null}}"
+    },
+    {
+      "id": "path:3",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "local",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "local-media",
+          "rootAlias": "Movies",
+          "relativePath": "a/%2F/b"
+        }
+      },
+      "normalized": {
+        "locator": {
+          "kind": "local-media",
+          "relativePath": "a/%2F/b",
+          "rootAlias": "Movies"
+        },
+        "origin": {
+          "profile": "Family",
+          "provider": "local",
+          "sourceAlias": "TV",
+          "subprofile": null
+        },
+        "title": "News"
+      },
+      "identity": "{\"locator\":{\"kind\":\"local-media\",\"relativePath\":\"a/%2F/b\",\"rootAlias\":\"Movies\"},\"origin\":{\"profile\":\"Family\",\"provider\":\"local\",\"sourceAlias\":\"TV\",\"subprofile\":null}}"
+    },
+    {
+      "id": "path:4",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "local",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "local-media",
+          "rootAlias": "Movies",
+          "relativePath": "/etc/passwd"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "path:5",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "local",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "local-media",
+          "rootAlias": "Movies",
+          "relativePath": "../film"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "path:6",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "local",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "local-media",
+          "rootAlias": "Movies",
+          "relativePath": "a//b"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "path:7",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "local",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "local-media",
+          "rootAlias": "Movies",
+          "relativePath": "a\\b"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "path:8",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "local",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "local-media",
+          "rootAlias": "Movies",
+          "relativePath": "C:film"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    },
+    {
+      "id": "path:9",
+      "input": {
+        "title": "News",
+        "origin": {
+          "provider": "local",
+          "profile": "Family",
+          "subprofile": null,
+          "sourceAlias": "TV"
+        },
+        "locator": {
+          "kind": "local-media",
+          "rootAlias": "Movies",
+          "relativePath": "a/./b"
+        }
+      },
+      "normalized": null,
+      "identity": ""
+    }
+  ],
+  "document": {
+    "input": {
+      "version": 1,
+      "entries": [
+        {
+          "title": "TV favorite",
+          "origin": {
+            "provider": "m3u",
+            "profile": "TV",
+            "subprofile": null,
+            "sourceAlias": "Family channels"
+          },
+          "locator": {
+            "kind": "channel",
+            "channelId": "001"
+          }
+        },
+        {
+          "title": "Portal favorite",
+          "origin": {
+            "provider": "stalker",
+            "profile": "Portal",
+            "subprofile": null,
+            "sourceAlias": "TV subscription"
+          },
+          "locator": {
+            "kind": "channel",
+            "channelId": "723"
+          }
+        },
+        {
+          "title": "Cinema favorite",
+          "origin": {
+            "provider": "plex",
+            "profile": "Cinema",
+            "subprofile": null,
+            "sourceAlias": "Home PMS"
+          },
+          "locator": {
+            "kind": "plex-media",
+            "serverId": "PMS_1",
+            "ratingKey": "42"
+          }
+        },
+        {
+          "title": "Movies favorite",
+          "origin": {
+            "provider": "local",
+            "profile": "Movies",
+            "subprofile": null,
+            "sourceAlias": "Home files"
+          },
+          "locator": {
+            "kind": "local-media",
+            "rootAlias": "Movies",
+            "relativePath": "Comedy/Film.mkv"
+          }
+        },
+        {
+          "title": "Portal cinema favorite",
+          "origin": {
+            "provider": "vportal",
+            "profile": "Portal cinema",
+            "subprofile": "Series",
+            "sourceAlias": "Cinema subscription"
+          },
+          "locator": {
+            "kind": "vportal-media",
+            "idField": "episode_id",
+            "id": "s18-e1"
+          }
+        },
+        {
+          "title": "News favorite",
+          "origin": {
+            "provider": "m3u",
+            "profile": "TV",
+            "subprofile": null,
+            "sourceAlias": "Family channels"
+          },
+          "locator": {
+            "kind": "channel-name",
+            "name": "News HD",
+            "group": "News"
+          }
+        }
+      ]
+    },
+    "normalized": {
+      "entries": [
+        {
+          "locator": {
+            "channelId": "001",
+            "kind": "channel"
+          },
+          "origin": {
+            "profile": "TV",
+            "provider": "m3u",
+            "sourceAlias": "Family channels",
+            "subprofile": null
+          },
+          "title": "TV favorite"
+        },
+        {
+          "locator": {
+            "channelId": "723",
+            "kind": "channel"
+          },
+          "origin": {
+            "profile": "Portal",
+            "provider": "stalker",
+            "sourceAlias": "TV subscription",
+            "subprofile": null
+          },
+          "title": "Portal favorite"
+        },
+        {
+          "locator": {
+            "kind": "plex-media",
+            "ratingKey": "42",
+            "serverId": "PMS_1"
+          },
+          "origin": {
+            "profile": "Cinema",
+            "provider": "plex",
+            "sourceAlias": "Home PMS",
+            "subprofile": null
+          },
+          "title": "Cinema favorite"
+        },
+        {
+          "locator": {
+            "kind": "local-media",
+            "relativePath": "Comedy/Film.mkv",
+            "rootAlias": "Movies"
+          },
+          "origin": {
+            "profile": "Movies",
+            "provider": "local",
+            "sourceAlias": "Home files",
+            "subprofile": null
+          },
+          "title": "Movies favorite"
+        },
+        {
+          "locator": {
+            "id": "s18-e1",
+            "idField": "episode_id",
+            "kind": "vportal-media"
+          },
+          "origin": {
+            "profile": "Portal cinema",
+            "provider": "vportal",
+            "sourceAlias": "Cinema subscription",
+            "subprofile": "Series"
+          },
+          "title": "Portal cinema favorite"
+        },
+        {
+          "locator": {
+            "group": "News",
+            "kind": "channel-name",
+            "name": "News HD"
+          },
+          "origin": {
+            "profile": "TV",
+            "provider": "m3u",
+            "sourceAlias": "Family channels",
+            "subprofile": null
+          },
+          "title": "News favorite"
+        }
+      ],
+      "version": 1
+    },
+    "required": [
+      "channel",
+      "channel-name",
+      "local-media",
+      "plex-media",
+      "vportal-media"
+    ]
+  }
+}

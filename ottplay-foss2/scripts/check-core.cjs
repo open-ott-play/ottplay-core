@@ -46,11 +46,12 @@ assert(!/var retryCount|var engineIndex|var mediaRecoveryUsed|function language\
 for (const [file, apis, displaced] of [
     ["src/state.js", ["validateBrowserState", "pruneBrowserSources", "exportBrowserState"], /function reference\(|function track\(/],
     ["src/library.js", ["restoreChannelIndex", "libraryDecorate", "favoriteListChange", "libraryToggleReminder"], /function legacyTvgId|candidates\.filter/],
-    ["src/channel-identity.js", ["rememberChannelIdentity", "reconcileChannelIdentity", "channelIdentityPermission"], /function candidates\(|function move\(/],
+    ["src/channel-identity.js", ["rememberChannelIdentity", "reconcileChannelIdentity", "channelIdentityPermission", "utf16Dual32Fingerprint"], /function candidates\(|function move\(|2166136261/],
     ["src/security.js", ["BrowserParentalSession", "parentalValidate", "parentalProtected", "parentalFailedBlock"], /playbackActions|maxBlock|grantUntil = 0/],
-    ["src/migration.js", ["previewLegacySettings"], /function (?:embedded|xtream|oldIds)\(/],
+    ["src/migration.js", ["previewLegacySettings", "readVersionedCloudStorage"], /function (?:embedded|xtream|oldIds)\(/],
+    ["src/local-media.js", ["localSourceScanStatus"], /scan\.generation > 9007199254740991/],
     ["src/playback-preferences.js", ["playbackTrack", "libraryPreferenceIndex", "librarySavePreference"], /function language\(|candidates\.filter/],
-    ["src/providers.js", ["OperatorRequestClient", "OperatorLifetimeClient", "operatorBrowserConfig", "operatorSourceRelationship"], /var sessions =|var seriesCache =/]
+    ["src/providers.js", ["OperatorRequestClient", "OperatorLifetimeClient", "operatorBrowserConfig", "operatorSourceRelationship", "utf16Dual32Fingerprint"], /var sessions =|var seriesCache =|2166136261/]
 ]) {
     const source = fs.readFileSync(path.join(root, file), "utf8");
     for (const api of apis) assert(source.includes("." + api + "("), file + " must use " + api);

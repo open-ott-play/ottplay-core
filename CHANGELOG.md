@@ -1,5 +1,33 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Share current storage-v2 XML framing with FOSS2 migration previews while
+  preserving each legacy XML profile and the host's import security boundary.
+- Add a compact source-scan status contract and one scalar UTF-16 fingerprint
+  implementation; retain existing source IDs and generation ownership rules.
+- Add explicit classic v1 channel-library, reference, portable-favorites,
+  programme-reminder and live-stall policy contracts, with common JVM/JS tests
+  and packaged JavaScript characterization checks.
+- Centralize M3U user-agent presets and resolution for qualified native table
+  generation, retaining custom values and host transport validation.
+- Document separate producer/consumer activation gates and retain the existing
+  Classic bulk paths while their JavaScript performance migration is deferred.
+- Remove quadratic group projection, stored-order reconstruction, shuffle reset
+  and provider-order adoption work without changing duplicate or callback order.
+- Normalize malformed cloud JSON string failures to the public error contract,
+  preventing parser snippets from exposing stored settings in host error text.
+- Bound portable-favorites snapshot work before schema validation and preserve
+  inherited array data slots without invoking accessors.
+
+### Upgrade
+
+The classic profiles are additive; existing APIs and serialized formats remain
+compatible. Qualify the same candidate JS/JAR with each consumer before merging
+the linked migration. These notes do not replace a published 0.1.5 artifact.
+
 ## [0.1.5] - Unreleased
 
 ### Changed

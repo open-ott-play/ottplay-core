@@ -1,0 +1,215 @@
+{
+  "schema": 1,
+  "contract": "UTF-16 code units, unsigned 32-bit overflow, unpadded lowercase hex; host separator and framing explicit; non-cryptographic",
+  "oracles": [
+    {
+      "id": "foss-source",
+      "repository": "open-ott-play/ottplay-foss",
+      "commit": "61df4e99a5541712b24b6ec334699921f4daa65a",
+      "path": "src/provider/source-identity.ts",
+      "sourceSha256": "f9bab6992505834b5ceb091fcfbced67eb58528189e3247866273cd20793a937",
+      "functionSha256": "bbd66937b41839401450a6466f89ab6864c116cd05b90763788290028ea22e93",
+      "function": "oracle_foss_source"
+    },
+    {
+      "id": "foss2-identity",
+      "repository": "open-ott-play/ottplay-core",
+      "commit": "cb33aae12335accd8ad6c0df821e7ca7838bc6df",
+      "path": "ottplay-foss2/src/channel-identity.js",
+      "sourceSha256": "87e0143cd68ee929e632410f3f124b9154f23f3cb7c8bba07809a21472a4f8f9",
+      "functionSha256": "1433ca5f0e0dd585b4f2f480e0fd0c4185611697c68123e116a18ec12258abdd",
+      "function": "oracle_foss2_identity"
+    },
+    {
+      "id": "foss2-provider",
+      "repository": "open-ott-play/ottplay-core",
+      "commit": "cb33aae12335accd8ad6c0df821e7ca7838bc6df",
+      "path": "ottplay-foss2/src/providers.js",
+      "sourceSha256": "18fcf9284a8586f2fb645a4892f5876b899b22a0773b2eabb179a221b7146b50",
+      "functionSha256": "82ea756221011ce3cef17610e8a8c5f9ce0a0661826824dbb31545d7395c8475",
+      "function": "oracle_foss2_provider"
+    }
+  ],
+  "vectors": [
+    {
+      "id": "empty",
+      "units": [],
+      "dash": "811c9dc5-1505",
+      "dot": "811c9dc5.1505"
+    },
+    {
+      "id": "ascii",
+      "units": [
+        97
+      ],
+      "dash": "e40c292c-2b5c4",
+      "dot": "e40c292c.2b5c4"
+    },
+    {
+      "id": "hello",
+      "units": [
+        104,
+        101,
+        108,
+        108,
+        111
+      ],
+      "dash": "4f9f2cab-a9cede7",
+      "dot": "4f9f2cab.a9cede7"
+    },
+    {
+      "id": "url",
+      "units": [
+        104,
+        116,
+        116,
+        112,
+        115,
+        58,
+        47,
+        47,
+        101,
+        120,
+        97,
+        109,
+        112,
+        108,
+        101,
+        46,
+        116,
+        101,
+        115,
+        116,
+        47,
+        108,
+        105,
+        118,
+        101,
+        63,
+        105,
+        100,
+        61,
+        49,
+        38,
+        116,
+        111,
+        107,
+        101,
+        110,
+        61,
+        115,
+        121,
+        110,
+        116,
+        104,
+        101,
+        116,
+        105,
+        99
+      ],
+      "dash": "f6bfb720-f28a1f20",
+      "dot": "f6bfb720.f28a1f20"
+    },
+    {
+      "id": "separators",
+      "units": [
+        97,
+        124,
+        98,
+        0,
+        99,
+        10
+      ],
+      "dash": "16b9275b-4f686ad3",
+      "dot": "16b9275b.4f686ad3"
+    },
+    {
+      "id": "cyrillic",
+      "units": [
+        1056,
+        1086,
+        1089,
+        1089,
+        1080,
+        1103,
+        32,
+        43,
+        50
+      ],
+      "dash": "e1e1df21-6de67c15",
+      "dot": "e1e1df21.6de67c15"
+    },
+    {
+      "id": "astral",
+      "units": [
+        55357,
+        56835
+      ],
+      "dash": "ce31c971-50fe9b",
+      "dot": "ce31c971.50fe9b"
+    },
+    {
+      "id": "lone-high",
+      "units": [
+        55296
+      ],
+      "dash": "481d51f-26da5",
+      "dot": "481d51f.26da5"
+    },
+    {
+      "id": "lone-low",
+      "units": [
+        56320
+      ],
+      "dash": "47b891f-269a5",
+      "dot": "47b891f.269a5"
+    },
+    {
+      "id": "split-surrogates",
+      "units": [
+        55296,
+        65,
+        56320
+      ],
+      "dash": "56a9238e-a54be84",
+      "dot": "56a9238e.a54be84"
+    },
+    {
+      "id": "boundary-units",
+      "units": [
+        65535,
+        0,
+        65279
+      ],
+      "dash": "61c33c6f-9beb625",
+      "dot": "61c33c6f.9beb625"
+    },
+    {
+      "id": "long-ascii",
+      "repeat": {
+        "unit": 97,
+        "count": 4096
+      },
+      "dash": "d400edc5-f891505",
+      "dot": "d400edc5.f891505"
+    },
+    {
+      "id": "overflow-units",
+      "repeat": {
+        "unit": 65535,
+        "count": 512
+      },
+      "dash": "a5be3c5-c7357505",
+      "dot": "a5be3c5.c7357505"
+    },
+    {
+      "id": "zeros",
+      "repeat": {
+        "unit": 0,
+        "count": 1024
+      },
+      "dash": "1f116dc5-605a9505",
+      "dot": "1f116dc5.605a9505"
+    }
+  ]
+}

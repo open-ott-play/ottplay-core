@@ -1,5 +1,6 @@
 OTT2.define("local-media", function () {
     "use strict";
+    var core = OttPlayCore;
     var key = "ottplay2:local:v1";
     function create(environment, options) {
         options = options || {};
@@ -383,9 +384,14 @@ OTT2.define("local-media", function () {
                 return getJSON(requestUrl, token).then(function (catalog) {
                     if (!alive(token)) return;
                     if (!catalog || !Array.isArray(catalog.items)) throw new Error("INVALID_CATALOG");
-                    var scans = (catalog.sourceScans || []).filter(function (scan) { return scan.sourceId === source.rootId; }), scan = scans[0];
-                    if (scans.length > 1 || scan && (typeof scan.generation !== "number" || !isFinite(scan.generation) || scan.generation <= 0 || Math.floor(scan.generation) !== scan.generation || ["pending", "scanning", "complete", "error"].indexOf(scan.state) < 0)) throw new Error("INVALID_GENERATION");
-                    if (scan) { if (scanGeneration !== null && scanGeneration !== scan.generation) throw new Error("SOURCE_CHANGED"); scanGeneration = scan.generation; }
+                    var scans = catalog.sourceScans, scan = null, matches = 0;
+                    if (Array.isArray(scans)) scans.forEach(function (record) { if (record && record.sourceId === source.rootId) { scan = record; matches++; } });
+                    var scanStatus = core.localSourceScanStatus(scans !== undefined, Array.isArray(scans), matches, scan && scan.generation, scan && scan.state);
+                    if (scanStatus === "invalid") throw new Error("INVALID_GENERATION");
+                    // An advertised source protocol cannot authorize legacy
+                    // completion before the selected source has a scan record.
+                    if (scanStatus === "pending" && !scan) scan = { generation: 0, state: "pending" };
+                    if (scan && scan.generation) { if (scanGeneration !== null && scanGeneration !== scan.generation) throw new Error("SOURCE_CHANGED"); scanGeneration = scan.generation; }
                     var complete = scan ? scan.state === "complete" : !catalog.scanning;
                     var sourceRow = (catalog.sources || []).filter(function (row) { return row.id === source.rootId; })[0];
                     if (!sourceRow || sourceRow.available === false) throw new Error("SOURCE_UNAVAILABLE");

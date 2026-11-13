@@ -1,0 +1,367 @@
+{
+  "schema": 1,
+  "contract": "Omitted protocol retains legacy fallback; advertised missing selected record waits; matching record must be unique with a safe positive integral generation and one of four states. Classification never authorizes playback or changes generation ownership.",
+  "cases": [
+    {
+      "name": "omitted protocol",
+      "expected": "legacy",
+      "advertised": false,
+      "array": false,
+      "matches": 0,
+      "generation": null,
+      "state": null
+    },
+    {
+      "name": "advertised null/nonarray",
+      "expected": "invalid",
+      "advertised": true,
+      "array": false,
+      "matches": 0,
+      "generation": null,
+      "state": null
+    },
+    {
+      "name": "advertised no selected record",
+      "expected": "pending",
+      "advertised": true,
+      "array": true,
+      "matches": 0,
+      "generation": null,
+      "state": null
+    },
+    {
+      "name": "invalid record count -1",
+      "expected": "invalid",
+      "advertised": true,
+      "array": true,
+      "matches": -1,
+      "generation": 1,
+      "state": "complete"
+    },
+    {
+      "name": "invalid record count 2",
+      "expected": "invalid",
+      "advertised": true,
+      "array": true,
+      "matches": 2,
+      "generation": 1,
+      "state": "complete"
+    },
+    {
+      "name": "invalid record count 1.5",
+      "expected": "invalid",
+      "advertised": true,
+      "array": true,
+      "matches": 1.5,
+      "generation": 1,
+      "state": "complete"
+    },
+    {
+      "name": "invalid record count 1",
+      "expected": "invalid",
+      "advertised": true,
+      "array": true,
+      "matches": "1",
+      "generation": 1,
+      "state": "complete"
+    },
+    {
+      "name": "invalid record count True",
+      "expected": "invalid",
+      "advertised": true,
+      "array": true,
+      "matches": true,
+      "generation": 1,
+      "state": "complete"
+    },
+    {
+      "name": "invalid record count None",
+      "expected": "invalid",
+      "advertised": true,
+      "array": true,
+      "matches": null,
+      "generation": 1,
+      "state": "complete"
+    },
+    {
+      "name": "invalid generation 1",
+      "expected": "invalid",
+      "advertised": true,
+      "array": true,
+      "matches": 1,
+      "generation": "1",
+      "state": "complete"
+    },
+    {
+      "name": "invalid generation True",
+      "expected": "invalid",
+      "advertised": true,
+      "array": true,
+      "matches": 1,
+      "generation": true,
+      "state": "complete"
+    },
+    {
+      "name": "invalid generation False",
+      "expected": "invalid",
+      "advertised": true,
+      "array": true,
+      "matches": 1,
+      "generation": false,
+      "state": "complete"
+    },
+    {
+      "name": "invalid generation None",
+      "expected": "invalid",
+      "advertised": true,
+      "array": true,
+      "matches": 1,
+      "generation": null,
+      "state": "complete"
+    },
+    {
+      "name": "invalid generation 0",
+      "expected": "invalid",
+      "advertised": true,
+      "array": true,
+      "matches": 1,
+      "generation": 0,
+      "state": "complete"
+    },
+    {
+      "name": "invalid generation -1",
+      "expected": "invalid",
+      "advertised": true,
+      "array": true,
+      "matches": 1,
+      "generation": -1,
+      "state": "complete"
+    },
+    {
+      "name": "invalid generation 1.5",
+      "expected": "invalid",
+      "advertised": true,
+      "array": true,
+      "matches": 1,
+      "generation": 1.5,
+      "state": "complete"
+    },
+    {
+      "name": "invalid generation 9007199254740992",
+      "expected": "invalid",
+      "advertised": true,
+      "array": true,
+      "matches": 1,
+      "generation": 9007199254740992,
+      "state": "complete"
+    },
+    {
+      "name": "invalid generation {'special': 'undefined'}",
+      "expected": "invalid",
+      "advertised": true,
+      "array": true,
+      "matches": 1,
+      "generation": {
+        "special": "undefined"
+      },
+      "state": "complete"
+    },
+    {
+      "name": "invalid generation {'special': 'NaN'}",
+      "expected": "invalid",
+      "advertised": true,
+      "array": true,
+      "matches": 1,
+      "generation": {
+        "special": "NaN"
+      },
+      "state": "complete"
+    },
+    {
+      "name": "invalid generation {'special': 'Infinity'}",
+      "expected": "invalid",
+      "advertised": true,
+      "array": true,
+      "matches": 1,
+      "generation": {
+        "special": "Infinity"
+      },
+      "state": "complete"
+    },
+    {
+      "name": "invalid generation {'special': '-Infinity'}",
+      "expected": "invalid",
+      "advertised": true,
+      "array": true,
+      "matches": 1,
+      "generation": {
+        "special": "-Infinity"
+      },
+      "state": "complete"
+    },
+    {
+      "name": "safe max generation",
+      "expected": "complete",
+      "advertised": true,
+      "array": true,
+      "matches": 1,
+      "generation": 9007199254740991,
+      "state": "complete"
+    },
+    {
+      "name": "record state pending",
+      "expected": "pending",
+      "advertised": true,
+      "array": true,
+      "matches": 1,
+      "generation": 1,
+      "state": "pending"
+    },
+    {
+      "name": "record state scanning",
+      "expected": "scanning",
+      "advertised": true,
+      "array": true,
+      "matches": 1,
+      "generation": 1,
+      "state": "scanning"
+    },
+    {
+      "name": "record state complete",
+      "expected": "complete",
+      "advertised": true,
+      "array": true,
+      "matches": 1,
+      "generation": 1,
+      "state": "complete"
+    },
+    {
+      "name": "record state error",
+      "expected": "error",
+      "advertised": true,
+      "array": true,
+      "matches": 1,
+      "generation": 1,
+      "state": "error"
+    },
+    {
+      "name": "invalid record state None",
+      "expected": "invalid",
+      "advertised": true,
+      "array": true,
+      "matches": 1,
+      "generation": 1,
+      "state": null
+    },
+    {
+      "name": "invalid record state True",
+      "expected": "invalid",
+      "advertised": true,
+      "array": true,
+      "matches": 1,
+      "generation": 1,
+      "state": true
+    },
+    {
+      "name": "invalid record state 1",
+      "expected": "invalid",
+      "advertised": true,
+      "array": true,
+      "matches": 1,
+      "generation": 1,
+      "state": 1
+    },
+    {
+      "name": "invalid record state ",
+      "expected": "invalid",
+      "advertised": true,
+      "array": true,
+      "matches": 1,
+      "generation": 1,
+      "state": ""
+    },
+    {
+      "name": "invalid record state Complete",
+      "expected": "invalid",
+      "advertised": true,
+      "array": true,
+      "matches": 1,
+      "generation": 1,
+      "state": "Complete"
+    },
+    {
+      "name": "invalid record state future",
+      "expected": "invalid",
+      "advertised": true,
+      "array": true,
+      "matches": 1,
+      "generation": 1,
+      "state": "future"
+    },
+    {
+      "name": "invalid record state {'special': 'undefined'}",
+      "expected": "invalid",
+      "advertised": true,
+      "array": true,
+      "matches": 1,
+      "generation": 1,
+      "state": {
+        "special": "undefined"
+      }
+    },
+    {
+      "name": "invalid advertised type 1",
+      "expected": "invalid",
+      "advertised": 1,
+      "array": true,
+      "matches": 1,
+      "generation": 1,
+      "state": "complete"
+    },
+    {
+      "name": "invalid advertised type true",
+      "expected": "invalid",
+      "advertised": "true",
+      "array": true,
+      "matches": 1,
+      "generation": 1,
+      "state": "complete"
+    },
+    {
+      "name": "invalid advertised type None",
+      "expected": "invalid",
+      "advertised": null,
+      "array": true,
+      "matches": 1,
+      "generation": 1,
+      "state": "complete"
+    },
+    {
+      "name": "invalid array type 1",
+      "expected": "invalid",
+      "advertised": true,
+      "array": 1,
+      "matches": 1,
+      "generation": 1,
+      "state": "complete"
+    },
+    {
+      "name": "invalid array type true",
+      "expected": "invalid",
+      "advertised": true,
+      "array": "true",
+      "matches": 1,
+      "generation": 1,
+      "state": "complete"
+    },
+    {
+      "name": "invalid array type None",
+      "expected": "invalid",
+      "advertised": true,
+      "array": null,
+      "matches": 1,
+      "generation": 1,
+      "state": "complete"
+    }
+  ]
+}

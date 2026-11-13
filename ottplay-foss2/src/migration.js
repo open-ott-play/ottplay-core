@@ -37,6 +37,10 @@ OTT2.define("migration", function (require) {
         });
     }
     function parseXML(text) {
+        // Current Classic cloud exports quote every raw storage string. Keep
+        // their exact v2 framing separate from this older entity-decoding profile.
+        var versioned = OttPlayCore.readVersionedCloudStorage(text);
+        if (versioned !== null) return versioned;
         var source = text.replace(/^\s*<\?xml\s+[^?]*\?>\s*/i, "");
         var result = {}, body, expression, match, consumed = 0, count = 0, key;
         // This exact legacy declaration is metadata only; no DTD is fetched.
