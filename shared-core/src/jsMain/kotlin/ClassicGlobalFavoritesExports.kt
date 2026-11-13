@@ -34,7 +34,15 @@ private fun classicFavoritesSnapshot(value: dynamic, depth: Int = 0, budget: Int
     for (key in keys) {
         val descriptor: dynamic = js("Object.getOwnPropertyDescriptor(value, key)")
         if (descriptor == null || descriptor.enumerable != true || !js("'value' in descriptor").unsafeCast<Boolean>()) return classicFavoritesInvalid
-        val child = classicFavoritesSnapshot(descriptor.value, depth + 1, budget)
+        val raw: dynamic = descriptor.value
+        // Reject container values in scalar fields before visiting their contents.
+        // Only these three v1 fields can contain another object or array.
+        when (key) {
+            "entries" -> if (!js("Array.isArray(raw)").unsafeCast<Boolean>()) return classicFavoritesInvalid
+            "origin", "locator" -> if (raw == null || jsTypeOf(raw) != "object" || js("Array.isArray(raw)").unsafeCast<Boolean>()) return classicFavoritesInvalid
+            else -> if (raw != null && jsTypeOf(raw) in listOf("object", "function")) return classicFavoritesInvalid
+        }
+        val child = classicFavoritesSnapshot(raw, depth + 1, budget)
         if (child === classicFavoritesInvalid) return classicFavoritesInvalid
         result[key] = child
     }

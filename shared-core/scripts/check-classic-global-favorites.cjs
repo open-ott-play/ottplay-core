@@ -97,6 +97,10 @@ const expandedTitle = Array(1000).fill(Array(1000).fill(leaf));
 context.favoritesCodec = codec;
 context.expandedFavorite = entry("oversized", expandedTitle);
 equal(vm.runInContext("favoritesCodec.normalize(expandedFavorite)", context, { timeout: 2000 }), null, "recursive snapshot work bounded");
+equal(copiedSlots, 0, "invalid scalar container rejected before array traversal");
+// Invalid structural fields can still form a DAG; the global budget bounds it.
+context.expandedFavorite = { entries: Array(1000).fill({ entries: Array(1000).fill(leaf) }) };
+equal(vm.runInContext("favoritesCodec.normalize(expandedFavorite)", context, { timeout: 2000 }), null, "structural DAG snapshot work bounded");
 assert(copiedSlots > 0 && copiedSlots <= 16384, "request-local node budget stops repeated subtree expansion"); checks++;
 assert.notEqual(codec.normalize(entry()), null, "snapshot budget does not leak between calls"); checks++;
 delete context.favoritesCodec;
