@@ -23,6 +23,26 @@ for (const row of vectors.cases) {
 assert.deepEqual(plain(core.readClassicCloudStorage(vectors.legacy.xml)), vectors.legacy.decoded);
 assert.equal(core.readVersionedCloudStorage(vectors.legacy.xml), null, "old literal XML remains with its host legacy profile");
 for (const row of vectors.invalid) { assert.throws(() => core.readClassicCloudStorage(row.xml), row.id); cases++; }
+const malformedStrings = ["&quot;unclosed", "&quot;\\x20&quot;", "&quot;\\u12zz&quot;", "&quot;x&quot;trailing", "&quot;x&quot;&quot;y&quot;", "&quot;trailing\\&quot;"];
+for (const malformed of malformedStrings) {
+    for (const api of ["readClassicCloudStorage", "readVersionedCloudStorage"]) {
+        for (const [key, value] of [["&quot;key&quot;", malformed], [malformed, "&quot;value&quot;"]]) {
+            const xml = core.cloudStorageHeader() + '\n<entry key="' + key + '">' + value + '</entry>\n</properties>';
+            assert.throws(() => core[api](xml), error => error.name === "Error" && error.message === "Invalid cloud settings document", api + ": malformed JSON uses the cloud failure contract");
+        }
+    }
+}
+// Normalize only JSON grammar failures; unrelated native failures must retain their identity.
+const nativeFailure = vm.runInContext("new TypeError('native parser failure')", context);
+context.nativeFailure = nativeFailure;
+vm.runInContext("var originalCloudJsonParse = JSON.parse; JSON.parse = function () { throw nativeFailure; };", context);
+try {
+    for (const api of ["readClassicCloudStorage", "readVersionedCloudStorage"]) {
+        assert.throws(() => core[api](write({ key: "value" })), error => error === nativeFailure);
+    }
+} finally {
+    vm.runInContext("JSON.parse = originalCloudJsonParse; delete nativeFailure; delete originalCloudJsonParse;", context);
+}
 for (const key of ["__proto__", "constructor", "prototype"]) assert.throws(() => core.cloudStorageEntry(key, "x"));
 let touched = 0;
 const wrong = new Proxy({}, { get() { touched++; throw "read"; }, ownKeys() { touched++; throw "keys"; } });

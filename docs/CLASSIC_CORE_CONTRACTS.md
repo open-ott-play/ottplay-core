@@ -3,7 +3,9 @@
 These additive **v1 classic profiles** preserve OTTPlay FOSS behavior. They do
 not replace the differently shaped FOSS2 `LibraryState`, `ChannelIdentity` or
 `PlaybackRetries` APIs. Public compiler outputs are built from the Kotlin
-common source; clients must not maintain another copy of these policy rules.
+common source. Activated ports must use the qualified common policy; the existing
+Classic bulk implementation remains the shipped oracle while that migration is
+deferred for performance. See [measured activation limits](CLASSIC_CORE_PERFORMANCE.md).
 
 ## Ownership
 
@@ -59,7 +61,7 @@ common source; clients must not maintain another copy of these policy rules.
   This scalar API does not transfer provider configuration objects or replace
   authentication, signatures or PIN hashing.
 
-## Delivery order and held integration
+## Delivery order and separate activation gates
 
 1. Freeze the existing client behavior as characterization cases and common
    contract tests, including rejected input and effect ordering.
@@ -73,11 +75,20 @@ common source; clients must not maintain another copy of these policy rules.
 5. Switch consumers to thin ports and remove only the replaced local rules.
    Recheck source/vendor equality after the final source change.
 
-The current migration uses a linked core PR and one FOSS integration PR. Both
-remain **draft/manual hold, without automerge**, pending the owner's release
-window and explicit merge clearance. A locally built candidate is not a released
-version or a hardware acceptance result. No device operation is required by
-these pure contract tests.
+The producer and consumer qualify independently. Additive contract fixes may
+merge without activating the new bulk ports. **The JavaScript channel-library
+and reference-graph migration remains deferred**: measured conversion costs
+are still materially higher than the frozen Classic path, despite the linear
+lookup fixes. Existing Classic functionality must remain available through its
+local implementation until a separately qualified transport design is ready.
+
+FOSS2 currently consumes the cloud framing, source-scan classifier and scalar
+fingerprint, not the new Classic bulk library/reference APIs. The already shipped
+`classicPortableSnapshot` and `classicInstallationState` are unchanged and are
+not newly deferred. Every consumer still needs the qualified producer package,
+its own integration tests and the ordinary release gates. A local build is not a
+released version or hardware acceptance. No device operation is required by these
+pure contract tests.
 
 ## Deliberately retained implementations
 

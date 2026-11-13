@@ -13,8 +13,12 @@
   and packaged JavaScript characterization checks.
 - Centralize M3U user-agent presets and resolution for qualified native table
   generation, retaining custom values and host transport validation.
-- Document the linked, held FOSS migration and the host boundaries that remain
-  responsible for persistence, security, timers and media ownership.
+- Document separate producer/consumer activation gates and retain the existing
+  Classic bulk paths while their JavaScript performance migration is deferred.
+- Remove quadratic group projection, stored-order reconstruction, shuffle reset
+  and provider-order adoption work without changing duplicate or callback order.
+- Normalize malformed cloud JSON string failures to the public error contract,
+  preventing parser snippets from exposing stored settings in host error text.
 
 ### Upgrade
 

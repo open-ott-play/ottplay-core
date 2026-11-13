@@ -54,6 +54,13 @@ class CloudStorageFramingTest {
         assertEquals(emptyList(), CloudStorageFraming.read(document(), true, 0))
     }
 
+    @Test fun malformedJsonStringsFailForBothKeysAndValues() {
+        for (value in listOf("&quot;unclosed", "&quot;\\x20&quot;", "&quot;\\u12zz&quot;", "&quot;x&quot;trailing", "&quot;x&quot;&quot;y&quot;", "&quot;trailing\\&quot;")) {
+            invalid(raw(value))
+            invalid(raw("&quot;value&quot;", value))
+        }
+    }
+
     @Test fun versionedDetectionOnlyUsesItsFramingPosition() {
         assertNull(CloudStorageFraming.read("<properties><comment>OTT-Play Preferences</comment></properties>", true))
         assertNull(CloudStorageFraming.read("<properties><comment>OTT-Play Preferences</comment><entry key=\"x\">" + CloudStorageFraming.marker + "</entry></properties>", true))

@@ -30,7 +30,10 @@ private fun cloudStorageDecoded(value: String): String {
         if (jsTypeOf(decoded) != "string") throw CloudStorageFailure()
         decoded
     })
-    val decoded: dynamic = js("JSON.parse")(json)
+    val decoded: dynamic = try { js("JSON.parse")(json) } catch (error: dynamic) {
+        if (js("error instanceof SyntaxError").unsafeCast<Boolean>()) throw CloudStorageFailure()
+        throw error
+    }
     if (jsTypeOf(decoded) != "string") throw CloudStorageFailure()
     return decoded.unsafeCast<String>()
 }

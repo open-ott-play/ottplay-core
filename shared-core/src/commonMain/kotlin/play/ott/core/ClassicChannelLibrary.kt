@@ -31,6 +31,11 @@ object ClassicChannelLibrary {
     private fun objectFields(value: ProviderValue) = if (value.isArray)
         value.elements.mapIndexed { index, item -> index.toString() to item }.toMap() else value.properties
     private fun group(values: List<ProviderValue>, id: String) = values.firstOrNull { it["id"].scalar == id }
+    // Match firstOrNull even for duplicate IDs supplied directly to the common API.
+    private fun firstGroups(values: List<ProviderValue>): Map<String, ProviderValue> =
+        linkedMapOf<String, ProviderValue>().apply {
+            values.forEach { row -> val id = row["id"].scalar; if (!containsKey(id)) put(id, row) }
+        }
     private fun live(provider: List<ProviderValue>, id: String) = group(provider, id)
     private fun list(value: ProviderValue) = value.elements.map { it.scalar }
     private fun positiveInteger(value: ProviderValue): Boolean = value.kind == ProviderValueKind.NUMBER &&
@@ -84,10 +89,11 @@ object ClassicChannelLibrary {
     /** Only the host's existing pure unresolved-ID mapping is called here. */
     fun groups(state: ProviderValue, provider: List<ProviderValue>, resolve: (String) -> String = { it }): ProviderValue {
         require(validState(state) && validProvider(provider)) { "Invalid classic channel library model" }
+        val providerById = firstGroups(provider)
         val seen = mutableSetOf<String>(); val hidden = list(state["hidden"]).toSet()
         val result = state["groups"].elements.map { stored ->
             val id = stored["id"].scalar; seen += id
-            val current = live(provider, id)
+            val current = providerById[id]
             var members = stored["members"].elements
             if (current != null && trueValue(stored["inheritsMembers"])) members = current["members"].elements
             else if (current != null && stored["known"].kind != ProviderValueKind.MISSING) {
@@ -230,8 +236,9 @@ object ClassicChannelLibrary {
                 val at = ordered.indexOfFirst { it["id"].scalar == id }; val moved = ordered.removeAt(at)
                 val start = (at + request["delta"].number() + ordered.size + 1) % (ordered.size + 1)
                 ordered.add(spliceIndex(start, ordered.size), moved)
+                val storedById = firstGroups(stored)
                 stored = ordered.map { row ->
-                    val previous = group(stored, row["id"].scalar)
+                    val previous = storedById[row["id"].scalar]
                     obj(linkedMapOf("id" to row["id"], "inheritsMembers" to (previous?.get("inheritsMembers") ?: bool(true)),
                         "known" to (previous?.get("known") ?: ProviderValue.missing), "label" to (previous?.get("label") ?: text("")), "members" to row["members"]))
                 }.toMutableList()
@@ -241,8 +248,10 @@ object ClassicChannelLibrary {
             "resetShuffle" -> {
                 val previous = group(stored, id)!!
                 val current = unique(group(visible, id)!!["members"])
-                val restored = unique(strings(previous["shuffleBefore"].elements.map { resolve(it.scalar) })).filter { it in current }
-                val value = edit()!!; value["members"] = strings(restored + current.filter { it !in restored })
+                val currentIds = current.toSet()
+                val restored = unique(strings(previous["shuffleBefore"].elements.map { resolve(it.scalar) })).filter { it in currentIds }
+                val restoredIds = restored.toSet()
+                val value = edit()!!; value["members"] = strings(restored + current.filter { it !in restoredIds })
                 value.remove("shuffleBefore"); value["inheritsMembers"] = bool(false); known(value); replaceGroup(value)
             }
             "shuffle" -> {
@@ -270,8 +279,9 @@ object ClassicChannelLibrary {
                 preferences[kind] = obj(values); result["preferences"] = obj(preferences)
             }
             "adoptOrder" -> {
+                val providerIds = provider.map { it["id"].scalar }.toSet()
                 stored = stored.map { current ->
-                    if (live(provider, current["id"].scalar) == null) current else {
+                    if (current["id"].scalar !in providerIds) current else {
                         val value = fields(current); value["inheritsMembers"] = bool(true); value["members"] = strings(emptyList())
                         value.remove("known"); value.remove("shuffleBefore"); obj(value)
                     }

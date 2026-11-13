@@ -236,4 +236,70 @@ class ClassicChannelLibraryTest {
         assertEquals(2, resolutions, "Only one projection of the two stored members is needed")
     }
 
+    @Test fun indexedGroupsAndMoveKeepFirstMatchesDuplicatesAndResolutionOrder() {
+        val first = replace(g("p", "", "old"), "inheritsMembers" to b(true), "known" to ss("a"))
+        val second = replace(g("p", "Second", "b"), "known" to ss("a"))
+        val before = replace(state(), "groups" to a(first, second, g("hidden", "Hidden", "h")), "hidden" to ss("hidden"))
+        val provider = listOf(g("p", "First provider", "a"), g("p", "Later provider", "wrong"), g("q", "Q", "c"))
+        val stateSnapshot = dump(before); val providerSnapshot = provider.map(::dump)
+        val resolutions = mutableListOf<String>()
+        val rows = ClassicChannelLibrary.groups(before, provider) { resolutions += it; it }
+        assertEquals(listOf("p", "p", "q"), rows.elements.map { it["id"].scalar })
+        assertEquals(listOf("First provider", "Second", "Q"), rows.elements.map { it["label"].scalar })
+        assertEquals(listOf(listOf("a"), listOf("b"), listOf("c")), rows.elements.map { strings(it["members"]) })
+        // Hidden stored members are resolved before filtering; appended provider members are not.
+        assertEquals(listOf("a", "b", "h"), resolutions)
+        val moved = reduce(before, request("move", "groupId" to t("q"), "delta" to n(1)), provider)["groups"].elements
+        assertEquals(listOf("q", "p", "p"), moved.map { it["id"].scalar })
+        assertEquals(listOf("", "", ""), moved.map { it["label"].scalar })
+        assertEquals(listOf("true", "true", "true"), moved.map { it["inheritsMembers"].scalar })
+        assertEquals(listOf(listOf("c"), listOf("a"), listOf("b")), moved.map { strings(it["members"]) })
+        assertEquals(listOf("a"), strings(moved[2]["known"]), "Both duplicate rows use the first stored metadata")
+        assertEquals(stateSnapshot, dump(before))
+        assertEquals(providerSnapshot, provider.map(::dump))
+    }
+
+    @Test fun groupProjectionMoveAndAdoptionUseLinearIdLookups() {
+        val size = 256
+        var reads = 0
+        fun counted(row: ProviderValue): ProviderValue {
+            val properties = row.properties
+            return ProviderValue.obj(object : Map<String, ProviderValue> by properties {
+                override fun get(key: String): ProviderValue? {
+                    if (key == "id") reads++
+                    return properties[key]
+                }
+            })
+        }
+        val provider = (0 until size).map { counted(g("p:$it", "P$it", "item:$it")) }
+        val stored = (0 until size).map { counted(replace(g("p:$it", "", "old:$it"), "inheritsMembers" to b(true))) }
+        val before = replace(state(), "groups" to ProviderValue.array(stored))
+        val projected = ClassicChannelLibrary.groups(before, provider)
+        assertEquals(size, projected.elements.size)
+        assertTrue(reads < size * 20, "Projection must not scan provider groups per stored group: $reads ID reads")
+        reads = 0
+        val moved = reduce(before, request("move", "groupId" to t("p:0"), "delta" to n(1)), provider)
+        assertEquals(listOf("p:1", "p:0"), moved["groups"].elements.take(2).map { it["id"].scalar })
+        assertTrue(reads < size * 20, "Move must not scan stored groups per visible group: $reads ID reads")
+        reads = 0
+        val adopted = reduce(before, request("adoptOrder", "order" to ss()), provider)
+        assertTrue(adopted["groups"].elements.all { it["members"].elements.isEmpty() })
+        assertTrue(reads < size * 20, "Adoption must not scan provider groups per stored group: $reads ID reads")
+    }
+
+    @Test fun resetShufflePreservesResolvedFirstOrderAndAppendsOnlyNewMembers() {
+        val size = 2048
+        val members = (0 until size).map { "item:$it" }
+        val saved = members.reversed().map { "old:$it" } + listOf("old:item:0", "removed")
+        val row = replace(g("user:1", "Custom"), "members" to ss(*members.toTypedArray(), "new"),
+            "shuffleBefore" to ss(*saved.toTypedArray()))
+        val before = replace(state(), "groups" to a(row)); val snapshot = dump(before)
+        var resolutions = 0
+        val restored = ClassicChannelLibrary.reduce(before, emptyList(), request("resetShuffle", "groupId" to t("user:1")),
+            resolve = { resolutions++; it.removePrefix("old:") }, stringify = ::primitiveString)
+        assertEquals(members.reversed() + "new", strings(restored["groups"].elements.single()["members"]))
+        assertEquals(members.size + 1 + saved.size, resolutions)
+        assertEquals(snapshot, dump(before))
+    }
+
 }
