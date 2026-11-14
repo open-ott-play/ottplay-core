@@ -26,7 +26,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+      - uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
         with:
           distribution: temurin
           java-version: '17'
@@ -65,7 +65,7 @@ jobs:
 
   browser-release:
     needs: package
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@4c0b1565d4437315d1a8aadb4b2ab3e3fa350526 # main
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@4774181674f4a1a18488bfc918b4c5ed1df39163 # main
     with:
       node-version: '22'
       run-node-ci: false
