@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   scope:
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/change-scope.yml@4c0b1565d4437315d1a8aadb4b2ab3e3fa350526 # main
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/change-scope.yml@4774181674f4a1a18488bfc918b4c5ed1df39163 # main
     with:
       runner: ${{ vars.CI_RUNNER_MODE == 'k3s' && github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule') && 'ottplay-k3s-linux-x64' || 'ubuntu-latest' }}
       force-full: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' }}
@@ -63,7 +63,7 @@ jobs:
           python3 -m venv .venv-workflow
           .venv-workflow/bin/python -m pip install --require-hashes --only-binary=:all: -r .github/requirements-workflow-contracts.txt
           .venv-workflow/bin/python scripts/workflow_contracts.py --actions-only
-      - uses: actions/setup-java@77dd5b2ce225ea11469928ac317850245a74ae78 # v6.2.0
+      - uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
         with:
           distribution: temurin
           java-version: '17'
@@ -208,7 +208,7 @@ jobs:
     needs: [scope, portable]
     # PRs and merge queues use the identical required Quality gate route once.
     if: ${{ github.event_name != 'pull_request' && github.event_name != 'merge_group' && (needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only') }}
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@4c0b1565d4437315d1a8aadb4b2ab3e3fa350526 # main
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@4774181674f4a1a18488bfc918b4c5ed1df39163 # main
     with:
       node-version: '22'
       run-node-ci: false
@@ -290,9 +290,9 @@ jobs:
           - repository: open-ott-play/ottplay-core
             destination: ottplay-foss2/vendor
             files: '["ottplay-core.js","ottplay-core.manifest.json","ottplay-core.LICENSE.txt"]'
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/vendor-update.yml@4c0b1565d4437315d1a8aadb4b2ab3e3fa350526 # main
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/vendor-update.yml@4774181674f4a1a18488bfc918b4c5ed1df39163 # main
     with:
-      toolkit-revision: '4c0b1565d4437315d1a8aadb4b2ab3e3fa350526'
+      toolkit-revision: '4774181674f4a1a18488bfc918b4c5ed1df39163'
       source-workflow: .github/workflows/core.yml
       source-tree: shared-core
       artifact-id: ${{ needs.portable.outputs.artifact-id }}
