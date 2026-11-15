@@ -12,7 +12,7 @@ permissions:
   contents: read
 jobs:
   scope:
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/change-scope.yml@f6ef8c9c4e949a242a7999e3b3b1bc50e5ff3077 # main
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/change-scope.yml@d42735efe245c1fa7ceba945a34b77d9d6b8176b # main
     with:
       runner: ${{ vars.CI_RUNNER_MODE == 'k3s' && github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule') && 'ottplay-k3s-linux-x64' || 'ubuntu-latest' }}
       force-full: ${{ inputs.force-full }}
@@ -210,7 +210,7 @@ jobs:
   browser-compatibility:
     needs: [scope, portable]
     if: ${{ needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only' }}
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@f6ef8c9c4e949a242a7999e3b3b1bc50e5ff3077 # main
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@d42735efe245c1fa7ceba945a34b77d9d6b8176b # main
     with:
       node-version: '22'
       run-node-ci: false
