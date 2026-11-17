@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   scope:
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/change-scope.yml@486d9b959599bed009f9fdafb55f0820070ce860 # main
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/change-scope.yml@5d28eb5407d1e9cbdef46ca8b8b65ea77c11db04 # main
     with:
       runner: ${{ vars.CI_RUNNER_MODE == 'k3s' && github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule') && 'ottplay-k3s-linux-x64' || 'ubuntu-latest' }}
       force-full: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' }}
@@ -208,7 +208,7 @@ jobs:
     needs: [scope, portable]
     # PRs and merge queues use the identical required Quality gate route once.
     if: ${{ github.event_name != 'pull_request' && github.event_name != 'merge_group' && (needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only') }}
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@486d9b959599bed009f9fdafb55f0820070ce860 # main
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@5d28eb5407d1e9cbdef46ca8b8b65ea77c11db04 # main
     with:
       node-version: '22'
       run-node-ci: false
@@ -258,7 +258,7 @@ jobs:
         if: runner.environment == 'self-hosted'
         working-directory: ${{ github.workspace }}
         run: python3 scripts/ci-runner-preflight.py base
-      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      - uses: actions/setup-go@d8cbb8045d7f43706b9177cceb36c1f91a6644d5 # v7.1.0
         with:
           go-version: '1.26.8'
           cache: false
@@ -290,9 +290,9 @@ jobs:
           - repository: open-ott-play/ottplay-core
             destination: ottplay-foss2/vendor
             files: '["ottplay-core.js","ottplay-core.manifest.json","ottplay-core.LICENSE.txt"]'
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/vendor-update.yml@486d9b959599bed009f9fdafb55f0820070ce860 # main
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/vendor-update.yml@5d28eb5407d1e9cbdef46ca8b8b65ea77c11db04 # main
     with:
-      toolkit-revision: '486d9b959599bed009f9fdafb55f0820070ce860'
+      toolkit-revision: '5d28eb5407d1e9cbdef46ca8b8b65ea77c11db04'
       source-workflow: .github/workflows/core.yml
       source-tree: shared-core
       artifact-id: ${{ needs.portable.outputs.artifact-id }}
