@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   scope:
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/change-scope.yml@5d28eb5407d1e9cbdef46ca8b8b65ea77c11db04 # main
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/change-scope.yml@cdd076846c902abbdb5dfdb4ea251c402bd37ef3 # main
     with:
       runner: ${{ vars.CI_RUNNER_MODE == 'k3s' && github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule') && 'ottplay-k3s-linux-x64' || 'ubuntu-latest' }}
       force-full: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' }}
@@ -40,7 +40,7 @@ jobs:
         working-directory: shared-core
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a # v2.22.4
+        uses: step-security/harden-runner@aebdcf6156ab6691adf63218240e476564a1ed4c # v2.23.0
         with:
           egress-policy: audit
 
@@ -100,7 +100,7 @@ jobs:
         working-directory: ottplay-foss2
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a # v2.22.4
+        uses: step-security/harden-runner@aebdcf6156ab6691adf63218240e476564a1ed4c # v2.23.0
         with:
           egress-policy: audit
 
@@ -208,7 +208,7 @@ jobs:
     needs: [scope, portable]
     # PRs and merge queues use the identical required Quality gate route once.
     if: ${{ github.event_name != 'pull_request' && github.event_name != 'merge_group' && (needs.scope.outputs.run != 'false' || needs.scope.outputs.reason != 'documentation-only') }}
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@5d28eb5407d1e9cbdef46ca8b8b65ea77c11db04 # main
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/typescript-ci.yml@cdd076846c902abbdb5dfdb4ea251c402bd37ef3 # main
     with:
       node-version: '22'
       run-node-ci: false
@@ -247,7 +247,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@1d88384fd173af6ecb012dfd0264a306b711241a # v2.22.4
+        uses: step-security/harden-runner@aebdcf6156ab6691adf63218240e476564a1ed4c # v2.23.0
         with:
           egress-policy: audit
 
@@ -290,9 +290,9 @@ jobs:
           - repository: open-ott-play/ottplay-core
             destination: ottplay-foss2/vendor
             files: '["ottplay-core.js","ottplay-core.manifest.json","ottplay-core.LICENSE.txt"]'
-    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/vendor-update.yml@5d28eb5407d1e9cbdef46ca8b8b65ea77c11db04 # main
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/vendor-update.yml@cdd076846c902abbdb5dfdb4ea251c402bd37ef3 # main
     with:
-      toolkit-revision: '5d28eb5407d1e9cbdef46ca8b8b65ea77c11db04'
+      toolkit-revision: 'cdd076846c902abbdb5dfdb4ea251c402bd37ef3'
       source-workflow: .github/workflows/core.yml
       source-tree: shared-core
       artifact-id: ${{ needs.portable.outputs.artifact-id }}
