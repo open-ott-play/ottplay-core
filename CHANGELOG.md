@@ -1,5 +1,30 @@
 # Changelog
 
+## [0.1.6] - Unreleased
+
+### Changed
+
+- keep local instruction files out of git.
+- add a navigation index for docs/.
+- point RC fuzzing results link at canonical toolkit copy.
+- Fix fuzzing scope link and mark vendored release toolkit docs.
+- Reject invalid favorite scalar containers before traversal.
+- Bound favorites snapshot work and retain inherited data slots.
+- Bound classic group work and normalize cloud parse failures.
+- Share cloud storage, scan and fingerprint contracts.
+- Extract compatible classic client domain contracts.
+- deliver verified browser vendor assets with dependency updates.
+
+### Upgrade
+
+The classic profiles are additive; existing APIs and serialized formats remain
+compatible. Qualify the same candidate JS/JAR with each consumer before merging
+the linked migration. These notes do not replace a published 0.1.5 artifact.
+
+### Security
+
+Retain the existing integrity checks and trust policy. Package and unit checks do not establish live device, account or hardware acceptance.
+
 ## [Unreleased]
 
 ### Added
