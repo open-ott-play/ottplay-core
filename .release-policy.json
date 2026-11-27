@@ -22,7 +22,7 @@
   "release_notes": "CHANGELOG.md",
   "single_entry_ci": false,
   "fuzzing": {
-    "toolkit_ref": "4b041db3d7ce951732c102e2195c7d0178c401bb"
+    "toolkit_ref": "0ef5d19a724a3910985fae1a6ec86cd7a5c92cf7"
   },
   "versioning": {
     "schema": 1,
